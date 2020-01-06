@@ -1,0 +1,83 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+## configure your datasource
+<%_ if (devDatabaseType === 'h2Disk') { _%>
+%dev.quarkus.datasource.url=jdbc:h2:file:./<%= BUILD_DIR %>h2db/db/<%= baseName.toLowerCase() %>;DB_CLOSE_DELAY=-1
+%dev.quarkus.datasource.driver=org.h2.Driver
+%dev.quarkus.datasource.username=<%= baseName %>
+%dev.quarkus.datasource.password=
+<%_ } _%>
+<%_ if (devDatabaseType === 'h2Memory') { _%>
+%dev.quarkus.datasource.url=jdbc:h2:mem:<%= baseName.toLowerCase() %>;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+%dev.quarkus.datasource.driver=org.h2.Driver
+%dev.quarkus.datasource.username=<%= baseName %>
+%dev.quarkus.datasource.password=
+<%_ } _%>
+<%_ if (devDatabaseType === 'mariadb') { _%>
+%dev.quarkus.datasource.url=jdbc:mariadb://localhost:3306/<%= baseName %>
+%dev.quarkus.datasource.driver=org.mariadb.jdbc.Driver
+%dev.quarkus.datasource.username=<%= baseName %>
+%dev.quarkus.datasource.password=
+<%_ } _%>
+<%_ if (prodDatabaseType === 'mariadb') { _%>
+%prod.quarkus.datasource.url=jdbc:mariadb://localhost:3306/<%= baseName %>
+%prod.quarkus.datasource.driver=org.mariadb.jdbc.Driver
+%prod.quarkus.datasource.username=root
+%prod.quarkus.datasource.password=
+<%_ } _%>
+<%_ if (devDatabaseType === 'mssql') { _%>
+%dev.quarkus.datasource.url=jdbc:sqlserver://localhost:1433;database=<%= baseName %>
+%dev.quarkus.datasource.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+%dev.quarkus.datasource.username=SA
+%dev.quarkus.datasource.password=yourStrong(!)Password
+<%_ } _%>
+<%_ if (prodDatabaseType === 'mssql') { _%>
+%prod.quarkus.datasource.url=jdbc:mariadb://localhost:3306/<%= baseName %>
+%prod.quarkus.datasource.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+%prod.quarkus.datasource.username=SA
+%prod.quarkus.datasource.password=yourStrong(!)Password
+<%_ } _%>
+<%_ if (devDatabaseType === 'mysql') { _%>
+%dev.quarkus.datasource.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
+%dev.quarkus.datasource.driver=com.mysql.jdbc.Driver
+%dev.quarkus.datasource.username=root
+%dev.quarkus.datasource.password=
+<%_ } _%>
+<%_ if (prodDatabaseType === 'mysql') { _%>
+%prod.quarkus.datasource.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
+%prod.quarkus.datasource.driver=com.mysql.jdbc.Driver
+%prod.quarkus.datasource.username=root
+%prod.quarkus.datasource.password=
+<%_ } _%>    
+<%_ if (devDatabaseType === 'postgresql') { _%>
+%dev.quarkus.datasource.url=jdbc:postgresql://localhost:5432/<%= baseName %>
+%dev.quarkus.datasource.driver=org.postgresql.Driver
+%dev.quarkus.datasource.username=<%= baseName %>
+%dev.quarkus.datasource.password=
+<%_ } _%>
+<%_ if (prodDatabaseType === 'postgresql') { _%>
+%prod.quarkus.datasource.url=jdbc:postgresql://localhost:5432/<%= baseName %>
+%prod.quarkus.datasource.driver=org.postgresql.Driver
+%prod.quarkus.datasource.username=<%= baseName %>
+%prod.quarkus.datasource.password=
+<%_ } _%>    
+quarkus.datasource.max-size=8
+quarkus.datasource.min-size=2
+quarkus.hibernate-orm.database.generation=drop-and-create
+quarkus.hibernate-orm.log.sql=true
