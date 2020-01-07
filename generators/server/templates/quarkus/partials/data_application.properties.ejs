@@ -64,7 +64,7 @@
 %prod.quarkus.datasource.driver=com.mysql.jdbc.Driver
 %prod.quarkus.datasource.username=root
 %prod.quarkus.datasource.password=
-<%_ } _%>    
+<%_ } _%>
 <%_ if (devDatabaseType === 'postgresql') { _%>
 %dev.quarkus.datasource.url=jdbc:postgresql://localhost:5432/<%= baseName %>
 %dev.quarkus.datasource.driver=org.postgresql.Driver
@@ -76,7 +76,13 @@
 %prod.quarkus.datasource.driver=org.postgresql.Driver
 %prod.quarkus.datasource.username=<%= baseName %>
 %prod.quarkus.datasource.password=
-<%_ } _%>    
+<%_ } _%>
+<%_ if (devDatabaseType === 'mongodb') { _%>
+%dev.quarkus.mongodb.connection-string = mongodb://localhost:27017
+<%_ } _%>
+<%_ if (prodDatabaseType === 'mongodb') { _%>
+%prod.quarkus.mongodb.connection-string = mongodb://localhost:27017
+<%_ } _%>
 quarkus.datasource.max-size=8
 quarkus.datasource.min-size=2
 quarkus.hibernate-orm.database.generation=drop-and-create

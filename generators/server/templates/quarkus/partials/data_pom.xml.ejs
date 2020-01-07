@@ -50,3 +50,9 @@
         <artifactId>quarkus-jdbc-postgresql</artifactId>
     </dependency>
 <%_ } _%>
+<%_ if (devDatabaseType === 'mongodb' || prodDatabaseType === 'mongodb') { _%>
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-mongodb-client</artifactId>
+    </dependency>
+<%_ } _%>
