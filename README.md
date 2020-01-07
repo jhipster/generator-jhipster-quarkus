@@ -97,7 +97,7 @@ Apache-2.0 © [Daniel Petisme]()
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-quarkus.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-quarkus
-[daviddm-image]: https://david-dm.org/danielpetisme/generator-jhipster-quarkus.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/danielpetisme/generator-jhipster-quarkus
-[github-actions-generator-ci-image]: https://github.com/jhipster/generator-jhipster-quarkus/workflows/Generator%20CI/badge.svg
-[github-actions-url]: https://github.com/jhipster/generator-jhipster-quarkus/actions
+[daviddm-image]: https://david-dm.org/jhipster/jhipster-quarkus.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/jhipster/jhipster-quarkus
+[github-actions-generator-ci-image]: https://github.com/jhipster/jhipster-quarkus/workflows/Generator%20CI/badge.svg
+[github-actions-url]: https://github.com/jhipster/jhipster-quarkus/actions
