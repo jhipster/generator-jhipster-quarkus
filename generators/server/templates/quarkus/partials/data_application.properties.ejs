@@ -83,7 +83,9 @@
 <%_ if (prodDatabaseType === 'mongodb') { _%>
 %prod.quarkus.mongodb.connection-string = mongodb://localhost:27017
 <%_ } _%>
+<%_ if (devDatabaseType !== 'mongodb' && prodDatabaseType !== 'mongodb') { _%>
 quarkus.datasource.max-size=8
 quarkus.datasource.min-size=2
 quarkus.hibernate-orm.database.generation=drop-and-create
 quarkus.hibernate-orm.log.sql=true
+<%_ } _%>
