@@ -1,25 +1,28 @@
 {
   "name": "generator-jhipster-quarkus",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "JHipster Quarkus blueprint",
   "keywords": [
     "yeoman-generator",
     "jhipster-blueprint",
-    "jhipster-5"
+    "jhipster-6"
   ],
-  "homepage": "https://github.com/danielpetisme/generator-jhipster-quarkus",
+  "homepage": "https://github.com/jhipster/generator-jhipster-quarkus",
   "author": {
     "name": "Daniel Petisme",
     "email": "daniel@jhipster.tech",
     "url": ""
   },
+  "contributors": [
+    "Angelo Manganiello <angelo.mang@libero.it> (https://github.com/amanganiello90)"
+  ],
   "files": [
     "generators"
   ],
   "main": "generators/app/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danielpetisme/generator-jhipster-quarkus.git"
+    "url": "git+https://github.com/jhipster/generator-jhipster-quarkus.git"
   },
   "dependencies": {
     "chalk": "2.4.1",
@@ -33,7 +36,6 @@
     "meow": "5.0.0",
     "mkdirp": "0.5.1",
     "pluralize": "7.0.0",
-    "prettier": "1.13.5",
     "randexp": "0.4.9",
     "semver": "5.5.0",
     "shelljs": "0.8.2",
@@ -72,6 +74,6 @@
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/danielpetisme/generator-jhipster-quarkus/issues"
+    "url": "https://github.com/jhipster/generator-jhipster-quarkus/issues"
   }
 }
