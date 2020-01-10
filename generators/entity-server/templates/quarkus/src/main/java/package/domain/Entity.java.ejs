@@ -146,7 +146,7 @@ import static org.springframework.data.couchbase.core.mapping.id.GenerationStrat
             if (cacheProvider === 'infinispan') { _%>
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 <%_         } else { _%>
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 <%_         }
         }
 } if (databaseType === 'mongodb') { _%>
@@ -287,7 +287,7 @@ public class <%= asEntity(entityClass) %> implements Serializable {
                     if (cacheProvider === 'infinispan') { _%>
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
                 <%_ } else { _%>
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
                 <%_ }
             }
         } else if (databaseType === 'mongodb' || databaseType === 'couchbase') {
@@ -337,7 +337,7 @@ public class <%= asEntity(entityClass) %> implements Serializable {
                 if (cacheProvider === 'infinispan') { _%>
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
             <%_ } else { _%>
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
             <%_ }
         } if (ownerSide === true) {
             if (relationshipValidate) { _%>

@@ -16,15 +16,29 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-application.name=<%= baseName %>
+package <%=packageName%>.service;
 
-<%- include('../../../partials/data_application.properties.ejs', { baseName: baseName, BUILD_DIR: BUILD_DIR, devDatabaseType:devDatabaseType, prodDatabaseType: prodDatabaseType}) -%>
+import <%=packageName%>.domain.User;
+import <%=packageName%>.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
-mp.jwt.verify.issuer=https://www.jhipster.tech
-quarkus.smallrye-jwt.enabled=true
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+import java.util.Optional;
 
-jhipster.security.authentication.jwt.privateKey.location=/META-INF/resources/privateKey.pem
-jhipster.security.authentication.jwt.issuer=https://www.jhipster.tech
-jhipster.security.authentication.jwt.tokenValidityInSeconds=86400
-jhipster.security.authentication.jwt.tokenValidityInSecondsForRememberMe=2592000
+@ApplicationScoped
+@Transactional
+public class UserService {
+
+    private final Logger log = LoggerFactory.getLogger(UserService.class);
+
+    @Inject
+    UserRepository userRepository;
+
+    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
+        return userRepository.findOneWithAuthoritiesByLogin(login);
+    }
+
+}

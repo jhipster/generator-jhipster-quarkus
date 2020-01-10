@@ -22,7 +22,7 @@ describe('Subgenerator common of quarkus JHipster blueprint', () => {
                 ])
                 .withPrompts({
                     baseName: 'sampleMysql',
-                    packageName: 'com.mycompany.myapp',
+                    packageName: '<%=packageName%>',
                     applicationType: 'monolith',
                     databaseType: 'sql',
                     devDatabaseType: 'h2Disk',
