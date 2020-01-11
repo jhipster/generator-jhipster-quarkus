@@ -1,5 +1,7 @@
 # generator-jhipster-quarkus
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+[![NPM version][npm-image]][npm-url] 
+[![Dependency Status][daviddm-image]][daviddm-url]
+[![Generator Build Status][github-actions-generator-ci-image]][github-actions-url]
 > JHipster blueprint, JHipster Quarkus blueprint
 
 # Introduction
@@ -95,7 +97,7 @@ Apache-2.0 © [Daniel Petisme]()
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-quarkus.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-quarkus
-[travis-image]: https://travis-ci.org/danielpetisme/generator-jhipster-quarkus.svg?branch=master
-[travis-url]: https://travis-ci.org/danielpetisme/generator-jhipster-quarkus
-[daviddm-image]: https://david-dm.org/danielpetisme/generator-jhipster-quarkus.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/danielpetisme/generator-jhipster-quarkus
+[daviddm-image]: https://david-dm.org/jhipster/jhipster-quarkus.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/jhipster/jhipster-quarkus
+[github-actions-generator-ci-image]: https://github.com/jhipster/jhipster-quarkus/workflows/Generator%20CI/badge.svg
+[github-actions-url]: https://github.com/jhipster/jhipster-quarkus/actions

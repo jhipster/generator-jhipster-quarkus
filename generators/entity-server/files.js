@@ -18,17 +18,20 @@
  */
 
 const constants = require('generator-jhipster/generators/generator-constants');
-
+const utils = require('../utils');
 /* Constants use throughout */
+const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
+
+/*
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
 const DOCKER_DIR = constants.DOCKER_DIR;
 const TEST_DIR = constants.TEST_DIR;
-const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
 const SERVER_MAIN_RES_DIR = constants.SERVER_MAIN_RES_DIR;
 const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
 const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
+*/
 
- const serverFiles = {
+const serverFiles = {
     server: [
         {
             path: SERVER_MAIN_SRC_DIR,
@@ -60,7 +63,7 @@ const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
     //                 file: 'package/web/rest/EntityResourceIT.java',
     //                 options: {
     //                     context: {
-    //                         randexp, <-- not defined 
+    //                         randexp, <-- not defined
     //                         _,
     //                         chalkRed: chalk.red,
     //                         fs,
@@ -73,9 +76,9 @@ const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
     //         ]
     //     }
     // ]
- };
+};
 
- function writeFiles() {
+function writeFiles() {
     return {
         writeServerFiles() {
             if (this.skipServer) return;

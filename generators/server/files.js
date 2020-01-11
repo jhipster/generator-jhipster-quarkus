@@ -23,7 +23,7 @@ const constants = require('generator-jhipster/generators/generator-constants');
 /* Constants use throughout */
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
 const DOCKER_DIR = constants.DOCKER_DIR;
-const TEST_DIR = constants.TEST_DIR;
+// const TEST_DIR = constants.TEST_DIR;
 const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
 const SERVER_MAIN_RES_DIR = constants.SERVER_MAIN_RES_DIR;
 const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
@@ -45,9 +45,7 @@ const serverFiles = {
     serverResource: [
         {
             path: SERVER_MAIN_RES_DIR,
-            templates: [
-                'application.properties'
-            ]
+            templates: ['application.properties']
         }
     ],
     //  serverJavaWebError: [
@@ -79,10 +77,7 @@ const serverFiles = {
     docker: [
         {
             path: DOCKER_DIR,
-            templates: [
-                'Dockerfile.jvm',
-                'Dockerfile.native',
-            ]
+            templates: ['Dockerfile.jvm', 'Dockerfile.native']
         }
     ]
 };
