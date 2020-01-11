@@ -4,6 +4,8 @@
 [![Dependency Status][daviddm-image]][daviddm-url]
 [![Generator Build Status][github-actions-generator-ci-image]][github-actions-url]
 
+> ## 🛠 Mode: In Development
+
 > JHipster blueprint, JHipster Quarkus blueprint
 
 # Introduction
@@ -90,9 +92,16 @@ npm link generator-jhipster (Optional: Needed only if you are using a non-releas
 jhipster -d --blueprint quarkus
 ```
 
+# Contributors ✨
+
+Thanks goes to these wonderful people:
+
+<table><tr><td align="center"><a href="https://github.com/danielpetisme"><img src="https://avatars3.githubusercontent.com/u/593564?s=400&v=4" width="100px;" alt="Daniel Petisme (founder stream lead)"/><br/><sub><b>Daniel Petisme</b><br/><b>(founder stream lead)</b></sub></a></td><td align="center"><a href="https://github.com/amanganiello90"><img src="https://avatars3.githubusercontent.com/u/20536757?s=400&v=4" width="100px;" alt="Angelo Manganiello"/><br /><sub><b>Angelo Manganiello</b></sub></a></td></tr></table>
+
+
 # License
 
-Apache-2.0 © [Daniel Petisme]()
+Apache-2.0 © [Daniel Petisme](https://github.com/danielpetisme)
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-quarkus.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-quarkus
