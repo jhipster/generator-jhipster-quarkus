@@ -31,18 +31,12 @@
         },
         "applicationType": "monolith",
         "baseName": "jhipsterBlueprint",
-        "testFrameworks": [
-            "gatling",
-            "protractor"
-        ],
+        "testFrameworks": ["gatling", "protractor"],
         "jhiPrefix": "jhi",
         "enableTranslation": true,
         "clientPackageManager": "npm",
         "nativeLanguage": "en",
-        "languages": [
-            "en",
-            "fr"
-        ],
+        "languages": ["en", "fr"],
         "blueprint": "generator-jhipster-quarkus"
     }
 }
