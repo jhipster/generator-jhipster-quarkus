@@ -25,8 +25,13 @@ import <%=packageName%>.web.rest.vm.LoginVM;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
+import io.quarkus.hibernate.orm.panache.Panache;
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
+
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
+import javax.transaction.TransactionManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -40,6 +45,12 @@ public class TestUserJWTControllerIT {
 
     @Inject
     BCryptPasswordHasher passwordHasher;
+
+    public void flushToDB() throws Exception {
+        TransactionManager tm = Panache.getTransactionManager();
+        tm.commit();
+        tm.begin();
+    }
 
     @Test
     @Transactional
@@ -55,10 +66,11 @@ public class TestUserJWTControllerIT {
         user.createdDate = Instant.now();
 
         userRepository.persistAndFlush(user);
+        flushToDB();
 
         LoginVM login = new LoginVM();
-        login.username = "admin";
-        login.password = "admin";
+        login.username = "user-jwt-controller";
+        login.password = "test";
 
         given()
             .body(login)
@@ -85,12 +97,12 @@ public class TestUserJWTControllerIT {
         user.password = passwordHasher.hash("test");
         user.createdBy = "test";
         user.createdDate = Instant.now();
-
         userRepository.persistAndFlush(user);
+        flushToDB();
 
         LoginVM login = new LoginVM();
-        login.username = "admin";
-        login.password = "admin";
+        login.username = "user-jwt-controller-remember-me";
+        login.password = "test";
         login.rememberMe = true;
 
         given()
@@ -107,8 +119,7 @@ public class TestUserJWTControllerIT {
     }
 
     @Test
-    @Transactional
-    public void testAuthorizeFails() throws Exception {
+    public void testAuthorizeFails() {
         LoginVM login = new LoginVM();
         login.username = "wrong-user";
         login.password = "wrong password";
