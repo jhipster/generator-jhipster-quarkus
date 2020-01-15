@@ -46,12 +46,12 @@ const serverFiles = {
         {
             path: SERVER_MAIN_RES_DIR,
             templates: [
-                { file: 'db/migration/V1_00000000000000__Initial_schema.sql', method: 'copy', noEjs: true },                
+                { file: 'db/migration/V1_00000000000000__Initial_schema.sql', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/privateKey.pem', method: 'copy', noEjs: true },
-                { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },                
+                { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
                 'application.properties'
             ]
-        }        
+        }
     ],
     serverJavaConfig: [
         {
