@@ -1,11 +1,11 @@
 {
     "generator-jhipster-quarkus": {
         "promptValues": {
-            "packageName": "<%=packageName%>"
+            "packageName": "com.mycompany.myapp"
         },
         "applicationType": "monolith",
         "baseName": "jhipsterBlueprint",
-        "packageName": "<%=packageName%>",
+        "packageName": "com.mycompany.myapp",
         "packageFolder": "com/mycompany/myapp",
         "serverPort": "8080",
         "authenticationType": "jwt",
