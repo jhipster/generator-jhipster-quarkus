@@ -46,14 +46,7 @@ public class TestUserJWTControllerIT {
     @Inject
     BCryptPasswordHasher passwordHasher;
 
-    public void flushToDB() throws Exception {
-        TransactionManager tm = Panache.getTransactionManager();
-        tm.commit();
-        tm.begin();
-    }
-
     @Test
-    @Transactional
     public void testAuthorize() throws Exception {
         UserRepository userRepository = CDI.current().select(UserRepository.class).get();
 
@@ -65,8 +58,9 @@ public class TestUserJWTControllerIT {
         user.createdBy = "test";
         user.createdDate = Instant.now();
 
+        Panache.getTransactionManager().begin();
         userRepository.persistAndFlush(user);
-        flushToDB();
+        Panache.getTransactionManager().commit();
 
         LoginVM login = new LoginVM();
         login.username = "user-jwt-controller";
@@ -86,7 +80,6 @@ public class TestUserJWTControllerIT {
     }
 
     @Test
-    @Transactional
     public void testAuthorizeWithRememberMe() throws Exception {
         UserRepository userRepository = CDI.current().select(UserRepository.class).get();
 
@@ -97,8 +90,10 @@ public class TestUserJWTControllerIT {
         user.password = passwordHasher.hash("test");
         user.createdBy = "test";
         user.createdDate = Instant.now();
+        
+        Panache.getTransactionManager().begin();
         userRepository.persistAndFlush(user);
-        flushToDB();
+        Panache.getTransactionManager().commit();
 
         LoginVM login = new LoginVM();
         login.username = "user-jwt-controller-remember-me";
