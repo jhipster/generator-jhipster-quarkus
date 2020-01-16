@@ -1,0 +1,108 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.service.dto;
+
+import <%=packageName%>.config.Constants;
+import <%=packageName%>.domain.User;
+
+import javax.validation.constraints.*;
+import java.time.Instant;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * A DTO representing a user, with his authorities.
+ */
+public class UserDTO {
+
+    public Long id;
+
+    @NotBlank
+    @Pattern(regexp = Constants.LOGIN_REGEX)
+    @Size(min = 1, max = 50)
+    public String login;
+
+    @Size(max = 50)
+    public String firstName;
+
+    @Size(max = 50)
+    public String lastName;
+
+    @Email
+    @Size(min = 5, max = 254)
+    public String email;
+
+    @Size(max = 256)
+    public String imageUrl;
+
+    public boolean activated = false;
+
+    @Size(min = 2, max = 10)
+    public String langKey;
+
+    public String createdBy;
+
+    public Instant createdDate;
+
+    public String lastModifiedBy;
+
+    public Instant lastModifiedDate;
+
+    public Set<String> authorities;
+
+    public UserDTO() {
+        // Empty constructor needed for Jackson.
+    }
+
+    public UserDTO(User user) {
+        this.id = user.id;
+        this.login = user.login;
+        this.firstName = user.firstName;
+        this.lastName = user.lastName;
+        this.email = user.email;
+        this.activated = user.activated;
+        this.imageUrl = user.imageUrl;
+        this.langKey = user.langKey;
+        this.createdBy = user.createdBy;
+        this.createdDate = user.createdDate;
+        this.lastModifiedBy = user.lastModifiedBy;
+        this.lastModifiedDate = user.lastModifiedDate;
+        this.authorities = user.authorities.stream()
+            .map(authority -> authority.name)
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+            "login='" + login + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", email='" + email + '\'' +
+            ", imageUrl='" + imageUrl + '\'' +
+            ", activated=" + activated +
+            ", langKey='" + langKey + '\'' +
+            ", createdBy=" + createdBy +
+            ", createdDate=" + createdDate +
+            ", lastModifiedBy='" + lastModifiedBy + '\'' +
+            ", lastModifiedDate=" + lastModifiedDate +
+            ", authorities=" + authorities +
+            "}";
+    }
+}

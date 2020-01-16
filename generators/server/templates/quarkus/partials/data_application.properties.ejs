@@ -79,5 +79,12 @@
 <%_ } _%>    
 quarkus.datasource.max-size=8
 quarkus.datasource.min-size=2
-quarkus.hibernate-orm.database.generation=drop-and-create
+quarkus.hibernate-orm.database.generation=none
 quarkus.hibernate-orm.log.sql=true
+quarkus.hibernate-orm.sql-load-script=no-file
+
+%dev.quarkus.flyway.migrate-at-start=true
+
+%test.quarkus.datasource.url=jdbc:h2:tcp://localhost/mem:test
+%test.quarkus.datasource.driver=org.h2.Driver
+%test.quarkus.flyway.migrate-at-start=true

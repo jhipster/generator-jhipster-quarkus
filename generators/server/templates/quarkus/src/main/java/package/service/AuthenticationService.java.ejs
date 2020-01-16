@@ -1,0 +1,82 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.service;
+
+import <%=packageName%>.domain.User;
+import <%=packageName%>.repository.UserRepository;
+import <%=packageName%>.security.BCryptPasswordHasher;
+import <%=packageName%>.security.UserNotActivatedException;
+import <%=packageName%>.security.UsernameNotFoundException;
+import io.quarkus.security.AuthenticationFailedException;
+import io.quarkus.security.runtime.QuarkusPrincipal;
+import io.quarkus.security.runtime.QuarkusSecurityIdentity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+@ApplicationScoped
+public class AuthenticationService {
+
+    private final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
+
+    public static final String emailValidator = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
+
+    @Inject
+    UserRepository userRepository;
+
+    @Inject
+    BCryptPasswordHasher passwordHasher;
+
+    public QuarkusSecurityIdentity authenticate(String login, String password) {
+        User user = loadByUsername(login);
+        if (!user.activated) {
+            throw new UserNotActivatedException("User " + login + " was not activated");
+        }
+        if (passwordHasher.checkPassword(password, user.password)) {
+            return createQuarkusSecurityIdentity(user);
+        }
+        log.debug("Authentication failed: password does not match stored value");
+        throw new AuthenticationFailedException("Authentication failed: password does not match stored value");
+    }
+
+    private User loadByUsername(String login) {
+        log.debug("Authenticating {}", login);
+
+        if (login.matches(emailValidator)) {
+            return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(login)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
+        }
+        String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
+        return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
+            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
+
+    }
+
+    private QuarkusSecurityIdentity createQuarkusSecurityIdentity(User user) {
+        QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder();
+        builder.setPrincipal(new QuarkusPrincipal(user.login));
+        builder.addCredential(new io.quarkus.security.credential.PasswordCredential(user.password.toCharArray()));
+        builder.addRoles(user.authorities.stream().map(authority -> authority.name).collect(Collectors.toSet()));
+        return builder.build();
+    }
+}

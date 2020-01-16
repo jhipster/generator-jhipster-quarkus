@@ -1,6 +1,7 @@
 const path = require('path');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
+const expectedFiles = require('./utils/expected-files');
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('Sample test', () => {
@@ -38,9 +39,9 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                 .on('end', done);
         });
 
-        it('it works', () => {
-            // Adds your tests here
-            assert.textEqual('Write your own tests!', 'Write your own tests!');
+        it('creates expected files for default configuration for server generator', () => {
+            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.maven);
         });
     });
 });

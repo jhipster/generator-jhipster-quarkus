@@ -56,12 +56,14 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-jsonb</artifactId>
-    </dependency>
+      <artifactId>quarkus-resteasy-jackson</artifactId>
+  </dependency>
 <%- include('./partials/data_pom.xml.ejs', { 
   devDatabaseType:devDatabaseType,
   prodDatabaseType:
   prodDatabaseType}) _%>    
+<%- include('./partials/security_pom.xml.ejs', { 
+  }) _%>    
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
