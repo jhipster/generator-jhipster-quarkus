@@ -18,7 +18,6 @@
 -%>
 package <%=packageName%>.web.rest;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import <%=packageName%>.security.jwt.TokenProvider;
 import <%=packageName%>.service.AuthenticationService;
 import <%=packageName%>.web.rest.vm.LoginVM;
@@ -26,7 +25,9 @@ import io.quarkus.security.runtime.QuarkusSecurityIdentity;
 
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.json.bind.annotation.JsonbProperty;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -40,10 +41,10 @@ import javax.ws.rs.core.Response;
 /**
  * Controller to authenticate users.
  */
-@Path("/api/authenticate")
+@Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@ApplicationScoped
+@RequestScoped
 public class UserJWTController {
 
     @Inject
@@ -56,6 +57,7 @@ public class UserJWTController {
     HttpHeaders headers;
 
     @POST
+    @Path("/authenticate")
     @PermitAll
     public Response authorize(@Valid LoginVM loginVM) {
         try {
@@ -71,9 +73,9 @@ public class UserJWTController {
     /**
      * Object to return as body in JWT Authentication.
      */
-    static class JWTToken {
+    public static class JWTToken {
 
-        @JsonProperty("id_token")
+        @JsonbProperty("id_token")
         public String idToken;
 
         JWTToken(String idToken) {

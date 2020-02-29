@@ -16,25 +16,19 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-package <%=packageName%>.web.util;
+package <%=packageName%>.security;
 
-import javax.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+/**
+ * Constants JHipster authorities.
+ */
+public final class AuthoritiesConstants {
 
+    public static final String ADMIN = "ROLE_ADMIN";
 
-public interface ResponseUtil {
+    public static final String USER = "ROLE_USER";
 
-    static Response wrapOrNotFound(Optional maybeResponse) {
-        return wrapOrNotFound(maybeResponse, Collections.emptyMap());
-    }
+    public static final String ANONYMOUS = "ROLE_ANONYMOUS";
 
-    static Response wrapOrNotFound(Optional maybeResponse, Map<String, String> header) {
-        Response.ResponseBuilder response = (Response.ResponseBuilder) maybeResponse
-            .map(value -> Response.ok(value))
-            .orElse(Response.status(Response.Status.NOT_FOUND));
-        header.forEach(response::header);
-        return response.build();
+    private AuthoritiesConstants() {
     }
 }

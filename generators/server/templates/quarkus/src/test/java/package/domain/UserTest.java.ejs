@@ -16,25 +16,27 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-package <%=packageName%>.web.util;
+package <%=packageName%>.domain;
 
-import javax.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import <%=packageName%>.TestUtil;
+import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
-public interface ResponseUtil {
+public class UserTest {
 
-    static Response wrapOrNotFound(Optional maybeResponse) {
-        return wrapOrNotFound(maybeResponse, Collections.emptyMap());
+    @Test
+    public void testUserEquals() throws Exception {
+        TestUtil.equalsVerifier(User.class);
+        var user1 = new User();
+        user1.id = 1L;
+        var user2 = new User();
+        user2.id = user1.id;
+        assertThat(user1).isEqualTo(user2);
+        user2.id = 2L;
+        assertThat(user1).isNotEqualTo(user2);
+        user1.id = null;
+        assertThat(user1).isNotEqualTo(user2);
     }
 
-    static Response wrapOrNotFound(Optional maybeResponse, Map<String, String> header) {
-        Response.ResponseBuilder response = (Response.ResponseBuilder) maybeResponse
-            .map(value -> Response.ok(value))
-            .orElse(Response.status(Response.Status.NOT_FOUND));
-        header.forEach(response::header);
-        return response.build();
-    }
 }

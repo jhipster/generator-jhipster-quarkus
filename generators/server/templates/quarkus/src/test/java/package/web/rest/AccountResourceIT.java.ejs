@@ -1,0 +1,971 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.web.rest;
+
+import com.mycompany.myapp.config.Constants;
+import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.security.AuthoritiesConstants;
+import com.mycompany.myapp.security.RandomUtil;
+import com.mycompany.myapp.service.dto.PasswordChangeDTO;
+import com.mycompany.myapp.service.dto.UserDTO;
+import com.mycompany.myapp.web.rest.vm.KeyAndPasswordVM;
+import com.mycompany.myapp.web.rest.vm.LoginVM;
+import com.mycompany.myapp.web.rest.vm.ManagedUserVM;
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.MockMailbox;
+import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.mapper.ObjectMapper;
+import io.restassured.mapper.ObjectMapperDeserializationContext;
+import io.restassured.mapper.ObjectMapperSerializationContext;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.inject.Inject;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import static io.restassured.RestAssured.*;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
+import static javax.ws.rs.core.Response.Status.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.fail;
+
+@QuarkusTest
+public class AccountResourceIT {
+
+    @Inject
+    Flyway flyway;
+
+    @Inject
+    MockMailbox mailbox;
+
+    @BeforeEach
+    void init() {
+        mailbox.clear();
+    }
+
+    @BeforeEach
+    public void databaseFixture() {
+        flyway.clean();
+        flyway.migrate();
+    }
+
+    @BeforeAll
+    static void jsonMapper() {
+        final var config = new JsonbConfig().withDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", null);
+        final var jsonb = JsonbBuilder.create(config);
+        ObjectMapper mapper = new ObjectMapper() {
+            @Override
+            public Object deserialize(ObjectMapperDeserializationContext context) {
+                return jsonb.fromJson(context.getDataToDeserialize().asString(), context.getType());
+            }
+
+            @Override
+            public Object serialize(ObjectMapperSerializationContext context) {
+                return jsonb.toJson(context.getObjectToSerialize());
+            }
+        };
+        objectMapper(mapper);
+    }
+
+    private void registerUser(ManagedUserVM user) {
+        //Registering user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(user)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(CREATED.getStatusCode());
+    }
+
+    private void activateUser(String email) {
+        List<Mail> sent = mailbox.getMessagesSentTo(email.toLowerCase());
+        Mail creationEmail = sent.get(sent.size() - 1); // get the last mail
+        var matcher = Pattern.compile(".*key=(\\w+).*", Pattern.MULTILINE).matcher(creationEmail.getHtml());
+
+        if (!matcher.find()) {
+            fail("No key found in activation mail");
+        }
+
+        var key = matcher.group(1);
+
+        //Activating user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/activate?key={key}", key);
+    }
+
+    private String authenticateUser(String username, String password) {
+        //Authenticating user
+        var login = new LoginVM();
+        login.username = username;
+        login.password = password;
+
+        var token = given()
+            .body(login)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .when()
+            .post("/api/authenticate")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .body("id_token", instanceOf(String.class))
+            .body("id_token", notNullValue())
+            .header(HttpHeaders.AUTHORIZATION, not(blankOrNullString()))
+            .extract()
+            .path("id_token");
+
+        return (String) token;
+    }
+
+    @Test
+    public void testNonAuthenticatedUser() {
+        given()
+            .accept(MediaType.TEXT_PLAIN)
+            .get("/api/authenticate")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .body(is(emptyString()));
+    }
+
+    @Test
+    public void testAuthenticatedUser() {
+        var user = new ManagedUserVM();
+        user.login = "test";
+        user.email = "test@example.com";
+        user.password = "test";
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .accept(MediaType.TEXT_PLAIN)
+            .get("/api/authenticate")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .body(containsString("test"));
+    }
+
+    @Test
+    public void testGetExistingAccount() {
+        var user = new ManagedUserVM();
+        user.login = "test";
+        user.password = "test";
+        user.firstName = "john";
+        user.lastName = "doe";
+        user.email = "john.doe@jhipster.com";
+        user.imageUrl = "http://placehold.it/50x50";
+        user.langKey = "en";
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get("/api/account")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .body("login", is("test"))
+            .body("firstName", is(user.firstName))
+            .body("lastName", is(user.lastName))
+            .body("email", is(user.email))
+            .body("imageUrl", is(user.imageUrl))
+            .body("langKey", is(user.langKey))
+            .body("authorities", hasItems(AuthoritiesConstants.USER));
+    }
+
+    @Test
+    public void testGetUnknownAccount() {
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get("/api/account")
+            .then()
+            .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
+    }
+
+    @Test
+    public void testRegisterValid() {
+        var validUser = new ManagedUserVM();
+        validUser.login = "test-register-valid";
+        validUser.password = "password";
+        validUser.firstName = "Alice";
+        validUser.lastName = "Test";
+        validUser.email = "test-register-valid@example.com";
+        validUser.imageUrl = "http://placehold.it/50x50";
+        validUser.langKey = Constants.DEFAULT_LANGUAGE;
+        validUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
+        get("/api/users/test-register-valid").then().statusCode(NOT_FOUND.getStatusCode());
+
+        registerUser(validUser);
+
+        get("/api/users/{login}", validUser.login).then().statusCode(OK.getStatusCode());
+    }
+
+    @Test
+    public void testRegisterInvalidLogin() {
+        var invalidUser = new ManagedUserVM();
+        invalidUser.login = "funky-log!n";// <-- invalid
+        invalidUser.password = "password";
+        invalidUser.firstName = "Funky";
+        invalidUser.lastName = "One";
+        invalidUser.email = "funky@example.com";
+        invalidUser.imageUrl = "http://placehold.it/50x50";
+        invalidUser.langKey = Constants.DEFAULT_LANGUAGE;
+        invalidUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
+
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(invalidUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+        get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void testRegisterInvalidEmail() {
+        var invalidUser = new ManagedUserVM();
+        invalidUser.login = "bob";
+        invalidUser.password = "password";
+        invalidUser.firstName = "Bob";
+        invalidUser.lastName = "Green";
+        invalidUser.email = "invalid";// <-- invalid
+        invalidUser.imageUrl = "http://placehold.it/50x50";
+        invalidUser.langKey = Constants.DEFAULT_LANGUAGE;
+        invalidUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
+
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(invalidUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+        get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void testRegisterInvalidPassword() {
+        var invalidUser = new ManagedUserVM();
+        invalidUser.login = "bob";
+        invalidUser.password = "123";// password with only 3 digits
+        invalidUser.firstName = "Bob";
+        invalidUser.lastName = "Green";
+        invalidUser.email = "invalid";
+        invalidUser.imageUrl = "http://placehold.it/50x50";
+        invalidUser.langKey = Constants.DEFAULT_LANGUAGE;
+        invalidUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
+
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(invalidUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+        get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void testRegisterNullPassword() {
+        var invalidUser = new ManagedUserVM();
+        invalidUser.login = "bob";
+        invalidUser.password = null;// invalid null password
+        invalidUser.firstName = "Bob";
+        invalidUser.lastName = "Green";
+        invalidUser.email = "invalid";
+        invalidUser.imageUrl = "http://placehold.it/50x50";
+        invalidUser.langKey = Constants.DEFAULT_LANGUAGE;
+        invalidUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
+
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(invalidUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+        get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void testRegisterDuplicateLogin() {
+        // First registration
+        var firstUser = new ManagedUserVM();
+        firstUser.login = "alice";
+        firstUser.password = "password";
+        firstUser.firstName = "Alice";
+        firstUser.lastName = "Something";
+        firstUser.email = "alice@example.com";
+        firstUser.imageUrl = "http://placehold.it/50x50";
+        firstUser.langKey = Constants.DEFAULT_LANGUAGE;
+        firstUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
+
+        // Duplicate login, different email
+        var secondUser = new ManagedUserVM();
+        secondUser.login = firstUser.login;
+        secondUser.password = firstUser.password;
+        secondUser.firstName = firstUser.firstName;
+        secondUser.lastName = firstUser.lastName;
+        secondUser.email = "alice2@example.com";
+        secondUser.imageUrl = firstUser.imageUrl;
+        secondUser.langKey = firstUser.langKey;
+        secondUser.authorities = new HashSet<>(firstUser.authorities);
+
+        // First user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(firstUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(CREATED.getStatusCode());
+
+        // Second (non activated) user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(secondUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(CREATED.getStatusCode());
+
+        activateUser(secondUser.email);
+
+        // Second (already activated) user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(secondUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+    }
+
+    @Test
+    public void testRegisterDuplicateEmail() {
+        // First registration
+        var firstUser = new ManagedUserVM();
+        firstUser.login = "test-register-duplicate-email";
+        firstUser.password = "password";
+        firstUser.firstName = "Alice";
+        firstUser.lastName = "Something";
+        firstUser.email = "test-register-duplicate-email@example.com";
+        firstUser.imageUrl = "http://placehold.it/50x50";
+        firstUser.langKey = Constants.DEFAULT_LANGUAGE;
+        firstUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
+
+        // Register first user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(firstUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(CREATED.getStatusCode());
+
+        get("/api/users/{login}", firstUser.login).then().statusCode(OK.getStatusCode());
+
+        // Duplicate email, different login
+        var secondUser = new ManagedUserVM();
+        secondUser.login = "test-register-duplicate-email-2";
+        secondUser.password = firstUser.password;
+        secondUser.firstName = firstUser.firstName;
+        secondUser.lastName = firstUser.lastName;
+        secondUser.email = firstUser.email;
+        secondUser.imageUrl = firstUser.imageUrl;
+        secondUser.langKey = firstUser.langKey;
+        secondUser.authorities = new HashSet<>(firstUser.authorities);
+
+        // Register second (non activated) user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(secondUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(CREATED.getStatusCode());
+
+        get("/api/users/{login}", firstUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+
+        get("/api/users/{login}", secondUser.login).then().statusCode(OK.getStatusCode());
+
+        var userWithUpperCaseEmail = new ManagedUserVM();
+        userWithUpperCaseEmail.id = firstUser.id;
+        userWithUpperCaseEmail.login = "test-register-duplicate-email-3";
+        userWithUpperCaseEmail.password = firstUser.password;
+        userWithUpperCaseEmail.firstName = firstUser.firstName;
+        userWithUpperCaseEmail.lastName = firstUser.lastName;
+        userWithUpperCaseEmail.email = "TEST-register-duplicate-email@example.com";
+        userWithUpperCaseEmail.imageUrl = firstUser.imageUrl;
+        userWithUpperCaseEmail.langKey = firstUser.langKey;
+        userWithUpperCaseEmail.authorities = new HashSet<>(firstUser.authorities);
+
+        // Register third (not activated) user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(userWithUpperCaseEmail)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(CREATED.getStatusCode());
+
+        var testUser = get("/api/users/{login}", userWithUpperCaseEmail.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        assertThat(testUser.email).isEqualTo("test-register-duplicate-email@example.com");
+
+        activateUser(userWithUpperCaseEmail.email);
+
+        // Register (already activated) user
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(secondUser)
+            .when()
+            .post("/api/register")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+    }
+
+
+    //    @Test
+//    @Transactional
+//    public void testRegisterAdminIsIgnored() throws Exception {
+//        ManagedUserVM validUser = new ManagedUserVM();
+//        validUser.setLogin("badguy");
+//        validUser.setPassword("password");
+//        validUser.setFirstName("Bad");
+//        validUser.setLastName("Guy");
+//        validUser.setEmail("badguy@example.com");
+//        validUser.setActivated(true);
+//        validUser.setImageUrl("http://placehold.it/50x50");
+//        validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
+//        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
+//
+//        restAccountMockMvc.perform(
+//            post("/api/register")
+//                .contentType(TestUtil.APPLICATION_JSON)
+//                .content(TestUtil.convertObjectToJsonBytes(validUser)))
+//            .andExpect(status().isCreated());
+//
+//        Optional<User> userDup = userRepository.findOneByLogin("badguy");
+//        assertThat(userDup.isPresent()).isTrue();
+//        assertThat(userDup.get().getAuthorities()).hasSize(1)
+//            .containsExactly(authorityRepository.findById(AuthoritiesConstants.USER).get());
+//    }
+//
+    @Test
+    public void testActivateAccount() throws Exception {
+
+        var user = new ManagedUserVM();
+        user.login = "test";
+        user.email = "test@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+
+        var activatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        assertThat(activatedUser.activated).isTrue();
+    }
+
+    @Test
+    public void testActivateAccountWithWrongKey() throws Exception {
+        //Activating user
+        given()
+            .when()
+            .get("/api/activate?key={key}", "wrongActivationKey")
+            .then()
+            .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
+    }
+
+    @Test
+    public void testSaveAccount() throws Exception {
+        var user = new ManagedUserVM();
+        user.login = "save-account";
+        user.email = "save-account@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var userDTO = new UserDTO();
+        userDTO.login = "not-used";
+        userDTO.firstName = "firstname";
+        userDTO.lastName = "lastname";
+        userDTO.email = "save-account@example.com";
+        userDTO.activated = false;
+        userDTO.imageUrl = "http://placehold.it/50x50";
+        userDTO.langKey = Constants.DEFAULT_LANGUAGE;
+        userDTO.authorities = Collections.singleton(AuthoritiesConstants.ADMIN);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(userDTO)
+            .post("/api/account")
+            .then()
+            .statusCode(OK.getStatusCode());
+
+        var updatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+
+        assertThat(updatedUser.firstName).isEqualTo(userDTO.firstName);
+        assertThat(updatedUser.lastName).isEqualTo(userDTO.lastName);
+        assertThat(updatedUser.email).isEqualTo(userDTO.email);
+        assertThat(updatedUser.langKey).isEqualTo(userDTO.langKey);
+        assertThat(updatedUser.imageUrl).isEqualTo(userDTO.imageUrl);
+        assertThat(updatedUser.activated).isEqualTo(true);
+        assertThat(updatedUser.authorities).isEmpty();
+    }
+
+    @Test
+    public void testSaveInvalidEmail() {
+        var user = new ManagedUserVM();
+        user.login = "save-invalid-email";
+        user.email = "save-invalid-email@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var userDTO = new UserDTO();
+        userDTO.login = "not-used";
+        userDTO.firstName = "firstname";
+        userDTO.lastName = "lastname";
+        userDTO.email = "invalid email";
+        userDTO.activated = false;
+        userDTO.imageUrl = "http://placehold.it/50x50";
+        userDTO.langKey = Constants.DEFAULT_LANGUAGE;
+        userDTO.authorities = Collections.singleton(AuthoritiesConstants.ADMIN);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(userDTO)
+            .post("/api/account")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+        var updatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        assertThat(updatedUser.email).isEqualTo(user.email);
+    }
+
+    @Test
+    public void testSaveExistingEmail() {
+        var user = new ManagedUserVM();
+        user.login = "save-existing-email";
+        user.email = "save-existing-email@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var anotherUser = new ManagedUserVM();
+        anotherUser.login = "save-existing-email2";
+        anotherUser.email = "save-existing-email2@example.com";
+        anotherUser.password = RandomUtil.generatePassword();
+
+        registerUser(anotherUser);
+        activateUser(anotherUser.email);
+
+        var userDTO = new UserDTO();
+        userDTO.login = "not-used";
+        userDTO.firstName = "firstname";
+        userDTO.lastName = "lastname";
+        userDTO.email = "save-existing-email2@example.com";
+        userDTO.activated = false;
+        userDTO.imageUrl = "http://placehold.it/50x50";
+        userDTO.langKey = Constants.DEFAULT_LANGUAGE;
+        userDTO.authorities = Collections.singleton(AuthoritiesConstants.ADMIN);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(userDTO)
+            .post("/api/account")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+        var updatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        assertThat(updatedUser.email).isEqualTo(user.email);
+    }
+
+    @Test
+    public void testSaveExistingEmailAndLogin() {
+        var user = new ManagedUserVM();
+        user.login = "save-existing-email-and-login";
+        user.email = "save-existing-email-and-login@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var userDTO = new UserDTO();
+        userDTO.login = "not-used";
+        userDTO.firstName = "firstname";
+        userDTO.lastName = "lastname";
+        userDTO.email = "save-existing-email-and-login@example.com";
+        userDTO.activated = false;
+        userDTO.imageUrl = "http://placehold.it/50x50";
+        userDTO.langKey = Constants.DEFAULT_LANGUAGE;
+        userDTO.authorities = Collections.singleton(AuthoritiesConstants.ADMIN);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(userDTO)
+            .post("/api/account")
+            .then()
+            .statusCode(OK.getStatusCode());
+
+        var updatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        assertThat(updatedUser.email).isEqualTo(user.email);
+    }
+
+    @Test
+    public void testChangePasswordWrongExistingPassword() {
+        var user = new ManagedUserVM();
+        user.login = "change-password-wrong-existing-password";
+        user.email = "change-password-wrong-existing-password@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var passwordChangeDTO = new PasswordChangeDTO();
+        passwordChangeDTO.currentPassword = "1" + user.password;
+        passwordChangeDTO.newPassword = "new password";
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(passwordChangeDTO)
+            .post("/api/account/change-password")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void testChangePassword() throws Exception {
+        var user = new ManagedUserVM();
+        user.login = "change-password";
+        user.email = "change-password@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var passwordChangeDTO = new PasswordChangeDTO();
+        passwordChangeDTO.currentPassword = user.password;
+        passwordChangeDTO.newPassword = "new password";
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(passwordChangeDTO)
+            .post("/api/account/change-password")
+            .then()
+            .statusCode(OK.getStatusCode());
+    }
+
+    @Test
+    public void testChangePasswordTooSmall() {
+        var user = new ManagedUserVM();
+        user.login = "change-password-too-small";
+        user.email = "change-password-too-small@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var passwordChangeDTO = new PasswordChangeDTO();
+        passwordChangeDTO.currentPassword = user.password;
+        passwordChangeDTO.newPassword = RandomStringUtils.random(ManagedUserVM.PASSWORD_MIN_LENGTH - 1);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(passwordChangeDTO)
+            .post("/api/account/change-password")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void testChangePasswordTooLong() {
+        var user = new ManagedUserVM();
+        user.login = "change-password-too-long";
+        user.email = "change-password-too-long@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var passwordChangeDTO = new PasswordChangeDTO();
+        passwordChangeDTO.currentPassword = user.password;
+        passwordChangeDTO.newPassword = RandomStringUtils.random(ManagedUserVM.PASSWORD_MAX_LENGTH + 1);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(passwordChangeDTO)
+            .post("/api/account/change-password")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void testChangePasswordEmpty() {
+        var user = new ManagedUserVM();
+        user.login = "change-password-empty";
+        user.email = "change-password-empty@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        var passwordChangeDTO = new PasswordChangeDTO();
+        passwordChangeDTO.currentPassword = user.password;
+        passwordChangeDTO.newPassword = "";
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(passwordChangeDTO)
+            .post("/api/account/change-password")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void testRequestPasswordReset() {
+        var user = new ManagedUserVM();
+        user.login = "password-reset";
+        user.email = "password-reset@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(TEXT_PLAIN)
+            .body("password-reset@example.com")
+            .post("/api/account/reset-password/init")
+            .then()
+            .statusCode(OK.getStatusCode());
+    }
+
+    @Test
+    public void testRequestPasswordResetUpperCaseEmail() throws Exception {
+        var user = new ManagedUserVM();
+        user.login = "password-reset";
+        user.email = "password-reset@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(TEXT_PLAIN)
+            .body("password-reset@EXAMPLE.com")
+            .post("/api/account/reset-password/init")
+            .then()
+            .statusCode(OK.getStatusCode());
+    }
+
+    @Test
+    public void testRequestPasswordResetWrongEmail() {
+        var user = new ManagedUserVM();
+        user.login = "password-reset";
+        user.email = "password-reset@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(TEXT_PLAIN)
+            .body("password-reset-wrong-email@example.com")
+            .post("/api/account/reset-password/init")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void testFinishPasswordReset() {
+        var user = new ManagedUserVM();
+        user.login = "finish-password-reset";
+        user.email = "finish-password-reset@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(TEXT_PLAIN)
+            .body(user.email)
+            .post("/api/account/reset-password/init")
+            .then()
+            .statusCode(OK.getStatusCode());
+
+        List<Mail> sent = mailbox.getMessagesSentTo(user.email);
+        Mail resetMail = sent.get(sent.size() - 1); // get the last mail
+        var matcher = Pattern.compile(".*key=(\\w+).*", Pattern.MULTILINE).matcher(resetMail.getHtml());
+
+        if (!matcher.find()) {
+            fail("No key found in reset mail");
+        }
+
+        var key = matcher.group(1);
+
+        var keyAndPassword = new KeyAndPasswordVM();
+        keyAndPassword.newPassword = RandomUtil.generatePassword();
+        keyAndPassword.key = key;
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(keyAndPassword)
+            .post("/api/account/reset-password/finish")
+            .then()
+            .statusCode(OK.getStatusCode());
+    }
+
+    @Test
+    public void testFinishPasswordResetTooSmall() {
+        var user = new ManagedUserVM();
+        user.login = "finish-password-reset-too-small";
+        user.email = "finish-password-reset-too-small@example.com";
+        user.password = RandomUtil.generatePassword();
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.login, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(TEXT_PLAIN)
+            .body(user.email)
+            .post("/api/account/reset-password/init")
+            .then()
+            .statusCode(OK.getStatusCode());
+
+        List<Mail> sent = mailbox.getMessagesSentTo(user.email);
+        Mail resetMail = sent.get(sent.size() - 1); // get the last mail
+        var matcher = Pattern.compile(".*key=(\\w+).*", Pattern.MULTILINE).matcher(resetMail.getHtml());
+
+        if (!matcher.find()) {
+            fail("No key found in reset mail");
+        }
+
+        var key = matcher.group(1);
+
+        var keyAndPassword = new KeyAndPasswordVM();
+        keyAndPassword.newPassword = RandomStringUtils.random(ManagedUserVM.PASSWORD_MAX_LENGTH - 1);
+        keyAndPassword.key = key;
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(keyAndPassword)
+            .post("/api/account/reset-password/finish")
+            .then()
+            .statusCode(OK.getStatusCode());
+    }
+
+    @Test
+    public void testFinishPasswordResetWrongKey() throws Exception {
+        var keyAndPassword = new KeyAndPasswordVM();
+        keyAndPassword.key = "wrong reset key";
+        keyAndPassword.newPassword = "new password";
+
+        given()
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(keyAndPassword)
+            .when()
+            .post("/api/account/reset-password/finish")
+            .then()
+            .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
+    }
+}
