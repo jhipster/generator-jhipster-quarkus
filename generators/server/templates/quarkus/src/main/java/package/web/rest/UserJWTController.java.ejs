@@ -22,9 +22,10 @@ import <%=packageName%>.security.jwt.TokenProvider;
 import <%=packageName%>.service.AuthenticationService;
 import <%=packageName%>.web.rest.vm.LoginVM;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.bind.annotation.JsonbProperty;
@@ -33,8 +34,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -47,14 +46,17 @@ import javax.ws.rs.core.Response;
 @RequestScoped
 public class UserJWTController {
 
-    @Inject
-    TokenProvider tokenProvider;
+    private final Logger log = LoggerFactory.getLogger(UserJWTController.class);
+
+    final AuthenticationService authenticationService;
+
+    final TokenProvider tokenProvider;
 
     @Inject
-    AuthenticationService authenticationService;
-
-    @Context
-    HttpHeaders headers;
+    public UserJWTController(AuthenticationService authenticationService, TokenProvider tokenProvider) {
+        this.authenticationService = authenticationService;
+        this.tokenProvider = tokenProvider;
+    }
 
     @POST
     @Path("/authenticate")

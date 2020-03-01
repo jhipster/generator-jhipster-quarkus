@@ -37,9 +37,15 @@ public class SpaFilter extends HttpFilter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
         chain.doFilter(request, response);
 
-        // Is it an API endpoint?
+        // do not alter an "application" response coming from the API
+        if (request.getRequestURI().startsWith("/api") || request.getRequestURI().startsWith("/management")) {
+            return;
+        }
+
+        // If the server didn't find the resource
         if (response.getStatus() == 404) {
             // Is it a file (eg. image, font, etc.)
             String path = request.getRequestURI().substring(

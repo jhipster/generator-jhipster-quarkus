@@ -41,11 +41,15 @@ public class AuthenticationService {
 
     public static final String emailValidator = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 
-    @Inject
-    UserRepository userRepository;
+    final BCryptPasswordHasher passwordHasher;
+
+    final UserRepository userRepository;
 
     @Inject
-    BCryptPasswordHasher passwordHasher;
+    public AuthenticationService(BCryptPasswordHasher passwordHasher, UserRepository userRepository) {
+        this.passwordHasher = passwordHasher;
+        this.userRepository = userRepository;
+    }
 
     public QuarkusSecurityIdentity authenticate(String login, String password) {
         User user = loadByUsername(login);

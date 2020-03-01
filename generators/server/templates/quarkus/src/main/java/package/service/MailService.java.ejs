@@ -41,17 +41,26 @@ public class MailService {
 
     private static final String BASE_URL = "baseUrl";
 
-    @ResourcePath("mail/creationEmail")
-    MailTemplate creationEmail;
+    final JHipsterProperties jHipsterProperties;
 
-    @ResourcePath("mail/activationEmail")
-    MailTemplate activationEmail;
+    final MailTemplate activationEmail;
 
-    @ResourcePath("mail/passwordResetEmail")
-    MailTemplate passwordResetEmail;
+    final MailTemplate creationEmail;
+
+    final MailTemplate passwordResetEmail;
 
     @Inject
-    JHipsterProperties jHipsterProperties;
+    public MailService(
+        JHipsterProperties jHipsterProperties,
+        @ResourcePath("mail/activationEmail") MailTemplate activationEmail,
+        @ResourcePath("mail/creationEmail") MailTemplate creationEmail,
+        @ResourcePath("mail/passwordResetEmail") MailTemplate passwordResetEmail
+    ) {
+        this.jHipsterProperties = jHipsterProperties;
+        this.activationEmail = activationEmail;
+        this.creationEmail = creationEmail;
+        this.passwordResetEmail = passwordResetEmail;
+    }
 
     public CompletionStage<Void> sendEmailFromTemplate(User user, MailTemplate template, String subject) {
         return template

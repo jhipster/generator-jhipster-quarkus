@@ -47,14 +47,18 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    @Inject
-    UserRepository userRepository;
+    final BCryptPasswordHasher passwordHasher;
+
+    final AuthorityRepository authorityRepository;
+
+    final UserRepository userRepository;
 
     @Inject
-    BCryptPasswordHasher passwordHasher;
-
-    @Inject
-    AuthorityRepository authorityRepository;
+    public UserService(BCryptPasswordHasher passwordHasher, AuthorityRepository authorityRepository, UserRepository userRepository) {
+        this.passwordHasher = passwordHasher;
+        this.authorityRepository = authorityRepository;
+        this.userRepository = userRepository;
+    }
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);

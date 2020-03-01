@@ -56,22 +56,26 @@ import java.util.concurrent.CompletionStage;
 @RequestScoped
 public class AccountResource {
 
+    private final Logger log = LoggerFactory.getLogger(AccountResource.class);
+
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {
             super(message);
         }
     }
 
-    private final Logger log = LoggerFactory.getLogger(AccountResource.class);
+    final MailService mailService;
+
+    final UserRepository userRepository;
+
+    final UserService userService;
 
     @Inject
-    UserService userService;
-
-    @Inject
-    UserRepository userRepository;
-
-    @Inject
-    MailService mailService;
+    public AccountResource(MailService mailService, UserRepository userRepository, UserService userService) {
+        this.mailService = mailService;
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
 
     /**
      * {@code POST /register} : register the user.

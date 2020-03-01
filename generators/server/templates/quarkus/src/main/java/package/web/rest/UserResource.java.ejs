@@ -80,17 +80,27 @@ public class UserResource {
 
     private static final String ENTITY_NAME = "users";
 
-    @ConfigProperty(name = "application.name")
-    String applicationName;
+    final String applicationName;
+
+    final MailService mailService;
+
+    final UserRepository userRepository;
+
+    final UserService userService;
 
     @Inject
-    UserRepository userRepository;
+    public UserResource(
+        @ConfigProperty(name = "application.name") String applicationName,
+        MailService mailService,
+        UserRepository userRepository,
+        UserService userService
+    ) {
+        this.applicationName = applicationName;
+        this.mailService = mailService;
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
 
-    @Inject
-    UserService userService;
-
-    @Inject
-    MailService mailService;
 
     /**
      * {@code POST  /users}  : Creates a new user.
