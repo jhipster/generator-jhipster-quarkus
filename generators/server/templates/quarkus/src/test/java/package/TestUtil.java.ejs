@@ -18,108 +18,20 @@
 -%>
 package <%=packageName%>;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
+import <%=packageName%>.web.rest.vm.LoginVM;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.List;
 
+import static io.restassured.RestAssured.given;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Utility class for testing REST controllers.
  */
 public final class TestUtil {
-
-    private static final ObjectMapper mapper = createObjectMapper();
-
-    /** MediaType for JSON UTF8 */
-    public static final MediaType APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON_PATCH_JSON_TYPE;
-
-    private static ObjectMapper createObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        mapper.registerModule(new JavaTimeModule());
-        return mapper;
-    }
-
-    /**
-     * Convert an object to JSON byte array.
-     *
-     * @param object the object to convert.
-     * @return the JSON byte array.
-     * @throws IOException
-     */
-    public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
-        return mapper.writeValueAsBytes(object);
-    }
-
-    /**
-     * Create a byte array with a specific size filled with specified data.
-     *
-     * @param size the size of the byte array.
-     * @param data the data to put in the byte array.
-     * @return the JSON byte array.
-     */
-    public static byte[] createByteArray(int size, String data) {
-        byte[] byteArray = new byte[size];
-        for (int i = 0; i < size; i++) {
-            byteArray[i] = Byte.parseByte(data, 2);
-        }
-        return byteArray;
-    }
-
-    /**
-     * A matcher that tests that the examined string represents the same instant as the reference datetime.
-     */
-    public static class ZonedDateTimeMatcher extends TypeSafeDiagnosingMatcher<String> {
-
-        private final ZonedDateTime date;
-
-        public ZonedDateTimeMatcher(ZonedDateTime date) {
-            this.date = date;
-        }
-
-        @Override
-        protected boolean matchesSafely(String item, Description mismatchDescription) {
-            try {
-                if (!date.isEqual(ZonedDateTime.parse(item))) {
-                    mismatchDescription.appendText("was ").appendValue(item);
-                    return false;
-                }
-                return true;
-            } catch (DateTimeParseException e) {
-                mismatchDescription.appendText("was ").appendValue(item)
-                    .appendText(", which could not be parsed as a ZonedDateTime");
-                return false;
-            }
-
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("a String representing the same Instant as ").appendValue(date);
-        }
-    }
-
-    /**
-     * Creates a matcher that matches when the examined string represents the same instant as the reference datetime.
-     * @param date the reference datetime against which the examined string is checked.
-     */
-    public static ZonedDateTimeMatcher sameInstant(ZonedDateTime date) {
-        return new ZonedDateTimeMatcher(date);
-    }
 
     /**
      * Verifies the equals/hashcode contract on the domain object.
@@ -140,33 +52,31 @@ public final class TestUtil {
         assertThat(domainObject1.hashCode()).isEqualTo(domainObject2.hashCode());
     }
 
-//    /**
-//     * Create a {@link FormattingConversionService} which use ISO date format, instead of the localized one.
-//     * @return the {@link FormattingConversionService}.
-//     */
-//    public static FormattingConversionService createFormattingConversionService() {
-//        DefaultFormattingConversionService dfcs = new DefaultFormattingConversionService ();
-//        DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
-//        registrar.setUseIsoFormat(true);
-//        registrar.registerFormatters(dfcs);
-//        return dfcs;
-//    }
-
-    /**
-     * Makes a an executes a query to the EntityManager finding all stored objects.
-     * @param <T> The type of objects to be searched
-     * @param em The instance of the EntityManager
-     * @param clss The class type to be searched
-     * @return A list of all found objects
-     */
-    public static <T> List<T> findAll(EntityManager em, Class<T> clss) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<T> cq = cb.createQuery(clss);
-        Root<T> rootEntry = cq.from(clss);
-        CriteriaQuery<T> all = cq.select(rootEntry);
-        TypedQuery<T> allQuery = em.createQuery(all);
-        return allQuery.getResultList();
+    public static String getAdminToken() {
+        return getToken("admin", "admin");
     }
 
-    private TestUtil() {}
+    public static String getToken(String username, String password) {
+        //Authenticating user
+        var login = new LoginVM();
+        login.username = username;
+        login.password = password;
+
+        return given()
+            .body(login)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .when()
+            .post("/api/authenticate")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .body("id_token", instanceOf(String.class))
+            .body("id_token", notNullValue())
+            .header(HttpHeaders.AUTHORIZATION, not(blankOrNullString()))
+            .extract()
+            .path("id_token");
+    }
+
+    private TestUtil() {
+    }
 }

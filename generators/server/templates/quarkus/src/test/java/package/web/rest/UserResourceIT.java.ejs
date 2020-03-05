@@ -18,13 +18,12 @@
 -%>
 package <%=packageName%>.web.rest;
 
+import <%=packageName%>.TestUtil;
 import <%=packageName%>.domain.User;
 import <%=packageName%>.security.AuthoritiesConstants;
-import <%=packageName%>.web.rest.vm.LoginVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
-import io.restassured.authentication.PreemptiveOAuth2HeaderScheme;
 import io.restassured.mapper.ObjectMapper;
 import io.restassured.mapper.ObjectMapperDeserializationContext;
 import io.restassured.mapper.ObjectMapperSerializationContext;
@@ -39,7 +38,6 @@ import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 
 import static io.restassured.RestAssured.get;
@@ -76,7 +74,9 @@ public class UserResourceIT {
     private static final String DEFAULT_LANGKEY = "en";
     private static final String UPDATED_LANGKEY = "fr";
 
-    private ManagedUserVM managedUserVM;
+    String adminToken;
+
+    ManagedUserVM managedUserVM;
 
     @Inject
     Flyway flyway;
@@ -101,28 +101,7 @@ public class UserResourceIT {
 
     @BeforeEach
     public void authenticateAdmin() {
-        //Authenticating user
-        var login = new LoginVM();
-        login.username = "admin";
-        login.password = "admin";
-
-        String token = given()
-            .body(login)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .when()
-            .post("/api/authenticate")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .body("id_token", instanceOf(String.class))
-            .body("id_token", notNullValue())
-            .header(HttpHeaders.AUTHORIZATION, not(blankOrNullString()))
-            .extract()
-            .path("id_token");
-
-        var authScheme = new PreemptiveOAuth2HeaderScheme();
-        authScheme.setAccessToken(token);
-        RestAssured.authentication = authScheme;
+        this.adminToken = TestUtil.getAdminToken();
     }
 
 
@@ -145,13 +124,13 @@ public class UserResourceIT {
         managedUserVM.imageUrl = DEFAULT_IMAGEURL;
         managedUserVM.langKey = DEFAULT_LANGKEY;
         managedUserVM.authorities = Collections.singleton(AuthoritiesConstants.USER);
-
     }
 
     @Test
     public void createUser() {
         // Create the User
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -175,6 +154,7 @@ public class UserResourceIT {
         managedUserVM.id = 1L;
         // An entity with an existing ID cannot be created, so this API call must fail
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -190,6 +170,7 @@ public class UserResourceIT {
     @Transactional
     public void createUserWithExistingLogin() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -211,6 +192,7 @@ public class UserResourceIT {
 
         // Create the User
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(otherManagedUserVM)
@@ -223,6 +205,7 @@ public class UserResourceIT {
     @Test
     public void createUserWithExistingEmail() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -244,6 +227,7 @@ public class UserResourceIT {
 
         // Create the User
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -256,6 +240,7 @@ public class UserResourceIT {
     @Test
     public void getAllUsers() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -266,6 +251,7 @@ public class UserResourceIT {
 
         // Get all the users
         given()
+            .auth().preemptive().oauth2(adminToken)
             .accept(APPLICATION_JSON)
             .when()
             .get("/api/users?sort=id,desc")
@@ -285,6 +271,7 @@ public class UserResourceIT {
     @Test
     public void getUser() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -320,6 +307,7 @@ public class UserResourceIT {
     @Test
     public void updateUser() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -349,6 +337,7 @@ public class UserResourceIT {
 
         // Update the User
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(updatedManagedUserVM)
@@ -368,6 +357,7 @@ public class UserResourceIT {
     @Test
     public void updateUserLogin() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -397,6 +387,7 @@ public class UserResourceIT {
 
         // Update the User
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(updatedManagedUserVM)
@@ -420,6 +411,7 @@ public class UserResourceIT {
     @Transactional
     public void updateUserExistingEmail() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -440,6 +432,7 @@ public class UserResourceIT {
         otherManagedUserVM.langKey = "en";
 
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(otherManagedUserVM)
@@ -468,6 +461,7 @@ public class UserResourceIT {
         updatedManagedUserVM.authorities = Collections.singleton(AuthoritiesConstants.USER);
 
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(updatedManagedUserVM)
@@ -480,6 +474,7 @@ public class UserResourceIT {
     @Test
     public void updateUserExistingLogin() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -500,6 +495,7 @@ public class UserResourceIT {
         otherManagedUserVM.langKey = "en";
 
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(otherManagedUserVM)
@@ -528,6 +524,7 @@ public class UserResourceIT {
         updatedManagedUserVM.authorities = Collections.singleton(AuthoritiesConstants.USER);
 
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(updatedManagedUserVM)
@@ -539,9 +536,9 @@ public class UserResourceIT {
     }
 
     @Test
-    @Transactional
     public void deleteUser() throws Exception {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -552,6 +549,7 @@ public class UserResourceIT {
 
         // Delete the user
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .when()
@@ -568,6 +566,7 @@ public class UserResourceIT {
     @Test
     public void getAllAuthorities() {
         given()
+            .auth().preemptive().oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .when()

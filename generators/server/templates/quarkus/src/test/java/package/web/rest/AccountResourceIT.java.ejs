@@ -18,15 +18,15 @@
 -%>
 package <%=packageName%>.web.rest;
 
-import com.mycompany.myapp.config.Constants;
-import com.mycompany.myapp.domain.User;
-import com.mycompany.myapp.security.AuthoritiesConstants;
-import com.mycompany.myapp.security.RandomUtil;
-import com.mycompany.myapp.service.dto.PasswordChangeDTO;
-import com.mycompany.myapp.service.dto.UserDTO;
-import com.mycompany.myapp.web.rest.vm.KeyAndPasswordVM;
-import com.mycompany.myapp.web.rest.vm.LoginVM;
-import com.mycompany.myapp.web.rest.vm.ManagedUserVM;
+import <%=packageName%>.config.Constants;
+import <%=packageName%>.domain.User;
+import <%=packageName%>.security.AuthoritiesConstants;
+import <%=packageName%>.security.RandomUtil;
+import <%=packageName%>.service.dto.PasswordChangeDTO;
+import <%=packageName%>.service.dto.UserDTO;
+import <%=packageName%>.web.rest.vm.KeyAndPasswordVM;
+import <%=packageName%>.web.rest.vm.LoginVM;
+import <%=packageName%>.web.rest.vm.ManagedUserVM;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;

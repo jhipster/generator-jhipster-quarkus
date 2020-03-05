@@ -18,13 +18,12 @@
 -%>
 package <%=packageName%>.web.rest;
 
+import <%=packageName%>.TestUtil;
 import <%=packageName%>.web.rest.vm.LoginVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.RestAssured;
-import io.restassured.authentication.PreemptiveOAuth2HeaderScheme;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,32 +52,6 @@ public class UserJWTControllerIT {
     public void databaseFixture() {
         flyway.clean();
         flyway.migrate();
-    }
-
-    @BeforeEach
-    public void authenticateAdmin() {
-        //Authenticating user
-        var login = new LoginVM();
-        login.username = "admin";
-        login.password = "admin";
-
-        String token = given()
-            .body(login)
-            .contentType(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .when()
-            .post("/api/authenticate")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .body("id_token", instanceOf(String.class))
-            .body("id_token", notNullValue())
-            .header(HttpHeaders.AUTHORIZATION, not(blankOrNullString()))
-            .extract()
-            .path("id_token");
-
-        var authScheme = new PreemptiveOAuth2HeaderScheme();
-        authScheme.setAccessToken(token);
-        RestAssured.authentication = authScheme;
     }
 
     private void registerUser(ManagedUserVM user) {
@@ -112,29 +85,6 @@ public class UserJWTControllerIT {
             .get("/api/activate?key={key}", key);
     }
 
-    private String authenticateUser(String username, String password) {
-        //Authenticating user
-        var login = new LoginVM();
-        login.username = username;
-        login.password = password;
-
-        var token = given()
-            .body(login)
-            .contentType(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .when()
-            .post("/api/authenticate")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .body("id_token", instanceOf(String.class))
-            .body("id_token", notNullValue())
-            .header(HttpHeaders.AUTHORIZATION, not(blankOrNullString()))
-            .extract()
-            .path("id_token");
-
-        return (String) token;
-    }
-
     @Test
     public void testAuthorize() {
 
@@ -145,7 +95,7 @@ public class UserJWTControllerIT {
 
         registerUser(user);
         activateUser(user.email);
-        var token = authenticateUser(user.login, user.password);
+        var token = TestUtil.getToken(user.login, user.password);
 
         var login = new LoginVM();
         login.username = "user-jwt-controller";
@@ -175,7 +125,7 @@ public class UserJWTControllerIT {
 
         registerUser(user);
         activateUser(user.email);
-        var token = authenticateUser(user.login, user.password);
+        var token = TestUtil.getToken(user.login, user.password);
 
         var login = new LoginVM();
         login.username = "user-jwt-controller-remember-me";
