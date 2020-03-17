@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const ServerGenerator = require('generator-jhipster/generators/server');
+const customServerPrompt = require('./prompts');
 const writeFiles = require('./files').writeFiles;
 
 module.exports = class extends ServerGenerator {
@@ -61,8 +62,10 @@ module.exports = class extends ServerGenerator {
     }
 
     get prompting() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._prompting();
+        const phaseFromJHipster = super._prompting();
+        phaseFromJHipster.askForServerSideOpts = customServerPrompt.askForServerSideOpts;
+
+        return phaseFromJHipster;
     }
 
     get configuring() {
