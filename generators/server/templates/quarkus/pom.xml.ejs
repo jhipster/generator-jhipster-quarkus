@@ -20,17 +20,17 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
     xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
-  
+
     <groupId><%= packageName %></groupId>
     <artifactId><%= dasherizedBaseName %></artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name><%= humanizedBaseName %></name>
-  
+
     <properties>
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <node.version>v12.13.1</node.version>
         <npm.version>6.13.4</npm.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,9 +41,10 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Dependency properties -->
-        <quarkus.platform.version>1.1.0.Final</quarkus.platform.version>
+        <quarkus.platform.version>1.2.1.Final</quarkus.platform.version>
+        <archunit-junit5.version>0.12.0</archunit-junit5.version>
 
-        <!-- Plugin properties -->
+        <!-- Plugin versions -->
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
@@ -54,10 +55,9 @@
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
         <maven-checkstyle.version>3.1.0</maven-checkstyle.version>
-        <checkstyle.version>8.27</checkstyle.version>
         <%_ if (!skipClient) { _%>
-        <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
-        <%_ } _%>
+            <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+            <%_ } _%>
         <git-commit-id-plugin.version>4.0.0</git-commit-id-plugin.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
@@ -65,14 +65,18 @@
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
         <%_ if (enableSwaggerCodegen) { _%>
         <openapi-generator-maven-plugin.version>3.2.3</openapi-generator-maven-plugin.version>
-        <%_ } _%>        
-        <quarkus-plugin.version>1.1.0.Final</quarkus-plugin.version>
+        <%_ } _%>
+        <quarkus-plugin.version>1.2.1.Final</quarkus-plugin.version>
+
+        <!-- Plugin properties -->
+        <checkstyle.version>8.27</checkstyle.version>
         <jacoco.utReportFolder>${project.build.directory}/jacoco/test</jacoco.utReportFolder>
         <jacoco.utReportFile>${jacoco.utReportFolder}/test.exec</jacoco.utReportFile>
-        <jacoco.itReportFolder>${project.build.directory}/jacoco/integrationTest</jacoco.itReportFolder>
-        <jacoco.itReportFile>${jacoco.itReportFolder}/integrationTest.exec</jacoco.itReportFile>
+        <!-- <jacoco.itReportFolder>${project.build.directory}/jacoco/integrationTest</jacoco.itReportFolder> -->
+        <!-- <jacoco.itReportFile>${jacoco.itReportFolder}/integrationTest.exec</jacoco.itReportFile> -->
         <junit.utReportFolder>${project.testresult.directory}/test</junit.utReportFolder>
         <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
+        <quarkus.logManager>org.jboss.logmanager.LogManager</quarkus.logManager>
         <!-- jhipster-needle-maven-property -->
     </properties>
 
@@ -87,22 +91,30 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-  
+
     <dependencies>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-undertow</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jackson</artifactId>
+            <artifactId>quarkus-resteasy-jsonb</artifactId>
         </dependency>
-<%- include('./partials/data_pom.xml.ejs', { 
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-mailer</artifactId>
+        </dependency>
+<%- include('./partials/data_pom.xml.ejs', {
   devDatabaseType:devDatabaseType,
   prodDatabaseType:
-  prodDatabaseType}) _%>    
-<%- include('./partials/security_pom.xml.ejs', { 
-  }) _%>    
+  prodDatabaseType}) _%>
+<%- include('./partials/security_pom.xml.ejs', {
+  }) _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
@@ -113,127 +125,70 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5-api</artifactId>
+            <version>${archunit-junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Adding the engine dependency to the surefire-plugin unfortunately does not work in the current version. -->
+        <!-- https://www.archunit.org/userguide/html/000_Index.html#_junit_5 -->
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5-engine</artifactId>
+            <version>${archunit-junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>${jacoco-maven-plugin.version}</version>
+            <classifier>runtime</classifier>
+            <scope>test</scope>
+        </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
     <build>
         <defaultGoal>compile quarkus:dev</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${checkstyle.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
-                    <includes>pom.xml,README.md</includes>
-                    <excludes>.git/**/*,target/**/*,node_modules/**/*,node/**/*</excludes>
-                    <sourceDirectories>./</sourceDirectories>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-idea-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <systemProperties>
-                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                    </systemProperties>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>${properties-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>read-project-properties</goal>
-                        </goals>
-                        <configuration>
-                            <files>
-                                <file>sonar-project.properties</file>
-                            </files>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-maven-plugin</artifactId>
-                <version>${quarkus-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- jhipster-needle-maven-add-plugin -->
-        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>${properties-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>read-project-properties</goal>
+                            </goals>
+                            <configuration>
+                                <files>
+                                    <file>sonar-project.properties</file>
+                                </files>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
@@ -268,19 +223,19 @@
                     <version>${jacoco-maven-plugin.version}</version>
                     <executions>
                         <execution>
-                            <id>pre-unit-tests</id>
+                            <id>instrument-ut</id>
                             <goals>
-                                <goal>prepare-agent</goal>
+                                <goal>instrument</goal>
                             </goals>
-                            <configuration>
-                                <!-- Sets the path to the file which contains the execution data. -->
-                                <destFile>${jacoco.utReportFile}</destFile>
-                            </configuration>
                         </execution>
-                        <!-- Ensures that the code coverage report for unit tests is created after unit tests have been run -->
                         <execution>
-                            <id>post-unit-test</id>
-                            <phase>test</phase>
+                            <id>restore-ut</id>
+                            <goals>
+                                <goal>restore-instrumented-classes</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report-ut</id>
                             <goals>
                                 <goal>report</goal>
                             </goals>
@@ -289,33 +244,15 @@
                                 <outputDirectory>${jacoco.utReportFolder}</outputDirectory>
                             </configuration>
                         </execution>
-                        <execution>
-                            <id>pre-integration-tests</id>
-                            <goals>
-                                <goal>prepare-agent-integration</goal>
-                            </goals>
-                            <configuration>
-                                <!-- Sets the path to the file which contains the execution data. -->
-                                <destFile>${jacoco.itReportFile}</destFile>
-                            </configuration>
-                        </execution>
-                        <!-- Ensures that the code coverage report for integration tests is created after integration tests have been run -->
-                        <execution>
-                            <id>post-integration-tests</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>report-integration</goal>
-                            </goals>
-                            <configuration>
-                                <dataFile>${jacoco.itReportFile}</dataFile>
-                                <outputDirectory>${jacoco.itReportFolder}</outputDirectory>
-                            </configuration>
-                        </execution>
                     </executions>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>${maven-clean-plugin.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -339,27 +276,29 @@
                         </execution>
                         <execution>
                             <id>enforce-dependencyConvergence</id>
-                            <configuration>
-                                <rules>
-                                    <DependencyConvergence/>
-                                </rules>
-                                <fail>false</fail>
-                            </configuration>
                             <goals>
                                 <goal>enforce</goal>
                             </goals>
+                            <configuration>
+                                <rules>
+                                    <DependencyConvergence></DependencyConvergence>
+                                </rules>
+                                <fail>false</fail>
+                            </configuration>
                         </execution>
                     </executions>
                     <configuration>
                         <rules>
                             <requireMavenVersion>
-                                <message>You are running an older version of Maven. JHipster Quarkus requires at least Maven
+                                <message>You are running an older version of Maven. JHipster Quarkus requires at least
+                                    Maven
                                     ${maven.version}
                                 </message>
                                 <version>[${maven.version},)</version>
                             </requireMavenVersion>
                             <requireJavaVersion>
-                                <message>You are running an incompatible version of Java. JHipster Quarkus supports JDK 8 to
+                                <message>You are running an incompatible version of Java. JHipster Quarkus supports JDK
+                                    8 to
                                     13.
                                 </message>
                                 <version>[1.8,14)</version>
@@ -385,13 +324,10 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
-                        <!-- Force alphabetical order to have a reproducible build -->
-                        <runOrder>alphabetical</runOrder>
-                        <reportsDirectory>${junit.utReportFolder}</reportsDirectory>
-                        <excludes>
-                            <exclude>**/*IT*</exclude>
-                            <exclude>**/*IntTest*</exclude>
-                        </excludes>
+                        <systemProperties>
+                            <jacoco-agent.destfile>${jacoco.utReportFile}</jacoco-agent.destfile>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        </systemProperties>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -399,37 +335,120 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>${maven-failsafe-plugin.version}</version>
                     <configuration>
-                        <!-- Force alphabetical order to have a reproducible build -->
-                        <runOrder>alphabetical</runOrder>
-                        <reportsDirectory>${junit.itReportFolder}</reportsDirectory>
-                        <includes>
-                            <include>**/*IT*</include>
-                            <include>**/*IntTest*</include>
-                        </includes>
+                        <systemPropertyVariables>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        </systemPropertyVariables>
                     </configuration>
                     <executions>
                         <execution>
-                            <id>integration-test</id>
+                            <id>default-integration-test</id>
                             <goals>
                                 <goal>integration-test</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>verify</id>
-                            <goals>
                                 <goal>verify</goal>
                             </goals>
                         </execution>
                     </executions>
+                </plugin>                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${checkstyle.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <configLocation>checkstyle.xml</configLocation>
+                        <includes>pom.xml,README.md</includes>
+                        <excludes>.git/**/*,target/**/*,node_modules/**/*,node/**/*</excludes>
+                        <sourceDirectories>./</sourceDirectories>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>${sonar-maven-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>io.quarkus</groupId>
+                    <artifactId>quarkus-maven-plugin</artifactId>
+                    <version>${quarkus-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
             <!-- jhipster-needle-maven-add-plugin-management -->
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-idea-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-maven-plugin</artifactId>
+                <version>${quarkus-plugin.version}</version>
+            </plugin>
+            <!-- jhipster-needle-maven-add-plugin -->
+        </plugins>
     </build>
     <profiles>
         <profile>
@@ -541,13 +560,6 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-clean-plugin</artifactId>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>target/classes/META-INF/resources/</directory>
-                                </fileset>
-                            </filesets>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>JHipster Quarkus remove static</id>
@@ -565,6 +577,13 @@
                                 </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>target/classes/META-INF/resources/</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>com.github.eirslett</groupId>
@@ -591,10 +610,10 @@
                             </execution>
                             <execution>
                                 <id>webpack build test</id>
+                                <phase>test</phase>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
-                                <phase>test</phase>
                                 <configuration>
                                     <arguments>run webpack:test</arguments>
                                     <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
@@ -602,10 +621,10 @@
                             </execution>
                             <execution>
                                 <id>webpack build prod</id>
+                                <phase>generate-resources</phase>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
-                                <phase>generate-resources</phase>
                                 <configuration>
                                     <arguments>run webpack:prod</arguments>
                                     <environmentVariables>

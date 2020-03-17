@@ -34,7 +34,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "jhi_authority")
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+//@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Authority implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,6 +44,15 @@ public class Authority implements Serializable {
     @Id
     @Column(length = 50)
     public String name;
+
+    public Authority() {
+        //empty
+    }
+
+    public Authority(String name) {
+        //for jsonb
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {

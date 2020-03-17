@@ -19,12 +19,20 @@
 application.name=<%= baseName %>
 
 <%- include('../../../partials/data_application.properties.ejs', { baseName: baseName, BUILD_DIR: BUILD_DIR, devDatabaseType:devDatabaseType, prodDatabaseType: prodDatabaseType}) -%>
+quarkus.mailer.from=<%= dasherizedBaseName %>@localhost
+quarkus.mailer.host=localhost
+quarkus.mailer.port=25
+quarkus.mailer.ssl=false
+quarkus.mailer.username=
+quarkus.mailer.password=
 
 mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
 mp.jwt.verify.issuer=https://www.jhipster.tech
 quarkus.smallrye-jwt.enabled=true
 
-jhipster.security.authentication.jwt.privateKey.location=/META-INF/resources/privateKey.pem
+jhipster.security.authentication.jwt.private-key.location=/META-INF/resources/privateKey.pem
 jhipster.security.authentication.jwt.issuer=https://www.jhipster.tech
-jhipster.security.authentication.jwt.tokenValidityInSeconds=86400
-jhipster.security.authentication.jwt.tokenValidityInSecondsForRememberMe=2592000
+jhipster.security.authentication.jwt.token-validity-in-seconds=86400
+jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2592000
+jhipster.mail.base-url=http://127.0.0.1:8080
+jhipster.mail.base-url=http://127.0.0.1:8080

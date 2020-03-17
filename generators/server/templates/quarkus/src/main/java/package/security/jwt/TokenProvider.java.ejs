@@ -45,29 +45,32 @@ public class TokenProvider {
 
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
-    private static final String AUTHORITIES_KEY = "auth";
+    private static final String AUTHORITIES_KEY = "auth"; // Claim JHiptser front-end uses
+    public static final String GROUPS_KEY = "groups"; // Default claim for MP-JWT
+
+    final private Key key;
+
+    final private String issuer;
+
+    final private long tokenValidityInMilliseconds;
+
+    final private long tokenValidityInMillisecondsForRememberMe;
 
     @Inject
-    JHipsterProperties jHipsterProperties;
-
-    private Key key;
-
-    private String issuer;
-
-    private long tokenValidityInMilliseconds;
-
-    private long tokenValidityInMillisecondsForRememberMe;
-
-    @PostConstruct
-    private void init() throws Exception {
+    public TokenProvider(JHipsterProperties jHipsterProperties) throws Exception {
         this.key = readPrivateKey(jHipsterProperties.security.authentication.jwt.privateKey.location);
         this.issuer = jHipsterProperties.security.authentication.jwt.issuer;
-        this.tokenValidityInMilliseconds = this.jHipsterProperties.security.authentication.jwt.tokenValidityInSeconds * 1000;
-        this.tokenValidityInMillisecondsForRememberMe = this.jHipsterProperties.security.authentication.jwt.tokenValidityInSecondsForRememberMe * 1000;
+        this.tokenValidityInMilliseconds = jHipsterProperties.security.authentication.jwt.tokenValidityInSeconds * 1000;
+        this.tokenValidityInMillisecondsForRememberMe = jHipsterProperties.security.authentication.jwt.tokenValidityInSecondsForRememberMe * 1000;
+    }
+
+    @PostConstruct
+    void init() throws Exception {
+
     }
 
     public String createToken(QuarkusSecurityIdentity identity, boolean rememberMe) {
-        String authorities = String.join(",", identity.getRoles());
+        String authorities = String.join(", ", identity.getRoles());
         long now = (new Date()).getTime();
         Date validity;
         if (rememberMe) {
@@ -79,6 +82,7 @@ public class TokenProvider {
         JwtClaims claims = new JwtClaims();
         claims.setSubject(identity.getPrincipal().getName());
         claims.setClaim(AUTHORITIES_KEY, authorities);
+        claims.setClaim(GROUPS_KEY, identity.getRoles());
         claims.setIssuedAt(NumericDate.fromMilliseconds(now));
         claims.setIssuer(this.issuer);
         claims.setExpirationTime(NumericDate.fromMilliseconds(validity.getTime()));
@@ -123,5 +127,4 @@ public class TokenProvider {
         pem = pem.replaceAll("\n", "");
         return pem.trim();
     }
-
 }

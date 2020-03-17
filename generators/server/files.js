@@ -32,6 +32,9 @@ const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
 const serverFiles = {
     serverBuild: [
         {
+            templates: [{ file: 'checkstyle.xml', options: { interpolate: INTERPOLATE_REGEX } }]
+        },
+        {
             templates: [
                 { file: 'mvnw', method: 'copy', noEjs: true },
                 { file: 'mvnw.cmd', method: 'copy', noEjs: true },
@@ -49,7 +52,29 @@ const serverFiles = {
                 { file: 'db/migration/V1_00000000000000__Initial_schema.sql', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/privateKey.pem', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
+                'templates/mail/activationEmail.html',
+                'templates/mail/creationEmail.html',
+                'templates/mail/passwordResetEmail.html',
                 'application.properties'
+            ]
+        }
+    ],
+    serverTestSupport: [
+        {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/ArchTest.java',
+                    renameTo: generator => `${generator.javaDir}/ArchTest.java`
+                },
+                {
+                    file: 'package/TestResources.java',
+                    renameTo: generator => `${generator.javaDir}/TestResources.java`
+                },
+                {
+                    file: 'package/TestUtil.java',
+                    renameTo: generator => `${generator.javaDir}/TestUtil.java`
+                }
             ]
         }
     ],
@@ -73,16 +98,25 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
-                    file: 'package/domain/AbstractAuditingEntity.java',
-                    renameTo: generator => `${generator.javaDir}domain/AbstractAuditingEntity.java`
-                },
-                {
                     file: 'package/domain/Authority.java',
                     renameTo: generator => `${generator.javaDir}domain/Authority.java`
                 },
                 {
                     file: 'package/domain/User.java',
                     renameTo: generator => `${generator.javaDir}domain/User.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/domain/AuthorityTest.java',
+                    renameTo: generator => `${generator.javaDir}/domain/AuthorityTest.java`
+                },
+                {
+                    file: 'package/domain/UserTest.java',
+                    renameTo: generator => `${generator.javaDir}/domain/UserTest.java`
                 }
             ]
         }
@@ -111,8 +145,16 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}security/jwt/TokenProvider.java`
                 },
                 {
+                    file: 'package/security/AuthoritiesConstants.java',
+                    renameTo: generator => `${generator.javaDir}security/AuthoritiesConstants.java`
+                },
+                {
                     file: 'package/security/BCryptPasswordHasher.java',
                     renameTo: generator => `${generator.javaDir}security/BCryptPasswordHasher.java`
+                },
+                {
+                    file: 'package/security/RandomUtil.java',
+                    renameTo: generator => `${generator.javaDir}security/RandomUtil.java`
                 },
                 {
                     file: 'package/security/UsernameNotFoundException.java',
@@ -130,6 +172,10 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
+                    file: 'package/service/dto/PasswordChangeDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/PasswordChangeDTO.java`
+                },
+                {
                     file: 'package/service/dto/UserDTO.java',
                     renameTo: generator => `${generator.javaDir}service/dto/UserDTO.java`
                 },
@@ -138,38 +184,82 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/AuthenticationService.java`
                 },
                 {
+                    file: 'package/service/EmailAlreadyUsedException.java',
+                    renameTo: generator => `${generator.javaDir}service/EmailAlreadyUsedException.java`
+                },
+                {
+                    file: 'package/service/InvalidPasswordException.java',
+                    renameTo: generator => `${generator.javaDir}service/InvalidPasswordException.java`
+                },
+                {
+                    file: 'package/service/MailService.java',
+                    renameTo: generator => `${generator.javaDir}service/MailService.java`
+                },
+                {
+                    file: 'package/service/UsernameAlreadyUsedException.java',
+                    renameTo: generator => `${generator.javaDir}service/UsernameAlreadyUsedException.java`
+                },
+                {
                     file: 'package/service/UserService.java',
                     renameTo: generator => `${generator.javaDir}service/UserService.java`
                 }
             ]
         }
     ],
-    // //  serverJavaWebRestError: [
-    // //     {
-    // //         path: SERVER_MAIN_SRC_DIR,
-    // //         templates: [
-    // //             {
-    // //                 file: 'package/web/rest/errors/BadRequestAlertException.java',
-    // //                 renameTo: generator => `${generator.javaDir}web/rest/errors/BadRequestAlertException.java`
-    // //             }
-    // //         ]
-    // //     }
-    // //  ],
+    serverJavaWebRestError: [
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/errors/BadRequestAlertException.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/BadRequestAlertException.java`
+                },
+                {
+                    file: 'package/web/rest/errors/EmailAlreadyUsedException.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/EmailAlreadyUsedException.java`
+                },
+                {
+                    file: 'package/web/rest/errors/EmailNotFoundException.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/EmailNotFoundException.java`
+                },
+                {
+                    file: 'package/web/rest/errors/LoginAlreadyUsedException.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/LoginAlreadyUsedException.java`
+                }
+            ]
+        }
+    ],
     serverJavaWeb: [
         {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
+                    file: 'package/web/rest/vm/KeyAndPasswordVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/vm/KeyAndPasswordVM.java`
+                },
+                {
                     file: 'package/web/rest/vm/LoginVM.java',
                     renameTo: generator => `${generator.javaDir}web/rest/vm/LoginVM.java`
+                },
+                {
+                    file: 'package/web/rest/vm/ManagedUserVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/vm/ManagedUserVM.java`
                 },
                 {
                     file: 'package/web/rest/AccountResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/AccountResource.java`
                 },
                 {
+                    file: 'package/web/rest/SpaFilter.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
+                },
+                {
                     file: 'package/web/rest/UserJWTController.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserJWTController.java`
+                },
+                {
+                    file: 'package/web/rest/UserResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserResource.java`
                 },
                 {
                     file: 'package/web/util/HeaderUtil.java',
@@ -185,12 +275,16 @@ const serverFiles = {
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
-                    file: 'package/TestResources.java',
-                    renameTo: generator => `${generator.javaDir}/TestResources.java`
+                    file: 'package/web/rest/AccountResourceIT.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AccountResourceIT.java`
                 },
                 {
-                    file: 'package/web/rest/TestUserJWTControllerIT.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/TestUserJWTControllerIT.java`
+                    file: 'package/web/rest/UserJWTControllerIT.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTControllerIT.java`
+                },
+                {
+                    file: 'package/web/rest/UserResourceIT.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserResourceIT.java`
                 }
             ]
         }

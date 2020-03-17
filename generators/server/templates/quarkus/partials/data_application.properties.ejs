@@ -55,16 +55,16 @@
 <%_ } _%>
 <%_ if (devDatabaseType === 'mysql') { _%>
 %dev.quarkus.datasource.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
-%dev.quarkus.datasource.driver=com.mysql.jdbc.Driver
+%dev.quarkus.datasource.driver=com.mysql.cj.jdbc.Driver
 %dev.quarkus.datasource.username=root
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mysql') { _%>
 %prod.quarkus.datasource.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
-%prod.quarkus.datasource.driver=com.mysql.jdbc.Driver
+%prod.quarkus.datasource.driver=com.mysql.cj.jdbc.Driver
 %prod.quarkus.datasource.username=root
 %prod.quarkus.datasource.password=
-<%_ } _%>    
+<%_ } _%>
 <%_ if (devDatabaseType === 'postgresql') { _%>
 %dev.quarkus.datasource.url=jdbc:postgresql://localhost:5432/<%= baseName %>
 %dev.quarkus.datasource.driver=org.postgresql.Driver
@@ -76,11 +76,11 @@
 %prod.quarkus.datasource.driver=org.postgresql.Driver
 %prod.quarkus.datasource.username=<%= baseName %>
 %prod.quarkus.datasource.password=
-<%_ } _%>    
+<%_ } _%>
 quarkus.datasource.max-size=8
 quarkus.datasource.min-size=2
 quarkus.hibernate-orm.database.generation=none
-quarkus.hibernate-orm.log.sql=true
+quarkus.hibernate-orm.log.sql=false
 quarkus.hibernate-orm.sql-load-script=no-file
 
 %dev.quarkus.flyway.migrate-at-start=true
