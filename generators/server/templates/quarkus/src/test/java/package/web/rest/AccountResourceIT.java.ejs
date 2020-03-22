@@ -18,6 +18,7 @@
 -%>
 package <%=packageName%>.web.rest;
 
+import <%=packageName%>.TestUtil;
 import <%=packageName%>.config.Constants;
 import <%=packageName%>.domain.User;
 import <%=packageName%>.security.AuthoritiesConstants;
@@ -30,9 +31,7 @@ import <%=packageName%>.web.rest.vm.ManagedUserVM;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.mapper.ObjectMapper;
-import io.restassured.mapper.ObjectMapperDeserializationContext;
-import io.restassured.mapper.ObjectMapperSerializationContext;
+import io.restassured.RestAssured;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,16 +39,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
+import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.Response.Status.*;
@@ -79,20 +79,8 @@ public class AccountResourceIT {
 
     @BeforeAll
     static void jsonMapper() {
-        final var config = new JsonbConfig().withDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", null);
-        final var jsonb = JsonbBuilder.create(config);
-        ObjectMapper mapper = new ObjectMapper() {
-            @Override
-            public Object deserialize(ObjectMapperDeserializationContext context) {
-                return jsonb.fromJson(context.getDataToDeserialize().asString(), context.getType());
-            }
-
-            @Override
-            public Object serialize(ObjectMapperSerializationContext context) {
-                return jsonb.toJson(context.getObjectToSerialize());
-            }
-        };
-        objectMapper(mapper);
+        RestAssured.config = RestAssured.config()
+            .objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
     }
 
     private void registerUser(ManagedUserVM user) {
@@ -534,7 +522,7 @@ public class AccountResourceIT {
     }
 
     @Test
-    public void testSaveAccount() throws Exception {
+    public void testSaveAccount() {
         var user = new ManagedUserVM();
         user.login = "save-account";
         user.email = "save-account@example.com";
@@ -552,7 +540,7 @@ public class AccountResourceIT {
         userDTO.activated = false;
         userDTO.imageUrl = "http://placehold.it/50x50";
         userDTO.langKey = Constants.DEFAULT_LANGUAGE;
-        userDTO.authorities = Collections.singleton(AuthoritiesConstants.ADMIN);
+        userDTO.authorities = Set.of(AuthoritiesConstants.ADMIN);
 
         given()
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -593,7 +581,7 @@ public class AccountResourceIT {
         userDTO.activated = false;
         userDTO.imageUrl = "http://placehold.it/50x50";
         userDTO.langKey = Constants.DEFAULT_LANGUAGE;
-        userDTO.authorities = Collections.singleton(AuthoritiesConstants.ADMIN);
+        userDTO.authorities = Set.of(AuthoritiesConstants.ADMIN);
 
         given()
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -635,7 +623,7 @@ public class AccountResourceIT {
         userDTO.activated = false;
         userDTO.imageUrl = "http://placehold.it/50x50";
         userDTO.langKey = Constants.DEFAULT_LANGUAGE;
-        userDTO.authorities = Collections.singleton(AuthoritiesConstants.ADMIN);
+        userDTO.authorities = Set.of(AuthoritiesConstants.ADMIN);
 
         given()
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -669,7 +657,7 @@ public class AccountResourceIT {
         userDTO.activated = false;
         userDTO.imageUrl = "http://placehold.it/50x50";
         userDTO.langKey = Constants.DEFAULT_LANGUAGE;
-        userDTO.authorities = Collections.singleton(AuthoritiesConstants.ADMIN);
+        userDTO.authorities = Set.of(AuthoritiesConstants.ADMIN);
 
         given()
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
