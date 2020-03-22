@@ -19,7 +19,13 @@
 package <%=packageName%>;
 
 import <%=packageName%>.web.rest.vm.LoginVM;
+import io.restassured.mapper.ObjectMapper;
+import io.restassured.mapper.ObjectMapperDeserializationContext;
+import io.restassured.mapper.ObjectMapperSerializationContext;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
@@ -75,6 +81,22 @@ public final class TestUtil {
             .header(HttpHeaders.AUTHORIZATION, not(blankOrNullString()))
             .extract()
             .path("id_token");
+    }
+
+    public static ObjectMapper jsonbObjectMapper() {
+        final var config = new JsonbConfig().withDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", null);
+        final Jsonb jsonb = JsonbBuilder.create(config);
+        return new ObjectMapper() {
+            @Override
+            public Object deserialize(ObjectMapperDeserializationContext context) {
+                return jsonb.fromJson(context.getDataToDeserialize().asString(), context.getType());
+            }
+
+            @Override
+            public Object serialize(ObjectMapperSerializationContext context) {
+                return jsonb.toJson(context.getObjectToSerialize());
+            }
+        };
     }
 
     private TestUtil() {
