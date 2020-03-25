@@ -230,7 +230,6 @@ const serverFiles = {
                     file: 'package/web/rest/errors/UserNotAuthenticatedException.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/UserNotAuthenticatedException.java`
                 }
-
             ]
         }
     ],
