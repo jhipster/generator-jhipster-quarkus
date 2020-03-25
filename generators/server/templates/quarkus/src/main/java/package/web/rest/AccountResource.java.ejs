@@ -28,13 +28,13 @@ import <%=packageName%>.service.dto.UserDTO;
 import <%=packageName%>.web.rest.errors.EmailAlreadyUsedException;
 import <%=packageName%>.web.rest.errors.EmailNotFoundException;
 import <%=packageName%>.web.rest.errors.LoginAlreadyUsedException;
+import <%=packageName%>.web.rest.errors.UserNotAuthenticatedException;
 import <%=packageName%>.web.rest.vm.KeyAndPasswordVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -144,7 +144,10 @@ public class AccountResource {
     @Path("/account")
     @PermitAll
     public UserDTO getAccount(@Context SecurityContext ctx) {
-        return userService.getUserWithAuthoritiesByLogin(ctx.getUserPrincipal().getName())
+        var login = Optional.ofNullable(ctx.getUserPrincipal())
+            .map(Principal::getName)
+            .orElseThrow(() -> new UserNotAuthenticatedException());
+        return userService.getUserWithAuthoritiesByLogin(login)
             .map(UserDTO::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
