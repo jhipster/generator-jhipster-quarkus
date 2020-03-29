@@ -21,8 +21,6 @@ package <%=packageName%>.service;
 import <%=packageName%>.config.Constants;
 import <%=packageName%>.domain.Authority;
 import <%=packageName%>.domain.User;
-import <%=packageName%>.repository.AuthorityRepository;
-import <%=packageName%>.repository.UserRepository;
 import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.security.BCryptPasswordHasher;
 import <%=packageName%>.security.RandomUtil;
@@ -49,20 +47,14 @@ public class UserService {
 
     final BCryptPasswordHasher passwordHasher;
 
-    final AuthorityRepository authorityRepository;
-
-    final UserRepository userRepository;
-
     @Inject
-    public UserService(BCryptPasswordHasher passwordHasher, AuthorityRepository authorityRepository, UserRepository userRepository) {
+    public UserService(BCryptPasswordHasher passwordHasher) {
         this.passwordHasher = passwordHasher;
-        this.authorityRepository = authorityRepository;
-        this.userRepository = userRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
-        return userRepository.findOneByActivationKey(key)
+        return User.findOneByActivationKey(key)
             .map(user -> {
                 // activate given user for the registration key.
                 user.activated = true;
@@ -75,7 +67,7 @@ public class UserService {
 
     public Optional<User> completePasswordReset(String newPassword, String key) {
         log.debug("Reset user password for reset key {}", key);
-        return userRepository.findOneByResetKey(key)
+        return User.findOneByResetKey(key)
             .filter(user -> user.resetDate.isAfter(Instant.now().minusSeconds(86400)))
             .map(user -> {
                 user.password = passwordHasher.hash(newPassword);
@@ -87,7 +79,7 @@ public class UserService {
     }
 
     public Optional<User> requestPasswordReset(String mail) {
-        return userRepository.findOneByEmailIgnoreCase(mail)
+        return User.findOneByEmailIgnoreCase(mail)
             .filter(user -> user.activated)
             .map(user -> {
                 user.resetKey = RandomUtil.generateResetKey();
@@ -98,13 +90,13 @@ public class UserService {
     }
 
     public User registerUser(UserDTO userDTO, String password) {
-        userRepository.findOneByLogin(userDTO.login.toLowerCase()).ifPresent(existingUser -> {
+        User.findOneByLogin(userDTO.login.toLowerCase()).ifPresent(existingUser -> {
             var removed = removeNonActivatedUser(existingUser);
             if (!removed) {
                 throw new UsernameAlreadyUsedException();
             }
         });
-        userRepository.findOneByEmailIgnoreCase(userDTO.email).ifPresent(existingUser -> {
+        User.findOneByEmailIgnoreCase(userDTO.email).ifPresent(existingUser -> {
             var removed = removeNonActivatedUser(existingUser);
             if (!removed) {
                 throw new EmailAlreadyUsedException();
@@ -127,9 +119,9 @@ public class UserService {
         // new user gets registration key
         newUser.activationKey = RandomUtil.generateActivationKey();
         Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findByIdOptional(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        Authority.<Authority>findByIdOptional(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.authorities = authorities;
-        userRepository.persist(newUser);
+        User.persist(newUser);
 //        this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -139,8 +131,7 @@ public class UserService {
         if (existingUser.activated) {
             return false;
         }
-        userRepository.delete(existingUser);
-        userRepository.flush();
+        User.delete("id", existingUser.id);
 //        this.clearUserCaches(existingUser);
         return true;
     }
@@ -166,13 +157,13 @@ public class UserService {
         user.activated = true;
         if (userDTO.authorities != null) {
             Set<Authority> authorities = userDTO.authorities.stream()
-                .map(authority -> authorityRepository.findByIdOptional(authority))
+                .map(authority -> Authority.<Authority>findByIdOptional(authority))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
             user.authorities = authorities;
         }
-        userRepository.persist(user);
+        User.persist(user);
 //        this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
         return user;
@@ -189,7 +180,7 @@ public class UserService {
      * @param imageUrl  image URL of user.
      */
     public void updateUser(String login, String firstName, String lastName, String email, String langKey, String imageUrl) {
-        userRepository.findOneByLogin(login).ifPresent(user -> {
+        User.findOneByLogin(login).ifPresent(user -> {
             user.firstName = firstName;
             user.lastName = lastName;
             if (email != null) {
@@ -209,7 +200,7 @@ public class UserService {
      * @return updated user.
      */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
-        return userRepository.findByIdOptional(userDTO.id).map(user -> {
+        return User.<User>findByIdOptional(userDTO.id).map(user -> {
             user.login = userDTO.login.toLowerCase();
             user.firstName = userDTO.firstName;
             user.lastName = userDTO.lastName;
@@ -222,7 +213,7 @@ public class UserService {
             Set<Authority> managedAuthorities = user.authorities;
             managedAuthorities.clear();
             userDTO.authorities.stream()
-                .map(authorityRepository::findByIdOptional)
+                .map(authority -> Authority.<Authority>findByIdOptional(authority))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(managedAuthorities::add);
@@ -233,15 +224,15 @@ public class UserService {
     }
 
     public void deleteUser(String login) {
-        userRepository.findOneByLogin(login).ifPresent(user -> {
-            userRepository.delete(user);
+        User.findOneByLogin(login).ifPresent(user -> {
+            User.delete("id", user.id);
 //            this.clearUserCaches(user);
             log.debug("Deleted User: {}", user);
         });
     }
 
     public void changePassword(String login, String currentClearTextPassword, String newPassword) {
-        userRepository.findOneByLogin(login).ifPresent(user -> {
+        User.findOneByLogin(login).ifPresent(user -> {
             String currentEncryptedPassword = user.password;
             if (!passwordHasher.checkPassword(currentClearTextPassword, currentEncryptedPassword)) {
                 throw new InvalidPasswordException();
@@ -255,17 +246,17 @@ public class UserService {
 
 
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
+        return User.findOneWithAuthoritiesByLogin(login);
     }
 
     public List<UserDTO> getAllManagedUsers() {
-        return userRepository.findAllByLoginNot(Page.ofSize(20), Constants.ANONYMOUS_USER)
+        return User.findAllByLoginNot(Page.ofSize(20), Constants.ANONYMOUS_USER)
             .stream().map(UserDTO::new).collect(Collectors.toList());
 
     }
 
     public List<String> getAuthorities() {
-        return authorityRepository.streamAll().map(authority -> authority.name).collect(Collectors.toList());
+        return Authority.<Authority>streamAll().map(authority -> authority.name).collect(Collectors.toList());
     }
 
 }

@@ -206,7 +206,7 @@ public class AccountResourceIT {
             .accept(APPLICATION_JSON)
             .get("/api/account")
             .then()
-            .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
+            .statusCode(UNAUTHORIZED.getStatusCode());
     }
 
     @Test

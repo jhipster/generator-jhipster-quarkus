@@ -18,7 +18,7 @@
 -%>
 package <%=packageName%>.web.rest;
 
-<%_     
+<%_
     const viaService = service !== 'no';
     let isUsingMapsId = false;
     let mapsIdAssoc;
@@ -50,7 +50,7 @@ import <%=packageName%>.repository.search.<%= entityClass %>SearchRepository;
     <%_ } _%>
 <%_ } _%>
 <%_ if (saveUserSnapshot) { _%>
-import <%=packageName%>.repository.UserRepository;
+import <%=packageName%>.domain.User;
 <%_ } _%>
 //import <%=packageName%>.web.rest.errors.BadRequestAlertException;
 import <%=packageName%>.web.util.HeaderUtil;
@@ -91,7 +91,7 @@ import reactor.core.publisher.Flux;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;<%_ if (!viaService && !saveUserSnapshot) { %>
-import javax.transaction.Transactional; <% } %>    
+import javax.transaction.Transactional; <% } %>
 <%_ if (validation) { _%>
 import javax.validation.Valid;
 <%_ } _%>
@@ -170,7 +170,7 @@ public class <%= entityClass %>Resource {
      * or with status {@code 400 (Bad Request)} if the <%= instanceName %> is not valid,
      * or with status {@code 500 (Internal Server Error)} if the <%= instanceName %> couldn't be updated.
      */
-    @PUT    
+    @PUT
     public Response update<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>) {
         log.debug("REST request to update <%= entityClass %> : {}", <%= instanceName %>);
         if (<%= instanceName %>.id == null) {
@@ -199,7 +199,7 @@ public class <%= entityClass %>Resource {
      */
     @GET<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
 
-    @Transactional(readOnly = true) <%_ } _%>    
+    @Transactional(readOnly = true) <%_ } _%>
 <%- include('../../common/get_all_template', {asEntity, asDto, viaService}); -%>
 
     <%_ if (reactiveRepositories) { _%>
@@ -232,7 +232,7 @@ public class <%= entityClass %>Resource {
 
     @Transactional(readOnly = true) <%_ } %>
     public Response get<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
-        log.debug("REST request to get <%= entityClass %> : {}", id);<%- include('../../common/get_template', {asEntity, asDto, viaService, returnDirectly:false}); -%>        
+        log.debug("REST request to get <%= entityClass %> : {}", id);<%- include('../../common/get_template', {asEntity, asDto, viaService, returnDirectly:false}); -%>
         return ResponseUtil.wrapOrNotFound(<%= instanceName %>);
     }
 <%_ if (!readOnly) { _%>
@@ -249,8 +249,8 @@ public class <%= entityClass %>Resource {
         log.debug("REST request to delete <%= entityClass %> : {}", id);
 <%- include('../../common/delete_template', {viaService: viaService, instanceName: instanceName}); -%>
         headers.getRequestHeaders().putAll(HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>));
-        return Response.noContent().build();   
-    }     
+        return Response.noContent().build();
+    }
 <%_ } _%>
 <%_ if (searchEngine === 'elasticsearch') { _%>
 

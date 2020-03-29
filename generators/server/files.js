@@ -121,21 +121,6 @@ const serverFiles = {
             ]
         }
     ],
-    serverJavaRepository: [
-        {
-            path: SERVER_MAIN_SRC_DIR,
-            templates: [
-                {
-                    file: 'package/repository/AuthorityRepository.java',
-                    renameTo: generator => `${generator.javaDir}repository/AuthorityRepository.java`
-                },
-                {
-                    file: 'package/repository/UserRepository.java',
-                    renameTo: generator => `${generator.javaDir}repository/UserRepository.java`
-                }
-            ]
-        }
-    ],
     serverJavaSecurity: [
         {
             path: SERVER_MAIN_SRC_DIR,

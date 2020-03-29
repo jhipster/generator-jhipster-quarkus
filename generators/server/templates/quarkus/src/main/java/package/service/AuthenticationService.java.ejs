@@ -19,7 +19,6 @@
 package <%=packageName%>.service;
 
 import <%=packageName%>.domain.User;
-import <%=packageName%>.repository.UserRepository;
 import <%=packageName%>.security.BCryptPasswordHasher;
 import <%=packageName%>.security.UserNotActivatedException;
 import <%=packageName%>.security.UsernameNotFoundException;
@@ -43,12 +42,9 @@ public class AuthenticationService {
 
     final BCryptPasswordHasher passwordHasher;
 
-    final UserRepository userRepository;
-
     @Inject
-    public AuthenticationService(BCryptPasswordHasher passwordHasher, UserRepository userRepository) {
+    public AuthenticationService(BCryptPasswordHasher passwordHasher) {
         this.passwordHasher = passwordHasher;
-        this.userRepository = userRepository;
     }
 
     public QuarkusSecurityIdentity authenticate(String login, String password) {
@@ -67,11 +63,11 @@ public class AuthenticationService {
         log.debug("Authenticating {}", login);
 
         if (login.matches(emailValidator)) {
-            return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(login)
+            return User.findOneWithAuthoritiesByEmailIgnoreCase(login)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
         }
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
-        return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
+        return User.findOneWithAuthoritiesByLogin(lowercaseLogin)
             .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
 
     }

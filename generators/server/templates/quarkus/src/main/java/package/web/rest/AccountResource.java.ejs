@@ -18,7 +18,7 @@
 -%>
 package <%=packageName%>.web.rest;
 
-import <%=packageName%>.repository.UserRepository;
+import <%=packageName%>.domain.User;
 import <%=packageName%>.service.InvalidPasswordException;
 import <%=packageName%>.service.MailService;
 import <%=packageName%>.service.UserService;
@@ -28,9 +28,9 @@ import <%=packageName%>.service.dto.UserDTO;
 import <%=packageName%>.web.rest.errors.EmailAlreadyUsedException;
 import <%=packageName%>.web.rest.errors.EmailNotFoundException;
 import <%=packageName%>.web.rest.errors.LoginAlreadyUsedException;
-import <%=packageName%>.web.rest.errors.UserNotAuthenticatedException;
 import <%=packageName%>.web.rest.vm.KeyAndPasswordVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
+import io.quarkus.security.Authenticated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,14 +66,11 @@ public class AccountResource {
 
     final MailService mailService;
 
-    final UserRepository userRepository;
-
     final UserService userService;
 
     @Inject
-    public AccountResource(MailService mailService, UserRepository userRepository, UserService userService) {
+    public AccountResource(MailService mailService, UserService userService) {
         this.mailService = mailService;
-        this.userRepository = userRepository;
         this.userService = userService;
     }
 
@@ -98,7 +95,7 @@ public class AccountResource {
                 .thenApply(it -> Response.created(null).build());
         } catch (UsernameAlreadyUsedException e) {
             throw new LoginAlreadyUsedException();
-        } catch (<%=packageName%>.service.EmailAlreadyUsedException e) {
+        } catch (com.mycompany.myapp.service.EmailAlreadyUsedException e) {
             throw new EmailAlreadyUsedException();
         }
     }
@@ -142,12 +139,9 @@ public class AccountResource {
      */
     @GET
     @Path("/account")
-    @PermitAll
+    @Authenticated
     public UserDTO getAccount(@Context SecurityContext ctx) {
-        var login = Optional.ofNullable(ctx.getUserPrincipal())
-            .map(Principal::getName)
-            .orElseThrow(() -> new UserNotAuthenticatedException());
-        return userService.getUserWithAuthoritiesByLogin(login)
+        return userService.getUserWithAuthoritiesByLogin(ctx.getUserPrincipal().getName())
             .map(UserDTO::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
@@ -157,17 +151,17 @@ public class AccountResource {
      *
      * @param userDTO the current user information.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
-     * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
+     * @throws RuntimeException          {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
     @POST
     @Path("/account")
     public Response saveAccount(@Valid UserDTO userDTO, @Context SecurityContext ctx) {
         var userLogin = Optional.ofNullable(ctx.getUserPrincipal().getName()).orElseThrow(() -> new AccountResourceException("Current user login not found"));
-        var existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.email);
+        var existingUser = User.findOneByEmailIgnoreCase(userDTO.email);
         if (existingUser.isPresent() && (!existingUser.get().login.equalsIgnoreCase(userLogin))) {
             throw new EmailAlreadyUsedException();
         }
-        var user = userRepository.findOneByLogin(userLogin);
+        var user = User.findOneByLogin(userLogin);
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
         }
