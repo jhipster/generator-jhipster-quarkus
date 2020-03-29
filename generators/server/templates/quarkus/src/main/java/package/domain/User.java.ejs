@@ -20,6 +20,7 @@ package <%=packageName%>.domain;
 
 import <%=packageName%>.config.Constants;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.panache.common.Page;
 import org.hibernate.annotations.BatchSize;
 
 import javax.json.bind.annotation.JsonbTransient;
@@ -31,6 +32,8 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -154,5 +157,45 @@ public class User extends PanacheEntity implements Serializable {
            ", activationKey='" + activationKey + '\'' +
            "}";
    }
+
+    public static Optional<User> findOneByActivationKey(String activationKey) {
+        return find("activationKey", activationKey).firstResultOptional();
+    }
+
+    public static List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime) {
+        return list("activated = false and activationKey not null and createdDate <= ?1", dateTime);
+    }
+
+    public static Optional<User> findOneByResetKey(String resetKey) {
+        return find("resetKey", resetKey).firstResultOptional();
+    }
+
+    public static Optional<User> findOneByEmailIgnoreCase(String email) {
+        return find("LOWER(email) = LOWER(?1)", email).firstResultOptional();
+    }
+
+    public static Optional<User> findOneByLogin(String login) {
+        return find("login", login).firstResultOptional();
+    }
+
+    public static Optional<User> findOneWithAuthoritiesById(Long id) {
+        return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.id = ?1", id).firstResultOptional();
+    }
+
+    public static Optional<User> findOneWithAuthoritiesByLogin(String login) {
+        return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)
+//            .withHint(QueryHints.HINT_CACHEABLE, "true")
+            .firstResultOptional();
+    }
+
+    public static Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
+        return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)
+//            .withHint(QueryHints.HINT_CACHEABLE, "true")
+            .firstResultOptional();
+    }
+
+    public static List<User> findAllByLoginNot(Page page, String login) {
+        return find("login != ?1", login).page(page).list();
+    }
 
 }
