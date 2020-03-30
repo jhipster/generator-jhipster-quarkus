@@ -22,19 +22,17 @@ import <%=packageName%>.config.JHipsterProperties;
 import <%=packageName%>.domain.User;
 import io.quarkus.mailer.MailTemplate;
 import io.quarkus.qute.api.ResourcePath;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.concurrent.CompletionStage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Service for sending emails.
  */
 @ApplicationScoped
 public class MailService {
-
     private final Logger log = LoggerFactory.getLogger(MailService.class);
 
     private static final String USER = "user";
@@ -68,10 +66,12 @@ public class MailService {
             .subject(subject)
             .data(BASE_URL, jHipsterProperties.mail.baseUrl)
             .data(USER, user)
-            .send().thenAccept((it) -> {
-                log.debug("Sent email to User '{}'", user.email);
-            });
-
+            .send()
+            .thenAccept(
+                it -> {
+                    log.debug("Sent email to User '{}'", user.email);
+                }
+            );
     }
 
     public CompletionStage<Void> sendActivationEmail(User user) {

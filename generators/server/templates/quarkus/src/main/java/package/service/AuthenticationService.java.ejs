@@ -25,20 +25,19 @@ import <%=packageName%>.security.UsernameNotFoundException;
 import io.quarkus.security.AuthenticationFailedException;
 import io.quarkus.security.runtime.QuarkusPrincipal;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
 @ApplicationScoped
 public class AuthenticationService {
-
     private final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
 
-    public static final String emailValidator = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
+    public static final String emailValidator =
+        "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 
     final BCryptPasswordHasher passwordHasher;
 
@@ -63,13 +62,14 @@ public class AuthenticationService {
         log.debug("Authenticating {}", login);
 
         if (login.matches(emailValidator)) {
-            return User.findOneWithAuthoritiesByEmailIgnoreCase(login)
+            return User
+                .findOneWithAuthoritiesByEmailIgnoreCase(login)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
         }
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
-        return User.findOneWithAuthoritiesByLogin(lowercaseLogin)
+        return User
+            .findOneWithAuthoritiesByLogin(lowercaseLogin)
             .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
-
     }
 
     private QuarkusSecurityIdentity createQuarkusSecurityIdentity(User user) {
