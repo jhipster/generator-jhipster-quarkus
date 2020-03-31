@@ -47,7 +47,7 @@
         "yeoman-test": "2.2.0"
     },
     "scripts": {
-        "prettier:format": "prettier --write \"{,**/}*.{js,json,md,yml}\"",
+        "prettier:format": "prettier --write \"{,**/}*.{js,json,md,yml,java}\"",
         "lint": "npm run eslint && npm run ejs-lint",
         "lint-fix": "npm run prettier:format && npm run eslint -- --fix",
         "eslint": "eslint . ",
