@@ -1,5 +1,5 @@
 {
   "hooks": {
-    "pre-commit": "prettier:format"
+    "pre-commit": "npm run prettier:format"
   }
 }
