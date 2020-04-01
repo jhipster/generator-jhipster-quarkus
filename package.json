@@ -39,15 +39,17 @@
         "eslint-plugin-import": "2.17.3",
         "eslint-plugin-prettier": "3.1.0",
         "fs-extra": "8.0.1",
+        "husky": "^4.2.3",
         "jsdoc": "3.6.3",
         "mocha": "6.1.4",
         "pre-commit": "1.2.2",
         "prettier": "1.17.1",
+        "prettier-plugin-java": "0.7.1",
         "yeoman-assert": "3.1.1",
         "yeoman-test": "2.2.0"
     },
     "scripts": {
-        "prettier:format": "prettier --write \"{,**/}*.{js,json,md,yml}\"",
+        "prettier:format": "prettier --write \"{,**/}*.{js,json,md,yml,java}\"",
         "lint": "npm run eslint && npm run ejs-lint",
         "lint-fix": "npm run prettier:format && npm run eslint -- --fix",
         "eslint": "eslint . ",

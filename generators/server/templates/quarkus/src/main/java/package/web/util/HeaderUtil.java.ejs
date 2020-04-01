@@ -18,18 +18,15 @@
 -%>
 package <%=packageName%>.web.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public final class HeaderUtil {
-
     private static final Logger log = LoggerFactory.getLogger(HeaderUtil.class);
 
-    private HeaderUtil() {
-    }
+    private HeaderUtil() {}
 
     /**
      * <p>createAlert.</p>
@@ -55,8 +52,14 @@ public final class HeaderUtil {
      * @param param             a {@link java.lang.String} object.
      * @return a {@link javax.ws.rs.core.MultivaluedMap} object.
      */
-    public static Map<String, String> createEntityCreationAlert(String applicationName, boolean enableTranslation, String entityName, String param) {
-        String message = enableTranslation ? applicationName + "." + entityName + ".created"
+    public static Map<String, String> createEntityCreationAlert(
+        String applicationName,
+        boolean enableTranslation,
+        String entityName,
+        String param
+    ) {
+        String message = enableTranslation
+            ? applicationName + "." + entityName + ".created"
             : "A new " + entityName + " is created with identifier " + param;
         return createAlert(applicationName, message, param);
     }
@@ -70,8 +73,14 @@ public final class HeaderUtil {
      * @param param             a {@link java.lang.String} object.
      * @return a {@link javax.ws.rs.core.MultivaluedMap} object.
      */
-    public static Map<String, String> createEntityUpdateAlert(String applicationName, boolean enableTranslation, String entityName, String param) {
-        String message = enableTranslation ? applicationName + "." + entityName + ".updated"
+    public static Map<String, String> createEntityUpdateAlert(
+        String applicationName,
+        boolean enableTranslation,
+        String entityName,
+        String param
+    ) {
+        String message = enableTranslation
+            ? applicationName + "." + entityName + ".updated"
             : "A " + entityName + " is updated with identifier " + param;
         return createAlert(applicationName, message, param);
     }
@@ -85,8 +94,14 @@ public final class HeaderUtil {
      * @param param             a {@link java.lang.String} object.
      * @return a {@link javax.ws.rs.core.MultivaluedMap} object.
      */
-    public static Map<String, String> createEntityDeletionAlert(String applicationName, boolean enableTranslation, String entityName, String param) {
-        String message = enableTranslation ? applicationName + "." + entityName + ".deleted"
+    public static Map<String, String> createEntityDeletionAlert(
+        String applicationName,
+        boolean enableTranslation,
+        String entityName,
+        String param
+    ) {
+        String message = enableTranslation
+            ? applicationName + "." + entityName + ".deleted"
             : "A " + entityName + " is deleted with identifier " + param;
         return createAlert(applicationName, message, param);
     }
@@ -101,7 +116,13 @@ public final class HeaderUtil {
      * @param defaultMessage    a {@link java.lang.String} object.
      * @return a {@link javax.ws.rs.core.MultivaluedMap} object.
      */
-    public static Map<String, String> createFailureAlert(String applicationName, boolean enableTranslation, String entityName, String errorKey, String defaultMessage) {
+    public static Map<String, String> createFailureAlert(
+        String applicationName,
+        boolean enableTranslation,
+        String entityName,
+        String errorKey,
+        String defaultMessage
+    ) {
         log.error("Entity processing failed, {}", defaultMessage);
 
         String message = enableTranslation ? "error." + errorKey : defaultMessage;

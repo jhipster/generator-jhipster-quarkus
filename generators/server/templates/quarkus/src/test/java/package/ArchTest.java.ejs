@@ -18,30 +18,30 @@
 -%>
 package <%=packageName%>;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import org.junit.jupiter.api.Test;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
-
 class ArchTest {
 
     @Test
     void servicesAndRepositoriesShouldNotDependOnWebLayer() {
-
         JavaClasses importedClasses = new ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-            .importPackages("<%=packageName%>");
+            .importPackages("com.mycompany.myapp");
 
         noClasses()
             .that()
-                .resideInAnyPackage("..service..")
+            .resideInAnyPackage("..service..")
             .or()
-                .resideInAnyPackage("..repository..")
-            .should().dependOnClassesThat()
-                .resideInAnyPackage("..<%=packageName%>.web..")
-        .because("Services and repositories should not depend on web layer")
-        .check(importedClasses);
+            .resideInAnyPackage("..repository..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAnyPackage("..com.mycompany.myapp.web..")
+            .because("Services and repositories should not depend on web layer")
+            .check(importedClasses);
     }
 }

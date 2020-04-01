@@ -18,13 +18,12 @@
 -%>
 package <%=packageName%>.web.rest.errors;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-
 public class BadRequestAlertException extends WebApplicationException {
-
     private static final long serialVersionUID = 1L;
 
     public BadRequestAlertException(String message, String entityName, String errorKey) {

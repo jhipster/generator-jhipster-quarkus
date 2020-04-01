@@ -19,14 +19,13 @@
 package <%=packageName%>.domain;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Objects;
 
 /**
  * An authority (a security role).
@@ -35,7 +34,6 @@ import java.util.Objects;
 @Table(name = "jhi_authority")
 //@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Authority extends PanacheEntityBase {
-
     private static final long serialVersionUID = 1L;
 
     @NotNull
@@ -71,8 +69,6 @@ public class Authority extends PanacheEntityBase {
 
     @Override
     public String toString() {
-        return "Authority{" +
-            "name='" + name + '\'' +
-            "}";
+        return "Authority{" + "name='" + name + '\'' + "}";
     }
 }

@@ -18,23 +18,6 @@
 -%>
 package <%=packageName%>.web.rest;
 
-import <%=packageName%>.TestUtil;
-import <%=packageName%>.domain.User;
-import <%=packageName%>.security.AuthoritiesConstants;
-import <%=packageName%>.web.rest.vm.ManagedUserVM;
-import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.RestAssured;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.core.HttpHeaders;
-import java.util.Set;
-
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
@@ -44,9 +27,24 @@ import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import <%=packageName%>.TestUtil;
+import <%=packageName%>.domain.User;
+import <%=packageName%>.security.AuthoritiesConstants;
+import <%=packageName%>.web.rest.vm.ManagedUserVM;
+import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.RestAssured;
+import java.util.Set;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+import javax.ws.rs.core.HttpHeaders;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 @QuarkusTest
 public class UserResourceIT {
-
     private static final String DEFAULT_LOGIN = "johndoe";
     private static final String UPDATED_LOGIN = "jhipster";
 
@@ -77,8 +75,8 @@ public class UserResourceIT {
 
     @BeforeAll
     static void jsonMapper() {
-        RestAssured.config = RestAssured.config()
-            .objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
+        RestAssured.config =
+            RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
     }
 
     @BeforeEach
@@ -86,13 +84,11 @@ public class UserResourceIT {
         this.adminToken = TestUtil.getAdminToken();
     }
 
-
     @BeforeEach
     public void databaseFixture() {
         flyway.clean();
         flyway.migrate();
     }
-
 
     @BeforeEach
     public void initTest() {
@@ -112,7 +108,9 @@ public class UserResourceIT {
     public void createUser() {
         // Create the User
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -136,7 +134,9 @@ public class UserResourceIT {
         managedUserVM.id = 1L;
         // An entity with an existing ID cannot be created, so this API call must fail
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -152,7 +152,9 @@ public class UserResourceIT {
     @Transactional
     public void createUserWithExistingLogin() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -174,7 +176,9 @@ public class UserResourceIT {
 
         // Create the User
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(otherManagedUserVM)
@@ -187,7 +191,9 @@ public class UserResourceIT {
     @Test
     public void createUserWithExistingEmail() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -201,7 +207,7 @@ public class UserResourceIT {
         otherManagedUserVM.password = DEFAULT_PASSWORD;
         otherManagedUserVM.firstName = DEFAULT_FIRSTNAME;
         otherManagedUserVM.lastName = DEFAULT_LASTNAME;
-        otherManagedUserVM.email = DEFAULT_EMAIL;// this email should already be used
+        otherManagedUserVM.email = DEFAULT_EMAIL; // this email should already be used
         otherManagedUserVM.activated = true;
         otherManagedUserVM.imageUrl = DEFAULT_IMAGEURL;
         otherManagedUserVM.langKey = DEFAULT_LANGKEY;
@@ -209,7 +215,9 @@ public class UserResourceIT {
 
         // Create the User
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -222,7 +230,9 @@ public class UserResourceIT {
     @Test
     public void getAllUsers() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -233,7 +243,9 @@ public class UserResourceIT {
 
         // Get all the users
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .accept(APPLICATION_JSON)
             .when()
             .get("/api/users?sort=id,desc")
@@ -249,11 +261,12 @@ public class UserResourceIT {
             .body("login", hasItem(DEFAULT_LOGIN));
     }
 
-
     @Test
     public void getUser() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -278,18 +291,15 @@ public class UserResourceIT {
 
     @Test
     public void getNonExistingUser() {
-        given()
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/users/unknown")
-            .then()
-            .statusCode(NOT_FOUND.getStatusCode());
+        given().accept(APPLICATION_JSON).when().get("/api/users/unknown").then().statusCode(NOT_FOUND.getStatusCode());
     }
 
     @Test
     public void updateUser() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -319,7 +329,9 @@ public class UserResourceIT {
 
         // Update the User
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(updatedManagedUserVM)
@@ -339,7 +351,9 @@ public class UserResourceIT {
     @Test
     public void updateUserLogin() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -369,7 +383,9 @@ public class UserResourceIT {
 
         // Update the User
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(updatedManagedUserVM)
@@ -386,14 +402,15 @@ public class UserResourceIT {
         assertThat(testUser.email).isEqualTo(UPDATED_EMAIL);
         assertThat(testUser.imageUrl).isEqualTo(UPDATED_IMAGEURL);
         assertThat(testUser.langKey).isEqualTo(UPDATED_LANGKEY);
-
     }
 
     @Test
     @Transactional
     public void updateUserExistingEmail() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -401,7 +418,6 @@ public class UserResourceIT {
             .post("/api/users")
             .then()
             .statusCode(CREATED.getStatusCode());
-
 
         var otherManagedUserVM = new ManagedUserVM();
         otherManagedUserVM.login = "jhipster";
@@ -414,7 +430,9 @@ public class UserResourceIT {
         otherManagedUserVM.langKey = "en";
 
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(otherManagedUserVM)
@@ -432,7 +450,7 @@ public class UserResourceIT {
         updatedManagedUserVM.password = updatedUser.password;
         updatedManagedUserVM.firstName = updatedUser.firstName;
         updatedManagedUserVM.lastName = updatedUser.lastName;
-        updatedManagedUserVM.email = otherManagedUserVM.email;// this email should already be used by anotherManagedUserVM
+        updatedManagedUserVM.email = otherManagedUserVM.email; // this email should already be used by anotherManagedUserVM
         updatedManagedUserVM.activated = updatedUser.activated;
         updatedManagedUserVM.imageUrl = updatedUser.imageUrl;
         updatedManagedUserVM.langKey = updatedUser.langKey;
@@ -443,7 +461,9 @@ public class UserResourceIT {
         updatedManagedUserVM.authorities = Set.of(AuthoritiesConstants.USER);
 
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(updatedManagedUserVM)
@@ -456,7 +476,9 @@ public class UserResourceIT {
     @Test
     public void updateUserExistingLogin() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -464,7 +486,6 @@ public class UserResourceIT {
             .post("/api/users")
             .then()
             .statusCode(CREATED.getStatusCode());
-
 
         var otherManagedUserVM = new ManagedUserVM();
         otherManagedUserVM.login = "jhipster";
@@ -477,7 +498,9 @@ public class UserResourceIT {
         otherManagedUserVM.langKey = "en";
 
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(otherManagedUserVM)
@@ -491,7 +514,7 @@ public class UserResourceIT {
 
         var updatedManagedUserVM = new ManagedUserVM();
         updatedManagedUserVM.id = updatedUser.id;
-        updatedManagedUserVM.login = otherManagedUserVM.login;// this login should already be used by anotherManagedUserVM
+        updatedManagedUserVM.login = otherManagedUserVM.login; // this login should already be used by anotherManagedUserVM
         updatedManagedUserVM.password = updatedUser.password;
         updatedManagedUserVM.firstName = updatedUser.firstName;
         updatedManagedUserVM.lastName = updatedUser.lastName;
@@ -506,7 +529,9 @@ public class UserResourceIT {
         updatedManagedUserVM.authorities = Set.of(AuthoritiesConstants.USER);
 
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(updatedManagedUserVM)
@@ -514,13 +539,14 @@ public class UserResourceIT {
             .put("/api/users")
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
-
     }
 
     @Test
     public void deleteUser() throws Exception {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body(managedUserVM)
@@ -531,7 +557,9 @@ public class UserResourceIT {
 
         // Delete the user
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .when()
@@ -540,15 +568,15 @@ public class UserResourceIT {
             .statusCode(NO_CONTENT.getStatusCode());
 
         // Validate the user has been removed database
-        get("/api/users/{login}", managedUserVM.login)
-            .then()
-            .statusCode(NOT_FOUND.getStatusCode());
+        get("/api/users/{login}", managedUserVM.login).then().statusCode(NOT_FOUND.getStatusCode());
     }
 
     @Test
     public void getAllAuthorities() {
         given()
-            .auth().preemptive().oauth2(adminToken)
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .when()
@@ -559,5 +587,4 @@ public class UserResourceIT {
             .body("$", hasSize(greaterThan(0)))
             .body("$", hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN));
     }
-
 }

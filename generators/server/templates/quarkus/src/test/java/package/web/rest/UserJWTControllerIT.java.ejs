@@ -18,30 +18,28 @@
 -%>
 package <%=packageName%>.web.rest;
 
-import <%=packageName%>.TestUtil;
-import <%=packageName%>.web.rest.vm.LoginVM;
-import <%=packageName%>.web.rest.vm.ManagedUserVM;
-import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.MockMailbox;
-import io.quarkus.test.junit.QuarkusTest;
-import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import javax.inject.Inject;
-import javax.ws.rs.core.HttpHeaders;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import static io.restassured.RestAssured.given;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import <%=packageName%>.TestUtil;
+import <%=packageName%>.web.rest.vm.LoginVM;
+import <%=packageName%>.web.rest.vm.ManagedUserVM;
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.MockMailbox;
+import io.quarkus.test.junit.QuarkusTest;
+import java.util.List;
+import java.util.regex.Pattern;
+import javax.inject.Inject;
+import javax.ws.rs.core.HttpHeaders;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 @QuarkusTest
 public class UserJWTControllerIT {
-
     @Inject
     Flyway flyway;
 
@@ -78,16 +76,11 @@ public class UserJWTControllerIT {
         var key = matcher.group(1);
 
         //Activating user
-        given()
-            .contentType(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/activate?key={key}", key);
+        given().contentType(APPLICATION_JSON).accept(APPLICATION_JSON).when().get("/api/activate?key={key}", key);
     }
 
     @Test
     public void testAuthorize() {
-
         var user = new ManagedUserVM();
         user.login = "user-jwt-controller";
         user.email = "user-jwt-controller@example.com";

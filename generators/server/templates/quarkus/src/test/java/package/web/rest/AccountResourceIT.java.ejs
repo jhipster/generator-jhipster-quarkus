@@ -18,6 +18,16 @@
 -%>
 package <%=packageName%>.web.rest;
 
+import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
+import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
+import static javax.ws.rs.core.Response.Status.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import <%=packageName%>.TestUtil;
 import <%=packageName%>.config.Constants;
 import <%=packageName%>.domain.User;
@@ -32,34 +42,22 @@ import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import javax.inject.Inject;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import static io.restassured.RestAssured.get;
-import static io.restassured.RestAssured.given;
-import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
-import static javax.ws.rs.core.Response.Status.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.fail;
-
 @QuarkusTest
 public class AccountResourceIT {
-
     @Inject
     Flyway flyway;
 
@@ -79,8 +77,8 @@ public class AccountResourceIT {
 
     @BeforeAll
     static void jsonMapper() {
-        RestAssured.config = RestAssured.config()
-            .objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
+        RestAssured.config =
+            RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
     }
 
     private void registerUser(ManagedUserVM user) {
@@ -107,11 +105,7 @@ public class AccountResourceIT {
         var key = matcher.group(1);
 
         //Activating user
-        given()
-            .contentType(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/activate?key={key}", key);
+        given().contentType(APPLICATION_JSON).accept(APPLICATION_JSON).when().get("/api/activate?key={key}", key);
     }
 
     private String authenticateUser(String username, String password) {
@@ -139,12 +133,7 @@ public class AccountResourceIT {
 
     @Test
     public void testNonAuthenticatedUser() {
-        given()
-            .accept(MediaType.TEXT_PLAIN)
-            .get("/api/authenticate")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .body(is(emptyString()));
+        given().accept(MediaType.TEXT_PLAIN).get("/api/authenticate").then().statusCode(OK.getStatusCode()).body(is(emptyString()));
     }
 
     @Test
@@ -201,12 +190,7 @@ public class AccountResourceIT {
 
     @Test
     public void testGetUnknownAccount() {
-        given()
-            .contentType(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .get("/api/account")
-            .then()
-            .statusCode(UNAUTHORIZED.getStatusCode());
+        given().contentType(APPLICATION_JSON).accept(APPLICATION_JSON).get("/api/account").then().statusCode(UNAUTHORIZED.getStatusCode());
     }
 
     @Test
@@ -230,7 +214,7 @@ public class AccountResourceIT {
     @Test
     public void testRegisterInvalidLogin() {
         var invalidUser = new ManagedUserVM();
-        invalidUser.login = "funky-log!n";// <-- invalid
+        invalidUser.login = "funky-log!n"; // <-- invalid
         invalidUser.password = "password";
         invalidUser.firstName = "Funky";
         invalidUser.lastName = "One";
@@ -258,7 +242,7 @@ public class AccountResourceIT {
         invalidUser.password = "password";
         invalidUser.firstName = "Bob";
         invalidUser.lastName = "Green";
-        invalidUser.email = "invalid";// <-- invalid
+        invalidUser.email = "invalid"; // <-- invalid
         invalidUser.imageUrl = "http://placehold.it/50x50";
         invalidUser.langKey = Constants.DEFAULT_LANGUAGE;
         invalidUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
@@ -279,7 +263,7 @@ public class AccountResourceIT {
     public void testRegisterInvalidPassword() {
         var invalidUser = new ManagedUserVM();
         invalidUser.login = "bob";
-        invalidUser.password = "123";// password with only 3 digits
+        invalidUser.password = "123"; // password with only 3 digits
         invalidUser.firstName = "Bob";
         invalidUser.lastName = "Green";
         invalidUser.email = "invalid";
@@ -303,7 +287,7 @@ public class AccountResourceIT {
     public void testRegisterNullPassword() {
         var invalidUser = new ManagedUserVM();
         invalidUser.login = "bob";
-        invalidUser.password = null;// invalid null password
+        invalidUser.password = null; // invalid null password
         invalidUser.firstName = "Bob";
         invalidUser.lastName = "Green";
         invalidUser.email = "invalid";
@@ -378,7 +362,6 @@ public class AccountResourceIT {
             .post("/api/register")
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
-
     }
 
     @Test
@@ -452,7 +435,11 @@ public class AccountResourceIT {
             .then()
             .statusCode(CREATED.getStatusCode());
 
-        var testUser = get("/api/users/{login}", userWithUpperCaseEmail.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        var testUser = get("/api/users/{login}", userWithUpperCaseEmail.login)
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(User.class);
         assertThat(testUser.email).isEqualTo("test-register-duplicate-email@example.com");
 
         activateUser(userWithUpperCaseEmail.email);
@@ -466,39 +453,36 @@ public class AccountResourceIT {
             .post("/api/register")
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
-
     }
 
-
     //    @Test
-//    @Transactional
-//    public void testRegisterAdminIsIgnored() throws Exception {
-//        ManagedUserVM validUser = new ManagedUserVM();
-//        validUser.setLogin("badguy");
-//        validUser.setPassword("password");
-//        validUser.setFirstName("Bad");
-//        validUser.setLastName("Guy");
-//        validUser.setEmail("badguy@example.com");
-//        validUser.setActivated(true);
-//        validUser.setImageUrl("http://placehold.it/50x50");
-//        validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-//        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
-//
-//        restAccountMockMvc.perform(
-//            post("/api/register")
-//                .contentType(TestUtil.APPLICATION_JSON)
-//                .content(TestUtil.convertObjectToJsonBytes(validUser)))
-//            .andExpect(status().isCreated());
-//
-//        Optional<User> userDup = userRepository.findOneByLogin("badguy");
-//        assertThat(userDup.isPresent()).isTrue();
-//        assertThat(userDup.get().getAuthorities()).hasSize(1)
-//            .containsExactly(authorityRepository.findById(AuthoritiesConstants.USER).get());
-//    }
-//
+    //    @Transactional
+    //    public void testRegisterAdminIsIgnored() throws Exception {
+    //        ManagedUserVM validUser = new ManagedUserVM();
+    //        validUser.setLogin("badguy");
+    //        validUser.setPassword("password");
+    //        validUser.setFirstName("Bad");
+    //        validUser.setLastName("Guy");
+    //        validUser.setEmail("badguy@example.com");
+    //        validUser.setActivated(true);
+    //        validUser.setImageUrl("http://placehold.it/50x50");
+    //        validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
+    //        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
+    //
+    //        restAccountMockMvc.perform(
+    //            post("/api/register")
+    //                .contentType(TestUtil.APPLICATION_JSON)
+    //                .content(TestUtil.convertObjectToJsonBytes(validUser)))
+    //            .andExpect(status().isCreated());
+    //
+    //        Optional<User> userDup = userRepository.findOneByLogin("badguy");
+    //        assertThat(userDup.isPresent()).isTrue();
+    //        assertThat(userDup.get().getAuthorities()).hasSize(1)
+    //            .containsExactly(authorityRepository.findById(AuthoritiesConstants.USER).get());
+    //    }
+    //
     @Test
     public void testActivateAccount() throws Exception {
-
         var user = new ManagedUserVM();
         user.login = "test";
         user.email = "test@example.com";
@@ -514,11 +498,7 @@ public class AccountResourceIT {
     @Test
     public void testActivateAccountWithWrongKey() throws Exception {
         //Activating user
-        given()
-            .when()
-            .get("/api/activate?key={key}", "wrongActivationKey")
-            .then()
-            .statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
+        given().when().get("/api/activate?key={key}", "wrongActivationKey").then().statusCode(INTERNAL_SERVER_ERROR.getStatusCode());
     }
 
     @Test
