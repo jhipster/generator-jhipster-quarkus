@@ -31,20 +31,22 @@ import <%=packageName%>.TestUtil;
 import <%=packageName%>.domain.User;
 import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
+import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.HttpHeaders;
+
+import liquibase.Liquibase;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
-public class UserResourceIT {
+public class UserResourceTest {
     private static final String DEFAULT_LOGIN = "johndoe";
     private static final String UPDATED_LOGIN = "jhipster";
 
@@ -71,7 +73,7 @@ public class UserResourceIT {
     ManagedUserVM managedUserVM;
 
     @Inject
-    Flyway flyway;
+    LiquibaseFactory liquibaseFactory;
 
     @BeforeAll
     static void jsonMapper() {
@@ -86,8 +88,13 @@ public class UserResourceIT {
 
     @BeforeEach
     public void databaseFixture() {
-        flyway.clean();
-        flyway.migrate();
+        try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
+            liquibase.dropAll();
+            liquibase.validate();
+            liquibase.update(liquibaseFactory.createContexts(), liquibaseFactory.createLabels());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @BeforeEach

@@ -38,6 +38,7 @@ import <%=packageName%>.service.dto.UserDTO;
 import <%=packageName%>.web.rest.vm.KeyAndPasswordVM;
 import <%=packageName%>.web.rest.vm.LoginVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
+import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
@@ -50,16 +51,17 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+
+import liquibase.Liquibase;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
-public class AccountResourceIT {
+public class AccountResourceTest {
     @Inject
-    Flyway flyway;
+    LiquibaseFactory liquibaseFactory;
 
     @Inject
     MockMailbox mailbox;
@@ -71,8 +73,13 @@ public class AccountResourceIT {
 
     @BeforeEach
     public void databaseFixture() {
-        flyway.clean();
-        flyway.migrate();
+        try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
+            liquibase.dropAll();
+            liquibase.validate();
+            liquibase.update(liquibaseFactory.createContexts(), liquibaseFactory.createLabels());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @BeforeAll

@@ -10,7 +10,8 @@ const expectedFiles = {
 
     server: [
         `${SERVER_MAIN_RES_DIR}application.properties`,
-        `${SERVER_MAIN_RES_DIR}db/migration/V1_00000000000000__Initial_schema.sql`,
+        `${SERVER_MAIN_RES_DIR}config/liquibase/master.xml`,
+        `${SERVER_MAIN_RES_DIR}config/liquibase/changelog/00000000000000_initial_schema.xml`,
         `${SERVER_MAIN_RES_DIR}META-INF/resources/privateKey.pem`,
         `${SERVER_MAIN_RES_DIR}META-INF/resources/publicKey.pem`,
         `${SERVER_MAIN_RES_DIR}templates/mail/activationEmail.html`,
@@ -48,9 +49,9 @@ const expectedFiles = {
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/AuthorityTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/UserTest.java`,
-        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceIT.java`,
-        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerIT.java`,
-        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserResourceIT.java`,
+        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceTest.java`,
+        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerTest.java`,
+        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserResourceTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`
