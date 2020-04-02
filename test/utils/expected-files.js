@@ -49,9 +49,9 @@ const expectedFiles = {
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/AuthorityTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/UserTest.java`,
-        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceIT.java`,
-        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerIT.java`,
-        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserResourceIT.java`,
+        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceTest.java`,
+        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerTest.java`,
+        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserResourceTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`
