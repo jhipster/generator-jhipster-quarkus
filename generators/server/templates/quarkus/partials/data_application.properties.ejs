@@ -83,8 +83,9 @@ quarkus.hibernate-orm.database.generation=none
 quarkus.hibernate-orm.log.sql=false
 quarkus.hibernate-orm.sql-load-script=no-file
 
-%dev.quarkus.flyway.migrate-at-start=true
+quarkus.liquibase.change-log=config/liquibase/master.xml
+%dev.quarkus.liquibase.migrate-at-start=true
 
 %test.quarkus.datasource.url=jdbc:h2:tcp://localhost/mem:test
 %test.quarkus.datasource.driver=org.h2.Driver
-%test.quarkus.flyway.migrate-at-start=true
+%test.quarkus.liquibase.migrate-at-start=true

@@ -19,7 +19,7 @@
 package <%=packageName%>.domain;
 
 import <%=packageName%>.config.Constants;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Page;
 import java.io.Serializable;
 import java.time.Instant;
@@ -41,9 +41,12 @@ import org.hibernate.annotations.BatchSize;
 @Entity
 @Table(name = "jhi_user")
 //@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-//The entity inherits `PanacheEntity` to take advantage of the ID and the public fields
-public class User extends PanacheEntity implements Serializable {
+public class User extends PanacheEntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)

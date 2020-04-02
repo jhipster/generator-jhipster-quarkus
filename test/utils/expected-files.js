@@ -10,7 +10,8 @@ const expectedFiles = {
 
     server: [
         `${SERVER_MAIN_RES_DIR}application.properties`,
-        `${SERVER_MAIN_RES_DIR}db/migration/V1_00000000000000__Initial_schema.sql`,
+        `${SERVER_MAIN_RES_DIR}config/liquibase/master.xml`,
+        `${SERVER_MAIN_RES_DIR}config/liquibase/changelog/00000000000000_initial_schema.xml`,
         `${SERVER_MAIN_RES_DIR}META-INF/resources/privateKey.pem`,
         `${SERVER_MAIN_RES_DIR}META-INF/resources/publicKey.pem`,
         `${SERVER_MAIN_RES_DIR}templates/mail/activationEmail.html`,

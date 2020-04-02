@@ -49,7 +49,6 @@ const serverFiles = {
         {
             path: SERVER_MAIN_RES_DIR,
             templates: [
-                { file: 'db/migration/V1_00000000000000__Initial_schema.sql', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/privateKey.pem', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
                 'templates/mail/activationEmail.html',
@@ -264,16 +263,16 @@ const serverFiles = {
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
-                    file: 'package/web/rest/AccountResourceIT.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/AccountResourceIT.java`
+                    file: 'package/web/rest/AccountResourceTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AccountResourceTest.java`
                 },
                 {
-                    file: 'package/web/rest/UserJWTControllerIT.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTControllerIT.java`
+                    file: 'package/web/rest/UserJWTControllerTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTControllerTest.java`
                 },
                 {
-                    file: 'package/web/rest/UserResourceIT.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/UserResourceIT.java`
+                    file: 'package/web/rest/UserResourceTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserResourceTest.java`
                 }
             ]
         }
@@ -282,6 +281,41 @@ const serverFiles = {
         {
             path: DOCKER_DIR,
             templates: ['Dockerfile.jvm', 'Dockerfile.native']
+        }
+    ]
+};
+
+const serverFilesFromJHipster = {
+    serverResource: [
+        {
+            condition: generator => generator.databaseType === 'sql',
+            path: SERVER_MAIN_RES_DIR,
+            templates: [
+                {
+                    file: 'config/liquibase/changelog/initial_schema.xml',
+                    renameTo: () => 'config/liquibase/changelog/00000000000000_initial_schema.xml',
+                    options: { interpolate: INTERPOLATE_REGEX }
+                },
+                'config/liquibase/master.xml'
+            ]
+        }
+    ],
+    serverJavaUserManagement: [
+        {
+            condition: generator =>
+                (generator.authenticationType === 'oauth2' && generator.applicationType !== 'microservice') ||
+                (!generator.skipUserManagement && generator.databaseType === 'sql'),
+            path: SERVER_MAIN_RES_DIR,
+            templates: ['config/liquibase/data/user.csv']
+        },
+        {
+            condition: generator =>
+                (generator.authenticationType === 'oauth2' &&
+                    generator.applicationType !== 'microservice' &&
+                    generator.databaseType === 'sql') ||
+                (!generator.skipUserManagement && generator.databaseType === 'sql'),
+            path: SERVER_MAIN_RES_DIR,
+            templates: ['config/liquibase/data/authority.csv', 'config/liquibase/data/user_authority.csv']
         }
     ]
 };
@@ -309,6 +343,7 @@ function writeFiles() {
 
         writeFiles() {
             this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
+            this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('server/templates'));
         }
     };
 }
