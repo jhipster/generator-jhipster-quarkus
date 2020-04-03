@@ -32,6 +32,8 @@ package <%=packageName%>.web.rest;
         }
         isUsingMapsId = false;
     } _%>
+import static javax.ws.rs.core.UriBuilder.fromPath;
+
 <%_ if (dto !== 'mapstruct' || service === 'no') { _%>
 import <%=packageName%>.domain.<%= asEntity(entityClass) %>;
 <%_ } _%>
@@ -52,7 +54,7 @@ import <%=packageName%>.repository.search.<%= entityClass %>SearchRepository;
 <%_ if (saveUserSnapshot) { _%>
 import <%=packageName%>.domain.User;
 <%_ } _%>
-//import <%=packageName%>.web.rest.errors.BadRequestAlertException;
+import <%=packageName%>.web.rest.errors.BadRequestAlertException;
 import <%=packageName%>.web.util.HeaderUtil;
 import <%=packageName%>.web.util.ResponseUtil;
 <%_ if (dto === 'mapstruct') { _%>
@@ -97,7 +99,6 @@ import javax.validation.Valid;
 <%_ } _%>
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
 <%_ if (pagination === 'no' && dto === 'mapstruct' && !viaService && fieldsContainNoOwnerOneToOne === true) { _%>
 import java.util.LinkedList;<% } %>
 import java.util.List;<% if (isUsingMapsId === true) { %>
@@ -151,15 +152,15 @@ public class <%= entityClass %>Resource {
     public Response create<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>, @Context UriInfo uriInfo) {
         log.debug("REST request to save <%= entityClass %> : {}", <%= instanceName %>);
         if (<%= instanceName %>.id != null) {
-//            throw new BadRequestAlertException("A new <%= entityInstance %> cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("A new <%= entityInstance %> cannot already have an ID", ENTITY_NAME, "idexists");
         }
         <%_ if (databaseType === 'cassandra') { _%>
         <%= instanceName %>.id = UUID.randomUUID();
         <%_ } _%>
 <%- include('../../common/save_template', {asEntity, asDto, viaService: viaService, returnDirectly: false, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
-        headers.getRequestHeaders().putAll(HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>));
-        URI uri = uriInfo.getAbsolutePathBuilder().path(<%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).build();
-        return Response.created(uri).entity(<%= instanceName %>).build();
+        var response = Response.created(fromPath("/api/<%= entityApiUrl %>/").path(<%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).build()).entity(<%= instanceName %>);
+        HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        return response.build();
     }
 
     /**
@@ -174,12 +175,12 @@ public class <%= entityClass %>Resource {
     public Response update<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>) {
         log.debug("REST request to update <%= entityClass %> : {}", <%= instanceName %>);
         if (<%= instanceName %>.id == null) {
-//            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 <%- include('../../common/save_template', {asEntity, asDto, viaService: viaService, returnDirectly: false, isUsingMapsId: false, mapsIdAssoc: mapsIdAssoc}); -%>
-        headers.getRequestHeaders().putAll(HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>));
-        return Response.ok().entity(<%= instanceName %>).build();
-
+        var response = Response.ok().entity(<%= instanceName %>);
+        HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        return response.build();
     }
     <%_ } _%>
 
@@ -248,8 +249,9 @@ public class <%= entityClass %>Resource {
     public Response delete<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
         log.debug("REST request to delete <%= entityClass %> : {}", id);
 <%- include('../../common/delete_template', {viaService: viaService, instanceName: instanceName}); -%>
-        headers.getRequestHeaders().putAll(HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>));
-        return Response.noContent().build();
+        var response = Response.noContent();
+        HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        return response.build();
     }
 <%_ } _%>
 <%_ if (searchEngine === 'elasticsearch') { _%>
