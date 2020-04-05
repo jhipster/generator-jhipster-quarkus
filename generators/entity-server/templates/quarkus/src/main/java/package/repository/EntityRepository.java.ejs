@@ -20,8 +20,6 @@ package <%=packageName%>.repository;
 
 import <%=packageName%>.domain.<%=asEntity(entityClass)%>;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-<%_ if (fieldsContainOwnerManyToMany) { _%>
-<%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 <%_ } _%>
@@ -37,22 +35,11 @@ import org.springframework.data.cassandra.repository.CassandraRepository;
 <%_ } _%>
 import javax.enterprise.context.ApplicationScoped;
 <%_ if (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase') { _%>
-
-    <%_ let importList = fieldsContainOwnerManyToMany;
-    for (r of relationships) {
-        if (r.relationshipType === 'many-to-one' && r.otherEntityName === 'user') {
-            importList = true;
-        }
-    }
-    if (importList) { _%>
-import java.util.List;
-    <%_ } _%>
 <%_ if (fieldsContainOwnerManyToMany) { _%>
 import java.util.Optional;
     <%_ } _%>
 <%_ } _%>
 <%_ if (databaseType === 'cassandra') { _%>
-
 import java.util.UUID;
 <%_ } _%>
 
