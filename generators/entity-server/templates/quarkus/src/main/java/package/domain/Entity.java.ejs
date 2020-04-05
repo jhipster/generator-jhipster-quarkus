@@ -55,6 +55,7 @@ const uniqueEnums = {};
         }
     }
 _%>
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 <%_ if (databaseType === 'cassandra') { _%>
 import org.springframework.data.annotation.Id;
     <%_ if (fieldsContainBlob) { _%>
@@ -160,7 +161,7 @@ import static org.springframework.data.couchbase.core.mapping.id.GenerationStrat
 <%_ } if (searchEngine === 'elasticsearch') { _%>
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "<%= entityInstance.toLowerCase() %>")
 <%_ } _%>
-public class <%= asEntity(entityClass) %> implements Serializable {
+public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
     <%_ if (databaseType === 'couchbase') { _%>

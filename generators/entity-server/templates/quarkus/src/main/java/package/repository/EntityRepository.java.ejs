@@ -17,9 +17,7 @@
  limitations under the License.
 -%>
 package <%=packageName%>.repository;
-<%
-const primaryKeyType = getPkTypeBasedOnDBAndAssociation(authenticationType, databaseType, relationships);
-%>
+
 import <%=packageName%>.domain.<%=asEntity(entityClass)%>;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 <%_ if (fieldsContainOwnerManyToMany) { _%>
@@ -66,44 +64,15 @@ import java.util.UUID;
 <%_ } _%>
 @ApplicationScoped
 public class <%=entityClass%>Repository implements <% if (databaseType === 'sql') { %>PanacheRepository<% } %><% if (databaseType === 'mongodb') { %>MongoRepository<% } %><% if (databaseType === 'cassandra') { %>CassandraRepository<% } %><% if (databaseType === 'couchbase') { %>N1qlCouchbaseRepository<% } %><<%=asEntity(entityClass)%>><% if (jpaMetamodelFiltering) { %>, JpaSpecificationExecutor<<%=asEntity(entityClass)%>><% } %> {
-    <%_ for (idx in relationships) {
-        if (relationships[idx].relationshipType === 'many-to-one' && relationships[idx].otherEntityName === 'user' && databaseType === 'sql') { _%>
-
-    public PanacheQuery<<%= asEntity(entityClass) %>> findBy<%= relationships[idx].relationshipNameCapitalized %>IsCurrentUser() {
-        return find("select <%= entityInstance %> from <%= asEntity(entityClass) %> <%= entityInstance %> where <%= entityInstance %>.<%= relationships[idx].relationshipFieldName %>.login = ?#{principal.<% if (authenticationType === 'oauth2') { %>preferredUsername<% } else { %>username<% } %>}");
+<%- include('../common/finders', {
+        databaseType: databaseType,
+        entityClass: entityClass,
+        entityInstance: entityInstance,
+        relationships: relationships,
+        fieldsContainOwnerManyToMany: fieldsContainOwnerManyToMany,
+        dataAccessPattern: 'repository',
+        asEntity: asEntity,
+        primaryKeyType: getPkTypeBasedOnDBAndAssociation(authenticationType, databaseType, relationships)
     }
-    <%_ } } _%>
-    <%_ if (fieldsContainOwnerManyToMany === true) {
-        if (databaseType === 'sql') { _%>
-
-    public PanacheQuery<<%= asEntity(entityClass) %>> findAllWithEagerRelationships() {
-        return find("select distinct <%= entityInstance %> from <%= asEntity(entityClass) %> <%= entityInstance %><% for (idx in relationships) {
-    if (relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide === true) { %> left join fetch <%= entityInstance %>.<%= relationships[idx].relationshipFieldNamePlural %><% } } %>");
-    }
-
-    public Optional<<%= asEntity(entityClass) %>> findOneWithEagerRelationships(<%= primaryKeyType %> id) {
-        return find("select <%= entityInstance %> from <%= asEntity(entityClass) %> <%= entityInstance %><% for (idx in relationships) {
-    if (relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide === true) { %> left join fetch <%= entityInstance %>.<%= relationships[idx].relationshipFieldNamePlural %><% } } %> where <%= entityInstance %>.id =?1", id).firstResultOptional();
-    }
-    <%_
-        } else if (databaseType === 'mongodb' || databaseType === 'couchbase')  { _%>
-
-    @Query("<%= (databaseType === 'mongodb') ? '{}' : '#{#n1ql.selectEntity} WHERE #{#n1ql.filter}' %>")
-    Page<<%= asEntity(entityClass) %>> findAllWithEagerRelationships(Pageable pageable);
-
-    @Query("<%= (databaseType === 'mongodb') ? '{}' : '#{#n1ql.selectEntity} WHERE #{#n1ql.filter}' %>")
-    List<<%= asEntity(entityClass) %>> findAllWithEagerRelationships();
-
-    @Query("<%- (databaseType === 'mongodb') ? "{'id': ?0}" : "#{#n1ql.selectEntity} USE KEYS $1 WHERE #{#n1ql.filter}" %>")
-    Optional<<%= asEntity(entityClass) %>> findOneWithEagerRelationships(<%= primaryKeyType %> id);
-    <%_
-        } else if (databaseType === 'neo4j') { _%>
-
-    @Query("MATCH (n:<%= asEntity(entityClass) %>)<-[]-(m) RETURN n,m")
-    Page<<%= asEntity(entityClass) %>> findAllWithEagerRelationships(Pageable pageable);
-
-    @Query("MATCH (e:<%= asEntity(entityClass) %> {id: $id}) RETURN e")
-    Optional<<%= asEntity(entityClass) %>> findOneWithEagerRelationships(<%= primaryKeyType %> id);
-    <%_ }
-    } _%>
+);-%>
 }
