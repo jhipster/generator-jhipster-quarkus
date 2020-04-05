@@ -210,6 +210,25 @@ function writeFiles() {
             // write server side files
             this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
             this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('entity-server/templates'));
+
+            if (this.databaseType === 'sql') {
+                if (!this.skipDbChangelog) {
+                    if (this.fieldsContainOwnerManyToMany || this.fieldsContainOwnerOneToOne || this.fieldsContainManyToOne) {
+                        this.addConstraintsChangelogToLiquibase(`${this.changelogDate}_added_entity_constraints_${this.entityClass}`);
+                    }
+                    this.addChangelogToLiquibase(`${this.changelogDate}_added_entity_${this.entityClass}`);
+                }
+
+                if (['ehcache', 'caffeine', 'infinispan', 'redis'].includes(this.cacheProvider) && this.enableHibernateCache) {
+                    this.addEntityToCache(
+                        this.asEntity(this.entityClass),
+                        this.relationships,
+                        this.packageName,
+                        this.packageFolder,
+                        this.cacheProvider
+                    );
+                }
+            }
         },
 
         writeEnumFiles() {
