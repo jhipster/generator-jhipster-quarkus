@@ -20,6 +20,7 @@ package <%=packageName%>.web.rest;
 
 <%_
     const viaService = service !== 'no';
+    const viaRepository = dataAccessPattern === 'repository';
     let isUsingMapsId = false;
     let mapsIdAssoc;
     let primaryKeyType = pkType;
@@ -39,7 +40,7 @@ import <%=packageName%>.domain.<%= asEntity(entityClass) %>;
 <%_ } _%>
 <%_ if (service !== 'no') { _%>
 import <%=packageName%>.service.<%= entityClass %>Service;
-<%_ } else { _%>
+<%_ } else if (viaRepository) { _%>
 import <%=packageName%>.repository.<%= entityClass %>Repository;
     <%_ if (isUsingMapsId === true) { _%>
 import <%=packageName%>.repository.<%= mapsIdAssoc.otherEntityNameCapitalized %>Repository;
@@ -92,7 +93,9 @@ import reactor.core.publisher.Flux;
 <%_ } _%>
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;<%_ if (!viaService && !saveUserSnapshot) { %>
+<%_ if (viaService || viaRepository) { _%>
+import javax.inject.Inject;
+<%_ } if (!viaService && !saveUserSnapshot) { %>
 import javax.transaction.Transactional; <% } %>
 <%_ if (validation) { _%>
 import javax.validation.Valid;
@@ -136,7 +139,7 @@ public class <%= entityClass %>Resource {
     <%_
     const instanceType = (dto === 'mapstruct') ? asDto(entityClass) : asEntity(entityClass);
     const instanceName = (dto === 'mapstruct') ? asDto(entityInstance) : asEntity(entityInstance);
-    _%><%- include('../../common/inject_template', {viaService: viaService, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
+    _%><%- include('../../common/inject_template', { viaRepository: viaRepository, viaService: viaService, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
 
 <%_ if (!readOnly) { _%>
 
@@ -155,7 +158,7 @@ public class <%= entityClass %>Resource {
         <%_ if (databaseType === 'cassandra') { _%>
         <%= instanceName %>.id = UUID.randomUUID();
         <%_ } _%>
-<%- include('../../common/save_template', {asEntity, asDto, viaService: viaService, returnDirectly: false, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
+<%- include('../../common/save_template', {asEntity, asDto, viaRepository: viaRepository, entityClass: entityClass, viaService: viaService, returnDirectly: false, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
         var response = Response.created(fromPath(uriInfo.getPath()).path(<%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).build()).entity(<%= instanceName %>);
         HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();
@@ -175,7 +178,7 @@ public class <%= entityClass %>Resource {
         if (<%= instanceName %>.id == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-<%- include('../../common/save_template', {asEntity, asDto, viaService: viaService, returnDirectly: false, isUsingMapsId: false, mapsIdAssoc: mapsIdAssoc}); -%>
+<%- include('../../common/save_template', {asEntity, asDto, viaRepository: viaRepository, entityClass: entityClass, viaService: viaService, returnDirectly: false, isUsingMapsId: false, mapsIdAssoc: mapsIdAssoc}); -%>
         var response = Response.ok().entity(<%= instanceName %>);
         HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();
@@ -199,7 +202,7 @@ public class <%= entityClass %>Resource {
     @GET<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
 
     @Transactional(readOnly = true) <%_ } _%>
-<%- include('../../common/get_all_template', {asEntity, asDto, viaService}); -%>
+<%- include('../../common/get_all_template', {asEntity, asDto, viaRepository: viaRepository, entityClass: entityClass, viaService}); -%>
 
     <%_ if (reactiveRepositories) { _%>
     /**
@@ -232,7 +235,7 @@ public class <%= entityClass %>Resource {
     @Transactional(readOnly = true) <%_ } %>
     public Response get<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
         log.debug("REST request to get <%= entityClass %> : {}", id);
-        <%- include('../../common/get_template', {asEntity, asDto, viaService, returnDirectly:false}); -%>
+        <%- include('../../common/get_template', {asEntity, asDto, viaRepository:viaRepository, entityClass: entityClass, viaService, returnDirectly:false}); -%>
 
         return ResponseUtil.wrapOrNotFound(<%= instanceName %>);
     }
@@ -248,7 +251,7 @@ public class <%= entityClass %>Resource {
     @Path("/{id}")
     public Response delete<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
         log.debug("REST request to delete <%= entityClass %> : {}", id);
-<%- include('../../common/delete_template', {viaService: viaService, instanceName: instanceName}); -%>
+<%- include('../../common/delete_template', {viaRepository: viaRepository, entityClass: entityClass, viaService: viaService, instanceName: instanceName}); -%>
         var response = Response.noContent();
         HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();

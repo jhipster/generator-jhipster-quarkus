@@ -56,7 +56,10 @@ const uniqueEnums = {};
     }
 _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-<%_ if (databaseType === 'cassandra') { _%>
+import javax.json.bind.annotation.JsonbTransient;
+<%_ if (dataAccessPattern === 'activeRecord') { _%>
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+<%_ } if (databaseType === 'cassandra') { _%>
 import org.springframework.data.annotation.Id;
     <%_ if (fieldsContainBlob) { _%>
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -116,6 +119,8 @@ import java.time.Duration;
 <%_ } if (importSet === true) { _%>
 import java.util.HashSet;
 import java.util.Set;
+<%_ } if (fieldsContainOwnerManyToMany && (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase')) { _%>
+import java.util.Optional;
 <%_ } if (databaseType === 'couchbase' && hasRelationship) { _%>
 import java.util.stream.Collectors;
 <%_ } _%>
@@ -329,6 +334,7 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
     <%_ }
     }
     _%>
+    @JsonbTransient
     public <%= asEntity(otherEntityNameCapitalized) %> <%= relationshipFieldName %>;
 
     <%_ } else if (relationshipType === 'many-to-many') {
@@ -357,12 +363,14 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
         <%_ } _%>
     @Field("<%= relationshipFieldNamePlural %>")
         <%_ if (databaseType === 'couchbase') { _%>
+    @JsonbTransient
     public Set<String> <%= relationshipFieldName %>Ids = new HashSet<>();
 
     @N1qlJoin(on = "lks.<%= relationshipFieldNamePlural %>=meta(rks).id", fetchType = FetchType.IMMEDIATE)
         <%_ }
          } if (ownerSide === false) { _%>
     <%_ } _%>
+    @JsonbTransient
     public Set<<%= asEntity(otherEntityNameCapitalized) %>> <%= relationshipFieldNamePlural %> = new HashSet<>();
 
     <%_ } else {
@@ -438,4 +446,18 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
             <%_ } _%>
             "}";
     }
+
+<%_ if (dataAccessPattern === 'activeRecord') { _%>
+<%- include('../common/finders', {
+        databaseType: databaseType,
+        entityClass: entityClass,
+        entityInstance: entityInstance,
+        relationships: relationships,
+        fieldsContainOwnerManyToMany: fieldsContainOwnerManyToMany,
+        dataAccessPattern: dataAccessPattern,
+        asEntity: asEntity,
+        primaryKeyType: getPkTypeBasedOnDBAndAssociation(authenticationType, databaseType, relationships)
+    }
+);-%>
+<%_ } _%>
 }

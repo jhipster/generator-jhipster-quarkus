@@ -87,13 +87,19 @@ const serverFiles = {
                     useBluePrint: true
                 },
                 {
-                    file: 'package/repository/EntityRepository.java',
-                    renameTo: generator => `${generator.packageFolder}/repository/${generator.entityClass}Repository.java`,
-                    useBluePrint: true
-                },
-                {
                     file: 'package/web/rest/EntityResource.java',
                     renameTo: generator => `${generator.packageFolder}/web/rest/${generator.entityClass}Resource.java`,
+                    useBluePrint: true
+                }
+            ]
+        },
+        {
+            condition: generator => generator.dataAccessPattern === 'repository',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/repository/EntityRepository.java',
+                    renameTo: generator => `${generator.packageFolder}/repository/${generator.entityClass}Repository.java`,
                     useBluePrint: true
                 }
             ]

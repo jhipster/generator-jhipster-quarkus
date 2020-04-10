@@ -22,14 +22,16 @@
         if (queryService) {
             beans.push({class: `${entityClass}QueryService`, instance: `${entityInstance}QueryService`});
         }
-        if (isUsingMapsId === true && isController === false) {
+        if (isUsingMapsId === true && viaRepository ==true && isController === false) {
             const mapsIdEntity = mapsIdAssoc.otherEntityNameCapitalized;
             const mapsIdEntityInstance = mapsIdEntity.charAt(0).toLowerCase() + mapsIdEntity.slice(1);
             const mapsIdRepoInstance = `${mapsIdEntityInstance}Repository`;
             beans.push({class: `${mapsIdEntity}Repository`, instance: mapsIdRepoInstance});
         }
     } else {
-        beans.push({class: `${entityClass}Repository`, instance: `${entityInstance}Repository`});
+        if (viaRepository) {
+            beans.push({class: `${entityClass}Repository`, instance: `${entityInstance}Repository`});
+        }
         if (dto === 'mapstruct') {
             beans.push({class: `${entityClass}Mapper`, instance: `${entityInstance}Mapper`});
         }
@@ -39,7 +41,7 @@
         if (reactiveRepositories) {
             beans.push({class: `${entityClass}ReactiveRepository`, instance: `${entityInstance}ReactiveRepository`});
         }
-        if (isUsingMapsId === true) {
+        if (isUsingMapsId === true && viaRepository ==true ) {
             const mapsIdEntity = mapsIdAssoc.otherEntityNameCapitalized;
             const mapsIdEntityInstance = mapsIdEntity.charAt(0).toLowerCase() + mapsIdEntity.slice(1);
             const mapsIdRepoInstance = `${mapsIdEntityInstance}Repository`;
@@ -51,4 +53,4 @@
     }
 _%>
 
-    <%= beans.map(bean => `@Inject\n    ${bean.class} ${bean.instance};`).join('\n\n    ') %>    
+    <%= beans.map(bean => `@Inject\n    ${bean.class} ${bean.instance};`).join('\n\n    ') %>

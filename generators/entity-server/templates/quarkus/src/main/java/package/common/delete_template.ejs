@@ -16,13 +16,19 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-<%_ if (!viaService) { _%>        
+<%_ if (!viaService) { _%>
+    <%_ if (!viaRepository) { _%>
+        <%= entityClass %>.findByIdOptional(id).ifPresent(<%= instanceName %> -> {
+            <%= instanceName %>.delete();
+        });
+    <%_ } else {_%>
         <%= entityInstance %>Repository.findByIdOptional(id).ifPresent(<%= instanceName %> -> {
             <%= entityInstance %>Repository.delete(<%= instanceName %>);
         });
-        <%_ if (searchEngine === 'elasticsearch') { _%>
+    <%_ } _%>
+    <%_ if (searchEngine === 'elasticsearch') { _%>
         <%= entityInstance %>SearchRepository.deleteById(id);
-        <%_ } _%>
+    <%_ } _%>
 <%_ } else { _%>
         <%= entityInstance %>Service.delete(id);
 <%_ } _%>

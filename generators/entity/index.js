@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
+const prompts = require('./prompts');
 const EntityGenerator = require('generator-jhipster/generators/entity');
 
 module.exports = class extends EntityGenerator {
@@ -13,59 +14,61 @@ module.exports = class extends EntityGenerator {
         }
 
         this.configOptions = jhContext.configOptions || {};
+        this.storageData = {};
 
         // This sets up options for this sub generator and is being reused from JHipster
         jhContext.setupEntityOptions(this, jhContext, this);
     }
 
     get initializing() {
-        /**
-         * Any method beginning with _ can be reused from the superclass `EntityGenerator`
-         *
-         * There are multiple ways to customize a phase from JHipster.
-         *
-         * 1. Let JHipster handle a phase, blueprint doesnt override anything.
-         * ```
-         *      return super._initializing();
-         * ```
-         *
-         * 2. Override the entire phase, this is when the blueprint takes control of a phase
-         * ```
-         *      return {
-         *          myCustomInitPhaseStep() {
-         *              // Do all your stuff here
-         *          },
-         *          myAnotherCustomInitPhaseStep(){
-         *              // Do all your stuff here
-         *          }
-         *      };
-         * ```
-         *
-         * 3. Partially override a phase, this is when the blueprint gets the phase from JHipster and customizes it.
-         * ```
-         *      const phaseFromJHipster = super._initializing();
-         *      const myCustomPhaseSteps = {
-         *          displayLogo() {
-         *              // override the displayLogo method from the _initializing phase of JHipster
-         *          },
-         *          myCustomInitPhaseStep() {
-         *              // Do all your stuff here
-         *          },
-         *      }
-         *      return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
-         * ```
-         */
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._initializing();
+        const phaseFromJHipster = super._initializing();
+        const customPhase = {
+            setupConfigQuarkus() {
+                const context = this.context;
+                const configuration = this.getAllJhipsterConfig(this, true);
+                context.dataAccessPattern = configuration.get('dataAccessPattern') || 'activeRecord';
+            }
+        };
+        return Object.assign(phaseFromJHipster, customPhase);
     }
 
     get prompting() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._prompting();
+        const phaseFromJHipster = super._prompting();
+        const customPhase = {
+            /* pre entity hook needs to be written here */
+            // askForMicroserviceJson: prompts.askForMicroserviceJson,
+            /* ask question to user if s/he wants to update entity */
+            askForUpdate: phaseFromJHipster.askForUpdate,
+            askForFields: phaseFromJHipster.askForFields,
+            askForFieldsToRemove: phaseFromJHipster.askForFieldsToRemove,
+            askForRelationships: phaseFromJHipster.askForRelationships,
+            askForRelationsToRemove: phaseFromJHipster.askForRelationsToRemove,
+            askForTableName: phaseFromJHipster.askForTableName,
+            askForDataAccessPattern: prompts.askForDataAccessPattern,
+            askForService: phaseFromJHipster.askForService,
+            askForDTO: phaseFromJHipster.askForDTO,
+            askForFiltering: phaseFromJHipster.askForFiltering,
+            askForReadOnly: phaseFromJHipster.askForReadOnly,
+            askForPagination: phaseFromJHipster.askForPagination
+        };
+        return customPhase;
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
+        // const phaseFromJHipster = super._configuring();
+        // const writeEntityJsonFromParent = phaseFromJHipster.writeEntityJson;
+        // const context = this.context;
+        // const myCustomPhaseSteps = {
+        //     writeEntityJson() {
+        //         // if (!context.dataAccessPattern) {
+        //         //     context.dataAccessPattern = 'activeRecord';
+        //         // }
+        //         // Use this.storageData to delegate to the parent EntityGenrator the file writing;
+        //         this.storageData.dataAccessPattern = context.dataAccessPattern;
+        //         writeEntityJsonFromParent();
+        //     }
+        // };
+        // return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
         return super._configuring();
     }
 
