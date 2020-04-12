@@ -1,7 +1,8 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
-const prompts = require('./prompts');
 const EntityGenerator = require('generator-jhipster/generators/entity');
+const prompts = require('./prompts');
+const constants = require('../generator-quarkus-constants');
 
 module.exports = class extends EntityGenerator {
     constructor(args, opts) {
@@ -22,19 +23,33 @@ module.exports = class extends EntityGenerator {
 
     get initializing() {
         const phaseFromJHipster = super._initializing();
-        const customPhase = {
+        const phaseFromQuarkus = {
             setupConfigQuarkus() {
                 const context = this.context;
-                const configuration = this.getAllJhipsterConfig(this, true);
-                context.dataAccessPattern = configuration.get('dataAccessPattern') || 'activeRecord';
+                // Specific Entity sub-generator constants
+                if (!context.useConfigurationFile) {
+                    // no file present, new entity creation
+                    // this.log(`\nThe entity ${entityName} is being created.\n`);
+                    context.dataAccessPattern = constants.DATA_ACCESS_PATTERN;
+                } else {
+                    // existing entity reading values from file
+                    // this.log(`\nThe entity ${entityName} is being updated.\n`);
+                    try {
+                        context.fileData = this.fs.readJSON(context.filename);
+                    } catch (err) {
+                        this.debug('Error:', err);
+                        this.error('\nThe entity configuration file could not be read!\n');
+                    }
+                    context.dataAccessPattern = context.fileData.dataAccessPattern || constants.DATA_ACCESS_PATTERN;
+                }
             }
         };
-        return Object.assign(phaseFromJHipster, customPhase);
+        return Object.assign(phaseFromJHipster, phaseFromQuarkus);
     }
 
     get prompting() {
         const phaseFromJHipster = super._prompting();
-        const customPhase = {
+        const phaseFromQuarkus = {
             /* pre entity hook needs to be written here */
             // askForMicroserviceJson: prompts.askForMicroserviceJson,
             /* ask question to user if s/he wants to update entity */
@@ -51,25 +66,22 @@ module.exports = class extends EntityGenerator {
             askForReadOnly: phaseFromJHipster.askForReadOnly,
             askForPagination: phaseFromJHipster.askForPagination
         };
-        return customPhase;
+        return phaseFromQuarkus;
     }
 
     get configuring() {
-        // const phaseFromJHipster = super._configuring();
-        // const writeEntityJsonFromParent = phaseFromJHipster.writeEntityJson;
-        // const context = this.context;
-        // const myCustomPhaseSteps = {
-        //     writeEntityJson() {
-        //         // if (!context.dataAccessPattern) {
-        //         //     context.dataAccessPattern = 'activeRecord';
-        //         // }
-        //         // Use this.storageData to delegate to the parent EntityGenrator the file writing;
-        //         this.storageData.dataAccessPattern = context.dataAccessPattern;
-        //         writeEntityJsonFromParent();
-        //     }
-        // };
-        // return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
-        return super._configuring();
+        const phaseFromJHipster = super._configuring();
+        // redefine the phases to insert a custom configuration
+        const phaseFromQuarkus = {
+            validateFile: phaseFromJHipster.validateFile,
+            configureEntityQuarkus() {
+                const context = this.context;
+                this.storageData.dataAccessPattern = context.dataAccessPattern;
+            },
+            writeEntityJson: phaseFromJHipster.writeEntityJson,
+            loadInMemoryData: phaseFromJHipster.loadInMemoryData
+        };
+        return phaseFromQuarkus;
     }
 
     get default() {

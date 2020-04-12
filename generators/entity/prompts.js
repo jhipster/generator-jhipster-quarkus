@@ -19,12 +19,12 @@ function askForDataAccessPattern() {
             choices: [
                 {
                     value: 'activeRecord',
-                    name: 'Active Record'
+                    name: 'Active Record. The entity encapsulates the DB access.'
                 },
                 {
                     value: 'repository',
-                    name: 'Repository'
-                },
+                    name: 'Repository. The DB access is delegated to a dedicated application layer. '
+                }
             ],
             default: 'activeRecord'
         }
