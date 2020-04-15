@@ -27,6 +27,7 @@ let primaryKeyType = pkType;
 let hasTextBlob = false;
 let hasRelationship = relationships.length !== 0;
 const uniqueEnums = {};
+let viaRepository = repository === 'no';
 %>
 <%- include('./imports', {
     fields: fields,
@@ -57,7 +58,7 @@ const uniqueEnums = {};
 _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.json.bind.annotation.JsonbTransient;
-<%_ if (dataAccessPattern === 'activeRecord') { _%>
+<%_ if (!viaRepository) { _%>
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 <%_ } if (databaseType === 'cassandra') { _%>
 import org.springframework.data.annotation.Id;
@@ -447,14 +448,14 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
             "}";
     }
 
-<%_ if (dataAccessPattern === 'activeRecord') { _%>
+<%_ if (!viaRepository) { _%>
 <%- include('../common/finders', {
         databaseType: databaseType,
         entityClass: entityClass,
         entityInstance: entityInstance,
         relationships: relationships,
         fieldsContainOwnerManyToMany: fieldsContainOwnerManyToMany,
-        dataAccessPattern: dataAccessPattern,
+        viaRepository: viaRepository,
         asEntity: asEntity,
         primaryKeyType: getPkTypeBasedOnDBAndAssociation(authenticationType, databaseType, relationships)
     }

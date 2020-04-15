@@ -1,8 +1,8 @@
 module.exports = {
-    askForDataAccessPattern
+    askForRepository
 };
 
-function askForDataAccessPattern() {
+function askForRepository() {
     const context = this.context;
     // don't prompt if data are imported from a file
     if (context.useConfigurationFile) {
@@ -14,23 +14,23 @@ function askForDataAccessPattern() {
         {
             when: () => databaseType !== 'no',
             type: 'list',
-            name: 'dataAccessPattern',
-            message: 'Which data access pattern to use?',
+            name: 'repository',
+            message: 'Do you want to use separate repository class for your data access layer?',
             choices: [
                 {
-                    value: 'activeRecord',
-                    name: 'Active Record. The entity encapsulates the DB access.'
+                    value: 'no',
+                    name: 'No, the Entity will be used as an Active Record'
                 },
                 {
-                    value: 'repository',
-                    name: 'Repository. The DB access is delegated to a dedicated application layer. '
+                    value: 'yes',
+                    name: 'Yes, generate a separate repository class'
                 }
             ],
-            default: 'activeRecord'
+            default: 0
         }
     ];
     this.prompt(prompts).then(props => {
-        context.dataAccessPattern = props.dataAccessPattern;
+        context.repository = props.repository;
         done();
     });
 }

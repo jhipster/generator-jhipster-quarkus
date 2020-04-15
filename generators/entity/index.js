@@ -27,9 +27,9 @@ module.exports = class extends EntityGenerator {
             setupConfigQuarkus() {
                 const context = this.context;
                 if (!context.useConfigurationFile) {
-                    context.dataAccessPattern = constants.DATA_ACCESS_PATTERN;
+                    context.repository = constants.DEFAULT_USE_REPOSITORY;
                 } else {
-                    context.dataAccessPattern = context.fileData.dataAccessPattern || constants.DATA_ACCESS_PATTERN;
+                    context.repository = context.fileData.repository || constants.DEFAULT_USE_REPOSITORY;
                 }
             }
         };
@@ -48,7 +48,7 @@ module.exports = class extends EntityGenerator {
             askForRelationships: phaseFromJHipster.askForRelationships,
             askForRelationsToRemove: phaseFromJHipster.askForRelationsToRemove,
             askForTableName: phaseFromJHipster.askForTableName,
-            askForDataAccessPattern: prompts.askForDataAccessPattern,
+            askForRepository: prompts.askForRepository,
             askForService: phaseFromJHipster.askForService,
             askForDTO: phaseFromJHipster.askForDTO,
             askForFiltering: phaseFromJHipster.askForFiltering,
@@ -67,7 +67,7 @@ module.exports = class extends EntityGenerator {
                 if (!this.storageData) {
                     this.storageData = {};
                 }
-                this.storageData.dataAccessPattern = context.dataAccessPattern;
+                this.storageData.repository = context.repository;
             },
             ...phaseFromJHipster
         };

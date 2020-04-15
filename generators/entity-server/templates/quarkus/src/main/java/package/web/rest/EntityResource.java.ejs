@@ -20,7 +20,7 @@ package <%=packageName%>.web.rest;
 
 <%_
     const viaService = service !== 'no';
-    const viaRepository = dataAccessPattern === 'repository';
+    const viaRepository = repository !== 'no';
     let isUsingMapsId = false;
     let mapsIdAssoc;
     let primaryKeyType = pkType;

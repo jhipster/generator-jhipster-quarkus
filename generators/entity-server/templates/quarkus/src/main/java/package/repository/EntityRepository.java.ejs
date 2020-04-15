@@ -54,7 +54,7 @@ public class <%=entityClass%>Repository implements <% if (databaseType === 'sql'
         entityInstance: entityInstance,
         relationships: relationships,
         fieldsContainOwnerManyToMany: fieldsContainOwnerManyToMany,
-        dataAccessPattern: dataAccessPattern,
+        viaRepository: viaRepository,
         asEntity: asEntity,
         primaryKeyType: getPkTypeBasedOnDBAndAssociation(authenticationType, databaseType, relationships)
     }

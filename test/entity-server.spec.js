@@ -28,6 +28,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withPrompts({
                     fieldAdd: false,
                     relationshipAdd: false,
+                    repository: 'no',
                     dto: 'no',
                     service: 'no',
                     pagination: 'infinite-scroll'

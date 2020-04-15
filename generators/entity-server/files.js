@@ -94,7 +94,7 @@ const serverFiles = {
             ]
         },
         {
-            condition: generator => generator.dataAccessPattern === 'repository',
+            condition: generator => generator.repository === 'yes',
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
