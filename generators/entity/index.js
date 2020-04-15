@@ -15,7 +15,6 @@ module.exports = class extends EntityGenerator {
         }
 
         this.configOptions = jhContext.configOptions || {};
-        this.storageData = {};
 
         // This sets up options for this sub generator and is being reused from JHipster
         jhContext.setupEntityOptions(this, jhContext, this);
@@ -24,27 +23,17 @@ module.exports = class extends EntityGenerator {
     get initializing() {
         const phaseFromJHipster = super._initializing();
         const phaseFromQuarkus = {
+            ...phaseFromJHipster,
             setupConfigQuarkus() {
                 const context = this.context;
-                // Specific Entity sub-generator constants
                 if (!context.useConfigurationFile) {
-                    // no file present, new entity creation
-                    // this.log(`\nThe entity ${entityName} is being created.\n`);
                     context.dataAccessPattern = constants.DATA_ACCESS_PATTERN;
                 } else {
-                    // existing entity reading values from file
-                    // this.log(`\nThe entity ${entityName} is being updated.\n`);
-                    try {
-                        context.fileData = this.fs.readJSON(context.filename);
-                    } catch (err) {
-                        this.debug('Error:', err);
-                        this.error('\nThe entity configuration file could not be read!\n');
-                    }
                     context.dataAccessPattern = context.fileData.dataAccessPattern || constants.DATA_ACCESS_PATTERN;
                 }
             }
         };
-        return Object.assign(phaseFromJHipster, phaseFromQuarkus);
+        return phaseFromQuarkus;
     }
 
     get prompting() {
@@ -73,13 +62,14 @@ module.exports = class extends EntityGenerator {
         const phaseFromJHipster = super._configuring();
         // redefine the phases to insert a custom configuration
         const phaseFromQuarkus = {
-            validateFile: phaseFromJHipster.validateFile,
             configureEntityQuarkus() {
                 const context = this.context;
+                if (!this.storageData) {
+                    this.storageData = {};
+                }
                 this.storageData.dataAccessPattern = context.dataAccessPattern;
             },
-            writeEntityJson: phaseFromJHipster.writeEntityJson,
-            loadInMemoryData: phaseFromJHipster.loadInMemoryData
+            ...phaseFromJHipster
         };
         return phaseFromQuarkus;
     }
