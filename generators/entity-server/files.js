@@ -26,13 +26,12 @@ const randexp = utils.RandexpWithFaker;
 const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
 const SERVER_MAIN_RES_DIR = constants.SERVER_MAIN_RES_DIR;
-
+const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
 /*
 
 const DOCKER_DIR = constants.DOCKER_DIR;
 const TEST_DIR = constants.TEST_DIR;
 
-const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
 const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
 */
 
@@ -103,30 +102,18 @@ const serverFiles = {
                     useBluePrint: true
                 }
             ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/domain/EntityTest.java',
+                    renameTo: generator => `${generator.packageFolder}/domain/${generator.entityClass}Test.java`,
+                    useBluePrint: true
+                }
+            ]
         }
     ]
-    // ,
-    // test: [
-    //     {
-    //         path: SERVER_TEST_SRC_DIR,
-    //         templates: [
-    //             {
-    //                 file: 'package/web/rest/EntityResourceIT.java',
-    //                 options: {
-    //                     context: {
-    //                         randexp, <-- not defined
-    //                         _,
-    //                         chalkRed: chalk.red,
-    //                         fs,
-    //                         SERVER_TEST_SRC_DIR
-    //                     }
-    //                 },
-    //                 renameTo: generator => `${generator.packageFolder}/web/rest/${generator.entityClass}ResourceIT.kt`,
-    //                 useBluePrint: true
-    //             }
-    //         ]
-    //     }
-    // ]
 };
 
 const serverFilesFromJHipster = {

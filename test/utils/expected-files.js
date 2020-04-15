@@ -60,7 +60,8 @@ const expectedFiles = {
         server: [
             '.jhipster/Foo.json',
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Foo.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/FooResource.java`
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/FooResource.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/FooTest.java`
             // `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/FooResourceIT.java`
         ],
         fakeData: [`${SERVER_MAIN_RES_DIR}config/liquibase/fake-data/foo.csv`],
