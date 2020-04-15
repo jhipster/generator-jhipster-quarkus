@@ -55,7 +55,17 @@ const expectedFiles = {
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`
-    ]
+    ],
+    entity: {
+        server: [
+            '.jhipster/Foo.json',
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Foo.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/FooResource.java`
+            // `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/FooResourceIT.java`
+        ],
+        fakeData: [`${SERVER_MAIN_RES_DIR}config/liquibase/fake-data/foo.csv`],
+        serverLiquibase: [`${SERVER_MAIN_RES_DIR}config/liquibase/changelog/20191106000100_added_entity_Foo.xml`]
+    }
 };
 
 module.exports = expectedFiles;
