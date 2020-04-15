@@ -455,7 +455,7 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
         entityInstance: entityInstance,
         relationships: relationships,
         fieldsContainOwnerManyToMany: fieldsContainOwnerManyToMany,
-        viaRepository: viaRepository,
+        viaRepository: false,
         asEntity: asEntity,
         primaryKeyType: getPkTypeBasedOnDBAndAssociation(authenticationType, databaseType, relationships)
     }
