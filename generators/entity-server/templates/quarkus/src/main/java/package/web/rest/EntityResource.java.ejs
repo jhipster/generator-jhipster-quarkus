@@ -21,6 +21,9 @@ package <%=packageName%>.web.rest;
 <%_
     const viaService = service !== 'no';
     const viaRepository = repository !== 'no';
+    const useDTO = dto === 'mapstruct';
+    const useTransaction = !viaService && !saveUserSnapshot;
+    const usePagination = pagination === 'no';
     let isUsingMapsId = false;
     let mapsIdAssoc;
     let primaryKeyType = pkType;
@@ -35,12 +38,13 @@ package <%=packageName%>.web.rest;
     } _%>
 import static javax.ws.rs.core.UriBuilder.fromPath;
 
-<%_ if (dto !== 'mapstruct' || service === 'no') { _%>
+<%_ if (!useDTO || !viaService) { _%>
 import <%=packageName%>.domain.<%= asEntity(entityClass) %>;
 <%_ } _%>
-<%_ if (service !== 'no') { _%>
+<%_ if (viaService) { _%>
 import <%=packageName%>.service.<%= entityClass %>Service;
-<%_ } else if (viaRepository) { _%>
+<%_ } _%>
+<%_ if (viaRepository) { _%>
 import <%=packageName%>.repository.<%= entityClass %>Repository;
     <%_ if (isUsingMapsId === true) { _%>
 import <%=packageName%>.repository.<%= mapsIdAssoc.otherEntityNameCapitalized %>Repository;
@@ -58,11 +62,12 @@ import <%=packageName%>.domain.User;
 import <%=packageName%>.web.rest.errors.BadRequestAlertException;
 import <%=packageName%>.web.util.HeaderUtil;
 import <%=packageName%>.web.util.ResponseUtil;
-<%_ if (dto === 'mapstruct') { _%>
+<%_ if (useDTO) { _%>
 import <%=packageName%>.service.dto.<%= asDto(entityClass) %>;
-<%_ if (service === 'no') { _%>
+    <%_ if (!viaService) { _%>
 import <%=packageName%>.service.mapper.<%= entityClass %>Mapper;
-<%_ } } _%>
+    <%_ } _%>
+<%_ } _%>
 <%_ if (jpaMetamodelFiltering) {  _%>
 import <%=packageName%>.service.dto.<%= entityClass %>Criteria;
 import <%=packageName%>.service.<%= entityClass %>QueryService;
@@ -71,7 +76,7 @@ import <%=packageName%>.service.<%= entityClass %>QueryService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-<%_ if (pagination !== 'no') { _%>
+<%_ if (!usePagination) { _%>
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -95,23 +100,35 @@ import reactor.core.publisher.Flux;
 import javax.enterprise.context.ApplicationScoped;
 <%_ if (viaService || viaRepository) { _%>
 import javax.inject.Inject;
-<%_ } if (!viaService && !saveUserSnapshot) { %>
-import javax.transaction.Transactional; <% } %>
+<%_ } _%>
+<%_ if (useTransaction) { %>
+import javax.transaction.Transactional;
+<%_ } _%>
 <%_ if (validation) { _%>
 import javax.validation.Valid;
 <%_ } _%>
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-<%_ if (pagination === 'no' && dto === 'mapstruct' && !viaService && fieldsContainNoOwnerOneToOne === true) { _%>
-import java.util.LinkedList;<% } %>
-import java.util.List;<% if (isUsingMapsId === true) { %>
-import java.util.Objects;<% } %>
-import java.util.Optional;<% if (databaseType === 'cassandra') { %>
-import java.util.UUID;<% } %><% if (!viaService && (searchEngine === 'elasticsearch' || fieldsContainNoOwnerOneToOne === true)) { %>
-import java.util.stream.Collectors;<% } %><% if (searchEngine === 'elasticsearch' || fieldsContainNoOwnerOneToOne === true) { %>
-import java.util.stream.StreamSupport;<% } %><% if (searchEngine === 'elasticsearch') { %>
-
-import static org.elasticsearch.index.query.QueryBuilders.*;<% } %>
+<%_ if (!usePagination && useDTO && !viaService && fieldsContainNoOwnerOneToOne === true) { _%>
+import java.util.LinkedList;
+<%_ } _%>
+import java.util.List;
+<%_ if (isUsingMapsId === true) { _%>
+import java.util.Objects;
+<%_ } _%>
+import java.util.Optional;
+<%_ if (databaseType === 'cassandra') { _%>
+import java.util.UUID;
+<%_ } _%>
+<%_ if (!viaService && (searchEngine === 'elasticsearch' || fieldsContainNoOwnerOneToOne === true)) { _%>
+import java.util.stream.Collectors;
+<%_ } _%>
+<%_ if (searchEngine === 'elasticsearch' || fieldsContainNoOwnerOneToOne === true) { _%>
+import java.util.stream.StreamSupport;
+<%_ } _%>
+<%_ if (searchEngine === 'elasticsearch') { _%>
+import static org.elasticsearch.index.query.QueryBuilders.*;
+<%_ } _%>
 
 /**
  * REST controller for managing {@link <%= packageName %>.domain.<%= asEntity(entityClass) %>}.
@@ -119,8 +136,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;<% } %>
 @Path("/api/<%= entityApiUrl %>")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@ApplicationScoped<% if (databaseType === 'sql' && !viaService && !saveUserSnapshot) { %>
-@Transactional <%_ } %>
+@ApplicationScoped
 public class <%= entityClass %>Resource {
 
     private final Logger log = LoggerFactory.getLogger(<%= entityClass %>Resource.class);
@@ -137,8 +153,8 @@ public class <%= entityClass %>Resource {
 
 <%_ } _%>
     <%_
-    const instanceType = (dto === 'mapstruct') ? asDto(entityClass) : asEntity(entityClass);
-    const instanceName = (dto === 'mapstruct') ? asDto(entityInstance) : asEntity(entityInstance);
+    const instanceType = useDTO ? asDto(entityClass) : asEntity(entityClass);
+    const instanceName = useDTO ? asDto(entityInstance) : asEntity(entityInstance);
     _%><%- include('../../common/inject_template', { viaRepository: viaRepository, viaService: viaService, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
 
 <%_ if (!readOnly) { _%>
@@ -150,6 +166,9 @@ public class <%= entityClass %>Resource {
      * @return the {@link Response} with status {@code 201 (Created)} and with body the new <%= instanceName %>, or with status {@code 400 (Bad Request)} if the <%= entityInstance %> has already an ID.
      */
     @POST
+    <%_ if (useTransaction) { _%>
+    @Transactional
+    <%_ } _%>
     public Response create<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>, @Context UriInfo uriInfo) {
         log.debug("REST request to save <%= entityClass %> : {}", <%= instanceName %>);
         if (<%= instanceName %>.id != null) {
@@ -173,6 +192,9 @@ public class <%= entityClass %>Resource {
      * or with status {@code 500 (Internal Server Error)} if the <%= instanceName %> couldn't be updated.
      */
     @PUT
+    <%_ if (useTransaction) { _%>
+    @Transactional
+    <%_ } _%>
     public Response update<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>) {
         log.debug("REST request to update <%= entityClass %> : {}", <%= instanceName %>);
         if (<%= instanceName %>.id == null) {
@@ -249,6 +271,9 @@ public class <%= entityClass %>Resource {
      */
     @DELETE
     @Path("/{id}")
+    <%_ if (useTransaction) { _%>
+    @Transactional
+    <%_ } _%>
     public Response delete<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
         log.debug("REST request to delete <%= entityClass %> : {}", id);
 <%- include('../../common/delete_template', {viaRepository: viaRepository, entityClass: entityClass, viaService: viaService, instanceName: instanceName}); -%>
