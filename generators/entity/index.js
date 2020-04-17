@@ -68,6 +68,31 @@ module.exports = class extends EntityGenerator {
                 }
                 this.storageData.repository = context.repository;
             },
+            plop() {
+                const context = this.context;
+                context.viaService = context.service !== 'no';
+                context.viaRepository = context.repository !== 'no';
+                context.hasDto = context.dto === 'mapstruct';
+                context.hasTransaction = !context.viaService && !context.saveUserSnapshot;
+                context.hasPagination = context.pagination !== 'no';
+                let isUsingMapsId = false;
+                context.primaryKeyType = context.pkType;
+                for (let idx = 0; idx < context.relationships.length; idx++) {
+                    isUsingMapsId = context.relationships[idx].useJPADerivedIdentifier;
+                    if (isUsingMapsId) {
+                        context.mapsIdAssoc = context.relationships[idx];
+                        context.primaryKeyType =
+                            context.relationships[idx].otherEntityName === 'user' && context.authenticationType === 'oauth2'
+                                ? 'String'
+                                : context.pkType;
+                        break;
+                    }
+                }
+                context.isUsingMapsId = isUsingMapsId;
+                context.isUsingMapsId = isUsingMapsId;
+                context.instanceType = context.hasDto ? this.asDto(context.entityClass) : this.asEntity(context.entityClass);
+                context.instanceName = context.hasDto ? this.asDto(context.entityInstance) : this.asEntity(context.entityInstance);
+            },
             ...phaseFromJHipster
         };
         return phaseFromQuarkus;

@@ -18,24 +18,6 @@
 -%>
 package <%=packageName%>.web.rest;
 
-<%_
-    const viaService = service !== 'no';
-    const viaRepository = repository !== 'no';
-    const hasDto = dto === 'mapstruct';
-    const hasTransaction = !viaService && !saveUserSnapshot;
-    const hasPagination = pagination !== 'no';
-    let isUsingMapsId = false;
-    let mapsIdAssoc;
-    let primaryKeyType = pkType;
-    for (idx in relationships) {
-        isUsingMapsId = relationships[idx].useJPADerivedIdentifier;
-        if ( isUsingMapsId === true) {
-            mapsIdAssoc = relationships[idx];
-            primaryKeyType = (relationships[idx].otherEntityName === 'user'  && authenticationType === 'oauth2') ? 'String' : pkType;
-            break;
-        }
-        isUsingMapsId = false;
-    } _%>
 import static javax.ws.rs.core.UriBuilder.fromPath;
 
 <%_ if (!(hasDto && viaService)) { _%>
@@ -153,59 +135,11 @@ public class <%= entityClass %>Resource {
 
 <%_ } _%>
     <%_
-    const instanceType = hasDto ? asDto(entityClass) : asEntity(entityClass);
-    const instanceName = hasDto ? asDto(entityInstance) : asEntity(entityInstance);
     _%><%- include('../../common/inject_template', { viaRepository: viaRepository, viaService: viaService, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
 
 <%_ if (!readOnly) { _%>
-
-    /**
-     * {@code POST  /<%= entityApiUrl %>} : Create a new <%= entityInstance %>.
-     *
-     * @param <%= instanceName %> the <%= instanceName %> to create.
-     * @return the {@link Response} with status {@code 201 (Created)} and with body the new <%= instanceName %>, or with status {@code 400 (Bad Request)} if the <%= entityInstance %> has already an ID.
-     */
-    @POST
-    <%_ if (hasTransaction) { _%>
-    @Transactional
-    <%_ } _%>
-    public Response create<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>, @Context UriInfo uriInfo) {
-        log.debug("REST request to save <%= entityClass %> : {}", <%= instanceName %>);
-        if (<%= instanceName %>.id != null) {
-            throw new BadRequestAlertException("A new <%= entityInstance %> cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        <%_ if (databaseType === 'cassandra') { _%>
-        <%= instanceName %>.id = UUID.randomUUID();
-        <%_ } _%>
-<%- include('../../common/save_template', {asEntity, asDto, viaRepository: viaRepository, entityClass: entityClass, viaService: viaService, returnDirectly: false, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
-        var response = Response.created(fromPath(uriInfo.getPath()).path(<%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).build()).entity(<%= instanceName %>);
-        HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
-        return response.build();
-    }
-
-    /**
-     * {@code PUT  /<%= entityApiUrl %>} : Updates an existing <%= entityInstance %>.
-     *
-     * @param <%= instanceName %> the <%= instanceName %> to update.
-     * @return the {@link Response} with status {@code 200 (OK)} and with body the updated <%= instanceName %>,
-     * or with status {@code 400 (Bad Request)} if the <%= instanceName %> is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the <%= instanceName %> couldn't be updated.
-     */
-    @PUT
-    <%_ if (hasTransaction) { _%>
-    @Transactional
-    <%_ } _%>
-    public Response update<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>) {
-        log.debug("REST request to update <%= entityClass %> : {}", <%= instanceName %>);
-        if (<%= instanceName %>.id == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-<%- include('../../common/save_template', {asEntity, asDto, viaRepository: viaRepository, entityClass: entityClass, viaService: viaService, returnDirectly: false, isUsingMapsId: false, mapsIdAssoc: mapsIdAssoc}); -%>
-        var response = Response.ok().entity(<%= instanceName %>);
-        HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
-        return response.build();
-    }
-    <%_ } _%>
+    <%- include('../../common/create_template', this); -%>
+<%_ } _%>
 
     /**
      * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %>.

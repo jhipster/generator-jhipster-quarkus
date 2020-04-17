@@ -1,0 +1,24 @@
+
+    /**
+     * {@code POST  /<%= entityApiUrl %>} : Create a new <%= entityInstance %>.
+     *
+     * @param <%= instanceName %> the <%= instanceName %> to create.
+     * @return the {@link Response} with status {@code 201 (Created)} and with body the new <%= instanceName %>, or with status {@code 400 (Bad Request)} if the <%= entityInstance %> has already an ID.
+     */
+    @POST
+    <%_ if (hasTransaction) { _%>
+    @Transactional
+    <%_ } _%>
+    public Response create<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>, @Context UriInfo uriInfo) {
+        log.debug("REST request to save <%= entityClass %> : {}", <%= instanceName %>);
+        if (<%= instanceName %>.id != null) {
+            throw new BadRequestAlertException("A new <%= entityInstance %> cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        <%_ if (databaseType === 'cassandra') { _%>
+        <%= instanceName %>.id = UUID.randomUUID();
+        <%_ } _%>
+<!-- <%- include('./save_template', {...this, returnDirectly: false, isController: true}); -%> -->
+        var response = Response.created(fromPath(uriInfo.getPath()).path(<%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).build()).entity(<%= instanceName %>);
+        HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        return response.build();
+    }

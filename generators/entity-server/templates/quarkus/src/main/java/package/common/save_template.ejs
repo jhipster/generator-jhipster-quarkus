@@ -16,7 +16,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-<%_ const instanceType = (dto === 'mapstruct') ? asDto(entityClass) : asEntity(entityClass);
+<%_
+// const entityInstanceName = asEntity(entityInstance);
+// const entityClassName = asEntity(entityClass);
+const instanceType = (dto === 'mapstruct') ? asDto(entityClass) : entityClassName;
 const instanceName = (dto === 'mapstruct') ? asDto(entityInstance) : asEntity(entityInstance);
 const mapper = entityInstance  + 'Mapper';
 const dtoToEntity = mapper + '.' + 'toEntity';
@@ -41,20 +44,20 @@ if (isUsingMapsId === true) {
 <%_ }
 if (!viaService) {
     if (dto === 'mapstruct') {
-        resultEntity = asEntity(entityInstance); _%>
-        <%= asEntity(entityClass) %> <%= asEntity(entityInstance) %> = <%= dtoToEntity %>(<%= instanceName %>);
+        resultEntity = entityInstanceName; _%>
+        <%= entityClassName %> <%= entityInstanceName %> = <%= dtoToEntity %>(<%= instanceName %>);
         <%_ if (isUsingMapsId === true) { _%>
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= instanceName %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>Id();
-        <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= asEntity(entityInstance) %>::<%= mapsIdAssoc.relationshipName %>);
+        <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityInstanceName %>::<%= mapsIdAssoc.relationshipName %>);
         <%_ } _%>
-        <%= asEntity(entityInstance) %> = <%= dataAccessObject %>.persist(<%= asEntity(entityInstance) %>);
-        <%= returnPrefix %> <%= entityToDto %>(<%= asEntity(entityInstance) %>);
+        <%= entityInstanceName %> = <%= dataAccessObject %>.persist(<%= entityInstanceName %>);
+        <%= returnPrefix %> <%= entityToDto %>(<%= entityInstanceName %>);
     <%_ } else { resultEntity = 'result'; _%>
         <%_ if (isUsingMapsId === true) { _%>
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= instanceName %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>().getId();
         <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= instanceName%>::<%= otherEntityName %>);
         <%_ } _%>
-        <%= dataAccessObject %>.persist(<%= asEntity(entityInstance) %>);
+        <%= dataAccessObject %>.persist(<%= entityInstanceName %>);
         <%_ } if (searchEngine === 'elasticsearch') { _%>
         <%= entityInstance %>SearchRepository.persist(<%= resultEntity %>);
             <%_ if (returnDirectly) { _%>
