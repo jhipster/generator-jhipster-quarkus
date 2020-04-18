@@ -16,16 +16,19 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-<%_
-const mapper = `${entityInstance}Mapper`;
-const entityToDtoReference = `${mapper}::toDto`;
-const returnPrefix = returnDirectly ? 'return' : `Optional<${instanceType}> ${instanceName} =`;
-const dataAccessObject = viaRepository ? `${entityInstance}Repository` : entityClass;
-_%>
-<%_ if (!viaService) { _%>
-    <%_ const finder = fieldsContainOwnerManyToMany ? 'findOneWithEagerRelationships(id)' : 'findByIdOptional(id)'; _%>
-        <%- returnPrefix %> <%= dataAccessObject %>.<%= finder %><% if (!hasDto) { %>;<% } else { %>
-        .map(<%= entityToDtoReference %>); <% } %>
-<%_  } else { _%>
-        <%- returnPrefix %> <%= entityInstance %>Service.findOne(id);
-<%_ } _%>
+    /**
+     * {@code SEARCH  /_search/<%= entityApiUrl %>?query=:query} : search for the <%= entityInstance %> corresponding
+     * to the query.
+     *
+     * @param query the query of the <%= entityInstance %> search.
+    <%_ if (hasPagination) { _%>
+     * @param pageable the pagination information.
+       <%_ if (reactive) { _%>
+     * @param request a {@link ServerHttpRequest} request.
+        <%_ } _%>
+    <%_ } _%>
+     * @return the result of the search.
+     */
+    @GET
+    @Path("/_search/<%= entityApiUrl %>")
+<%- include('./search_template', this); -%>

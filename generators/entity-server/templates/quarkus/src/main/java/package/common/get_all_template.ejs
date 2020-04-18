@@ -17,14 +17,12 @@
  limitations under the License.
 -%>
     <%_
-    const instanceType = (dto === 'mapstruct') ? asDto(entityClass) : asEntity(entityClass);
-    const instanceName = (dto === 'mapstruct') ? asDto(entityInstance) : asEntity(entityInstance);
-    const mapper = entityInstance + 'Mapper';
-    const entityListToDtoListReference = mapper + '.' + 'toDto';
-    const entityToDtoReference = mapper + '::'+ 'toDto';
-    const dataAccessObject = viaRepository ? entityInstance + 'Repository' : entityClass;
+    const mapper = `${entityInstance}Mapper`;
+    const entityListToDtoListReference = `${mapper}.toDto`;
+    const entityToDtoReference = `${mapper}::toDto`;
+    const dataAccessObject = viaRepository ? `${entityInstance}Repository` : entityClass;
     if (jpaMetamodelFiltering) {  %>
-    public Response<List<<%= instanceType %>>> getAll<%= entityClassPlural %>(<%= entityClass %>Criteria criteria<% if (pagination != 'no') { %>, Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% } %>) {
+    public Response<List<<%= instanceType %>>> getAll<%= entityClassPlural %>(<%= entityClass %>Criteria criteria<% if (hasPagination) { %>, Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% } %>) {
         log.debug("REST request to get <%= entityClassPlural %> by criteria: {}", criteria);
     <%_ if (pagination === 'no') { _%>
         List<<%= instanceType %>> entityList = <%= entityInstance %>QueryService.findByCriteria(criteria);
@@ -32,7 +30,7 @@
     <%_ } else { _%>
         Page<<%= instanceType %>> page = <%= entityInstance %>QueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(<% if (!reactive) { %>ServletUriComponentsBuilder.fromCurrentRequest()<% } else { %>UriComponentsBuilder.fromHttpRequest(request)<% } %>, page);
-        return ResponseEntity.ok().headers(headers).entit(page.getContent());
+        return ResponseEntity.ok().headers(headers).entity(page.getContent());
     <%_ } _%>
     }
 

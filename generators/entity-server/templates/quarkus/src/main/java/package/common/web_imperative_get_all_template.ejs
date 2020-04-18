@@ -1,0 +1,56 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+    /**
+     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %>.
+     *<%_ if (hasPagination) { %>
+     * @param pageable the pagination information.
+        <%_ if (reactive) { _%>
+     * @param request a {@link ServerHttpRequest} request.
+        <%_ } _%>
+    <%_ } _%>
+    <%_ if (!jpaMetamodelFiltering && fieldsContainOwnerManyToMany) { _%>
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).<% } if (jpaMetamodelFiltering) { %>
+     * @param criteria the criteria which the requested entities should match.<% } else if (fieldsContainNoOwnerOneToOne) { %>
+     * @param filter the filter of the request.<% } %>
+     * @return the {@link Response} with status {@code 200 (OK)} and the list of <%= entityInstancePlural %> in body.
+     */
+    @GET
+    <%_ if (hasTransaction) { _%>
+    @Transactional
+    <%_ } _%>
+<%- include('./get_all_template', this); -%>
+
+    <%_ if (reactiveRepositories) { _%>
+    /**
+     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %> as a stream.
+     * @return the {@link Flux} of <%= entityInstancePlural %>.
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_STREAM_JSON_VALUE)<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
+
+    @Transactional(readOnly = true) <%_ } _%>
+    public Flux<<%= instanceType %>> getAll<%= entityClassPlural %>AsStream() {
+        log.debug("REST request to get all <%= entityClassPlural %> as a stream");
+        <%_ if (viaService) { _%>
+        return <%= entityInstance %>Service.findAllAsFlux();
+        <%_ } else { _%>
+        return <%= entityInstance %>ReactiveRepository.findAll();
+        <%_ } _%>
+    }
+    <%_ } _%>

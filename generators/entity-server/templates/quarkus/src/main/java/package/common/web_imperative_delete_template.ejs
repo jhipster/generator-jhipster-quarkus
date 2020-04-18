@@ -1,0 +1,36 @@
+<%#
+ Copyright 2013-2019 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+    /**
+     * {@code DELETE  /<%= entityApiUrl %>/:id} : delete the "id" <%= entityInstance %>.
+     *
+     * @param id the id of the <%= instanceName %> to delete.
+     * @return the {@link Response} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DELETE
+    @Path("/{id}")
+    <%_ if (hasTransaction) { _%>
+    @Transactional
+    <%_ } _%>
+    public Response delete<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
+        log.debug("REST request to delete <%= entityClass %> : {}", id);
+<%- include('./delete_template', this); -%>
+        var response = Response.noContent();
+        HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        return response.build();
+    }

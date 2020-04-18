@@ -18,99 +18,7 @@
 -%>
 package <%=packageName%>.web.rest;
 
-import static javax.ws.rs.core.UriBuilder.fromPath;
-
-<%_ if (!(hasDto && viaService)) { _%>
-import <%=packageName%>.domain.<%= asEntity(entityClass) %>;
-<%_ } _%>
-<%_ if (viaService) { _%>
-import <%=packageName%>.service.<%= entityClass %>Service;
-<%_ } _%>
-<%_ if (viaRepository) { _%>
-import <%=packageName%>.repository.<%= entityClass %>Repository;
-    <%_ if (isUsingMapsId === true) { _%>
-import <%=packageName%>.repository.<%= mapsIdAssoc.otherEntityNameCapitalized %>Repository;
-    <%_ } _%>
-    <%_ if (reactiveRepositories) { _%>
-import <%=packageName%>.repository.reactive.<%= entityClass %>ReactiveRepository;
-    <%_ } _%>
-    <%_ if (searchEngine === 'elasticsearch') { _%>
-import <%=packageName%>.repository.search.<%= entityClass %>SearchRepository;
-    <%_ } _%>
-<%_ } _%>
-<%_ if (saveUserSnapshot) { _%>
-import <%=packageName%>.domain.User;
-<%_ } _%>
-import <%=packageName%>.web.rest.errors.BadRequestAlertException;
-import <%=packageName%>.web.util.HeaderUtil;
-import <%=packageName%>.web.util.ResponseUtil;
-<%_ if (hasDto) { _%>
-import <%=packageName%>.service.dto.<%= asDto(entityClass) %>;
-    <%_ if (!viaService) { _%>
-import <%=packageName%>.service.mapper.<%= entityClass %>Mapper;
-    <%_ } _%>
-<%_ } _%>
-<%_ if (jpaMetamodelFiltering) {  _%>
-import <%=packageName%>.service.dto.<%= entityClass %>Criteria;
-import <%=packageName%>.service.<%= entityClass %>QueryService;
-<%_ } _%>
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-<%_ if (hasPagination) { _%>
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-    <%_ if (reactive) { _%>
-import org.springframework.http.server.reactive.ServerHttpRequest;
-    <%_ } _%>
-    <%_ if (!reactive) { _%>
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-    <%_ } else { _%>
-import org.springframework.web.util.UriComponentsBuilder;
-    <%_ } _%>
-<%_ } _%>
-<%_ if (reactiveRepositories) { _%>
-import org.springframework.http.MediaType;
-<%_ } _%>
-<%_ if (reactiveRepositories) { _%>
-import reactor.core.publisher.Flux;
-<%_ } _%>
-
-import javax.enterprise.context.ApplicationScoped;
-<%_ if (viaService || viaRepository) { _%>
-import javax.inject.Inject;
-<%_ } _%>
-<%_ if (hasTransaction) { %>
-import javax.transaction.Transactional;
-<%_ } _%>
-<%_ if (validation) { _%>
-import javax.validation.Valid;
-<%_ } _%>
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-<%_ if (!hasPagination && hasDto && !viaService && fieldsContainNoOwnerOneToOne === true) { _%>
-import java.util.LinkedList;
-<%_ } _%>
-import java.util.List;
-<%_ if (isUsingMapsId === true) { _%>
-import java.util.Objects;
-<%_ } _%>
-import java.util.Optional;
-<%_ if (databaseType === 'cassandra') { _%>
-import java.util.UUID;
-<%_ } _%>
-<%_ if (!viaService && (searchEngine === 'elasticsearch' || fieldsContainNoOwnerOneToOne === true)) { _%>
-import java.util.stream.Collectors;
-<%_ } _%>
-<%_ if (searchEngine === 'elasticsearch' || fieldsContainNoOwnerOneToOne === true) { _%>
-import java.util.stream.StreamSupport;
-<%_ } _%>
-<%_ if (searchEngine === 'elasticsearch') { _%>
-import static org.elasticsearch.index.query.QueryBuilders.*;
-<%_ } _%>
+<%- include('../../common/web_imports_template', this); -%>
 
 /**
  * REST controller for managing {@link <%= packageName %>.domain.<%= asEntity(entityClass) %>}.
@@ -124,114 +32,26 @@ public class <%= entityClass %>Resource {
     private final Logger log = LoggerFactory.getLogger(<%= entityClass %>Resource.class);
 <%_ if (!readOnly) { _%>
 
-    <%_ let entityName = entityInstance;
-    if (clientRootFolder && !skipUiGrouping) {
-        entityName = _.camelCase(`${clientRootFolder}${entityClass}`);
-    } _%>
-    private static final String ENTITY_NAME = "<%= entityName %>";
+    private static final String ENTITY_NAME = "<%= (clientRootFolder && !skipUiGrouping) ? _.camelCase(`${clientRootFolder}${entityClass}`) : entityInstance %>";
 
     @ConfigProperty(name = "application.name")
     String applicationName;
 
 <%_ } _%>
-    <%_
-    _%><%- include('../../common/inject_template', { viaRepository: viaRepository, viaService: viaService, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
-
+<%- include('../../common/inject_template', { ...this, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isController: true}); -%>
 <%_ if (!readOnly) { _%>
-    <%- include('../../common/create_template', this); -%>
+<%- include('../../common/web_imperative_create_template', this); -%>
+
+<%- include('../../common/web_imperative_update_template', this); -%>
+
+<%- include('../../common/web_imperative_delete_template', this); -%>
+
 <%_ } _%>
+<%- include('../../common/web_imperative_get_all_template', this); -%>
 
-    /**
-     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %>.
-     *<%_ if (pagination !== 'no') { %>
-     * @param pageable the pagination information.
-        <%_ if (reactive) { _%>
-     * @param request a {@link ServerHttpRequest} request.
-        <%_ } _%>
-    <%_ } _%>
-    <%_ if (!jpaMetamodelFiltering && fieldsContainOwnerManyToMany) { _%>
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).<% } if (jpaMetamodelFiltering) { %>
-     * @param criteria the criteria which the requested entities should match.<% } else if (fieldsContainNoOwnerOneToOne) { %>
-     * @param filter the filter of the request.<% } %>
-     * @return the {@link Response} with status {@code 200 (OK)} and the list of <%= entityInstancePlural %> in body.
-     */
-    @GET<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
-
-    @Transactional(readOnly = true) <%_ } _%>
-<%- include('../../common/get_all_template', {asEntity, asDto, viaRepository: viaRepository, entityClass: entityClass, viaService}); -%>
-
-    <%_ if (reactiveRepositories) { _%>
-    /**
-     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %> as a stream.
-     * @return the {@link Flux} of <%= entityInstancePlural %>.
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_STREAM_JSON_VALUE)<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
-
-    @Transactional(readOnly = true) <%_ } _%>
-    public Flux<<%= instanceType %>> getAll<%= entityClassPlural %>AsStream() {
-        log.debug("REST request to get all <%= entityClassPlural %> as a stream");
-        <%_ if (viaService) { _%>
-        return <%= entityInstance %>Service.findAllAsFlux();
-        <%_ } else { _%>
-        return <%= entityInstance %>ReactiveRepository.findAll();
-        <%_ } _%>
-    }
-
-    <%_ } _%>
-    /**
-     * {@code GET  /<%= entityApiUrl %>/:id} : get the "id" <%= entityInstance %>.
-     *
-     * @param id the id of the <%= instanceName %> to retrieve.
-     * @return the {@link Response} with status {@code 200 (OK)} and with body the <%= instanceName %>, or with status {@code 404 (Not Found)}.
-     */
-    @GET
-    @Path("/{id}")<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
-
-    @Transactional(readOnly = true) <%_ } %>
-    public Response get<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
-        log.debug("REST request to get <%= entityClass %> : {}", id);
-        <%- include('../../common/get_template', {asEntity, asDto, viaRepository:viaRepository, entityClass: entityClass, viaService, returnDirectly:false}); -%>
-
-        return ResponseUtil.wrapOrNotFound(<%= instanceName %>);
-    }
-<%_ if (!readOnly) { _%>
-
-    /**
-     * {@code DELETE  /<%= entityApiUrl %>/:id} : delete the "id" <%= entityInstance %>.
-     *
-     * @param id the id of the <%= instanceName %> to delete.
-     * @return the {@link Response} with status {@code 204 (NO_CONTENT)}.
-     */
-    @DELETE
-    @Path("/{id}")
-    <%_ if (hasTransaction) { _%>
-    @Transactional
-    <%_ } _%>
-    public Response delete<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
-        log.debug("REST request to delete <%= entityClass %> : {}", id);
-<%- include('../../common/delete_template', {viaRepository: viaRepository, entityClass: entityClass, viaService: viaService, instanceName: instanceName}); -%>
-        var response = Response.noContent();
-        HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
-        return response.build();
-    }
-<%_ } _%>
+<%- include('../../common/web_imperative_get_template', this); -%>
 <%_ if (searchEngine === 'elasticsearch') { _%>
 
-    /**
-     * {@code SEARCH  /_search/<%= entityApiUrl %>?query=:query} : search for the <%= entityInstance %> corresponding
-     * to the query.
-     *
-     * @param query the query of the <%= entityInstance %> search.
-    <%_ if (pagination !== 'no') { _%>
-     * @param pageable the pagination information.
-       <%_ if (reactive) { _%>
-     * @param request a {@link ServerHttpRequest} request.
-        <%_ } _%>
-    <%_ } _%>
-     * @return the result of the search.
-     */
-    @GET
-    @Path("/_search/<%= entityApiUrl %>")<%- include('../../common/search_template', {asEntity, asDto, viaService}); -%>
+    <%- include('../../common/web_imperative_search_template', this); -%>
 <%_ } _%>
 }
