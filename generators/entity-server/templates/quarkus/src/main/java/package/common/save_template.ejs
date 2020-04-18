@@ -17,10 +17,6 @@
  limitations under the License.
 -%>
 <%_
-// const entityInstanceName = asEntity(entityInstance);
-// const entityClassName = asEntity(entityClass);
-const instanceType = (dto === 'mapstruct') ? asDto(entityClass) : entityClassName;
-const instanceName = (dto === 'mapstruct') ? asDto(entityInstance) : asEntity(entityInstance);
 const mapper = entityInstance  + 'Mapper';
 const dtoToEntity = mapper + '.' + 'toEntity';
 const entityToDto = mapper + '.' + 'toDto';
