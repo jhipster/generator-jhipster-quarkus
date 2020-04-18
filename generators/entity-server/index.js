@@ -59,8 +59,37 @@ module.exports = class extends EntityServerGenerator {
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._configuring();
+        const phaseFromJHipster = super._configuring();
+        const phaseFromQuarkus = {
+            ...phaseFromJHipster,
+            prepareQuarkusRendering() {
+                this.viaService = this.service !== 'no';
+                this.viaRepository = this.repository !== 'no';
+                this.hasDto = this.dto === 'mapstruct';
+                this.hasTransaction = !this.viaService && !this.saveUserSnapshot;
+                this.hasPagination = this.pagination !== 'no';
+
+                this.mapsIdAssoc = undefined;
+                this.primaryKeyType = this.pkType;
+                for (let idx = 0; idx < this.relationships.length; idx++) {
+                    const relationship = this.relationships[idx];
+                    if (relationship.useJPADerivedIdentifier) {
+                        this.mapsIdAssoc = relationship;
+                        this.primaryKeyType =
+                            this.relationships[idx].otherEntityName === 'user' && this.authenticationType === 'oauth2'
+                                ? 'String'
+                                : this.pkType;
+                        break;
+                    }
+                }
+                this.isUsingMapsId = this.mapsIdAssoc !== undefined;
+                this.instanceType = this.hasDto ? this.asDto(this.entityClass) : this.asEntity(this.entityClass);
+                this.instanceName = this.hasDto ? this.asDto(this.entityInstance) : this.asEntity(this.entityInstance);
+                this.entityInstanceName = this.asEntity(this.entityInstance);
+                this.entityClassName = this.asEntity(this.entityClass);
+            }
+        };
+        return phaseFromQuarkus;
     }
 
     get default() {

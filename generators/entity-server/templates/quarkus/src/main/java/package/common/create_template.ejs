@@ -17,7 +17,7 @@
         <%_ if (databaseType === 'cassandra') { _%>
         <%= instanceName %>.id = UUID.randomUUID();
         <%_ } _%>
-<!-- <%- include('./save_template', {...this, returnDirectly: false, isController: true}); -%> -->
+<%- include('./save_template', {...this, returnDirectly: false, isController: true}); -%>
         var response = Response.created(fromPath(uriInfo.getPath()).path(<%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).build()).entity(<%= instanceName %>);
         HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();

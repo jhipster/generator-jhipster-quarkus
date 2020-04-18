@@ -33,13 +33,13 @@ if (isUsingMapsId === true) {
     mapsIdRepoInstance = `${mapsIdEntityInstance}Repository`;
     otherEntityName = mapsIdAssoc.otherEntityName;
     if (isController === true) { _%>
-        if (Objects.isNull(<%= instanceName%>.get<%= mapsIdAssoc.relationshipNameCapitalized %> <%_ if (dto === 'mapstruct') { _%> Id <%_ } _%>())) {
+        if (Objects.isNull(<%= instanceName%>.get<%= mapsIdAssoc.relationshipNameCapitalized %> <%_ if (hasDto) { _%> Id <%_ } _%>())) {
             throw new BadRequestAlertException("Invalid association value provided", ENTITY_NAME, "null");
         }
     <%_ } _%>
 <%_ }
 if (!viaService) {
-    if (dto === 'mapstruct') {
+    if (hasDto) {
         resultEntity = entityInstanceName; _%>
         <%= entityClassName %> <%= entityInstanceName %> = <%= dtoToEntity %>(<%= instanceName %>);
         <%_ if (isUsingMapsId === true) { _%>
