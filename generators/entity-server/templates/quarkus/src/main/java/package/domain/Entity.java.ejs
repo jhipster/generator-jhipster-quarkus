@@ -21,13 +21,9 @@ let importApiModelProperty = false;
 let importJsonIgnore = false;
 let importJsonIgnoreProperties = false;
 let importSet = false;
-let hasDto = dto === 'mapstruct';
-let isUsingMapsId = false;
-let primaryKeyType = pkType;
 let hasTextBlob = false;
 let hasRelationship = relationships.length !== 0;
 const uniqueEnums = {};
-let viaRepository = repository === 'no';
 %>
 <%- include('./imports', {
     fields: fields,
@@ -447,8 +443,10 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
             <%_ } _%>
             "}";
     }
-
 <%_ if (!viaRepository) { _%>
+
+<%- include('../common/data_save_template', this) -%>
+
 <%- include('../common/finders', {
         databaseType: databaseType,
         entityClass: entityClass,

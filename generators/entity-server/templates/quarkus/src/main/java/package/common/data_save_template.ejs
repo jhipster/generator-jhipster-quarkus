@@ -1,0 +1,42 @@
+    public <%= instanceType %> update() {
+        return update(this);
+    }
+
+    public <%= instanceType %> persistOrUpdate() {
+        return persistOrUpdate(this);
+    }
+
+    public static <%= instanceType %> update(<%= instanceType %> <%= instanceName %>) {
+        if (<%= instanceName %> == null) {
+            throw new IllegalArgumentException("<%= instanceName %> can't be null");
+        }
+        var entity = <%= instanceType %>.<<%= instanceType %>>findById(<%= instanceName %>.id);
+        if (entity != null) {
+            <%_
+            for (let idx = 0; idx < fields.length; idx++) {
+                let fieldName = fields[idx].fieldName;
+            _%>
+            entity.<%= fieldName %> = <%= instanceName %>.<%= fieldName %>;
+            <%_ } _%>
+            <%_
+            for (let idx = 0; idx < relationships.length; idx++) {
+                let relationship = relationships[idx]
+                let fieldName = relationship.relationshipType.endsWith('to-many') ? relationship.relationshipFieldNamePlural : relationship.relationshipFieldName;
+            _%>
+            entity.<%= fieldName %> = <%= instanceName %>.<%= fieldName %>;
+            <%_ } _%>
+        }
+        return entity;
+    }
+
+    public static <%= instanceType %> persistOrUpdate(<%= instanceType %> <%= instanceName %>) {
+        if (<%= instanceName %> == null) {
+            throw new IllegalArgumentException("<%= instanceName %> can't be null");
+        }
+        if (<%= instanceName %>.id == null) {
+            persist(<%= instanceName %>);
+            return <%= instanceName %>;
+        } else {
+            return update(<%= instanceName %>);
+        }
+    }
