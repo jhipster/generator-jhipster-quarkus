@@ -1,0 +1,10 @@
+<%_ for (let idx = 0; idx < fields.length; idx++) {
+    const fieldName = fields[idx].fieldName;
+    const expectedVariableName = prefix + fields[idx].fieldNameUnderscored.toUpperCase();
+    let assertionMethod = 'isEqualTo';
+    if (fields[idx].fieldType === 'BigDecimal') {
+        assertionMethod = 'isEqualByComparingTo';
+    }
+_%>
+        assertThat(test<%= entityClass %>.<%= fieldName %>).<%= assertionMethod %>(<%= expectedVariableName %>);
+<%_ } _%>

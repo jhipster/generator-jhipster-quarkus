@@ -110,6 +110,11 @@ const serverFiles = {
                     file: 'package/domain/EntityTest.java',
                     renameTo: generator => `${generator.packageFolder}/domain/${generator.entityClass}Test.java`,
                     useBluePrint: true
+                },
+                {
+                    file: 'package/web/rest/EntityResourceTest.java',
+                    renameTo: generator => `${generator.packageFolder}/web/rest/${generator.entityClass}ResourceTest.java`,
+                    useBluePrint: true
                 }
             ]
         }

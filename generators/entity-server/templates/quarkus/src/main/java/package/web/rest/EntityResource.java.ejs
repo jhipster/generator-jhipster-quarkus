@@ -52,6 +52,6 @@ public class <%= entityClass %>Resource {
 <%- include('../../common/web_imperative_get_template', this); -%>
 <%_ if (searchEngine === 'elasticsearch') { _%>
 
-    <%- include('../../common/web_imperative_search_template', this); -%>
+<%- include('../../common/web_imperative_search_template', this); -%>
 <%_ } _%>
 }
