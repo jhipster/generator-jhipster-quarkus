@@ -45,7 +45,7 @@ import <%=packageName%>.web.util.ResponseUtil;
 <%_ if (hasDto) { _%>
 import <%=packageName%>.service.dto.<%= instanceType %>;
     <%_ if (!viaService) { _%>
-import <%=packageName%>.service.mapper.<%= entityClass %>Mapper;
+import <%=packageName%>.service.mapper.<%= mapper %>;
     <%_ } _%>
 <%_ } _%>
 <%_ if (jpaMetamodelFiltering) {  _%>

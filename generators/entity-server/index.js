@@ -87,6 +87,10 @@ module.exports = class extends EntityServerGenerator {
                 this.instanceName = this.hasDto ? this.asDto(this.entityInstance) : this.asEntity(this.entityInstance);
                 this.entityInstanceName = this.asEntity(this.entityInstance);
                 this.entityClassName = this.asEntity(this.entityClass);
+                this.dataAccessObject = this.viaRepository ? `${this.entityInstance}Repository` : this.entityClass;
+                this.mapper = `${this.entityInstance}Mapper`;
+                this.entityToDtoMethodReference = `${this.mapper}::toDto`;
+                this.entityToDtoMethodInvocation = `${this.mapper}.toDto`;
             }
         };
         return phaseFromQuarkus;

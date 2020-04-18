@@ -17,11 +17,8 @@
  limitations under the License.
 -%>
 <%_
-const mapper = entityInstance  + 'Mapper';
 const dtoToEntity = mapper + '.' + 'toEntity';
-const entityToDto = mapper + '.' + 'toDto';
 const returnPrefix = (returnDirectly && searchEngine !== 'elasticsearch') ? 'return' : instanceType + ' result =';
-const dataAccessObject = viaRepository ? entityInstance + 'Repository' : entityClass;
 let resultEntity;
 let mapsIdEntityInstance;
 let mapsIdRepoInstance;
@@ -47,7 +44,7 @@ if (!viaService) {
         <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityInstanceName %>::<%= mapsIdAssoc.relationshipName %>);
         <%_ } _%>
         <%= entityInstanceName %> = <%= dataAccessObject %>.persist(<%= entityInstanceName %>);
-        <%= returnPrefix %> <%= entityToDto %>(<%= entityInstanceName %>);
+        <%= returnPrefix %> <%= entityToDtoMethodInvocation %>(<%= entityInstanceName %>);
     <%_ } else { resultEntity = 'result'; _%>
         <%_ if (isUsingMapsId === true) { _%>
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= instanceName %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>().getId();

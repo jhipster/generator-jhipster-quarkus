@@ -17,10 +17,6 @@
  limitations under the License.
 -%>
     <%_
-    const mapper = `${entityInstance}Mapper`;
-    const entityListToDtoListReference = `${mapper}.toDto`;
-    const entityToDtoReference = `${mapper}::toDto`;
-    const dataAccessObject = viaRepository ? `${entityInstance}Repository` : entityClass;
     if (jpaMetamodelFiltering) {  %>
     public Response<List<<%= instanceType %>>> getAll<%= entityClassPlural %>(<%= entityClass %>Criteria criteria<% if (hasPagination) { %>, Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% } %>) {
         log.debug("REST request to get <%= entityClassPlural %> by criteria: {}", criteria);
@@ -53,7 +49,7 @@
         log.debug("REST request to get all <%= entityClassPlural %>");<% if (viaService) { %>
         return <%= entityInstance %>Service.findAll();<% } else if (dto === 'mapstruct') { %>
         List<<%= asEntity(entityClass) %>> <%= entityInstancePlural %> = <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
-        return <%= entityListToDtoListReference %>(<%= entityInstancePlural %>);<% } else { %>
+        return <%= entityToDtoMethodInvocation %>(<%= entityInstancePlural %>);<% } else { %>
         return <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();<% } %>
     <%_ } if (pagination !== 'no') { _%>
     public ResponseEntity<List<<%= instanceType %>>> getAll<%= entityClassPlural %>(Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% if (fieldsContainNoOwnerOneToOne) { %>, @RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany) { %>, @QueryParam(value = "eagerload") boolean eagerload<% } %>) {<%- include('get_all_stream_template', {viaService: viaService}); -%>
@@ -75,13 +71,13 @@
         <%_ if (fieldsContainOwnerManyToMany) { _%>
         Page<<%= instanceType %>> page;
         if (eagerload) {
-            page = <%= dataAccessObject %>.findAllWithEagerRelationships(pageable)<% if (dto === 'mapstruct') {%>.map(<%= entityToDtoReference %>)<% } %>;
+            page = <%= dataAccessObject %>.findAllWithEagerRelationships(pageable)<% if (dto === 'mapstruct') {%>.map(<%= entityToDtoMethodReference %>)<% } %>;
         } else {
-            page = <%= dataAccessObject %>.findAll(pageable)<% if (dto !== 'mapstruct') { %>;<% } else { %>.map(<%= entityToDtoReference %>);<% } %>
+            page = <%= dataAccessObject %>.findAll(pageable)<% if (dto !== 'mapstruct') { %>;<% } else { %>.map(<%= entityToDtoMethodReference %>);<% } %>
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(<% if (!reactive) { %>ServletUriComponentsBuilder.fromCurrentRequest()<% } else { %>UriComponentsBuilder.fromHttpRequest(request)<% } %>, page);
         <%_ } else { _%>
-        Page<<%= instanceType %>> page = <%= dataAccessObject %>.findAll(pageable)<% if (dto !== 'mapstruct') { %>;<% } else { %>.map(<%= entityToDtoReference %>);<% } %>
+        Page<<%= instanceType %>> page = <%= dataAccessObject %>.findAll(pageable)<% if (dto !== 'mapstruct') { %>;<% } else { %>.map(<%= entityToDtoMethodReference %>);<% } %>
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(<% if (!reactive) { %>ServletUriComponentsBuilder.fromCurrentRequest()<% } else { %>UriComponentsBuilder.fromHttpRequest(request)<% } %>, page);
         <%_ } _%>
     <%_ } _%>

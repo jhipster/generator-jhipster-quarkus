@@ -17,8 +17,6 @@
  limitations under the License.
 -%>
 <%
-const mapper = entityInstance  + 'Mapper';
-const entityToDtoReference = mapper + '::' + 'toDto';
 for (idx in relationships) { if (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide !== true) { %>
         if ("<%= relationships[idx].relationshipName.toLowerCase() %>-is-null".equals(filter)) {
             log.debug("REST request to get all <%= entityClass %>s where <%= relationships[idx].relationshipName %> is null");<% if (viaService) { %>
@@ -27,7 +25,7 @@ for (idx in relationships) { if (relationships[idx].relationshipType === 'one-to
             return <% if (pagination !== 'no') { %>new ResponseEntity<>(<% } %>StreamSupport
                 .stream(<%= entityInstance %>Repository.findAll().spliterator(), false)
                 .filter(<%= entityInstance %> -> <%= entityInstance %>.get<%= relationships[idx].relationshipNameCapitalized %>() == null)<% if (dto === 'mapstruct') { %>
-                .map(<%= entityToDtoReference %>)<% } if (pagination !== 'no') { %>
+                .map(<%= entityToDtoMethodReference %>)<% } if (pagination !== 'no') { %>
                 .collect(Collectors.toList()), HttpStatus.OK);<% } else { if (dto === 'mapstruct') { %>
                 .collect(Collectors.toCollection(LinkedList::new));<% } else { %>
                 .collect(Collectors.toList());<% }} %><% } %>
