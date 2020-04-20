@@ -59,8 +59,9 @@
             .extract().body().as(ENTITY_TYPE);
 
         // Update the <%= entityInstance %>
-        updated<%= entityClass %>.name = UPDATED_NAME;
-        updated<%= entityClass %>.balance = UPDATED_BALANCE;
+        <%_ for (let idx = 0; idx < fields.length; idx++) { _%>
+        updated<%= entityClass %>.<%= fields[idx].fieldName %> = UPDATED_<%= fields[idx].fieldNameUnderscored.toUpperCase() %>;
+        <%_ } _%>
 
         given()
             .auth()
@@ -88,7 +89,7 @@
             .extract().as(LIST_OF_ENTITY_TYPE);
 
         assertThat(<%= entityInstance %>List).hasSize(databaseSizeBeforeUpdate);
-        var test<%= entityClass %> = <%= entityInstance %>List.get(<%= entityInstance %>List.size() - 1);
+        var test<%= entityClass %> = <%= entityInstance %>List.stream().filter(it -> updated<%= entityClass %>.id.equals(it.id)).findFirst().get();
 <%- include('./web_object_verification_template', {...this, prefix: 'UPDATED_'}); -%>
     }
 

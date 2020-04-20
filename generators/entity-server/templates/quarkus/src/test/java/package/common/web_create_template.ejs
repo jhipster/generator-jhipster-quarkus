@@ -32,7 +32,7 @@
             .size();
 
         // Create the <%= entityClass %>
-        given()
+        <%= entityInstance %> = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -42,7 +42,8 @@
             .when()
             .post("/api/<%= entityApiUrl %>")
             .then()
-            .statusCode(CREATED.getStatusCode());
+            .statusCode(CREATED.getStatusCode())
+            .extract().as(ENTITY_TYPE);
 
         // Validate the <%= entityClass %> in the database
         var <%= entityInstance %>List = given()
@@ -58,7 +59,7 @@
             .extract().as(LIST_OF_ENTITY_TYPE);
 
         assertThat(<%= entityInstance %>List).hasSize(databaseSizeBeforeCreate + 1);
-        var test<%= entityClass %> = <%= entityInstance %>List.get(<%= entityInstance %>List.size() - 1);
+        var test<%= entityClass %> = <%= entityInstance %>List.stream().filter(it -> <%= entityInstance %>.id.equals(it.id)).findFirst().get();
 <%- include('./web_object_verification_template', {...this, prefix: 'DEFAULT_'}); -%>
     }
 

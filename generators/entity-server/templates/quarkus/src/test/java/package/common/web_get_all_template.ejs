@@ -55,19 +55,21 @@
             <%_ for (let idx = 0; idx < fields.length; idx++) {
                 const fieldName = fields[idx].fieldName;
                 const fieldType = fields[idx].fieldType;
-                const expectedVariableName = 'DEFAULT_' + fields[idx].fieldNameUnderscored.toUpperCase();
-                let valueTransformer = '';
+                let expected = 'DEFAULT_' + fields[idx].fieldNameUnderscored.toUpperCase();
+
                 if (fieldType === 'Integer' || fieldType === 'Long') {
-                    valueTransformer = '.intValue()';
+                    expected = `${expected}.intValue()`;
                 } else if (fieldType === 'Float' || fieldType === 'Double') {
-                    valueTransformer = '.doubleValue()';
+                    expected = `${expected}.doubleValue()`;
                 } else if (fieldType === 'BigDecimal') {
-                    valueTransformer = '.floatValue()';
+                    expected = `${expected}.floatValue()`;
                 } else if (fieldType === 'Boolean') {
-                    valueTransformer = '.booleanValue()';
+                    expected = `${expected}.booleanValue()`;
+                } else if (fieldType === 'Instant' || fieldType === 'ZonedDateTime' || fieldType === 'LocalDate') {
+                    expected = `TestUtil.formatDateTime(${expected})`;
                 } else if (fieldType !== 'String') {
-                    valueTransformer = '.toString()';
+                    expected = `${expected}.toString()`;
                 }
             _%>
-            .body("<%= fields[idx].fieldName %>", hasItem(<%= expectedVariableName%><%= valueTransformer %>))<%_ } _%>;
+            .body("<%= fields[idx].fieldName %>", hasItem(<%= expected %>))<%_ } _%>;
     }

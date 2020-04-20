@@ -68,22 +68,24 @@
             <% for (let idx = 0; idx < fields.length; idx++) {
                 const fieldName = fields[idx].fieldName;
                 const fieldType = fields[idx].fieldType;
-                const expectedVariableName = 'DEFAULT_' + fields[idx].fieldNameUnderscored.toUpperCase();
-                let valueTransformer = '';
+                let expected = 'DEFAULT_' + fields[idx].fieldNameUnderscored.toUpperCase();
                 let assertionMethod = 'is';
                 if (fieldType === 'Integer' || fieldType === 'Long') {
-                    valueTransformer = '.intValue()';
+                    expected = `${expected}.intValue()`;
                 } else if (fieldType === 'Float' || fieldType === 'Double') {
-                    valueTransformer = '.doubleValue()';
+                    expected = `${expected}.doubleValue()`;
                 } else if (fieldType === 'BigDecimal') {
                     assertionMethod = 'comparesEqualTo';
-                    valueTransformer = '.floatValue()';
+                    expected = `${expected}.floatValue()`;
                 } else if (fieldType === 'Boolean') {
-                    valueTransformer = '.booleanValue()';
+                    expected = `${expected}.booleanValue()`;
+                } else if (fieldType === 'Instant' || fieldType === 'ZonedDateTime' || fieldType === 'LocalDate') {
+                    expected = `TestUtil.formatDateTime(${expected})`;
                 } else if (fieldType !== 'String') {
-                    valueTransformer = '.toString()';
-                }%>
-                .body("<%= fields[idx].fieldName %>", <%= assertionMethod %>(<%= expectedVariableName%><%= valueTransformer %>))<% } %>;
+                    expected = `${expected}.toString()`;
+                }
+                %>
+                .body("<%= fields[idx].fieldName %>", <%= assertionMethod %>(<%= expected %>))<% } %>;
     }
 
     @Test

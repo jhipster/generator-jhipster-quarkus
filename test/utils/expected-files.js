@@ -20,6 +20,7 @@ const expectedFiles = {
         `${SERVER_MAIN_RES_DIR}templates/mail/passwordResetEmail.html`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/Constants.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`,
+        `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JsonbConfiguration.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Authority.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/jwt/TokenProvider.java`,

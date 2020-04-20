@@ -68,7 +68,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 <%_ } if (!hasDto && importApiModelProperty === true) { _%>
 import io.swagger.annotations.ApiModelProperty;
-<%_ } if (enableHibernateCache) { _%>
+<%_ } if (readOnly) { _%>
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 <%_ } if (hasTextBlob === true || (fieldsContainUUID === true && ['mysql', 'mariadb'].includes(prodDatabaseType))) { _%>
@@ -147,14 +147,11 @@ import static org.springframework.data.couchbase.core.mapping.id.GenerationStrat
 <%_ if (databaseType === 'sql') { _%>
 @Entity
 @Table(name = "<%= entityTableName %>")
-<%_     if (enableHibernateCache) {
-            if (cacheProvider === 'infinispan') { _%>
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-<%_         } else { _%>
+    <%_ if (readOnly) { _%>
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-<%_         }
-        }
-} if (databaseType === 'mongodb') { _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
 @Document(collection = "<%= entityTableName %>")
 <%_ } if (databaseType === 'couchbase') { _%>
 @Document
@@ -282,20 +279,16 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
 <%- formatAsFieldJavadoc(relationships[idx].javadoc) %>
             <%_ if (!hasDto) { _%>
     @ApiModelProperty(value = "<%- formatAsApiDescription(relationships[idx].javadoc) %>")
-            <%_ }_%>
+            <%_ } _%>
     <%_ }
         if (relationshipType === 'one-to-many') {
             if (databaseType === 'sql') {
     _%>
     @OneToMany(mappedBy = "<%= otherEntityRelationshipName %>")
-            <%_ if (enableHibernateCache) {
-                    if (cacheProvider === 'infinispan') { _%>
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-                <%_ } else { _%>
+                <%_ if (readOnly) { _%>
     @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-                <%_ }
-            }
-        } else if (databaseType === 'mongodb' || databaseType === 'couchbase') {
+                <%_ } _%>
+            <%_ } else if (databaseType === 'mongodb' || databaseType === 'couchbase') {
             if (databaseType === 'mongodb') { _%>
     @DBRef
         <%_ } _%>
@@ -337,13 +330,10 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
     <%_ } else if (relationshipType === 'many-to-many') {
         if (databaseType === 'sql') { _%>
     @ManyToMany<% if (ownerSide === false) { %>(mappedBy = "<%= otherEntityRelationshipNamePlural %>")<% } %>
-        <%_ if (enableHibernateCache) {
-                if (cacheProvider === 'infinispan') { _%>
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-            <%_ } else { _%>
+        <%_ if (readOnly) { _%>
     @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-            <%_ }
-        } if (ownerSide === true) {
+        <%_ } _%>
+        <%_ if (ownerSide === true) {
             if (relationshipValidate) { _%>
     <%- include(fetchFromInstalledJHipster('entity-server/templates') + '/src/main/java/package/domain/relationship_validators', {
         idx: idx,

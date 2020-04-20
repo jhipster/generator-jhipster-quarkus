@@ -89,6 +89,10 @@ const serverFiles = {
                 {
                     file: 'package/config/JHipsterProperties.java',
                     renameTo: generator => `${generator.javaDir}config/JHipsterProperties.java`
+                },
+                {
+                    file: 'package/config/JsonbConfiguration.java',
+                    renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`
                 }
             ]
         }

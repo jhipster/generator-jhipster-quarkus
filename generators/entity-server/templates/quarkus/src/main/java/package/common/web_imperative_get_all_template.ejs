@@ -31,9 +31,6 @@
      * @return the {@link Response} with status {@code 200 (OK)} and the list of <%= entityInstancePlural %> in body.
      */
     @GET
-    <%_ if (hasTransaction) { _%>
-    @Transactional
-    <%_ } _%>
 <%- include('./get_all_template', this); -%>
 
     <%_ if (reactiveRepositories) { _%>

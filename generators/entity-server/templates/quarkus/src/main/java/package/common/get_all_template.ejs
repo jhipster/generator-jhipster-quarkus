@@ -16,8 +16,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-    <%_
-    if (jpaMetamodelFiltering) {  %>
+    <%_ if (jpaMetamodelFiltering) {  %>
     public Response<List<<%= instanceType %>>> getAll<%= entityClassPlural %>(<%= entityClass %>Criteria criteria<% if (hasPagination) { %>, Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% } %>) {
         log.debug("REST request to get <%= entityClassPlural %> by criteria: {}", criteria);
     <%_ if (pagination === 'no') { _%>
@@ -42,14 +41,16 @@
         log.debug("REST request to count <%= entityClassPlural %> by criteria: {}", criteria);
         return Response.ok().entity(<%= entityInstance %>QueryService.countByCriteria(criteria)).build();
     }
-<% } else { %>
+<%_ } else { _%>
+        <%_ if (hasTransaction && fieldsContainOwnerManyToMany) { _%>
+    @Transactional
+        <%_ } _%>
     <%_ if (pagination === 'no') { _%>
-    public List<<%= instanceType %>> getAll<%= entityClassPlural %>(<% if (fieldsContainNoOwnerOneToOne) { %>@RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany && fieldsContainNoOwnerOneToOne) { %>,<% } %><% if (fieldsContainOwnerManyToMany) { %>@QueryParam(value = "eagerload") boolean eagerload<% }%>) {<%- include('get_all_stream_template', {viaService: viaService}); -%>
-
+    public List<<%= instanceType %>> getAll<%= entityClassPlural %>(<% if (fieldsContainNoOwnerOneToOne) { %>@RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany && fieldsContainNoOwnerOneToOne) { %>,<% } %><% if (fieldsContainOwnerManyToMany) { %>@QueryParam(value = "eagerload") boolean eagerload<% }%>) {<%- include('get_all_stream_template', {viaService: viaService}); _%>
         log.debug("REST request to get all <%= entityClassPlural %>");<% if (viaService) { %>
         return <%= entityInstance %>Service.findAll();<% } else if (dto === 'mapstruct') { %>
         List<<%= asEntity(entityClass) %>> <%= entityInstancePlural %> = <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
-        return <%= entityToDtoMethodInvocation %>(<%= entityInstancePlural %>);<% } else { %>
+        return <%= entityListToDtoListReference %>(<%= entityInstancePlural %>);<% } else { %>
         return <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();<% } %>
     <%_ } if (pagination !== 'no') { _%>
     public ResponseEntity<List<<%= instanceType %>>> getAll<%= entityClassPlural %>(Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% if (fieldsContainNoOwnerOneToOne) { %>, @RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany) { %>, @QueryParam(value = "eagerload") boolean eagerload<% } %>) {<%- include('get_all_stream_template', {viaService: viaService}); -%>
