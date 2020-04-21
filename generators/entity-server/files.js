@@ -118,6 +118,22 @@ const serverFiles = {
                 }
             ]
         }
+    ],
+    dto: [
+        {
+            condition: generator => generator.dto === 'mapstruct',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/dto/EntityDTO.java',
+                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.asDto(generator.entityClass)}.java`
+                },
+                {
+                    file: 'package/service/mapper/EntityMapper.java',
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/${generator.entityClass}Mapper.java`
+                }
+            ]
+        }
     ]
 };
 
@@ -196,6 +212,40 @@ const serverFilesFromJHipster = {
                 generator.fieldsContainTextBlob === true,
             path: SERVER_MAIN_RES_DIR,
             templates: [{ file: 'config/liquibase/fake-data/blob/hipster.txt', method: 'copy' }]
+        }
+    ],
+    dto: [
+        {
+            condition: generator => generator.dto === 'mapstruct',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/mapper/BaseEntityMapper.java',
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/EntityMapper.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.dto === 'mapstruct',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/dto/EntityDTOTest.java',
+                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.asDto(generator.entityClass)}Test.java`
+                }
+            ]
+        },
+        {
+            condition: generator =>
+                generator.dto === 'mapstruct' &&
+                (generator.databaseType === 'sql' || generator.databaseType === 'mongodb' || generator.databaseType === 'couchbase'),
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/mapper/EntityMapperTest.java',
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/${generator.entityClass}MapperTest.java`
+                }
+            ]
         }
     ]
 };
