@@ -68,7 +68,17 @@ module.exports = class extends EntityGenerator {
                 }
                 this.storageData.repository = context.repository;
             },
-            ...phaseFromJHipster
+            ...phaseFromJHipster,
+            fixRelationshipsPk() {
+                // TODO remove after JHipster 6.8.0
+                // https://github.com/jhipster/generator-jhipster/blob/master/generators/entity/index.js#L894
+                for (let idx = 0; idx < this.context.relationships.length; idx++) {
+                    this.context.relationships[idx].otherEntityPrimaryKeyType =
+                        this.context.relationships[idx].otherEntityName === 'user' && this.context.authenticationType === 'oauth2'
+                            ? 'String'
+                            : this.getPkType(this.context.databaseType);
+                }
+            }
         };
         return phaseFromQuarkus;
     }

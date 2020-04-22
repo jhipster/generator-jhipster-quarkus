@@ -161,6 +161,10 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
+                    file: 'package/service/mapper/UserMapper.java',
+                    renameTo: generator => `${generator.javaDir}service/mapper/UserMapper.java`
+                },
+                {
                     file: 'package/service/dto/PasswordChangeDTO.java',
                     renameTo: generator => `${generator.javaDir}service/dto/PasswordChangeDTO.java`
                 },
