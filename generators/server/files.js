@@ -197,6 +197,19 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/UserService.java`
                 }
             ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/mapper/UserMapperTest.java',
+                    renameTo: generator => `${generator.javaDir}/service/mapper/UserMapperTest.java`
+                },
+                {
+                    file: 'package/domain/UserTest.java',
+                    renameTo: generator => `${generator.javaDir}/domain/UserTest.java`
+                }
+            ]
         }
     ],
     serverJavaWebRestError: [
