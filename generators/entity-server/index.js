@@ -64,6 +64,7 @@ module.exports = class extends EntityServerGenerator {
             ...phaseFromJHipster,
             prepareQuarkusRendering() {
                 this.viaService = this.service !== 'no';
+                this.hasServiceImpl = this.service === 'serviceImpl';
                 this.viaRepository = this.repository !== 'no';
                 this.hasDto = this.dto === 'mapstruct';
                 this.hasTransaction = !this.viaService && !this.saveUserSnapshot;
@@ -91,6 +92,7 @@ module.exports = class extends EntityServerGenerator {
                 this.mapper = `${this.entityInstance}Mapper`;
                 this.entityToDtoMethodReference = `${this.mapper}::toDto`;
                 this.entityToDtoMethodInvocation = `${this.mapper}.toDto`;
+                this.serviceClassName = this.hasServiceImpl ? `${this.entityClass}ServiceImpl` : `${this.entityClass}Service`;
             }
         };
         return phaseFromQuarkus;

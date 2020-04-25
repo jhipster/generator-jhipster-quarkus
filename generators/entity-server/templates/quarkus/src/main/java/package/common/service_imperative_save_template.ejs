@@ -16,19 +16,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-<%_ if (!viaService) { _%>
-    <%_ if (!viaRepository) { _%>
-        <%= entityClass %>.findByIdOptional(id).ifPresent(<%= entityInstanceName %> -> {
-            <%= entityInstanceName %>.delete();
-        });
-    <%_ } else {_%>
-        <%= entityInstance %>Repository.findByIdOptional(id).ifPresent(<%= entityInstanceName %> -> {
-            <%= entityInstanceName %>Repository.delete(<%= instanceName %>);
-        });
+    <%_ if (hasServiceImpl) { _%>
+    @Override
     <%_ } _%>
-    <%_ if (searchEngine === 'elasticsearch') { _%>
-        <%= entityInstanceName %>SearchRepository.deleteById(id);
-    <%_ } _%>
-<%_ } else { _%>
-        <%= entityInstanceName %>Service.delete(id);
-<%_ } _%>
+    public <%= entityClass %> persistOrUpdate(<%= entityClass %> <%= entityInstanceName %>) {
+        log.debug("Request to save <%= entityClass %> : {}", <%= entityInstanceName %>);
+<%- include('./save_template', {...this, viaService: false, hasDto: false, returnDirectly: true, isController: false}); -%>
+    }

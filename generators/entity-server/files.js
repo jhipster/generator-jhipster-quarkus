@@ -117,9 +117,31 @@ const serverFiles = {
                     useBluePrint: true
                 }
             ]
-        }
-    ],
-    dto: [
+        },
+        {
+            condition: generator => generator.service === 'serviceImpl' && !generator.embedded,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/EntityService.java',
+                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`
+                },
+                {
+                    file: 'package/service/impl/EntityServiceImpl.java',
+                    renameTo: generator => `${generator.packageFolder}/service/impl/${generator.entityClass}ServiceImpl.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.service === 'serviceClass' && !generator.embedded,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/impl/EntityServiceImpl.java',
+                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`
+                }
+            ]
+        },
         {
             condition: generator => generator.dto === 'mapstruct',
             path: SERVER_MAIN_SRC_DIR,

@@ -32,7 +32,7 @@
         if (viaRepository) {
             beans.push({class: `${entityClass}Repository`, instance: `${entityInstance}Repository`});
         }
-        if (dto === 'mapstruct') {
+        if (hasDto) {
             beans.push({class: `${entityClass}Mapper`, instance: `${entityInstance}Mapper`});
         }
         if (searchEngine === 'elasticsearch') {

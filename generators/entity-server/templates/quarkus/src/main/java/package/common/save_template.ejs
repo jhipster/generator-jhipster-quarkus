@@ -43,22 +43,26 @@ if (!viaService) {
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= instanceName %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>Id();
         <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityInstanceName %>::<%= mapsIdAssoc.relationshipName %>);
         <%_ } _%>
-        <%= entityInstanceName %> = <%= dataAccessObject %>.persist(<%= entityInstanceName %>);
+        <%= entityInstanceName %> = <%= dataAccessObject %>.persistOrUpdate(<%= entityInstanceName %>);
         <%= returnPrefix %> <%= entityToDtoMethodInvocation %>(<%= entityInstanceName %>);
-    <%_ } else { resultEntity = 'result'; _%>
+    <%_ } else {
+        resultEntity = 'result';
+    _%>
         <%_ if (isUsingMapsId) { _%>
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= instanceName %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>().getId();
         <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= instanceName%>::<%= otherEntityName %>);
         <%_ } _%>
         <%= returnPrefix %> <%= dataAccessObject %>.persistOrUpdate(<%= entityInstanceName %>);
         <%_ } if (searchEngine === 'elasticsearch') { _%>
-        <%= entityInstance %>SearchRepository.persist(<%= resultEntity %>);
+        <%= entityInstance %>SearchRepository.persistOrUpdate(<%= resultEntity %>);
             <%_ if (returnDirectly) { _%>
         return result;
-    <%_ }}} else { _%>
+            <%_ } _%>
+        <%_ } _%>
+<%_ } else { _%>
         <%_ if (isUsingMapsId && isController === false) { _%>
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= entityInstance %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>().getId();
         <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityInstance%>::<%= otherEntityName %>);
         <%_ } _%>
-        <%= returnPrefix %> <%= entityInstance %>Service.persist(<%= instanceName %>);
+        <%= returnPrefix %> <%= entityInstance %>Service.persistOrUpdate(<%= instanceName %>);
 <%_ } _%>

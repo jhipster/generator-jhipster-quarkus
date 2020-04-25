@@ -129,7 +129,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                     relationshipAdd: false,
                     repository: 'no',
                     dto: 'mapstruct',
-                    service: 'serviceImpl',
+                    service: 'serviceClass',
                     pagination: 'infinite-scroll'
                 })
                 .on('end', done);
@@ -141,6 +141,50 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
 
             assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/FooDTO.java`, 'public class FooDTO');
             assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/mapper/FooMapper.java`, 'public interface FooMapper');
+        });
+    });
+    describe('with dto and service interface and service implementation', () => {
+        before(done => {
+            helpers
+                .run('generator-jhipster/generators/entity')
+                .inTmpDir(dir => {
+                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
+                })
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'quarkus',
+                    skipChecks: true,
+                    creationTimestamp: '2019-11-06'
+                })
+                .withGenerators([
+                    [
+                        require('../generators/entity-server'), // eslint-disable-line global-require
+                        'generator-jhipster-quarkus:entity-server',
+                        path.join(__dirname, '../generators/entity-server/index.js')
+                    ]
+                ])
+                .withArguments(['foo'])
+                .withPrompts({
+                    fieldAdd: false,
+                    relationshipAdd: false,
+                    repository: 'no',
+                    dto: 'mapstruct',
+                    service: 'serviceImpl',
+                    pagination: 'infinite-scroll'
+                })
+                .on('end', done);
+        });
+
+        it('creates expected entity with the corresponding dto', () => {
+            assert.file([`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`, ...expectedFiles.server]);
+            assert.file([`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/impl/FooServiceImpl.java`, ...expectedFiles.server]);
+
+            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`, 'public interface FooService');
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/impl/FooServiceImpl.java`,
+                'public class FooServiceImpl implements FooService'
+            );
         });
     });
 });

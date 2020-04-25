@@ -96,7 +96,7 @@ public class <%= asDto(entityClass) %> implements Serializable {
         const fieldType = fields[idx].fieldType;
         const fieldTypeBlobContent = fields[idx].fieldTypeBlobContent;
         const fieldName = fields[idx].fieldName;
-        let required = fieldValidateRules.includes('required');
+        let required = fieldValidate && fieldValidateRules.includes('required');
         _%>
         <%_ if (fieldValidate === true) { _%>
     <%- include(fetchFromInstalledJHipster('entity-server/templates') + '/src/main/java/package/common/field_validators', { idx, fields }) -%>
