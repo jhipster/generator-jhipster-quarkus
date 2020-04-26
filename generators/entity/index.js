@@ -61,6 +61,9 @@ module.exports = class extends EntityGenerator {
         const phaseFromJHipster = super._configuring();
         // redefine the phases to insert a custom configuration
         const phaseFromQuarkus = {
+            disableFluentMethods() {
+                this.context.fluentMethods = false;
+            },
             configureEntityQuarkus() {
                 const context = this.context;
                 if (!this.storageData) {
