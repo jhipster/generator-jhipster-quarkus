@@ -32,13 +32,13 @@
             .size();
 
         // Create the <%= entityClass %>
-        <%= entityInstance %> = given()
+        <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(<%= entityInstance %>)
+            .body(<%= entityOrDtoInstance %>)
             .when()
             .post("/api/<%= entityApiUrl %>")
             .then()
@@ -46,7 +46,7 @@
             .extract().as(ENTITY_TYPE);
 
         // Validate the <%= entityClass %> in the database
-        var <%= entityInstance %>List = given()
+        var <%= entityOrDtoInstance %>List = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -58,8 +58,8 @@
             .contentType(APPLICATION_JSON)
             .extract().as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityInstance %>List).hasSize(databaseSizeBeforeCreate + 1);
-        var test<%= entityClass %> = <%= entityInstance %>List.stream().filter(it -> <%= entityInstance %>.id.equals(it.id)).findFirst().get();
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate + 1);
+        var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().filter(it -> <%= entityOrDtoInstance %>.id.equals(it.id)).findFirst().get();
 <%- include('./web_object_verification_template', {...this, prefix: 'DEFAULT_'}); -%>
     }
 
@@ -79,7 +79,7 @@
             .size();
 
         // Create the <%= entityClass %> with an existing ID
-        <%= entityInstance %>.id = 1L;
+        <%= entityOrDtoInstance %>.id = 1L;
 
         // An entity with an existing ID cannot be created, so this API call must fail
         given()
@@ -88,14 +88,14 @@
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(<%= entityInstance %>)
+            .body(<%= entityOrDtoInstance %>)
             .when()
             .post("/api/<%= entityApiUrl %>")
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
 
         // Validate the <%= entityClass %> in the database
-        var <%= entityInstance %>List = given()
+        var <%= entityOrDtoInstance %>List = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -107,5 +107,5 @@
             .contentType(APPLICATION_JSON)
             .extract().as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityInstance %>List).hasSize(databaseSizeBeforeCreate);
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate);
     }

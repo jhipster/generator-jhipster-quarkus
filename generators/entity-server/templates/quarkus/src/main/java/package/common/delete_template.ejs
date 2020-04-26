@@ -18,17 +18,17 @@
 -%>
 <%_ if (!viaService) { _%>
     <%_ if (!viaRepository) { _%>
-        <%= entityClass %>.findByIdOptional(id).ifPresent(<%= entityInstanceName %> -> {
-            <%= entityInstanceName %>.delete();
+        <%= entityClass %>.findByIdOptional(id).ifPresent(<%= entityInstance %> -> {
+            <%= entityInstance %>.delete();
         });
     <%_ } else {_%>
-        <%= entityInstance %>Repository.findByIdOptional(id).ifPresent(<%= entityInstanceName %> -> {
-            <%= entityInstanceName %>Repository.delete(<%= instanceName %>);
+        <%= entityInstance %>Repository.findByIdOptional(id).ifPresent(<%= entityInstance %> -> {
+            <%= entityInstance %>Repository.delete(<%= entityInstance %>);
         });
     <%_ } _%>
     <%_ if (searchEngine === 'elasticsearch') { _%>
-        <%= entityInstanceName %>SearchRepository.deleteById(id);
+        <%= entityInstance %>SearchRepository.deleteById(id);
     <%_ } _%>
 <%_ } else { _%>
-        <%= entityInstanceName %>Service.delete(id);
+        <%= entityInstance %>Service.delete(id);
 <%_ } _%>

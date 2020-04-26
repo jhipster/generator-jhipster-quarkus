@@ -97,7 +97,7 @@ public final class TestUtil {
     }
 
     public static ObjectMapper jsonbObjectMapper() {
-        final var config = new JsonbConfig().withDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", null);
+        final var config = new JsonbConfig().withDateFormat(DATE_TIME_FORMAT, null);
         final Jsonb jsonb = JsonbBuilder.create(config);
         return new ObjectMapper() {
 

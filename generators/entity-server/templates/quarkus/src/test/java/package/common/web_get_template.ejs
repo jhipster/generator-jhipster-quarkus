@@ -19,13 +19,13 @@
     @Test
     public void get<%= entityClass %>() {
         // Initialize the database
-        <%= entityInstance %> = given()
+        <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(<%= entityInstance %>)
+            .body(<%= entityOrDtoInstance %>)
             .when()
             .post("/api/<%= entityApiUrl %>")
             .then()
@@ -39,7 +39,7 @@
                 .oauth2(adminToken)
                 .accept(APPLICATION_JSON)
                 .when()
-                .get("/api/<%= entityApiUrl %>/{id}", <%= entityInstance %>.id)
+                .get("/api/<%= entityApiUrl %>/{id}", <%= entityOrDtoInstance %>.id)
                 .then()
                 .statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -52,7 +52,7 @@
             .oauth2(adminToken)
             .accept(APPLICATION_JSON)
             .when()
-            .get("/api/<%= entityApiUrl %>/{id}", <%= entityInstance %>.id)
+            .get("/api/<%= entityApiUrl %>/{id}", <%= entityOrDtoInstance %>.id)
             .then()
             .statusCode(OK.getStatusCode())
             .contentType(APPLICATION_JSON)
@@ -64,7 +64,7 @@
                     idValueTransformer = '.toString()';
                 }
             _%>
-            .body("id", is(<%= entityInstance %>.id<%= idValueTransformer %>))
+            .body("id", is(<%= entityOrDtoInstance %>.id<%= idValueTransformer %>))
             <% for (let idx = 0; idx < fields.length; idx++) {
                 const fieldName = fields[idx].fieldName;
                 const fieldType = fields[idx].fieldType;

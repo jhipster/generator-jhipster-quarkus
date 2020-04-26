@@ -19,13 +19,13 @@
     @Test
     public void getAll<%= entityClassPlural %>() {
         // Initialize the database
-        <%= entityInstance %> = given()
+        <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(<%= entityInstance %>)
+            .body(<%= entityOrDtoInstance %>)
             .when()
             .post("/api/<%= entityApiUrl %>")
             .then()
@@ -51,7 +51,7 @@
                     idValueTransformer = '.toString()';
                 }
             _%>
-            .body("id", hasItem(<%= entityInstance %>.id<%= idValueTransformer %>))
+            .body("id", hasItem(<%= entityOrDtoInstance %>.id<%= idValueTransformer %>))
             <%_ for (let idx = 0; idx < fields.length; idx++) {
                 const fieldName = fields[idx].fieldName;
                 const fieldType = fields[idx].fieldType;

@@ -19,13 +19,13 @@
     @Test
     public void delete<%= entityClass %>() {
         // Initialize the database
-        <%= entityInstance %> = given()
+        <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(<%= entityInstance %>)
+            .body(<%= entityOrDtoInstance %>)
             .when()
             .post("/api/<%= entityApiUrl %>")
             .then()
@@ -52,12 +52,12 @@
             .oauth2(adminToken)
             .accept(APPLICATION_JSON)
             .when()
-            .delete("/api/<%= entityApiUrl %>/{id}", <%= entityInstance %>.id)
+            .delete("/api/<%= entityApiUrl %>/{id}", <%= entityOrDtoInstance %>.id)
             .then()
             .statusCode(NO_CONTENT.getStatusCode());
 
         // Validate the database contains one less item
-        var <%= entityInstance %>List = given()
+        var <%= entityOrDtoInstance %>List = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -69,5 +69,5 @@
             .contentType(APPLICATION_JSON)
             .extract().as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityInstance %>List).hasSize(databaseSizeBeforeDelete - 1);
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeDelete - 1);
     }

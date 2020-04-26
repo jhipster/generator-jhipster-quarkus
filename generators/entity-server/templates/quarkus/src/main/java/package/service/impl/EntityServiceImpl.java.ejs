@@ -21,13 +21,13 @@ package <%= packageName %>.service<% if (hasServiceImpl) { %>.impl<% } %>;
 <%- include('../../common/service_imports', this); -%>
 
 @ApplicationScoped
-<%_ if (hasTransaction) { _%>
+<%_ if (databaseType === 'sql') { _%>
 @Transactional
 <%_ } _%>
 public class <%= serviceClassName %><% if (hasServiceImpl) { %> implements <%= entityClass %>Service<% } %> {
 
     private final Logger log = LoggerFactory.getLogger(<%= serviceClassName %>.class);
-<%- include('../../common/inject_template', { ...this, viaService: false, hasDto: false, constructorName: serviceClassName, queryService: false, isController: false}); -%>
+<%- include('../../common/inject_template', { ...this, viaService: false, constructorName: serviceClassName, queryService: false, isController: false}); -%>
 
 <%- include('../../common/service_imperative_save_template', this); -%>
 

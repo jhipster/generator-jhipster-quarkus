@@ -18,29 +18,38 @@
 -%>
 package <%= packageName %>.service;
 
-import <%= packageName %>.domain.<%= entityClassName %>;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
+<%_ if (hasDto) { _%>
+import <%= packageName %>.service.dto.<%= entityOrDtoClass %>;
+<%_ } else { _%>
+import <%= packageName %>.domain.<%= entityOrDtoClass %>;
+<%_ } _%>
+<%_ if (hasPagination || fieldsContainOwnerManyToMany === true) { _%>
+    import java.util.List;
+<%_ } _%>
 
+<%_ if (!hasPagination || fieldsContainNoOwnerOneToOne === true) { _%>
+import java.util.List;
+<%_ } _%>
 import java.util.Optional;
 <%_ if (databaseType === 'cassandra') { _%>
 import java.util.UUID;
 <%_ } _%>
 
 /**
- * Service Interface for managing {@link <%= packageName %>.domain.<%= entityClassName %>}.
+ * Service Interface for managing {@link <%= packageName %>.domain.<%= entityClass %>}.
  */
-public interface <%= entityClassName %>Service {
+public interface <%= entityClass %>Service {
 
     /**
      * Save a <%= entityInstance %>.
      *
-     * @param <%= instanceName %> the entity to save.
+     * @param <%= entityOrDtoInstance %> the entity to save.
      * @return the persisted entity.
      */
-    <%= entityClassName %> persistOrUpdate(<%= entityClass %> <%= instanceName %>);
+    <%= entityOrDtoClass %> persistOrUpdate(<%= entityOrDtoClass %> <%= entityOrDtoInstance %>);
 
     /**
-     * Delete the "id" <%= entityInstanceName %>.
+     * Delete the "id" <%= entityOrDtoInstance %>.
      *
      * @param id the id of the entity.
      */
@@ -50,24 +59,24 @@ public interface <%= entityClassName %>Service {
      * Get all the <%= entityInstancePlural %>.
      * @return the list of entities.
      */
-    PanacheQuery<<%= entityClassName %>> findAll();
+    List<<%= entityOrDtoClass %>> findAll();
 
     /**
-     * Get the "id" <%= entityInstanceName %>.
+     * Get the "id" <%= entityOrDtoInstance %>.
      *
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<<%= entityClass %>> findOne(<%= primaryKeyType %> id);
+    Optional<<%= entityOrDtoClass %>> findOne(<%= primaryKeyType %> id);
 
     <%_ for (idx in relationships) { _%>
         <%_ if (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide !== true) { _%>
     /**
-     * Get all the <%= instanceType %> where <%= relationships[idx].relationshipNameCapitalized %> is {@code null}.
+     * Get all the <%= entityOrDtoClass %> where <%= relationships[idx].relationshipNameCapitalized %> is {@code null}.
      *
      * @return the list of entities.
      */
-    PanacheQuery<<%= entityClass %>> findAllWhere<%= relationships[idx].relationshipNameCapitalized %>IsNull();
+    List<<%= entityOrDtoClass %>> findAllWhere<%= relationships[idx].relationshipNameCapitalized %>IsNull();
         <%_ } _%>
     <%_ } _%>
 
@@ -77,7 +86,7 @@ public interface <%= entityClassName %>Service {
      *
      * @return the list of entities.
     */
-    PanacheQuery<<%= entityClass %>> findAllWithEagerRelationships();
+    List<<%= entityOrDtoClass %>> findAllWithEagerRelationships();
 
     <%_ } _%>
 

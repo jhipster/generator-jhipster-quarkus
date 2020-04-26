@@ -24,7 +24,7 @@ for (const idx in relationships) { if (relationships[idx].relationshipType === '
      *  @return the list of entities.
      */<% if (databaseType === 'sql') { %>
     @Transactional(readOnly = true) <% } %>
-    public List<<%= instanceType %>> findAllWhere<%= relationships[idx].relationshipNameCapitalized %>IsNull() {
+    public List<<%= entityOrDtoClass %>> findAllWhere<%= relationships[idx].relationshipNameCapitalized %>IsNull() {
         log.debug("Request to get all <%= entityInstancePlural %> where <%= relationships[idx].relationshipNameCapitalized %> is null");
         return StreamSupport
             .stream(<%= entityInstance %>Repository.findAll().spliterator(), false)

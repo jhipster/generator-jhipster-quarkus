@@ -19,12 +19,12 @@
     /**
      * {@code DELETE  /<%= entityApiUrl %>/:id} : delete the "id" <%= entityInstance %>.
      *
-     * @param id the id of the <%= instanceName %> to delete.
+     * @param id the id of the <%= entityOrDtoInstance %> to delete.
      * @return the {@link Response} with status {@code 204 (NO_CONTENT)}.
      */
     @DELETE
     @Path("/{id}")
-    <%_ if (hasTransaction) { _%>
+    <%_ if (databaseType === 'sql' && !viaService) { _%>
     @Transactional
     <%_ } _%>
     public Response delete<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {

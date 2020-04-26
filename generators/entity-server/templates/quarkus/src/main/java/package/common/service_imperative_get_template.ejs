@@ -25,10 +25,10 @@
     <%_ if (hasServiceImpl) { _%>
     @Override
     <%_ } _%>
-    <%_ if (hasTransaction) { _%>
+    <%_ if (databaseType === 'sql' && isUsingMapsId === true) { _%>
     @Transactional(readOnly = true)
     <%_ } _%>
-    public Optional<<%= entityClass %>> findOne(<%= primaryKeyType %> id) {
+    public Optional<<%= entityOrDtoClass %>> findOne(<%= primaryKeyType %> id) {
         log.debug("Request to get <%= entityClass %> : {}", id);
-<%- include('./get_template', {...this, viaService: false, hasDto: false, returnDirectly:true}); -%>
+<%- include('./get_template', {...this, viaService: false, returnDirectly:true}); -%>
     }

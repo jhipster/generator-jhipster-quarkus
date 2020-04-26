@@ -19,7 +19,10 @@
     <%_ if (hasServiceImpl) { _%>
     @Override
     <%_ } _%>
-    public <%= entityClass %> persistOrUpdate(<%= entityClass %> <%= entityInstanceName %>) {
-        log.debug("Request to save <%= entityClass %> : {}", <%= entityInstanceName %>);
-<%- include('./save_template', {...this, viaService: false, hasDto: false, returnDirectly: true, isController: false}); -%>
+    <%_ if (databaseType === 'sql') { _%>
+    @Transactional
+    <%_ } _%>
+    public <%= entityOrDtoClass %> persistOrUpdate(<%= entityOrDtoClass %> <%= entityOrDtoInstance %>) {
+        log.debug("Request to save <%= entityClass %> : {}", <%= entityOrDtoInstance %>);
+<%- include('./save_template', {...this, viaService: false, returnDirectly: true, isController: false}); -%>
     }

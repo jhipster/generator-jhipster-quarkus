@@ -19,7 +19,7 @@
 <%_ if (hasServiceImpl) { _%>
 import <%= packageName %>.service.<%= entityClass %>Service;
 <%_ } _%>
-import <%= packageName %>.domain.<%= entityClassName %>;
+import <%= packageName %>.domain.<%= entityClass %>;
 <%_ if (viaRepository) { _%>
 import <%= packageName %>.repository.<%= entityClass %>Repository;
 <%_ } _%>
@@ -33,18 +33,23 @@ import <%= packageName %>.domain.<%= mapsIdAssoc.otherEntityNameCapitalized %>;
 <%_ if (searchEngine === 'elasticsearch') { _%>
 import <%= packageName %>.repository.search.<%= entityClass %>SearchRepository;
 <%_ } _%>
+<%_ if (hasDto) { _%>
+import <%= packageName %>.service.dto.<%= dtoClass %>;
+import <%= packageName %>.service.mapper.<%= entityClass %>Mapper;
+<%_ } _%>
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-<%_ if (viaRepository) { _%>
+<%_ if (viaService || viaRepository || hasDto) { _%>
 import javax.inject.Inject;
 <%_ } _%>
-<%_ if (hasTransaction) { _%>
+<%_ if (databaseType === 'sql') { _%>
 import javax.transaction.Transactional;
 <%_ } _%>
 
+import java.util.List;
 <%_ if (!reactive) { _%>
 import java.util.Optional;
 <%_ } _%>

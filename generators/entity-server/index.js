@@ -67,7 +67,6 @@ module.exports = class extends EntityServerGenerator {
                 this.hasServiceImpl = this.service === 'serviceImpl';
                 this.viaRepository = this.repository !== 'no';
                 this.hasDto = this.dto === 'mapstruct';
-                this.hasTransaction = !this.viaService && !this.saveUserSnapshot;
                 this.hasPagination = this.pagination !== 'no';
 
                 this.mapsIdAssoc = undefined;
@@ -84,10 +83,10 @@ module.exports = class extends EntityServerGenerator {
                     }
                 }
                 this.isUsingMapsId = this.mapsIdAssoc !== undefined;
-                this.instanceType = this.hasDto ? this.asDto(this.entityClass) : this.asEntity(this.entityClass);
-                this.instanceName = this.hasDto ? this.asDto(this.entityInstance) : this.asEntity(this.entityInstance);
-                this.entityInstanceName = this.asEntity(this.entityInstance);
-                this.entityClassName = this.asEntity(this.entityClass);
+                this.dtoClass = this.asDto(this.entityClass);
+                this.dtoInstance = this.asDto(this.entityInstance);
+                this.entityOrDtoClass = this.hasDto ? this.dtoClass : this.asEntity(this.entityClass);
+                this.entityOrDtoInstance = this.hasDto ? this.dtoInstance : this.asEntity(this.entityInstance);
                 this.dataAccessObject = this.viaRepository ? `${this.entityInstance}Repository` : this.entityClass;
                 this.mapper = `${this.entityInstance}Mapper`;
                 this.entityToDtoMethodReference = `${this.mapper}::toDto`;

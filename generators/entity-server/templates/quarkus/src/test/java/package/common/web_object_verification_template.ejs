@@ -6,5 +6,5 @@
         assertionMethod = 'isEqualByComparingTo';
     }
 _%>
-        assertThat(test<%= entityClass %>.<%= fieldName %>).<%= assertionMethod %>(<%= expectedVariableName %>);
+        assertThat(test<%= entityOrDtoClass %>.<%= fieldName %>).<%= assertionMethod %>(<%= expectedVariableName %>);
 <%_ } _%>

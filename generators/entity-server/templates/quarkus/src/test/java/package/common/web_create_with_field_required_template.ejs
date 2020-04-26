@@ -18,26 +18,23 @@ _%>
             .size();
 
         // set the field null
-        <%= entityInstance %>.<%= fields[idx].fieldName %> = null;
+        <%= entityOrDtoInstance %>.<%= fields[idx].fieldName %> = null;
 
         // Create the <%= entityClass %>, which fails.
-        <%_ if (hasDto) { _%>
-        DTO TODO
-        <%_ } _%>
         given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(<%= entityInstance %>)
+            .body(<%= entityOrDtoInstance %>)
             .when()
             .post("/api/<%= entityApiUrl %>")
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
 
         // Validate the <%= entityClass %> in the database
-        var <%= entityInstance %>List = given()
+        var <%= entityOrDtoInstance %>List = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -49,7 +46,7 @@ _%>
             .contentType(APPLICATION_JSON)
             .extract().as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityInstance %>List).hasSize(databaseSizeBeforeTest);
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeTest);
     }
 <%_ }
 } _%>

@@ -33,7 +33,7 @@ public class JsonbConfiguration implements JsonbConfigCustomizer {
     @Override
     public void customize(JsonbConfig config) {
         config
-            .withDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", null);
+            .withDateFormat(Constants.DATE_TIME_FORMAT, null);
     }
 
 }

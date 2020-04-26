@@ -23,12 +23,17 @@
     <%_ if (hasServiceImpl) { _%>
     @Override
     <%_ } _%>
-    <%_ if (hasTransaction) { _%>
+    <%_ if (databaseType === 'sql' && isUsingMapsId === true) { _%>
     @Transactional(readOnly = true)
     <%_ } _%>
-    public PanacheQuery<<%= entityClassName %>> findAll() {
+    public List<<%= entityOrDtoClass %>> findAll() {
         log.debug("Request to get all <%= entityClassPlural %>");
-        return <%= dataAccessObject %>.findAll();
+        <%_ if(hasDto) { _%>
+        List<<%= entityClass%>> <%= entityInstancePlural %> = <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
+        return <%= mapper %>.toDto(<%= entityInstancePlural %>);
+        <%_ } else { _%>
+        return <%= dataAccessObject %>.findAll().list();
+        <%_ } _%>
     }
 
     <%_ if (fieldsContainOwnerManyToMany === true) { _%>
@@ -38,7 +43,12 @@
      *
      * @return the list of entities.
      */
-    public PanacheQuery<<%= entityClassName %>> findAllWithEagerRelationships() {
-        return <%= dataAccessObject %>.findAllWithEagerRelationships();
+    public List<<%= entityOrDtoClass %>> findAllWithEagerRelationships() {
+        <%_ if(hasDto) { _%>
+        List<<%= entityClass%>> <%= entityInstancePlural %> = <%= dataAccessObject %>.findAllWithEagerRelationships().list();
+        return <%= mapper %>.toDto(<%= entityInstancePlural %>);
+        <%_ } else { _%>
+        return <%= dataAccessObject %>.findAllWithEagerRelationships().list();
+        <%_ } _%>
     }
     <%_ } _%>

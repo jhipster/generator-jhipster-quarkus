@@ -24,10 +24,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import <%= packageName %>.TestUtil;
-import <%= packageName %>.domain.<%= instanceType %>;
-<%_ if (hasDto) { _%>
-import <%= packageName %>.service.dto.<%= instanceType %>;
-import <%= packageName %>.service.mapper.<%= mapper %>;
+<%_ if (!hasDto) { _%>
+import <%= packageName %>.domain.<%= entityClass %>;
+<%_ } else { _%>
+import <%= packageName %>.service.dto.<%= dtoClass %>;
 <%_ } _%>
 import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
@@ -65,7 +65,7 @@ import java.time.ZoneOffset;
     <%_ if (fieldsContainLocalDate|| fieldsContainZonedDateTime) { _%>
 import java.time.ZoneId;
     <%_ } _%>
-    <%_ if (fieldsContainInstant === true) { _%>
+    <%_ if (fieldsContainInstant === true || fieldsContainZonedDateTime === true) { _%>
 import java.time.temporal.ChronoUnit;
     <%_ } _%>
     <%_ if (fieldsContainOwnerManyToMany) { _%>

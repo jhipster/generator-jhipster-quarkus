@@ -125,13 +125,13 @@
         defaultValue = 'LocalDate.ofEpochDay(0L)';
         updatedValue = 'LocalDate.now(ZoneId.systemDefault())';
     } else if (fieldType === 'Instant') {
-        smallerValue = 'Instant.ofEpochMilli(-1L)';
-        defaultValue = 'Instant.ofEpochMilli(0L)';
-        updatedValue = 'Instant.now().truncatedTo(ChronoUnit.MILLIS)';
+        smallerValue = 'Instant.ofEpochSecond(-1L).truncatedTo(ChronoUnit.SECONDS)';
+        defaultValue = 'Instant.ofEpochSecond(0L).truncatedTo(ChronoUnit.SECONDS)';
+        updatedValue = 'Instant.now().truncatedTo(ChronoUnit.SECONDS)';
     } else if (fieldType === 'ZonedDateTime') {
-        smallerValue = 'ZonedDateTime.ofInstant(Instant.ofEpochMilli(-1L), ZoneOffset.UTC)';
-        defaultValue = 'ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC)';
-        updatedValue = 'ZonedDateTime.now(ZoneId.systemDefault()).withNano(0)';
+        smallerValue = 'ZonedDateTime.ofInstant(Instant.ofEpochSecond(-1L).truncatedTo(ChronoUnit.SECONDS), ZoneOffset.UTC)';
+        defaultValue = 'ZonedDateTime.ofInstant(Instant.ofEpochSecond(0L).truncatedTo(ChronoUnit.SECONDS), ZoneOffset.UTC)';
+        updatedValue = 'ZonedDateTime.now(ZoneId.systemDefault()).truncatedTo(ChronoUnit.SECONDS)';
     } else if (fieldType === 'Duration') {
         smallerValue = 'Duration.ofHours(5)';
         defaultValue = 'Duration.ofHours(6)';

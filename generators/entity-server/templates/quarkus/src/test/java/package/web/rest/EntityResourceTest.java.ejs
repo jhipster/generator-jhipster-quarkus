@@ -23,17 +23,17 @@ package <%=packageName%>.web.rest;
 @QuarkusTest
 public class <%= entityClass%>ResourceTest {
 
-    private static final TypeRef<<%= entityClass%>> ENTITY_TYPE = new TypeRef<>() {
+    private static final TypeRef<<%= entityOrDtoClass%>> ENTITY_TYPE = new TypeRef<>() {
     };
 
-    private static final TypeRef<List<<%= entityClass%>>> LIST_OF_ENTITY_TYPE = new TypeRef<>() {
+    private static final TypeRef<List<<%= entityOrDtoClass%>>> LIST_OF_ENTITY_TYPE = new TypeRef<>() {
     };
 
 <%- include('../../common/web_defaults_template', this); -%>
 
     String adminToken;
 
-    <%= entityClass %> <%= entityInstance %>;
+    <%= entityOrDtoClass %> <%= entityOrDtoInstance %>;
 
     @Inject
     LiquibaseFactory liquibaseFactory;
@@ -66,17 +66,17 @@ public class <%= entityClass%>ResourceTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static <%= entityClass %> createEntity() {
-        var <%= entityInstance %> = new <%= entityClass %>();
+    public static <%= entityOrDtoClass %> createEntity() {
+        var <%= entityOrDtoInstance %> = new <%= entityOrDtoClass %>();
         <%_ for (let idx = 0; idx < fields.length; idx++) { _%>
-        <%= entityInstance %>.<%= fields[idx].fieldName %> = DEFAULT_<%= fields[idx].fieldNameUnderscored.toUpperCase(); %>;
+        <%= entityOrDtoInstance %>.<%= fields[idx].fieldName %> = DEFAULT_<%= fields[idx].fieldNameUnderscored.toUpperCase(); %>;
         <%_ } _%>
-        return <%= entityInstance %>;
+        return <%= entityOrDtoInstance %>;
     }
 
     @BeforeEach
     public void initTest() {
-        <%= entityInstance %> = createEntity();
+        <%= entityOrDtoInstance %> = createEntity();
     }
 
     <%_ if (!readOnly) { _%>

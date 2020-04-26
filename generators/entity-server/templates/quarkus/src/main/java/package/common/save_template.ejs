@@ -30,29 +30,29 @@ if (isUsingMapsId) {
     mapsIdRepoInstance = `${mapsIdEntityInstance}Repository`;
     otherEntityName = mapsIdAssoc.otherEntityName;
     if (isController === true) { _%>
-        if (Objects.isNull(<%= instanceName%>.get<%= mapsIdAssoc.relationshipNameCapitalized %> <%_ if (hasDto) { _%> Id <%_ } _%>())) {
+        if (Objects.isNull(<%= entityOrDtoInstance%>.get<%= mapsIdAssoc.relationshipNameCapitalized %> <%_ if (hasDto) { _%> Id <%_ } _%>())) {
             throw new BadRequestAlertException("Invalid association value provided", ENTITY_NAME, "null");
         }
     <%_ } _%>
 <%_ }
 if (!viaService) {
     if (hasDto) {
-        resultEntity = entityInstanceName; _%>
-        <%= entityClassName %> <%= entityInstanceName %> = <%= dtoToEntity %>(<%= instanceName %>);
+        resultEntity = entityInstance; _%>
+        var <%= entityInstance %> = <%= mapper %>.toEntity(<%= dtoInstance %>);
         <%_ if (isUsingMapsId) { _%>
-        <%= dataTypeName %> <%= otherEntityName %>Id = <%= instanceName %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>Id();
-        <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityInstanceName %>::<%= mapsIdAssoc.relationshipName %>);
+        <%= dataTypeName %> <%= otherEntityName %>Id = <%= entityOrDtoInstance %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>Id();
+        <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityOrDtoInstance %>::<%= mapsIdAssoc.relationshipName %>);
         <%_ } _%>
-        <%= entityInstanceName %> = <%= dataAccessObject %>.persistOrUpdate(<%= entityInstanceName %>);
-        <%= returnPrefix %> <%= entityToDtoMethodInvocation %>(<%= entityInstanceName %>);
+        <%= entityInstance %> = <%= dataAccessObject %>.persistOrUpdate(<%= entityInstance %>);
+        <%= returnPrefix %> <%= mapper %>.toDto(<%= entityInstance %>);
     <%_ } else {
         resultEntity = 'result';
     _%>
         <%_ if (isUsingMapsId) { _%>
-        <%= dataTypeName %> <%= otherEntityName %>Id = <%= instanceName %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>().getId();
-        <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= instanceName%>::<%= otherEntityName %>);
+        <%= dataTypeName %> <%= otherEntityName %>Id = <%= entityOrDtoInstance %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>().getId();
+        <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityOrDtoInstance%>::<%= otherEntityName %>);
         <%_ } _%>
-        <%= returnPrefix %> <%= dataAccessObject %>.persistOrUpdate(<%= entityInstanceName %>);
+        <%= returnPrefix %> <%= dataAccessObject %>.persistOrUpdate(<%= entityInstance %>);
         <%_ } if (searchEngine === 'elasticsearch') { _%>
         <%= entityInstance %>SearchRepository.persistOrUpdate(<%= resultEntity %>);
             <%_ if (returnDirectly) { _%>
@@ -64,5 +64,5 @@ if (!viaService) {
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= entityInstance %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>().getId();
         <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityInstance%>::<%= otherEntityName %>);
         <%_ } _%>
-        <%= returnPrefix %> <%= entityInstance %>Service.persistOrUpdate(<%= instanceName %>);
+        <%= returnPrefix %> <%= entityInstance %>Service.persistOrUpdate(<%= entityOrDtoInstance %>);
 <%_ } _%>

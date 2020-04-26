@@ -24,7 +24,10 @@
     <%_ if (hasServiceImpl) { _%>
     @Override
     <%_ } _%>
+    <%_ if (databaseType === 'sql') { _%>
+    @Transactional
+    <%_ } _%>
     public void delete(<%= primaryKeyType %> id) {
         log.debug("Request to delete <%= entityClass %> : {}", id);
-<%- include('./delete_template', {...this, viaService: false, hasDto: false}); -%>
+<%- include('./delete_template', {...this, viaService: false}); -%>
     }

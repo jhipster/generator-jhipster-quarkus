@@ -272,6 +272,29 @@ const serverFilesFromJHipster = {
     ]
 };
 
+function updateDtoTest() {
+    this.replaceContent(
+        `${SERVER_TEST_SRC_DIR}/${this.packageFolder}/service/dto/${this.asDto(this.entityClass)}Test.java`,
+        'web.rest.TestUtil',
+        'TestUtil'
+    );
+
+    this.replaceContent(
+        `${SERVER_TEST_SRC_DIR}/${this.packageFolder}/service/dto/${this.asDto(this.entityClass)}Test.java`,
+        'getId()',
+        'id'
+    );
+
+    this.replaceContent(
+        `${SERVER_TEST_SRC_DIR}/${this.packageFolder}/service/dto/${this.asDto(this.entityClass)}Test.java`,
+        'setId\\((.+)\\)',
+        'id = $1',
+        true
+    );
+
+    this.replaceContent(`${SERVER_TEST_SRC_DIR}/${this.packageFolder}/service/mapper/${this.entityClass}MapperTest.java`, 'getId()', 'id');
+}
+
 function writeFiles() {
     return {
         writeServerFiles() {
@@ -280,6 +303,7 @@ function writeFiles() {
             // write server side files
             this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
             this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('entity-server/templates'));
+            updateDtoTest.call(this);
 
             if (this.databaseType === 'sql') {
                 if (!this.skipDbChangelog) {

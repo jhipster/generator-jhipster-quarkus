@@ -19,13 +19,13 @@
     @Test
     public void update<%= entityClass %>() {
         // Initialize the database
-        <%= entityInstance %> = given()
+        <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(<%= entityInstance %>)
+            .body(<%= entityOrDtoInstance %>)
             .when()
             .post("/api/<%= entityApiUrl %>")
             .then()
@@ -46,13 +46,13 @@
             .size();
 
         // Get the <%= entityInstance %>
-        var updated<%= entityClass %> = given()
+        var updated<%= entityOrDtoClass %> = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
             .accept(APPLICATION_JSON)
             .when()
-            .get("/api/<%= entityApiUrl %>/{id}", <%= entityInstance %>.id)
+            .get("/api/<%= entityApiUrl %>/{id}", <%= entityOrDtoInstance %>.id)
             .then()
             .statusCode(OK.getStatusCode())
             .contentType(APPLICATION_JSON)
@@ -60,7 +60,7 @@
 
         // Update the <%= entityInstance %>
         <%_ for (let idx = 0; idx < fields.length; idx++) { _%>
-        updated<%= entityClass %>.<%= fields[idx].fieldName %> = UPDATED_<%= fields[idx].fieldNameUnderscored.toUpperCase() %>;
+        updated<%= entityOrDtoClass %>.<%= fields[idx].fieldName %> = UPDATED_<%= fields[idx].fieldNameUnderscored.toUpperCase() %>;
         <%_ } _%>
 
         given()
@@ -69,14 +69,14 @@
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(updated<%= entityClass %>)
+            .body(updated<%= entityOrDtoClass %>)
             .when()
             .put("/api/<%= entityApiUrl %>")
             .then()
             .statusCode(OK.getStatusCode());
 
         // Validate the <%= entityClass %> in the database
-        var <%= entityInstance %>List = given()
+        var <%= entityOrDtoInstance %>List = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -88,8 +88,8 @@
             .contentType(APPLICATION_JSON)
             .extract().as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityInstance %>List).hasSize(databaseSizeBeforeUpdate);
-        var test<%= entityClass %> = <%= entityInstance %>List.stream().filter(it -> updated<%= entityClass %>.id.equals(it.id)).findFirst().get();
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeUpdate);
+        var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().filter(it -> updated<%= entityOrDtoClass %>.id.equals(it.id)).findFirst().get();
 <%- include('./web_object_verification_template', {...this, prefix: 'UPDATED_'}); -%>
     }
 
@@ -115,14 +115,14 @@
             .oauth2(adminToken)
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(<%= entityInstance %>)
+            .body(<%= entityOrDtoInstance %>)
             .when()
             .put("/api/<%= entityApiUrl %>")
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
 
         // Validate the <%= entityClass %> in the database
-        var <%= entityInstance %>List = given()
+        var <%= entityOrDtoInstance %>List = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -134,5 +134,5 @@
             .contentType(APPLICATION_JSON)
             .extract().as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityInstance %>List).hasSize(databaseSizeBeforeUpdate);
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeUpdate);
     }
