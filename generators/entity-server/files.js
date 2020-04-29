@@ -19,9 +19,10 @@
 
 const constants = require('generator-jhipster/generators/generator-constants');
 const faker = require('faker');
+const jhipsterUtils = require('generator-jhipster/generators/utils');
 const utils = require('../utils');
 
-const randexp = utils.RandexpWithFaker;
+const randexp = jhipsterUtils.RandexpWithFaker;
 /* Constants use throughout */
 const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
@@ -303,7 +304,9 @@ function writeFiles() {
             // write server side files
             this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
             this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('entity-server/templates'));
-            updateDtoTest.call(this);
+            if (this.hasDto) {
+                updateDtoTest.call(this);
+            }
 
             if (this.databaseType === 'sql') {
                 if (!this.skipDbChangelog) {

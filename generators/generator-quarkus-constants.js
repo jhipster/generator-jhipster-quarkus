@@ -1,7 +1,7 @@
-const DEFAULT_USE_REPOSITORY = 'no';
+const DEFAULT_DATA_ACCESS = 'activeRecord';
 
 const constants = {
-    DEFAULT_USE_REPOSITORY
+    DEFAULT_DATA_ACCESS
 };
 
 module.exports = constants;

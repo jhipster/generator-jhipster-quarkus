@@ -57,8 +57,8 @@
         <%_ if (viaService) { _%>
         return <%= entityInstance %>Service.findAll();
         <%_ } else if (hasDto) { _%>
-        List<<%= asEntity(entityClass) %>> <%= entityInstancePlural %> = <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
-        return <%= entityListToDtoListMethodInvocation %>(<%= entityInstancePlural %>);
+        List<<%= entityClass %>> <%= entityInstancePlural %> = <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
+        return <%= mapper %>.toDto(<%= entityInstancePlural %>);
         <%_ } else { _%>
         return <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
         <%_ } _%>

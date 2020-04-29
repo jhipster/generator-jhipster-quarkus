@@ -65,7 +65,7 @@ module.exports = class extends EntityServerGenerator {
             prepareQuarkusRendering() {
                 this.viaService = this.service !== 'no';
                 this.hasServiceImpl = this.service === 'serviceImpl';
-                this.viaRepository = this.repository !== 'no';
+                this.viaRepository = this.dataAccessObject === 'repository';
                 this.hasDto = this.dto === 'mapstruct';
                 this.hasPagination = this.pagination !== 'no';
 

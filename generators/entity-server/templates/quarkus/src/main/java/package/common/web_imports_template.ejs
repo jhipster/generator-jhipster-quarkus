@@ -45,7 +45,7 @@ import <%=packageName%>.web.util.ResponseUtil;
 <%_ if (hasDto) { _%>
 import <%=packageName%>.service.dto.<%= entityOrDtoClass %>;
     <%_ if (!viaService) { _%>
-import <%=packageName%>.service.mapper.<%= mapper %>;
+import <%=packageName%>.service.mapper.<%= entityClass %>Mapper;
     <%_ } _%>
 <%_ } _%>
 <%_ if (jpaMetamodelFiltering) {  _%>
@@ -78,7 +78,7 @@ import reactor.core.publisher.Flux;
 <%_ } _%>
 
 import javax.enterprise.context.ApplicationScoped;
-<%_ if (viaService || viaRepository) { _%>
+<%_ if (viaService || viaRepository || hasDto) { _%>
 import javax.inject.Inject;
 <%_ } _%>
 <%_ if (databaseType === 'sql' && !viaService) { %>

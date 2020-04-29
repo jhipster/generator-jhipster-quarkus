@@ -17,7 +17,7 @@
  limitations under the License.
 -%>
 <%_
-let finderPrefix = 'public' + ((repository !== 'activeRecord') ? ' static'  : '');
+let finderPrefix = 'public' + (!viaRepository ? ' static'  : '');
 for (idx in relationships) {
     if (relationships[idx].relationshipType === 'many-to-one' && relationships[idx].otherEntityName === 'user' && databaseType === 'sql') {
 _%>

@@ -26,9 +26,9 @@ module.exports = class extends EntityGenerator {
             setupConfigQuarkus() {
                 const context = this.context;
                 if (!context.useConfigurationFile) {
-                    context.repository = constants.DEFAULT_USE_REPOSITORY;
+                    context.dataAccess = constants.DEFAULT_DATA_ACCESS;
                 } else {
-                    context.repository = context.fileData.repository || constants.DEFAULT_USE_REPOSITORY;
+                    context.dataAccess = context.fileData.dataAccess || constants.DEFAULT_DATA_ACCESS;
                 }
             }
         };
@@ -47,12 +47,12 @@ module.exports = class extends EntityGenerator {
             askForRelationships: phaseFromJHipster.askForRelationships,
             askForRelationsToRemove: phaseFromJHipster.askForRelationsToRemove,
             askForTableName: phaseFromJHipster.askForTableName,
-            askForRepository: prompts.askForRepository,
-            askForService: phaseFromJHipster.askForService,
-            askForDTO: phaseFromJHipster.askForDTO,
-            askForFiltering: phaseFromJHipster.askForFiltering,
-            askForReadOnly: phaseFromJHipster.askForReadOnly,
-            askForPagination: phaseFromJHipster.askForPagination
+            askForDataAccess: prompts.askForDataAccess,
+            askForService: prompts.askForService,
+            askForDTO: phaseFromJHipster.askForDTO
+            // askForFiltering: phaseFromJHipster.askForFiltering,
+            // askForReadOnly: phaseFromJHipster.askForReadOnly,
+            // askForPagination: phaseFromJHipster.askForPagination
         };
         return phaseFromQuarkus;
     }
@@ -69,7 +69,7 @@ module.exports = class extends EntityGenerator {
                 if (!this.storageData) {
                     this.storageData = {};
                 }
-                this.storageData.repository = context.repository;
+                this.storageData.dataAccess = context.dataAccess;
             },
             ...phaseFromJHipster,
             fixRelationshipsPk() {

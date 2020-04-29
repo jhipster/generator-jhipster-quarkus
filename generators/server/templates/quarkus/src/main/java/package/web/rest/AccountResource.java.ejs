@@ -93,7 +93,7 @@ public class AccountResource {
             return mailService.sendActivationEmail(user).thenApply(it -> Response.created(null).build());
         } catch (UsernameAlreadyUsedException e) {
             throw new LoginAlreadyUsedException();
-        } catch (com.mycompany.myapp.service.EmailAlreadyUsedException e) {
+        } catch (<%= packageName %>.service.EmailAlreadyUsedException e) {
             throw new EmailAlreadyUsedException();
         }
     }

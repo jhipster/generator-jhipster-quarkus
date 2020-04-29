@@ -32,7 +32,7 @@ import javax.validation.constraints.Size;
  * An authority (a security role).
  */
 @Entity
-@Table(name = "jhi_authority")
+@Table(name = "<%= jhiTablePrefix %>_authority")
 //@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Authority extends PanacheEntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
