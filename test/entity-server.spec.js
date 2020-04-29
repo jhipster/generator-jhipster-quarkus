@@ -36,7 +36,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withPrompts({
                     fieldAdd: false,
                     relationshipAdd: false,
-                    repository: 'no',
+                    dataAccess: 'activeRecord',
                     dto: 'no',
                     service: 'no',
                     pagination: 'infinite-scroll'
@@ -83,7 +83,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withPrompts({
                     fieldAdd: false,
                     relationshipAdd: false,
-                    repository: 'yes',
+                    dataAccess: 'repository',
                     dto: 'no',
                     service: 'no',
                     pagination: 'infinite-scroll'
@@ -127,7 +127,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withPrompts({
                     fieldAdd: false,
                     relationshipAdd: false,
-                    repository: 'no',
+                    dataAccess: 'activeRecord',
                     dto: 'mapstruct',
                     service: 'serviceClass',
                     pagination: 'infinite-scroll'
@@ -168,7 +168,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withPrompts({
                     fieldAdd: false,
                     relationshipAdd: false,
-                    repository: 'no',
+                    dataAccess: 'activeRecord',
                     dto: 'mapstruct',
                     service: 'serviceImpl',
                     pagination: 'infinite-scroll'

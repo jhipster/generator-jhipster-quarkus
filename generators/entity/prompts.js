@@ -31,7 +31,7 @@ function askForDataAccess() {
         }
     ];
     this.prompt(prompts).then(props => {
-        context.repository = props.repository;
+        context.dataAccess = props.dataAccess;
         done();
     });
 }
