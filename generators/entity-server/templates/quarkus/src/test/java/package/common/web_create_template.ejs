@@ -1,0 +1,111 @@
+<%#
+ Copyright 2013-2020 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+    @Test
+    public void create<%= entityClass %>() {
+        var databaseSizeBeforeCreate = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract().as(LIST_OF_ENTITY_TYPE)
+            .size();
+
+        // Create the <%= entityClass %>
+        <%= entityOrDtoInstance %> = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(<%= entityOrDtoInstance %>)
+            .when()
+            .post("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(CREATED.getStatusCode())
+            .extract().as(ENTITY_TYPE);
+
+        // Validate the <%= entityClass %> in the database
+        var <%= entityOrDtoInstance %>List = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract().as(LIST_OF_ENTITY_TYPE);
+
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate + 1);
+        var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().filter(it -> <%= entityOrDtoInstance %>.id.equals(it.id)).findFirst().get();
+<%- include('./web_object_verification_template', {...this, prefix: 'DEFAULT_'}); -%>
+    }
+
+    @Test
+    public void create<%= entityClass %>WithExistingId() {
+        var databaseSizeBeforeCreate = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract().as(LIST_OF_ENTITY_TYPE)
+            .size();
+
+        // Create the <%= entityClass %> with an existing ID
+        <%= entityOrDtoInstance %>.id = 1L;
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(<%= entityOrDtoInstance %>)
+            .when()
+            .post("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(BAD_REQUEST.getStatusCode());
+
+        // Validate the <%= entityClass %> in the database
+        var <%= entityOrDtoInstance %>List = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract().as(LIST_OF_ENTITY_TYPE);
+
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate);
+    }

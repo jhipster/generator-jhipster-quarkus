@@ -1,5 +1,5 @@
 <%#
- Copyright 2013-2019 the original author or authors from the JHipster project.
+ Copyright 2013-2020 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -16,30 +16,80 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-package <%=packageName%>;
+package <%=packageName%>.web.rest;
 
-import io.quarkus.test.junit.NativeImageTest;
-import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
+<%- include('../../common/web_imports_template', this); -%>
 
 @QuarkusTest
-public class ExampleResourceTest {
+public class <%= entityClass%>ResourceTest {
 
-    @NativeImageTest
-    public class NativeExampleResourceIT extends ExampleResourceTest {
-        // Execute the same tests but in native mode.
+    private static final TypeRef<<%= entityOrDtoClass%>> ENTITY_TYPE = new TypeRef<>() {
+    };
+
+    private static final TypeRef<List<<%= entityOrDtoClass%>>> LIST_OF_ENTITY_TYPE = new TypeRef<>() {
+    };
+
+<%- include('../../common/web_defaults_template', this); -%>
+
+    String adminToken;
+
+    <%= entityOrDtoClass %> <%= entityOrDtoInstance %>;
+
+    @Inject
+    LiquibaseFactory liquibaseFactory;
+
+    @BeforeAll
+    static void jsonMapper() {
+        RestAssured.config =
+            RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
     }
 
-    @Test
-    public void testHelloEndpoint() {
-        given()
-          .when().get("/hello")
-          .then()
-             .statusCode(200)
-             .body(is("hello"));
+    @BeforeEach
+    public void authenticateAdmin() {
+        this.adminToken = TestUtil.getAdminToken();
     }
 
+    @BeforeEach
+    public void databaseFixture() {
+        try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
+            liquibase.dropAll();
+            liquibase.validate();
+            liquibase.update(liquibaseFactory.createContexts(), liquibaseFactory.createLabels());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Create an entity for this test.
+     * <p>
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static <%= entityOrDtoClass %> createEntity() {
+        var <%= entityOrDtoInstance %> = new <%= entityOrDtoClass %>();
+        <%_ for (let idx = 0; idx < fields.length; idx++) { _%>
+        <%= entityOrDtoInstance %>.<%= fields[idx].fieldName %> = DEFAULT_<%= fields[idx].fieldNameUnderscored.toUpperCase(); %>;
+        <%_ } _%>
+        return <%= entityOrDtoInstance %>;
+    }
+
+    @BeforeEach
+    public void initTest() {
+        <%= entityOrDtoInstance %> = createEntity();
+    }
+
+    <%_ if (!readOnly) { _%>
+<%- include('../../common/web_create_template', this); -%>
+
+<%- include('../../common/web_create_with_field_required_template', this); -%>
+
+<%- include('../../common/web_update_template', this); -%>
+
+<%- include('../../common/web_delete_template', this); -%>
+
+    <%_ } _%>
+<%- include('../../common/web_get_all_template', this); -%>
+
+<%- include('../../common/web_get_template', this); -%>
 }

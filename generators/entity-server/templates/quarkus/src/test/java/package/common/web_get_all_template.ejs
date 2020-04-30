@@ -1,0 +1,75 @@
+<%#
+ Copyright 2013-2020 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+    @Test
+    public void getAll<%= entityClassPlural %>() {
+        // Initialize the database
+        <%= entityOrDtoInstance %> = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(<%= entityOrDtoInstance %>)
+            .when()
+            .post("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(CREATED.getStatusCode())
+            .extract().as(ENTITY_TYPE);
+
+        // Get all the <%= entityInstance %>List
+        given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>?sort=id,desc")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            <%_
+                let idValueTransformer = '';
+                if (primaryKeyType === 'Long') {
+                    idValueTransformer = '.intValue()';
+                } else if (primaryKeyType === 'UUID') {
+                    idValueTransformer = '.toString()';
+                }
+            _%>
+            .body("id", hasItem(<%= entityOrDtoInstance %>.id<%= idValueTransformer %>))
+            <%_ for (let idx = 0; idx < fields.length; idx++) {
+                const fieldName = fields[idx].fieldName;
+                const fieldType = fields[idx].fieldType;
+                let expected = 'DEFAULT_' + fields[idx].fieldNameUnderscored.toUpperCase();
+
+                if (fieldType === 'Integer' || fieldType === 'Long') {
+                    expected = `${expected}.intValue()`;
+                } else if (fieldType === 'Float' || fieldType === 'Double') {
+                    expected = `${expected}.doubleValue()`;
+                } else if (fieldType === 'BigDecimal') {
+                    expected = `${expected}.floatValue()`;
+                } else if (fieldType === 'Boolean') {
+                    expected = `${expected}.booleanValue()`;
+                } else if (fieldType === 'Instant' || fieldType === 'ZonedDateTime' || fieldType === 'LocalDate') {
+                    expected = `TestUtil.formatDateTime(${expected})`;
+                } else if (fieldType !== 'String') {
+                    expected = `${expected}.toString()`;
+                }
+            _%>
+            .body("<%= fields[idx].fieldName %>", hasItem(<%= expected %>))<%_ } _%>;
+    }

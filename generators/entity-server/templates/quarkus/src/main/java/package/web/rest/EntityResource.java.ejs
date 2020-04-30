@@ -1,5 +1,5 @@
 <%#
- Copyright 2013-2019 the original author or authors from the JHipster project.
+ Copyright 2013-2020 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -18,96 +18,7 @@
 -%>
 package <%=packageName%>.web.rest;
 
-<%_
-    const viaService = service !== 'no';
-    let isUsingMapsId = false;
-    let mapsIdAssoc;
-    let primaryKeyType = pkType;
-    for (idx in relationships) {
-        isUsingMapsId = relationships[idx].useJPADerivedIdentifier;
-        if ( isUsingMapsId === true) {
-            mapsIdAssoc = relationships[idx];
-            primaryKeyType = (relationships[idx].otherEntityName === 'user'  && authenticationType === 'oauth2') ? 'String' : pkType;
-            break;
-        }
-        isUsingMapsId = false;
-    } _%>
-<%_ if (dto !== 'mapstruct' || service === 'no') { _%>
-import <%=packageName%>.domain.<%= asEntity(entityClass) %>;
-<%_ } _%>
-<%_ if (service !== 'no') { _%>
-import <%=packageName%>.service.<%= entityClass %>Service;
-<%_ } else { _%>
-import <%=packageName%>.repository.<%= entityClass %>Repository;
-    <%_ if (isUsingMapsId === true) { _%>
-import <%=packageName%>.repository.<%= mapsIdAssoc.otherEntityNameCapitalized %>Repository;
-    <%_ } _%>
-    <%_ if (reactiveRepositories) { _%>
-import <%=packageName%>.repository.reactive.<%= entityClass %>ReactiveRepository;
-    <%_ } _%>
-    <%_ if (searchEngine === 'elasticsearch') { _%>
-import <%=packageName%>.repository.search.<%= entityClass %>SearchRepository;
-    <%_ } _%>
-<%_ } _%>
-<%_ if (saveUserSnapshot) { _%>
-import <%=packageName%>.domain.User;
-<%_ } _%>
-//import <%=packageName%>.web.rest.errors.BadRequestAlertException;
-import <%=packageName%>.web.util.HeaderUtil;
-import <%=packageName%>.web.util.ResponseUtil;
-<%_ if (dto === 'mapstruct') { _%>
-import <%=packageName%>.service.dto.<%= asDto(entityClass) %>;
-<%_ if (service === 'no') { _%>
-import <%=packageName%>.service.mapper.<%= entityClass %>Mapper;
-<%_ } } _%>
-<%_ if (jpaMetamodelFiltering) {  _%>
-import <%=packageName%>.service.dto.<%= entityClass %>Criteria;
-import <%=packageName%>.service.<%= entityClass %>QueryService;
-<%_ } _%>
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-<%_ if (pagination !== 'no') { _%>
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-    <%_ if (reactive) { _%>
-import org.springframework.http.server.reactive.ServerHttpRequest;
-    <%_ } _%>
-    <%_ if (!reactive) { _%>
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-    <%_ } else { _%>
-import org.springframework.web.util.UriComponentsBuilder;
-    <%_ } _%>
-<%_ } _%>
-<%_ if (reactiveRepositories) { _%>
-import org.springframework.http.MediaType;
-<%_ } _%>
-<%_ if (reactiveRepositories) { _%>
-import reactor.core.publisher.Flux;
-<%_ } _%>
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;<%_ if (!viaService && !saveUserSnapshot) { %>
-import javax.transaction.Transactional; <% } %>
-<%_ if (validation) { _%>
-import javax.validation.Valid;
-<%_ } _%>
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.net.URI;
-<%_ if (pagination === 'no' && dto === 'mapstruct' && !viaService && fieldsContainNoOwnerOneToOne === true) { _%>
-import java.util.LinkedList;<% } %>
-import java.util.List;<% if (isUsingMapsId === true) { %>
-import java.util.Objects;<% } %>
-import java.util.Optional;<% if (databaseType === 'cassandra') { %>
-import java.util.UUID;<% } %><% if (!viaService && (searchEngine === 'elasticsearch' || fieldsContainNoOwnerOneToOne === true)) { %>
-import java.util.stream.Collectors;<% } %><% if (searchEngine === 'elasticsearch' || fieldsContainNoOwnerOneToOne === true) { %>
-import java.util.stream.StreamSupport;<% } %><% if (searchEngine === 'elasticsearch') { %>
-
-import static org.elasticsearch.index.query.QueryBuilders.*;<% } %>
+<%- include('../../common/web_imports_template', this); -%>
 
 /**
  * REST controller for managing {@link <%= packageName %>.domain.<%= asEntity(entityClass) %>}.
@@ -115,159 +26,32 @@ import static org.elasticsearch.index.query.QueryBuilders.*;<% } %>
 @Path("/api/<%= entityApiUrl %>")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@ApplicationScoped<% if (databaseType === 'sql' && !viaService && !saveUserSnapshot) { %>
-@Transactional <%_ } %>
+@ApplicationScoped
 public class <%= entityClass %>Resource {
 
     private final Logger log = LoggerFactory.getLogger(<%= entityClass %>Resource.class);
 <%_ if (!readOnly) { _%>
 
-    <%_ let entityName = entityInstance;
-    if (clientRootFolder && !skipUiGrouping) {
-        entityName = _.camelCase(`${clientRootFolder}${entityClass}`);
-    } _%>
-    private static final String ENTITY_NAME = "<%= entityName %>";
+    private static final String ENTITY_NAME = "<%= (clientRootFolder && !skipUiGrouping) ? _.camelCase(`${clientRootFolder}${entityClass}`) : entityInstance %>";
 
     @ConfigProperty(name = "application.name")
     String applicationName;
 
-    @Context
-    HttpHeaders headers;
 <%_ } _%>
-    <%_
-    const instanceType = (dto === 'mapstruct') ? asDto(entityClass) : asEntity(entityClass);
-    const instanceName = (dto === 'mapstruct') ? asDto(entityInstance) : asEntity(entityInstance);
-    _%><%- include('../../common/inject_template', {viaService: viaService, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
-
+<%- include('../../common/inject_template', { ...this, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isController: true}); -%>
 <%_ if (!readOnly) { _%>
+<%- include('../../common/web_imperative_create_template', this); -%>
 
-    /**
-     * {@code POST  /<%= entityApiUrl %>} : Create a new <%= entityInstance %>.
-     *
-     * @param <%= instanceName %> the <%= instanceName %> to create.
-     * @return the {@link Response} with status {@code 201 (Created)} and with body the new <%= instanceName %>, or with status {@code 400 (Bad Request)} if the <%= entityInstance %> has already an ID.
-     */
-    @POST
-    public Response create<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>, @Context UriInfo uriInfo) {
-        log.debug("REST request to save <%= entityClass %> : {}", <%= instanceName %>);
-        if (<%= instanceName %>.id != null) {
-//            throw new BadRequestAlertException("A new <%= entityInstance %> cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        <%_ if (databaseType === 'cassandra') { _%>
-        <%= instanceName %>.id = UUID.randomUUID();
-        <%_ } _%>
-<%- include('../../common/save_template', {asEntity, asDto, viaService: viaService, returnDirectly: false, isUsingMapsId: isUsingMapsId, mapsIdAssoc: mapsIdAssoc, isController: true}); -%>
-        headers.getRequestHeaders().putAll(HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>));
-        URI uri = uriInfo.getAbsolutePathBuilder().path(<%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).build();
-        return Response.created(uri).entity(<%= instanceName %>).build();
-    }
+<%- include('../../common/web_imperative_update_template', this); -%>
 
-    /**
-     * {@code PUT  /<%= entityApiUrl %>} : Updates an existing <%= entityInstance %>.
-     *
-     * @param <%= instanceName %> the <%= instanceName %> to update.
-     * @return the {@link Response} with status {@code 200 (OK)} and with body the updated <%= instanceName %>,
-     * or with status {@code 400 (Bad Request)} if the <%= instanceName %> is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the <%= instanceName %> couldn't be updated.
-     */
-    @PUT
-    public Response update<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= instanceType %> <%= instanceName %>) {
-        log.debug("REST request to update <%= entityClass %> : {}", <%= instanceName %>);
-        if (<%= instanceName %>.id == null) {
-//            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-<%- include('../../common/save_template', {asEntity, asDto, viaService: viaService, returnDirectly: false, isUsingMapsId: false, mapsIdAssoc: mapsIdAssoc}); -%>
-        headers.getRequestHeaders().putAll(HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= instanceName %>.id<% if (pkType !== 'String') { %>.toString()<% } %>));
-        return Response.ok().entity(<%= instanceName %>).build();
+<%- include('../../common/web_imperative_delete_template', this); -%>
 
-    }
-    <%_ } _%>
-
-    /**
-     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %>.
-     *<%_ if (pagination !== 'no') { %>
-     * @param pageable the pagination information.
-        <%_ if (reactive) { _%>
-     * @param request a {@link ServerHttpRequest} request.
-        <%_ } _%>
-    <%_ } _%>
-    <%_ if (!jpaMetamodelFiltering && fieldsContainOwnerManyToMany) { _%>
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).<% } if (jpaMetamodelFiltering) { %>
-     * @param criteria the criteria which the requested entities should match.<% } else if (fieldsContainNoOwnerOneToOne) { %>
-     * @param filter the filter of the request.<% } %>
-     * @return the {@link Response} with status {@code 200 (OK)} and the list of <%= entityInstancePlural %> in body.
-     */
-    @GET<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
-
-    @Transactional(readOnly = true) <%_ } _%>
-<%- include('../../common/get_all_template', {asEntity, asDto, viaService}); -%>
-
-    <%_ if (reactiveRepositories) { _%>
-    /**
-     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %> as a stream.
-     * @return the {@link Flux} of <%= entityInstancePlural %>.
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_STREAM_JSON_VALUE)<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
-
-    @Transactional(readOnly = true) <%_ } _%>
-    public Flux<<%= instanceType %>> getAll<%= entityClassPlural %>AsStream() {
-        log.debug("REST request to get all <%= entityClassPlural %> as a stream");
-        <%_ if (viaService) { _%>
-        return <%= entityInstance %>Service.findAllAsFlux();
-        <%_ } else { _%>
-        return <%= entityInstance %>ReactiveRepository.findAll();
-        <%_ } _%>
-    }
-
-    <%_ } _%>
-    /**
-     * {@code GET  /<%= entityApiUrl %>/:id} : get the "id" <%= entityInstance %>.
-     *
-     * @param id the id of the <%= instanceName %> to retrieve.
-     * @return the {@link Response} with status {@code 200 (OK)} and with body the <%= instanceName %>, or with status {@code 404 (Not Found)}.
-     */
-    @GET
-    @Path("/{id}")<%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
-
-    @Transactional(readOnly = true) <%_ } %>
-    public Response get<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
-        log.debug("REST request to get <%= entityClass %> : {}", id);<%- include('../../common/get_template', {asEntity, asDto, viaService, returnDirectly:false}); -%>
-        return ResponseUtil.wrapOrNotFound(<%= instanceName %>);
-    }
-<%_ if (!readOnly) { _%>
-
-    /**
-     * {@code DELETE  /<%= entityApiUrl %>/:id} : delete the "id" <%= entityInstance %>.
-     *
-     * @param id the id of the <%= instanceName %> to delete.
-     * @return the {@link Response} with status {@code 204 (NO_CONTENT)}.
-     */
-    @DELETE
-    @Path("/{id}")
-    public Response delete<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
-        log.debug("REST request to delete <%= entityClass %> : {}", id);
-<%- include('../../common/delete_template', {viaService: viaService, instanceName: instanceName}); -%>
-        headers.getRequestHeaders().putAll(HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>));
-        return Response.noContent().build();
-    }
 <%_ } _%>
+<%- include('../../common/web_imperative_get_all_template', this); -%>
+
+<%- include('../../common/web_imperative_get_template', this); -%>
 <%_ if (searchEngine === 'elasticsearch') { _%>
 
-    /**
-     * {@code SEARCH  /_search/<%= entityApiUrl %>?query=:query} : search for the <%= entityInstance %> corresponding
-     * to the query.
-     *
-     * @param query the query of the <%= entityInstance %> search.
-    <%_ if (pagination !== 'no') { _%>
-     * @param pageable the pagination information.
-       <%_ if (reactive) { _%>
-     * @param request a {@link ServerHttpRequest} request.
-        <%_ } _%>
-    <%_ } _%>
-     * @return the result of the search.
-     */
-    @GET
-    @Path("/_search/<%= entityApiUrl %>")<%- include('../../common/search_template', {asEntity, asDto, viaService}); -%>
+<%- include('../../common/web_imperative_search_template', this); -%>
 <%_ } _%>
 }

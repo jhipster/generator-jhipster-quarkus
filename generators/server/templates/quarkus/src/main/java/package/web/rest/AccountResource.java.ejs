@@ -1,5 +1,5 @@
 <%#
- Copyright 2013-2019 the original author or authors from the JHipster project.
+ Copyright 2013-2020 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -93,7 +93,7 @@ public class AccountResource {
             return mailService.sendActivationEmail(user).thenApply(it -> Response.created(null).build());
         } catch (UsernameAlreadyUsedException e) {
             throw new LoginAlreadyUsedException();
-        } catch (com.mycompany.myapp.service.EmailAlreadyUsedException e) {
+        } catch (<%= packageName %>.service.EmailAlreadyUsedException e) {
             throw new EmailAlreadyUsedException();
         }
     }

@@ -1,5 +1,5 @@
 <%#
- Copyright 2013-2019 the original author or authors from the JHipster project.
+ Copyright 2013-2020 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -28,12 +28,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import <%=packageName%>.TestUtil;
+import <%=packageName%>.domain.Authority;
 import <%=packageName%>.domain.User;
 import <%=packageName%>.security.AuthoritiesConstants;
+import <%=packageName%>.service.dto.UserDTO;
+import <%=packageName%>.service.mapper.UserMapper;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
 import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
+import java.time.Instant;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -593,5 +597,76 @@ public class UserResourceTest {
             .contentType(APPLICATION_JSON)
             .body("$", hasSize(greaterThan(0)))
             .body("$", hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN));
+    }
+
+    @Test
+    public void testUserDTOtoUser() {
+        var userMapper = new UserMapper();
+        var userDTO = new UserDTO();
+        userDTO.id = 1L;
+        userDTO.login = DEFAULT_LOGIN;
+        userDTO.firstName = DEFAULT_FIRSTNAME;
+        userDTO.lastName = DEFAULT_LASTNAME;
+        userDTO.email = DEFAULT_EMAIL;
+        userDTO.activated = true;
+        userDTO.imageUrl = DEFAULT_IMAGEURL;
+        userDTO.langKey = DEFAULT_LANGKEY;
+        userDTO.createdBy = DEFAULT_LOGIN;
+        userDTO.lastModifiedBy = DEFAULT_LOGIN;
+        userDTO.authorities = Set.of(AuthoritiesConstants.USER);
+
+        User user = userMapper.userDTOToUser(userDTO);
+        assertThat(user.id).isEqualTo(1L);
+        assertThat(user.login).isEqualTo(DEFAULT_LOGIN);
+        assertThat(user.firstName).isEqualTo(DEFAULT_FIRSTNAME);
+        assertThat(user.lastName).isEqualTo(DEFAULT_LASTNAME);
+        assertThat(user.email).isEqualTo(DEFAULT_EMAIL);
+        assertThat(user.activated).isEqualTo(true);
+        assertThat(user.imageUrl).isEqualTo(DEFAULT_IMAGEURL);
+        assertThat(user.langKey).isEqualTo(DEFAULT_LANGKEY);
+        assertThat(user.createdBy).isBlank();
+        assertThat(user.createdDate).isNotNull();
+        assertThat(user.lastModifiedBy).isBlank();
+        assertThat(user.lastModifiedDate).isNotNull();
+        assertThat(user.authorities).extracting("name").containsExactly(AuthoritiesConstants.USER);
+    }
+
+    @Test
+    public void testUserToUserDTO() {
+        var userMapper = new UserMapper();
+        var user = new User();
+        user.id = 1L;
+        user.login = DEFAULT_LOGIN;
+        user.password = DEFAULT_PASSWORD;
+        user.firstName = DEFAULT_FIRSTNAME;
+        user.lastName = DEFAULT_LASTNAME;
+        user.email = DEFAULT_EMAIL;
+        user.activated = true;
+        user.imageUrl = DEFAULT_IMAGEURL;
+        user.langKey = DEFAULT_LANGKEY;
+        user.createdBy = DEFAULT_LOGIN;
+        user.createdDate = Instant.now();
+        user.lastModifiedBy = DEFAULT_LOGIN;
+        user.lastModifiedDate = Instant.now();
+        var authority = new Authority();
+        authority.name = AuthoritiesConstants.USER;
+        user.authorities = Set.of(authority);
+
+        UserDTO userDTO = userMapper.userToUserDTO(user);
+
+        assertThat(userDTO.id).isEqualTo(1L);
+        assertThat(userDTO.login).isEqualTo(DEFAULT_LOGIN);
+        assertThat(userDTO.firstName).isEqualTo(DEFAULT_FIRSTNAME);
+        assertThat(userDTO.lastName).isEqualTo(DEFAULT_LASTNAME);
+        assertThat(userDTO.email).isEqualTo(DEFAULT_EMAIL);
+        assertThat(userDTO.activated).isEqualTo(true);
+        assertThat(userDTO.imageUrl).isEqualTo(DEFAULT_IMAGEURL);
+        assertThat(userDTO.langKey).isEqualTo(DEFAULT_LANGKEY);
+        assertThat(userDTO.createdBy).isEqualTo(DEFAULT_LOGIN);
+        assertThat(userDTO.createdDate).isEqualTo(user.createdDate);
+        assertThat(userDTO.lastModifiedBy).isEqualTo(DEFAULT_LOGIN);
+        assertThat(userDTO.lastModifiedDate).isEqualTo(user.lastModifiedDate);
+        assertThat(userDTO.authorities).containsExactly(AuthoritiesConstants.USER);
+        assertThat(userDTO.toString()).isNotNull();
     }
 }

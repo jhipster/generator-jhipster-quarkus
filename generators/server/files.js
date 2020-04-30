@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2019 the original author or authors from the JHipster project.
+ * Copyright 2013-2020 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see https://www.jhipster.tech/
  * for more information.
@@ -49,6 +49,7 @@ const serverFiles = {
         {
             path: SERVER_MAIN_RES_DIR,
             templates: [
+                { file: 'default_banner.txt', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/privateKey.pem', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
                 'templates/mail/activationEmail.html',
@@ -88,6 +89,10 @@ const serverFiles = {
                 {
                     file: 'package/config/JHipsterProperties.java',
                     renameTo: generator => `${generator.javaDir}config/JHipsterProperties.java`
+                },
+                {
+                    file: 'package/config/JsonbConfiguration.java',
+                    renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`
                 }
             ]
         }
@@ -156,6 +161,10 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
+                    file: 'package/service/mapper/UserMapper.java',
+                    renameTo: generator => `${generator.javaDir}service/mapper/UserMapper.java`
+                },
+                {
                     file: 'package/service/dto/PasswordChangeDTO.java',
                     renameTo: generator => `${generator.javaDir}service/dto/PasswordChangeDTO.java`
                 },
@@ -186,6 +195,19 @@ const serverFiles = {
                 {
                     file: 'package/service/UserService.java',
                     renameTo: generator => `${generator.javaDir}service/UserService.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/mapper/UserMapperTest.java',
+                    renameTo: generator => `${generator.javaDir}/service/mapper/UserMapperTest.java`
+                },
+                {
+                    file: 'package/domain/UserTest.java',
+                    renameTo: generator => `${generator.javaDir}/domain/UserTest.java`
                 }
             ]
         }

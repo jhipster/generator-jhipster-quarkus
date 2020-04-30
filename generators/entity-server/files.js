@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2019 the original author or authors from the JHipster project.
+ * Copyright 2013-2020 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see https://www.jhipster.tech/
  * for more information.
@@ -19,20 +19,20 @@
 
 const constants = require('generator-jhipster/generators/generator-constants');
 const faker = require('faker');
+const jhipsterUtils = require('generator-jhipster/generators/utils');
 const utils = require('../utils');
 
-const randexp = utils.RandexpWithFaker;
+const randexp = jhipsterUtils.RandexpWithFaker;
 /* Constants use throughout */
 const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
 const SERVER_MAIN_RES_DIR = constants.SERVER_MAIN_RES_DIR;
-
+const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
 /*
 
 const DOCKER_DIR = constants.DOCKER_DIR;
 const TEST_DIR = constants.TEST_DIR;
 
-const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
 const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
 */
 
@@ -87,40 +87,77 @@ const serverFiles = {
                     useBluePrint: true
                 },
                 {
-                    file: 'package/repository/EntityRepository.java',
-                    renameTo: generator => `${generator.packageFolder}/repository/${generator.entityClass}Repository.java`,
-                    useBluePrint: true
-                },
-                {
                     file: 'package/web/rest/EntityResource.java',
                     renameTo: generator => `${generator.packageFolder}/web/rest/${generator.entityClass}Resource.java`,
                     useBluePrint: true
                 }
             ]
+        },
+        {
+            condition: generator => generator.dataAccess === 'repository',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/repository/EntityRepository.java',
+                    renameTo: generator => `${generator.packageFolder}/repository/${generator.entityClass}Repository.java`,
+                    useBluePrint: true
+                }
+            ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/domain/EntityTest.java',
+                    renameTo: generator => `${generator.packageFolder}/domain/${generator.entityClass}Test.java`,
+                    useBluePrint: true
+                },
+                {
+                    file: 'package/web/rest/EntityResourceTest.java',
+                    renameTo: generator => `${generator.packageFolder}/web/rest/${generator.entityClass}ResourceTest.java`,
+                    useBluePrint: true
+                }
+            ]
+        },
+        {
+            condition: generator => generator.service === 'serviceImpl' && !generator.embedded,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/EntityService.java',
+                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`
+                },
+                {
+                    file: 'package/service/impl/EntityServiceImpl.java',
+                    renameTo: generator => `${generator.packageFolder}/service/impl/${generator.entityClass}ServiceImpl.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.service === 'serviceClass' && !generator.embedded,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/impl/EntityServiceImpl.java',
+                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.dto === 'mapstruct',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/dto/EntityDTO.java',
+                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.asDto(generator.entityClass)}.java`
+                },
+                {
+                    file: 'package/service/mapper/EntityMapper.java',
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/${generator.entityClass}Mapper.java`
+                }
+            ]
         }
     ]
-    // ,
-    // test: [
-    //     {
-    //         path: SERVER_TEST_SRC_DIR,
-    //         templates: [
-    //             {
-    //                 file: 'package/web/rest/EntityResourceIT.java',
-    //                 options: {
-    //                     context: {
-    //                         randexp, <-- not defined
-    //                         _,
-    //                         chalkRed: chalk.red,
-    //                         fs,
-    //                         SERVER_TEST_SRC_DIR
-    //                     }
-    //                 },
-    //                 renameTo: generator => `${generator.packageFolder}/web/rest/${generator.entityClass}ResourceIT.kt`,
-    //                 useBluePrint: true
-    //             }
-    //         ]
-    //     }
-    // ]
 };
 
 const serverFilesFromJHipster = {
@@ -199,8 +236,65 @@ const serverFilesFromJHipster = {
             path: SERVER_MAIN_RES_DIR,
             templates: [{ file: 'config/liquibase/fake-data/blob/hipster.txt', method: 'copy' }]
         }
+    ],
+    dto: [
+        {
+            condition: generator => generator.dto === 'mapstruct',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/mapper/BaseEntityMapper.java',
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/EntityMapper.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.dto === 'mapstruct',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/dto/EntityDTOTest.java',
+                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.asDto(generator.entityClass)}Test.java`
+                }
+            ]
+        },
+        {
+            condition: generator =>
+                generator.dto === 'mapstruct' &&
+                (generator.databaseType === 'sql' || generator.databaseType === 'mongodb' || generator.databaseType === 'couchbase'),
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/mapper/EntityMapperTest.java',
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/${generator.entityClass}MapperTest.java`
+                }
+            ]
+        }
     ]
 };
+
+function updateDtoTest() {
+    this.replaceContent(
+        `${SERVER_TEST_SRC_DIR}/${this.packageFolder}/service/dto/${this.asDto(this.entityClass)}Test.java`,
+        'web.rest.TestUtil',
+        'TestUtil'
+    );
+
+    this.replaceContent(
+        `${SERVER_TEST_SRC_DIR}/${this.packageFolder}/service/dto/${this.asDto(this.entityClass)}Test.java`,
+        'getId()',
+        'id'
+    );
+
+    this.replaceContent(
+        `${SERVER_TEST_SRC_DIR}/${this.packageFolder}/service/dto/${this.asDto(this.entityClass)}Test.java`,
+        'setId\\((.+)\\)',
+        'id = $1',
+        true
+    );
+
+    this.replaceContent(`${SERVER_TEST_SRC_DIR}/${this.packageFolder}/service/mapper/${this.entityClass}MapperTest.java`, 'getId()', 'id');
+}
 
 function writeFiles() {
     return {
@@ -210,6 +304,28 @@ function writeFiles() {
             // write server side files
             this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
             this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('entity-server/templates'));
+            if (this.hasDto) {
+                updateDtoTest.call(this);
+            }
+
+            if (this.databaseType === 'sql') {
+                if (!this.skipDbChangelog) {
+                    if (this.fieldsContainOwnerManyToMany || this.fieldsContainOwnerOneToOne || this.fieldsContainManyToOne) {
+                        this.addConstraintsChangelogToLiquibase(`${this.changelogDate}_added_entity_constraints_${this.entityClass}`);
+                    }
+                    this.addChangelogToLiquibase(`${this.changelogDate}_added_entity_${this.entityClass}`);
+                }
+
+                if (['ehcache', 'caffeine', 'infinispan', 'redis'].includes(this.cacheProvider) && this.enableHibernateCache) {
+                    this.addEntityToCache(
+                        this.asEntity(this.entityClass),
+                        this.relationships,
+                        this.packageName,
+                        this.packageFolder,
+                        this.cacheProvider
+                    );
+                }
+            }
         },
 
         writeEnumFiles() {

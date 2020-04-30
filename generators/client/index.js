@@ -93,12 +93,12 @@ module.exports = class extends ClientGenerator {
         // The writing phase is being overriden so that we can write our own templates as well.
         // If the templates doesnt need to be overrriden then just return `super._writing()` here
         const phaseFromJHipster = super._writing();
-        const customPhaseSteps = {
+        const phaseFromQuarkus = {
             writeAdditionalFile() {
                 writeFiles.call(this);
             }
         };
-        return Object.assign(phaseFromJHipster, customPhaseSteps);
+        return Object.assign(phaseFromJHipster, phaseFromQuarkus);
     }
 
     get install() {
