@@ -105,6 +105,39 @@ const serverFiles = {
             ]
         },
         {
+            condition: generator => generator.hasPagination,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/Paginated.java',
+                    renameTo: generator => `${generator.packageFolder}/service/Paginated.java`,
+                    useBluePrint: true
+                }
+            ]
+        },
+        {
+            condition: generator => generator.hasPagination,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/vm/PageRequestVM.java',
+                    renameTo: generator => `${generator.packageFolder}/web/rest/vm/PageRequestVM.java`,
+                    useBluePrint: true
+                }
+            ]
+        },
+        {
+            condition: generator => generator.hasPagination,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/util/PaginationUtil.java',
+                    renameTo: generator => `${generator.packageFolder}/web/util/PaginationUtil.java`,
+                    useBluePrint: true
+                }
+            ]
+        },
+        {
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
@@ -144,7 +177,7 @@ const serverFiles = {
             ]
         },
         {
-            condition: generator => generator.dto === 'mapstruct',
+            condition: generator => generator.hasDto,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
@@ -239,7 +272,7 @@ const serverFilesFromJHipster = {
     ],
     dto: [
         {
-            condition: generator => generator.dto === 'mapstruct',
+            condition: generator => generator.hasDto,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
@@ -249,7 +282,7 @@ const serverFilesFromJHipster = {
             ]
         },
         {
-            condition: generator => generator.dto === 'mapstruct',
+            condition: generator => generator.hasDto,
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
@@ -260,7 +293,7 @@ const serverFilesFromJHipster = {
         },
         {
             condition: generator =>
-                generator.dto === 'mapstruct' &&
+                generator.hasDto &&
                 (generator.databaseType === 'sql' || generator.databaseType === 'mongodb' || generator.databaseType === 'couchbase'),
             path: SERVER_TEST_SRC_DIR,
             templates: [

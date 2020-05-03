@@ -49,10 +49,10 @@ module.exports = class extends EntityGenerator {
             askForTableName: phaseFromJHipster.askForTableName,
             askForDataAccess: prompts.askForDataAccess,
             askForService: prompts.askForService,
-            askForDTO: phaseFromJHipster.askForDTO
+            askForDTO: phaseFromJHipster.askForDTO,
             // askForFiltering: phaseFromJHipster.askForFiltering,
             // askForReadOnly: phaseFromJHipster.askForReadOnly,
-            // askForPagination: phaseFromJHipster.askForPagination
+            askForPagination: phaseFromJHipster.askForPagination
         };
         return phaseFromQuarkus;
     }

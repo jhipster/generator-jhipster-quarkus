@@ -20,36 +20,34 @@
     @Transactional
     <%_ } _%>
     <%_ if (hasPagination) { _%>
-    public ResponseEntity<List<<%= entityOrDtoClass %>>> getAll<%= entityClassPlural %>(Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% if (fieldsContainNoOwnerOneToOne) { %>, @RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany) { %>, @QueryParam(value = "eagerload") boolean eagerload<% } %>) {
+    public Response getAll<%= entityClassPlural %>(@BeanParam PageRequestVM pageRequest, @Context UriInfo uriInfo<% if (reactive) { %>, ServerHttpRequest request<% } %><% if (fieldsContainNoOwnerOneToOne) { %>, @RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany) { %>, @QueryParam(value = "eagerload") boolean eagerload<% } %>) {
         log.debug("REST request to get a page of <%= entityClassPlural %>");
             <%_ if (viaService) { _%>
                 <%_ if (fieldsContainOwnerManyToMany) { _%>
-        Page<<%= entityOrDtoClass %>> page;
+        Paginated<<%= entityOrDtoClass %>> page;
         if (eagerload) {
-            page = <%= entityInstance %>Service.findAllWithEagerRelationships(pageable);
+            page = <%= entityInstance %>Service.findAllWithEagerRelationships(pageRequest.toPage());
         } else {
-            page = <%= entityInstance %>Service.findAll(pageable);
+            page = <%= entityInstance %>Service.findAll(pageRequest.toPage());
         }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(<% if (!reactive) { %>ServletUriComponentsBuilder.fromCurrentRequest()<% } else { %>UriComponentsBuilder.fromHttpRequest(request)<% } %>, page);
                 <%_ } else { _%>
-        Page<<%= entityOrDtoClass %>> page = <%= entityInstance %>Service.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(<% if (!reactive) { %>ServletUriComponentsBuilder.fromCurrentRequest()<% } else { %>UriComponentsBuilder.fromHttpRequest(request)<% } %>, page);
+        Paginated<<%= entityOrDtoClass %>> page = <%= entityInstance %>Service.findAll(pageRequest.toPage());
                 <%_ } _%>
         <%_ } else { _%>
             <%_ if (fieldsContainOwnerManyToMany) { _%>
-        Page<<%= entityOrDtoClass %>> page;
+        Paginated<<%= entityOrDtoClass %>> page;
         if (eagerload) {
-            page = <%= dataAccessObject %>.findAllWithEagerRelationships(pageable)<% if (dto === 'mapstruct') {%>.map(<%= entityToDtoMethodReference %>)<% } %>;
+            page = <%= dataAccessObject %>.findAllWithEagerRelationships(pageRequest.toPage())<% if (hasDto) {%>.map(<%= entityToDtoMethodReference %>)<% } %>;
         } else {
-            page = <%= dataAccessObject %>.findAll(pageable)<% if (dto !== 'mapstruct') { %>;<% } else { %>.map(<%= entityToDtoMethodReference %>);<% } %>
+            page = <%= dataAccessObject %>.findAll(pageRequest.toPage()).map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
         }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(<% if (!reactive) { %>ServletUriComponentsBuilder.fromCurrentRequest()<% } else { %>UriComponentsBuilder.fromHttpRequest(request)<% } %>, page);
             <%_ } else { _%>
-        Page<<%= entityOrDtoClass %>> page = <%= dataAccessObject %>.findAll(pageable)<% if (dto !== 'mapstruct') { %>;<% } else { %>.map(<%= entityToDtoMethodReference %>);<% } %>
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(<% if (!reactive) { %>ServletUriComponentsBuilder.fromCurrentRequest()<% } else { %>UriComponentsBuilder.fromHttpRequest(request)<% } %>, page);
+        Paginated<<%= entityOrDtoClass %>> page = <%= dataAccessObject %>.findAll(pageRequest.toPage()).map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
             <%_ } _%>
         <%_ } _%>
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        var response = Response.ok().entity(page.content);
+        response = PaginationUtil.withPaginationInfo(response, uriInfo, page);
+        return response.build();
     }
     <%_ } else { _%>
     public List<<%= entityOrDtoClass %>> getAll<%= entityClassPlural %>(<% if (fieldsContainNoOwnerOneToOne) { %>@RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany && fieldsContainNoOwnerOneToOne) { %>,<% } %><% if (fieldsContainOwnerManyToMany) { %>@QueryParam(value = "eagerload") boolean eagerload<% }%>) {
