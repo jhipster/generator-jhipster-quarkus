@@ -20,6 +20,7 @@ package <%= packageName %>.service;
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class Paginated<T> {
         this.size = size;
         this.totalCount = totalCount;
         this.pageCount = pageCount;
-        this.content = content;
+        this.content = Collections.unmodifiableList(content);
     }
 
     public <R> Paginated<R> map(Function<T, R> mapper) {

@@ -21,6 +21,9 @@ import <%= packageName %>.service.<%= entityClass %>Service;
 <%_ } _%>
 <%_ if (hasPagination) { _%>
 import io.quarkus.panache.common.Page;
+    <%_ if (hasServiceImpl) { _%>
+import <%= packageName %>.service.Paginated;
+    <%_ } _%>
 <%_ } _%>
 import <%= packageName %>.domain.<%= entityClass %>;
 <%_ if (viaRepository) { _%>
