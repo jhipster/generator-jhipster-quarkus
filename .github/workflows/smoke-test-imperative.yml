@@ -39,6 +39,6 @@ jobs:
             - name: 'Generate JHipster Application with entities'
               run: $JHI_SCRIPTS/03-copy-entities.sh $JHI_APP
             - name: 'Generate JHipster Application with entities'
-              run: $JHI_SCRIPTS/03-copy-entities.sh $JHI_APP
+              run: $JHI_SCRIPTS/04-generate-project-with-entities.sh $JHI_APP
             - name: 'Run JHipster Application server test'
               run: $JHI_SCRIPTS/05-run-server-test.sh $JHI_APP
