@@ -1,4 +1,4 @@
-name: Imperative Test Integration
+name: Imperative Smoke Tests
 on: [push, pull_request]
 env:
     JHI_SCRIPTS: ./test-integration/scripts

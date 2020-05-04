@@ -28,7 +28,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -83,7 +83,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -131,7 +131,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -180,7 +180,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -229,7 +229,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -278,7 +278,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])

@@ -4,12 +4,11 @@ module.exports = {
 };
 
 function askForDataAccess() {
-    const context = this.context;
     // don't prompt if data are imported from a file
-    if (context.useConfigurationFile) {
+    if (this.useConfigurationFile) {
         return;
     }
-    const databaseType = context.databaseType;
+    const databaseType = this.databaseType;
     const done = this.async();
     const prompts = [
         {
@@ -31,15 +30,14 @@ function askForDataAccess() {
         }
     ];
     this.prompt(prompts).then(props => {
-        context.dataAccess = props.dataAccess;
+        this.dataAccess = props.dataAccess;
         done();
     });
 }
 
 function askForService() {
-    const context = this.context;
     // don't prompt if data is imported from a file or server is skipped
-    if (context.useConfigurationFile || context.skipServer) {
+    if (this.useConfigurationFile || this.skipServer) {
         return;
     }
     const done = this.async();
@@ -66,7 +64,7 @@ function askForService() {
         }
     ];
     this.prompt(prompts).then(props => {
-        context.service = props.service;
+        this.service = props.service;
         done();
     });
 }
