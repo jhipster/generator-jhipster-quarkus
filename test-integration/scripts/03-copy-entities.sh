@@ -10,7 +10,10 @@ fi
 rm -rf "$JHI_FOLDER_APP"/.jhipster
 mkdir -p "$JHI_FOLDER_APP"/.jhipster
 
-cp "$JHI_SAMPLES"/.jhipster/"$JHI_ENTITY"/*.json "$JHI_FOLDER_APP"/.jhipster/
+ls .
+ls "$JHI_SAMPLES"/.jhipster/"$JHI_ENTITY"/*.json
+
+cp -f "$JHI_SAMPLES"/.jhipster/"$JHI_ENTITY"/*.json "$JHI_FOLDER_APP"/.jhipster/
 
 #-------------------------------------------------------------------------------
 # Check the entities copied
