@@ -18,9 +18,3 @@ cd "$JHI_FOLDER_APP"
 runOptions="--blueprints quarkus --skip-checks --force --no-insight --skip-install"
 
 jhipster $runOptions
-
-#-------------------------------------------------------------------------------
-# Check folder where the app is generated
-#-------------------------------------------------------------------------------
-ls -al "$JHI_FOLDER_APP"
-git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
