@@ -10,6 +10,9 @@ fi
 rm -rf "$JHI_FOLDER_APP"/.jhipster
 mkdir -p "$JHI_FOLDER_APP"/.jhipster
 
+echo "===="
+echo "$JHI_SAMPLES"
+echo "===="
 ls .
 ls "$JHI_SAMPLES"/.jhipster/"$JHI_ENTITY"/*.json
 
