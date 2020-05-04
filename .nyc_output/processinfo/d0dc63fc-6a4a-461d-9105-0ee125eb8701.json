@@ -1,1 +1,13 @@
-{"parent":"b6db1072-1786-437e-ac66-895339dfd0ac","pid":43746,"argv":["/Users/daniel/.nvm/versions/node/v12.14.0/bin/node","/Users/daniel/.nvm/versions/node/v12.14.0/bin/npm","root","-g"],"execArgv":[],"cwd":"/private/var/folders/_y/4dzs9_nn3dggply5gbpwpmtm0000gn/T/af1d8d2e1f6e76c26f52657c4f4b545e4029fc7a","time":1588631088970,"ppid":43716,"coverageFilename":"/Users/daniel/workspace/jhipster-quarkus/.nyc_output/d0dc63fc-6a4a-461d-9105-0ee125eb8701.json","externalId":"","uuid":"d0dc63fc-6a4a-461d-9105-0ee125eb8701","files":[]}
+{
+    "parent": "b6db1072-1786-437e-ac66-895339dfd0ac",
+    "pid": 43746,
+    "argv": ["/Users/daniel/.nvm/versions/node/v12.14.0/bin/node", "/Users/daniel/.nvm/versions/node/v12.14.0/bin/npm", "root", "-g"],
+    "execArgv": [],
+    "cwd": "/private/var/folders/_y/4dzs9_nn3dggply5gbpwpmtm0000gn/T/af1d8d2e1f6e76c26f52657c4f4b545e4029fc7a",
+    "time": 1588631088970,
+    "ppid": 43716,
+    "coverageFilename": "/Users/daniel/workspace/jhipster-quarkus/.nyc_output/d0dc63fc-6a4a-461d-9105-0ee125eb8701.json",
+    "externalId": "",
+    "uuid": "d0dc63fc-6a4a-461d-9105-0ee125eb8701",
+    "files": []
+}
