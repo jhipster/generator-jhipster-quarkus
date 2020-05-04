@@ -1,8 +1,7 @@
 name: Imperative Test Integration
 on: [push, pull_request]
 env:
-    JHI_SCRIPTS: $JHI_SCRIPTS/scripts
-
+    JHI_SCRIPTS: ./test-integration/scripts
 jobs:
     applications:
         name: ${{ matrix.app-type }}
