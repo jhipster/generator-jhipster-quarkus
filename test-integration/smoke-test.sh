@@ -23,7 +23,8 @@ fi
 rm -rf "$JHI_WORKSPACE" && mkdir -p "$JHI_WORKSPACE"
 
 for sample in $(ls -1 "$JHI_SAMPLES"); do
-    for entity in $(ls -1 "$JHI_SAMPLES/.jhipster"); do
+    entity="sqllight"
+    # for entity in $(ls -1 "$JHI_SAMPLES/.jhipster"); do
 
         echo "*********************** Generating project $sample_$entity"
         JHI_FOLDER_APP="$JHI_WORKSPACE/$sample_$entity"
@@ -39,6 +40,6 @@ for sample in $(ls -1 "$JHI_SAMPLES"); do
             exit 1
         fi
         popd
-    done
+    # done
 done
 

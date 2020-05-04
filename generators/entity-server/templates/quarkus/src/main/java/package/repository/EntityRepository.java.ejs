@@ -48,6 +48,8 @@ import java.util.Optional;
 <%_ } _%>
 @ApplicationScoped
 public class <%=entityClass%>Repository implements <% if (databaseType === 'sql') { %>PanacheRepository<% } %><% if (databaseType === 'mongodb') { %>MongoRepository<% } %><% if (databaseType === 'cassandra') { %>CassandraRepository<% } %><% if (databaseType === 'couchbase') { %>N1qlCouchbaseRepository<% } %><<%=asEntity(entityClass)%>><% if (jpaMetamodelFiltering) { %>, JpaSpecificationExecutor<<%=asEntity(entityClass)%>><% } %> {
+<%- include('../common/data_save_template', this) -%>
+
 <%- include('../common/finders', {
         databaseType: databaseType,
         entityClass: entityClass,

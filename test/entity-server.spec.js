@@ -11,7 +11,7 @@ const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
 // const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
 
 describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
-    describe('with default options (no repository, no service, no dto)', () => {
+    describe('with default options (no repository, no service, no dto, no pagination)', () => {
         before(done => {
             helpers
                 .run('generator-jhipster/generators/entity')
@@ -28,7 +28,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -39,19 +39,27 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                     dataAccess: 'activeRecord',
                     dto: 'no',
                     service: 'no',
-                    pagination: 'infinite-scroll'
+                    pagination: 'no'
                 })
                 .on('end', done);
         });
 
         it('creates expected entity as active record and resources files', () => {
-            // Adds your tests here
             assert.file(expectedFiles.server);
             assert.file(expectedFiles.fakeData);
             assert.file(expectedFiles.serverLiquibase);
 
             assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/repository/FooRepository.java`);
+            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/FooDTO.java`);
+            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/FooMapper.java`);
+            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`);
+            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/impl/FooServiceImpl.java`);
 
+            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paginated.java`);
+            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/vm/PageRequest.java`);
+            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/PaginationUtil.java`);
+        });
+        it('generates an active record extending PanacheEntityBase', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Foo.java`,
                 'public class Foo extends PanacheEntityBase implements Serializable'
@@ -75,7 +83,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -86,15 +94,19 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                     dataAccess: 'repository',
                     dto: 'no',
                     service: 'no',
-                    pagination: 'infinite-scroll'
+                    pagination: 'no'
                 })
                 .on('end', done);
         });
 
         it('creates expected entity with the corresponding repository', () => {
-            // Adds your tests here
-            assert.file([`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/repository/FooRepository.java`, ...expectedFiles.server]);
+            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.fakeData);
+            assert.file(expectedFiles.serverLiquibase);
 
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/repository/FooRepository.java`);
+        });
+        it('generates a repository extending PanacheRepository', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/repository/FooRepository.java`,
                 'public class FooRepository implements PanacheRepository<Foo>'
@@ -119,7 +131,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -130,17 +142,25 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                     dataAccess: 'activeRecord',
                     dto: 'mapstruct',
                     service: 'serviceClass',
-                    pagination: 'infinite-scroll'
+                    pagination: 'no'
                 })
                 .on('end', done);
         });
 
         it('creates expected entity with the corresponding dto', () => {
-            assert.file([`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/FooDTO.java`, ...expectedFiles.server]);
-            assert.file([`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/mapper/FooMapper.java`, ...expectedFiles.server]);
+            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.fakeData);
+            assert.file(expectedFiles.serverLiquibase);
 
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/FooDTO.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/mapper/FooMapper.java`);
+        });
+        it('generate a proper DTO class and mapper', () => {
             assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/dto/FooDTO.java`, 'public class FooDTO');
-            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/mapper/FooMapper.java`, 'public interface FooMapper');
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/mapper/FooMapper.java`,
+                'public interface FooMapper extends EntityMapper<FooDTO, Foo>'
+            );
         });
     });
     describe('with dto and service interface and service implementation', () => {
@@ -160,7 +180,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 .withGenerators([
                     [
                         require('../generators/entity-server'), // eslint-disable-line global-require
-                        'generator-jhipster-quarkus:entity-server',
+                        'jhipster-quarkus:entity-server',
                         path.join(__dirname, '../generators/entity-server/index.js')
                     ]
                 ])
@@ -171,19 +191,122 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                     dataAccess: 'activeRecord',
                     dto: 'mapstruct',
                     service: 'serviceImpl',
-                    pagination: 'infinite-scroll'
+                    pagination: 'no'
                 })
                 .on('end', done);
         });
 
         it('creates expected entity with the corresponding dto', () => {
-            assert.file([`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`, ...expectedFiles.server]);
-            assert.file([`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/impl/FooServiceImpl.java`, ...expectedFiles.server]);
+            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.fakeData);
+            assert.file(expectedFiles.serverLiquibase);
 
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/impl/FooServiceImpl.java`);
+        });
+        it('generate service interface and implementation', () => {
             assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`, 'public interface FooService');
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/impl/FooServiceImpl.java`,
                 'public class FooServiceImpl implements FooService'
+            );
+        });
+    });
+    describe('with pagination', () => {
+        before(done => {
+            helpers
+                .run('generator-jhipster/generators/entity')
+                .inTmpDir(dir => {
+                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
+                })
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'quarkus',
+                    skipChecks: true,
+                    creationTimestamp: '2019-11-06'
+                })
+                .withGenerators([
+                    [
+                        require('../generators/entity-server'), // eslint-disable-line global-require
+                        'jhipster-quarkus:entity-server',
+                        path.join(__dirname, '../generators/entity-server/index.js')
+                    ]
+                ])
+                .withArguments(['foo'])
+                .withPrompts({
+                    fieldAdd: false,
+                    relationshipAdd: false,
+                    dataAccess: 'activeRecord',
+                    dto: 'no',
+                    service: 'no',
+                    pagination: 'pagination'
+                })
+                .on('end', done);
+        });
+
+        it('creates expected pagination file', () => {
+            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.fakeData);
+            assert.file(expectedFiles.serverLiquibase);
+
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paginated.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/PageRequestVM.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/PaginationUtil.java`);
+        });
+        it('update Web finder signature', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/FooResource.java`,
+                'public Response getAllFoos(@BeanParam PageRequestVM pageRequest, @Context UriInfo uriInfo)'
+            );
+        });
+    });
+    describe('with pagination(infinite-scroll), service and dto', () => {
+        before(done => {
+            helpers
+                .run('generator-jhipster/generators/entity')
+                .inTmpDir(dir => {
+                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
+                })
+                .withOptions({
+                    'from-cli': true,
+                    skipInstall: true,
+                    blueprint: 'quarkus',
+                    skipChecks: true,
+                    creationTimestamp: '2019-11-06'
+                })
+                .withGenerators([
+                    [
+                        require('../generators/entity-server'), // eslint-disable-line global-require
+                        'jhipster-quarkus:entity-server',
+                        path.join(__dirname, '../generators/entity-server/index.js')
+                    ]
+                ])
+                .withArguments(['foo'])
+                .withPrompts({
+                    fieldAdd: false,
+                    relationshipAdd: false,
+                    dataAccess: 'activeRecord',
+                    dto: 'mapstruct',
+                    service: 'serviceClass',
+                    pagination: 'infinite-scroll'
+                })
+                .on('end', done);
+        });
+
+        it('creates expected pagination file', () => {
+            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.fakeData);
+            assert.file(expectedFiles.serverLiquibase);
+
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paginated.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/PageRequestVM.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/PaginationUtil.java`);
+        });
+        it('update service finder signature', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`,
+                'public Paginated<FooDTO> findAll(Page page)'
             );
         });
     });

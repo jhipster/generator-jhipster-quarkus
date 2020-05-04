@@ -19,9 +19,9 @@
     /**
      * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %>.
      *<%_ if (hasPagination) { %>
-     * @param pageable the pagination information.
+     * @param pageRequest the pagination information.
         <%_ if (reactive) { _%>
-     * @param request a {@link ServerHttpRequest} request.
+     * @param uriInfo a {@link UriInfo} URI information.
         <%_ } _%>
     <%_ } _%>
     <%_ if (!jpaMetamodelFiltering && fieldsContainOwnerManyToMany) { _%>

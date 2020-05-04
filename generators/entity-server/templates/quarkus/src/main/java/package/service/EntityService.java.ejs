@@ -23,8 +23,8 @@ import <%= packageName %>.service.dto.<%= entityOrDtoClass %>;
 <%_ } else { _%>
 import <%= packageName %>.domain.<%= entityOrDtoClass %>;
 <%_ } _%>
-<%_ if (hasPagination || fieldsContainOwnerManyToMany === true) { _%>
-    import java.util.List;
+<%_ if (hasPagination) { _%>
+import io.quarkus.panache.common.Page;
 <%_ } _%>
 
 <%_ if (!hasPagination || fieldsContainNoOwnerOneToOne === true) { _%>
@@ -57,9 +57,12 @@ public interface <%= entityClass %>Service {
 
     /**
      * Get all the <%= entityInstancePlural %>.
+    <%_ if (hasPagination) { _%>
+     * @param page the pagination information.
+    <%_ } _%>
      * @return the list of entities.
      */
-    List<<%= entityOrDtoClass %>> findAll();
+    public <% if(hasPagination) { %>Paginated<<%= entityOrDtoClass %>><% } else { %> List<<%= entityOrDtoClass %>><% } %> findAll(<% if(hasPagination) { %>Page page<% } %>);
 
     /**
      * Get the "id" <%= entityOrDtoInstance %>.
@@ -83,10 +86,12 @@ public interface <%= entityClass %>Service {
     <%_ if (fieldsContainOwnerManyToMany === true) { _%>
     /**
      * Get all the <%= entityInstancePlural %> with eager load of many-to-many relationships.
-     *
+    <%_ if (hasPagination) { _%>
+     * @param page the pagination information.
+    <%_ } _%>
      * @return the list of entities.
     */
-    List<<%= entityOrDtoClass %>> findAllWithEagerRelationships();
+    public <% if(hasPagination) { %>Paginated<<%= entityOrDtoClass %>><% } else { %> List<<%= entityOrDtoClass %>><% } %> findAllWithEagerRelationships(<% if(hasPagination) { %>Page page<% } %>);
 
     <%_ } _%>
 

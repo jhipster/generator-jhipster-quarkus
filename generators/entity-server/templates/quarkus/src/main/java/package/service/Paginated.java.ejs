@@ -1,0 +1,54 @@
+<%#
+ Copyright 2013-2020 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%= packageName %>.service;
+
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class Paginated<T> {
+
+    public final long index;
+    public final long size;
+
+    public final long totalCount;
+    public final long pageCount;
+
+    public final List<T> content;
+
+    public Paginated(PanacheQuery<T> query) {
+        this(query.page().index, query.page().size, query.count(), query.pageCount(), query.list());
+    }
+
+    public Paginated(long index, long size, long totalCount, long pageCount, List<T> content) {
+        this.index = index;
+        this.size = size;
+        this.totalCount = totalCount;
+        this.pageCount = pageCount;
+        this.content = Collections.unmodifiableList(content);
+    }
+
+    public <R> Paginated<R> map(Function<T, R> mapper) {
+        var mapped = content.stream().map(mapper).collect(Collectors.toList());
+        return new Paginated<R>(this.index, this.size, this.totalCount, this.pageCount, mapped);
+    }
+}
