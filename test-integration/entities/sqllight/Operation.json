@@ -1,0 +1,51 @@
+{
+    "changelogDate": "20200401222030",
+    "clientRootFolder": "",
+    "databaseType": "sql",
+    "dataAccess": "repository",
+    "dto": "mapstruct",
+    "entityTableName": "operation",
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "date",
+            "fieldType": "DateTime",
+            "fieldValidateRules": ["required"]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "amount",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": ["required", "unique"]
+        }
+    ],
+    "fluentMethods": true,
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination",
+    "readOnly": false,
+    "relationships": [
+        {
+            "otherEntityField": "name",
+            "otherEntityName": "bankAccount",
+            "otherEntityRelationshipName": "operation",
+            "relationshipName": "bankAccount",
+            "relationshipType": "many-to-one"
+        },
+        {
+            "otherEntityField": "label",
+            "otherEntityName": "label",
+            "otherEntityRelationshipName": "operation",
+            "ownerSide": true,
+            "relationshipId": 2,
+            "relationshipName": "label",
+            "relationshipType": "many-to-many"
+        }
+    ],
+    "searchEngine": false,
+    "service": "serviceImpl"
+}

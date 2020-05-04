@@ -1,0 +1,43 @@
+{
+    "changelogDate": "20200401213326",
+    "clientRootFolder": "",
+    "databaseType": "sql",
+    "dto": "mapstruct",
+    "entityTableName": "bank_account",
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": ["required"]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "balance",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": ["required"]
+        }
+    ],
+    "fluentMethods": true,
+    "jpaMetamodelFiltering": false,
+    "pagination": "no",
+    "readOnly": false,
+    "relationships": [
+        {
+            "otherEntityField": "login",
+            "otherEntityName": "user",
+            "relationshipId": 1,
+            "relationshipName": "user",
+            "relationshipType": "many-to-one"
+        },
+        {
+            "otherEntityName": "operation",
+            "otherEntityRelationshipName": "bankAccount",
+            "relationshipId": 2,
+            "relationshipName": "operation",
+            "relationshipType": "one-to-many"
+        }
+    ],
+    "searchEngine": false,
+    "service": "no"
+}
