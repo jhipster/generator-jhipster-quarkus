@@ -22,7 +22,7 @@ import <%= packageName %>.service.<%= entityClass %>Service;
 <%_ if (hasPagination) { _%>
 import io.quarkus.panache.common.Page;
     <%_ if (hasServiceImpl) { _%>
-import <%= packageName %>.service.Paginated;
+import <%= packageName %>.service.Paged;
     <%_ } _%>
 <%_ } _%>
 import <%= packageName %>.domain.<%= entityClass %>;
