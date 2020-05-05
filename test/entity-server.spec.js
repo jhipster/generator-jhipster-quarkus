@@ -55,7 +55,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
             assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`);
             assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/impl/FooServiceImpl.java`);
 
-            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paginated.java`);
+            assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paged.java`);
             assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/vm/PageRequest.java`);
             assert.noFile(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/PaginationUtil.java`);
         });
@@ -250,7 +250,7 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
             assert.file(expectedFiles.fakeData);
             assert.file(expectedFiles.serverLiquibase);
 
-            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paginated.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paged.java`);
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/PageRequestVM.java`);
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/PaginationUtil.java`);
         });
@@ -299,14 +299,14 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
             assert.file(expectedFiles.fakeData);
             assert.file(expectedFiles.serverLiquibase);
 
-            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paginated.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paged.java`);
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/PageRequestVM.java`);
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/PaginationUtil.java`);
         });
         it('update service finder signature', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/FooService.java`,
-                'public Paginated<FooDTO> findAll(Page page)'
+                'public Paged<FooDTO> findAll(Page page)'
             );
         });
     });
