@@ -13,6 +13,7 @@ mydir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$mydir"
 
 JHI_SAMPLES="$mydir/samples"
+JHI_ENTITIES="$mydir/entities"
 
 if [[ "$1" == "" ]]; then
     JHI_WORKSPACE=/tmp/smoke-test
@@ -23,11 +24,10 @@ fi
 rm -rf "$JHI_WORKSPACE" && mkdir -p "$JHI_WORKSPACE"
 
 for sample in $(ls -1 "$JHI_SAMPLES"); do
-    entity="sqllight"
-    # for entity in $(ls -1 "$JHI_SAMPLES/.jhipster"); do
-
-        echo "*********************** Generating project $sample_$entity"
-        JHI_FOLDER_APP="$JHI_WORKSPACE/$sample_$entity"
+    for entity in $(ls -1 "$JHI_ENTITIES"); do
+        PROJECT="$sample"_"$entity"
+        echo "*********************** Generating project $PROJECT"
+        JHI_FOLDER_APP="$JHI_WORKSPACE/$PROJECT"
         JHI_APP=$sample
         JHI_ENTITY=$entity
         $mydir/generate-sample.sh generate "$JHI_FOLDER_APP" "$JHI_APP" "$JHI_ENTITY"
@@ -40,6 +40,6 @@ for sample in $(ls -1 "$JHI_SAMPLES"); do
             exit 1
         fi
         popd
-    # done
+    done
 done
 

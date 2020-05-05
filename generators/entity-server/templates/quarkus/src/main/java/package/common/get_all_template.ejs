@@ -29,7 +29,7 @@
         if (eagerload) {
             result = <%= entityInstance %>Service.findAllWithEagerRelationships(page);
         } else {
-            result = <%= entityInstance %>Service.findAll().page(page);
+            result = <%= entityInstance %>Service.findAll(page);
         }
                 <%_ } else { _%>
         Paged<<%= entityOrDtoClass %>> result = <%= entityInstance %>Service.findAll(page);
@@ -46,11 +46,11 @@
             result = new Paged<>(<%= dataAccessObject %>.findAll().page(page));
         }
             <%_ } else { _%>
-        Paged<<%= entityOrDtoClass %>> result = <%= dataAccessObject %>.findAll(page);
+        result = <%= dataAccessObject %>.findAll(page);
             <%_ } _%>
-        <%_ } _%>
         <%_ if (hasDto) { _%>
         result = result.map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
+        <%_ } _%>
         <%_ } _%>
         var response = Response.ok().entity(result.content);
         response = PaginationUtil.withPaginationInfo(response, uriInfo, result);

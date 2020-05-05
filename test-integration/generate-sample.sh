@@ -39,10 +39,9 @@ function generateProject() {
         echo "*** Empty folder, let's generate JHipster project in: $JHI_FOLDER_APP"
     fi
 
-    pushd scripts/
-    echo "*********************** Copying entities for $JHI_APP in $JHI_FOLDER_APP/.jhipster"
-    source ./03-copy-entities.sh
-    popd
+    echo "*********************** Copying entities for $JHI_ENTITY in $JHI_FOLDER_APP/.jhipster"
+    cp -f "$JHI_ENTITIES"/"$JHI_ENTITY"/*.json "$JHI_FOLDER_APP"/.jhipster/
+    ls -al "$JHI_FOLDER_APP"/.jhipster/
 
     echo "*********************** Copy configuration in $JHI_FOLDER_APP"
     cp -f "$JHI_SAMPLES"/"$JHI_APP"/.yo-rc.json "$JHI_FOLDER_APP"/
@@ -56,6 +55,7 @@ function generateProject() {
 
 mydir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 JHI_SAMPLES="$mydir/samples"
+JHI_ENTITIES="$mydir/entities"
 
 if [ "$1" = "list-sample" ]; then
     for dir in $(ls -1 "$JHI_SAMPLES"); do
