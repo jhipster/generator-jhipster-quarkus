@@ -18,7 +18,7 @@
 -%>
 package <%= packageName %>.web.util;
 
-import <%= packageName %>.service.Paginated;
+import <%= packageName %>.service.Paged;
 
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
@@ -36,21 +36,21 @@ public final class PaginationUtil {
     private PaginationUtil() {
     }
 
-    public static <T> Response.ResponseBuilder withPaginationInfo(Response.ResponseBuilder builder, UriInfo uriInfo, Paginated<T> paginated) {
-        builder.header(HEADER_X_TOTAL_COUNT, paginated.totalCount);
-        builder.header(HEADER_X_PAGE_COUNT, paginated.pageCount);
+    public static <T> Response.ResponseBuilder withPaginationInfo(Response.ResponseBuilder builder, UriInfo uriInfo, Paged<T> paged) {
+        builder.header(HEADER_X_TOTAL_COUNT, paged.totalCount);
+        builder.header(HEADER_X_PAGE_COUNT, paged.pageCount);
 
-        var pageNumber = paginated.index;
-        var pageSize = paginated.size;
+        var pageNumber = paged.index;
+        var pageSize = paged.size;
 
         builder.links(prepareLink(uriInfo, 0, pageSize, REL_FIRST));
-        builder.links(prepareLink(uriInfo, paginated.pageCount - 1, pageSize, REL_LAST));
+        builder.links(prepareLink(uriInfo, paged.pageCount - 1, pageSize, REL_LAST));
 
         if (pageNumber > 0) {
             builder.links(prepareLink(uriInfo, pageNumber - 1, pageSize, REL_PREV));
         }
 
-        if (pageNumber < paginated.pageCount - 1) {
+        if (pageNumber < paged.pageCount - 1) {
             builder.links(prepareLink(uriInfo, pageNumber + 1, pageSize, REL_NEXT));
         }
 

@@ -109,8 +109,8 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
-                    file: 'package/service/Paginated.java',
-                    renameTo: generator => `${generator.packageFolder}/service/Paginated.java`,
+                    file: 'package/service/Paged.java',
+                    renameTo: generator => `${generator.packageFolder}/service/Paged.java`,
                     useBluePrint: true
                 }
             ]

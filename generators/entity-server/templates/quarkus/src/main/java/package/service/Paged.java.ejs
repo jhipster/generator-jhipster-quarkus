@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Paginated<T> {
+public class Paged<T> {
 
     public final long index;
     public final long size;
@@ -35,11 +35,11 @@ public class Paginated<T> {
 
     public final List<T> content;
 
-    public Paginated(PanacheQuery<T> query) {
+    public Paged(PanacheQuery<T> query) {
         this(query.page().index, query.page().size, query.count(), query.pageCount(), query.list());
     }
 
-    public Paginated(long index, long size, long totalCount, long pageCount, List<T> content) {
+    public Paged(long index, long size, long totalCount, long pageCount, List<T> content) {
         this.index = index;
         this.size = size;
         this.totalCount = totalCount;
@@ -47,8 +47,8 @@ public class Paginated<T> {
         this.content = Collections.unmodifiableList(content);
     }
 
-    public <R> Paginated<R> map(Function<T, R> mapper) {
+    public <R> Paged<R> map(Function<T, R> mapper) {
         var mapped = content.stream().map(mapper).collect(Collectors.toList());
-        return new Paginated<R>(this.index, this.size, this.totalCount, this.pageCount, mapped);
+        return new Paged<R>(this.index, this.size, this.totalCount, this.pageCount, mapped);
     }
 }

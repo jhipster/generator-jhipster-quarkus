@@ -24,25 +24,25 @@
         log.debug("REST request to get a page of <%= entityClassPlural %>");
             <%_ if (viaService) { _%>
                 <%_ if (fieldsContainOwnerManyToMany) { _%>
-        Paginated<<%= entityOrDtoClass %>> page;
+        Paged<<%= entityOrDtoClass %>> page;
         if (eagerload) {
             page = <%= entityInstance %>Service.findAllWithEagerRelationships(pageRequest.toPage());
         } else {
             page = <%= entityInstance %>Service.findAll(pageRequest.toPage());
         }
                 <%_ } else { _%>
-        Paginated<<%= entityOrDtoClass %>> page = <%= entityInstance %>Service.findAll(pageRequest.toPage());
+        Paged<<%= entityOrDtoClass %>> page = <%= entityInstance %>Service.findAll(pageRequest.toPage());
                 <%_ } _%>
         <%_ } else { _%>
             <%_ if (fieldsContainOwnerManyToMany) { _%>
-        Paginated<<%= entityOrDtoClass %>> page;
+        Paged<<%= entityOrDtoClass %>> page;
         if (eagerload) {
             page = <%= dataAccessObject %>.findAllWithEagerRelationships(pageRequest.toPage())<% if (hasDto) {%>.map(<%= entityToDtoMethodReference %>)<% } %>;
         } else {
             page = <%= dataAccessObject %>.findAll(pageRequest.toPage()).map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
         }
             <%_ } else { _%>
-        Paginated<<%= entityOrDtoClass %>> page = <%= dataAccessObject %>.findAll(pageRequest.toPage()).map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
+        Paged<<%= entityOrDtoClass %>> page = <%= dataAccessObject %>.findAll(pageRequest.toPage()).map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
             <%_ } _%>
         <%_ } _%>
         var response = Response.ok().entity(page.content);
