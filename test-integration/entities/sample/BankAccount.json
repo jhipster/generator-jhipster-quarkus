@@ -20,17 +20,13 @@
             "fieldId": 1,
             "fieldName": "name",
             "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldValidateRules": ["required"]
         },
         {
             "fieldId": 2,
             "fieldName": "balance",
             "fieldType": "BigDecimal",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldValidateRules": ["required"]
         }
     ],
     "changelogDate": "20150805124838",

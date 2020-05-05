@@ -21,9 +21,7 @@
             "fieldId": 1,
             "fieldName": "date",
             "fieldType": "DateTime",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldValidateRules": ["required"]
         },
         {
             "fieldId": 2,
@@ -34,9 +32,7 @@
             "fieldId": 3,
             "fieldName": "amount",
             "fieldType": "BigDecimal",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldValidateRules": ["required"]
         }
     ],
     "changelogDate": "20150805125054",
