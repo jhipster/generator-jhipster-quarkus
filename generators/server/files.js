@@ -50,7 +50,7 @@ const serverFiles = {
             path: SERVER_MAIN_RES_DIR,
             templates: [
                 { file: 'default_banner.txt', method: 'copy', noEjs: true },
-                { file: 'META-INF/resources/privateKey.pem', method: 'copy', noEjs: true },
+                { file: 'jwt/privateKey.pem', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
                 'templates/mail/activationEmail.html',
                 'templates/mail/creationEmail.html',
