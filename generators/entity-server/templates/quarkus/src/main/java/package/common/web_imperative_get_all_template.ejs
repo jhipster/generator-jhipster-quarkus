@@ -36,22 +36,3 @@
 <%_ } else { _%>
 <%- include('./get_all_template', this); -%>
 <%_ } _%>
-    <%_ if (reactiveRepositories) { _%>
-    /**
-     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %> as a stream.
-     * @return the {@link Flux} of <%= entityInstancePlural %>.
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_STREAM_JSON_VALUE)
-    <%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
-    @Transactional(readOnly = true)
-    <%_ } _%>
-    public Flux<<%= entityOrDtoClass %>> getAll<%= entityClassPlural %>AsStream() {
-        log.debug("REST request to get all <%= entityClassPlural %> as a stream");
-        <%_ if (viaService) { _%>
-        return <%= entityInstance %>Service.findAllAsFlux();
-        <%_ } else { _%>
-        return <%= entityInstance %>ReactiveRepository.findAll();
-        <%_ } _%>
-    }
-    <%_ } _%>
