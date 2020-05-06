@@ -21,8 +21,8 @@ let finderPrefix = 'public' + (!viaRepository ? ' static'  : '');
 for (idx in relationships) {
     if (relationships[idx].relationshipType === 'many-to-one' && relationships[idx].otherEntityName === 'user' && databaseType === 'sql') {
 _%>
-    <%= finderPrefix %> PanacheQuery<<%= asEntity(entityClass) %>> findBy<%= relationships[idx].relationshipNameCapitalized %>IsCurrentUser() {
-        return find("select <%= entityInstance %> from <%= asEntity(entityClass) %> <%= entityInstance %> where <%= entityInstance %>.<%= relationships[idx].relationshipFieldName %>.login = ?#{principal.<% if (authenticationType === 'oauth2') { %>preferredUsername<% } else { %>username<% } %>}");
+    <%= finderPrefix %> PanacheQuery<<%= entityClass %>> findBy<%= relationships[idx].relationshipNameCapitalized %>IsCurrentUser() {
+        return find("select <%= entityInstance %> from <%= entityClass %> <%= entityInstance %> where <%= entityInstance %>.<%= relationships[idx].relationshipFieldName %>.login = ?#{principal.<% if (authenticationType === 'oauth2') { %>preferredUsername<% } else { %>username<% } %>}");
     }
 <%_
     }
@@ -32,34 +32,34 @@ _%>
 if (fieldsContainOwnerManyToMany === true) {
     if (databaseType === 'sql') {
 _%>
-    <%= finderPrefix %> PanacheQuery<<%= asEntity(entityClass) %>> findAllWithEagerRelationships() {
-        return find("select distinct <%= entityInstance %> from <%= asEntity(entityClass) %> <%= entityInstance %><% for (idx in relationships) {
+    <%= finderPrefix %> PanacheQuery<<%= entityClass %>> findAllWithEagerRelationships() {
+        return find("select distinct <%= entityInstance %> from <%= entityClass %> <%= entityInstance %><% for (idx in relationships) {
             if (relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide === true) { %> left join fetch <%= entityInstance %>.<%= relationships[idx].relationshipFieldNamePlural %><% } } %>");
     }
 
-    <%= finderPrefix %> Optional<<%= asEntity(entityClass) %>> findOneWithEagerRelationships(<%= primaryKeyType %> id) {
-        return find("select <%= entityInstance %> from <%= asEntity(entityClass) %> <%= entityInstance %><% for (idx in relationships) {
+    <%= finderPrefix %> Optional<<%= entityClass %>> findOneWithEagerRelationships(<%= primaryKeyType %> id) {
+        return find("select <%= entityInstance %> from <%= entityClass %> <%= entityInstance %><% for (idx in relationships) {
             if (relationships[idx].relationshipType === 'many-to-many' && relationships[idx].ownerSide === true) { %> left join fetch <%= entityInstance %>.<%= relationships[idx].relationshipFieldNamePlural %><% } } %> where <%= entityInstance %>.id =?1", id).firstResultOptional();
     }
 <%_
     } else if (databaseType === 'mongodb' || databaseType === 'couchbase')  {
 _%>
     @Query("<%= (databaseType === 'mongodb') ? '{}' : '#{#n1ql.selectEntity} WHERE #{#n1ql.filter}' %>")
-    Page<<%= asEntity(entityClass) %>> findAllWithEagerRelationships(Pageable pageable);
+    Page<<%= entityClass %>> findAllWithEagerRelationships(Pageable pageable);
 
     @Query("<%= (databaseType === 'mongodb') ? '{}' : '#{#n1ql.selectEntity} WHERE #{#n1ql.filter}' %>")
-    List<<%= asEntity(entityClass) %>> findAllWithEagerRelationships();
+    List<<%= entityClass %>> findAllWithEagerRelationships();
 
     @Query("<%- (databaseType === 'mongodb') ? "{'id': ?0}" : "#{#n1ql.selectEntity} USE KEYS $1 WHERE #{#n1ql.filter}" %>")
-    Optional<<%= asEntity(entityClass) %>> findOneWithEagerRelationships(<%= primaryKeyType %> id);
+    Optional<<%= entityClass %>> findOneWithEagerRelationships(<%= primaryKeyType %> id);
 <%_
     } else if (databaseType === 'neo4j') {
 _%>
-    @Query("MATCH (n:<%= asEntity(entityClass) %>)<-[]-(m) RETURN n,m")
-    Page<<%= asEntity(entityClass) %>> findAllWithEagerRelationships(Pageable pageable);
+    @Query("MATCH (n:<%= entityClass %>)<-[]-(m) RETURN n,m")
+    Page<<%= entityClass %>> findAllWithEagerRelationships(Pageable pageable);
 
-    @Query("MATCH (e:<%= asEntity(entityClass) %> {id: $id}) RETURN e")
-    Optional<<%= asEntity(entityClass) %>> findOneWithEagerRelationships(<%= primaryKeyType %> id);
+    @Query("MATCH (e:<%= entityClass %> {id: $id}) RETURN e")
+    Optional<<%= entityClass %>> findOneWithEagerRelationships(<%= primaryKeyType %> id);
 <%_
     }
 }

@@ -29,7 +29,7 @@
     <%_ } _%>
     public Response delete<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
         log.debug("REST request to delete <%= entityClass %> : {}", id);
-<%- include('./delete_template', this); -%>
+<%- include('../common/delete', this); -%>
         var response = Response.noContent();
         HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();

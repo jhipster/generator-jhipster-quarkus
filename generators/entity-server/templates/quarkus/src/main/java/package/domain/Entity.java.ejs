@@ -435,18 +435,8 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
     }
 <%_ if (!viaRepository) { _%>
 
-<%- include('../common/data_save_template', this) -%>
+<%- include('../_partials/imperative/common/persist', this) -%>
 
-<%- include('../common/finders', {
-        databaseType: databaseType,
-        entityClass: entityClass,
-        entityInstance: entityInstance,
-        relationships: relationships,
-        fieldsContainOwnerManyToMany: fieldsContainOwnerManyToMany,
-        viaRepository: false,
-        asEntity: asEntity,
-        primaryKeyType: getPkTypeBasedOnDBAndAssociation(authenticationType, databaseType, relationships)
-    }
-);-%>
+<%- include('../_partials/imperative/common/finders', this) -%>
 <%_ } _%>
 }

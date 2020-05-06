@@ -16,6 +16,18 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
+    /**
+     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %>.
+     *<%_ if (hasPagination) { %>
+     * @param pageRequest the pagination information.
+    <%_ } _%>
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link Response} with status {@code 200 (OK)} and the list of <%= entityInstancePlural %> in body.
+     */
+    @GET
+    <%_ if (databaseType === 'sql' && fieldsContainOwnerManyToMany && !viaService) { _%>
+    @Transactional
+    <%_ } _%>
     public Response<List<<%= entityOrDtoClass %>>> getAll<%= entityClassPlural %>(<%= entityClass %>Criteria criteria<% if (hasPagination) { %>, Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% } %>) {
         log.debug("REST request to get <%= entityClassPlural %> by criteria: {}", criteria);
     <%_ if (pagination === 'no') { _%>

@@ -18,7 +18,7 @@
 -%>
 package <%= packageName %>.service<% if (hasServiceImpl) { %>.impl<% } %>;
 
-<%- include('../../common/service_imports', this); -%>
+<%- include('../../_partials/imperative/service/imports', this); -%>
 
 @ApplicationScoped
 <%_ if (databaseType === 'sql') { _%>
@@ -27,15 +27,15 @@ package <%= packageName %>.service<% if (hasServiceImpl) { %>.impl<% } %>;
 public class <%= serviceClassName %><% if (hasServiceImpl) { %> implements <%= entityClass %>Service<% } %> {
 
     private final Logger log = LoggerFactory.getLogger(<%= serviceClassName %>.class);
-<%- include('../../common/inject_template', { ...this, viaService: false, constructorName: serviceClassName, queryService: false, isController: false}); -%>
+<%- include('../../_partials/imperative/common/inject', { ...this, viaService: false, constructorName: serviceClassName, queryService: false, isController: false}); -%>
 
-<%- include('../../common/service_imperative_save_template', this); -%>
+<%- include('../../_partials/imperative/service/save', this); -%>
 
-<%- include('../../common/service_imperative_delete_template', this); -%>
+<%- include('../../_partials/imperative/service/delete', this); -%>
 
-<%- include('../../common/service_imperative_get_template', this); -%>
+<%- include('../../_partials/imperative/service/find', this); -%>
 
-<%- include('../../common/service_imperative_get_all_template', this); -%>
+<%- include('../../_partials/imperative/service/find_all', this); -%>
 
 
 }

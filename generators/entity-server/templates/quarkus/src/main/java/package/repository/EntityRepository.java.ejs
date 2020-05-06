@@ -48,17 +48,7 @@ import java.util.Optional;
 <%_ } _%>
 @ApplicationScoped
 public class <%=entityClass%>Repository implements <% if (databaseType === 'sql') { %>PanacheRepository<% } %><% if (databaseType === 'mongodb') { %>MongoRepository<% } %><% if (databaseType === 'cassandra') { %>CassandraRepository<% } %><% if (databaseType === 'couchbase') { %>N1qlCouchbaseRepository<% } %><<%=asEntity(entityClass)%>><% if (jpaMetamodelFiltering) { %>, JpaSpecificationExecutor<<%=asEntity(entityClass)%>><% } %> {
-<%- include('../common/data_save_template', this) -%>
+<%- include('../_partials/imperative/common/persist', this) -%>
 
-<%- include('../common/finders', {
-        databaseType: databaseType,
-        entityClass: entityClass,
-        entityInstance: entityInstance,
-        relationships: relationships,
-        fieldsContainOwnerManyToMany: fieldsContainOwnerManyToMany,
-        viaRepository: true,
-        asEntity: asEntity,
-        primaryKeyType: getPkTypeBasedOnDBAndAssociation(authenticationType, databaseType, relationships)
-    }
-);-%>
+<%- include('../_partials/imperative/common/finders', this) -%>
 }

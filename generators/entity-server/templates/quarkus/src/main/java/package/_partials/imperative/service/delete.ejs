@@ -29,5 +29,5 @@
     <%_ } _%>
     public void delete(<%= primaryKeyType %> id) {
         log.debug("Request to delete <%= entityClass %> : {}", id);
-<%- include('./delete_template', {...this, viaService: false}); -%>
+<%- include('../common/delete', {...this, viaService: false}); -%>
     }
