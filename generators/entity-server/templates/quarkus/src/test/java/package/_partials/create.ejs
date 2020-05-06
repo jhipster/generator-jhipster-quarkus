@@ -60,7 +60,7 @@
 
         assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate + 1);
         var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().filter(it -> <%= entityOrDtoInstance %>.id.equals(it.id)).findFirst().get();
-<%- include('./web_object_verification_template', {...this, prefix: 'DEFAULT_'}); -%>
+<%- include('./object_verification', {...this, prefix: 'DEFAULT_'}); -%>
     }
 
     @Test
