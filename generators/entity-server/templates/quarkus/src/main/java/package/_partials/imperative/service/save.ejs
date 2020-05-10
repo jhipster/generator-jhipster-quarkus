@@ -16,11 +16,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-        <%_ if (!viaService) { _%>
-        return StreamSupport
-            .stream(<%= entityInstance %>SearchRepository.search(queryStringQuery(query)).spliterator(), false)<% if (dto === 'mapstruct') { %>
-            .map(<%= entityToDtoMethodReference %>)<% } %>
-            .collect(Collectors.toList());
-        <%_ } else { _%>
-        return <%= entityInstance %>Service.search(query);
-        <%_ } _%>
+    <%_ if (hasServiceImpl) { _%>
+    @Override
+    <%_ } _%>
+    <%_ if (databaseType === 'sql') { _%>
+    @Transactional
+    <%_ } _%>
+    public <%= entityOrDtoClass %> persistOrUpdate(<%= entityOrDtoClass %> <%= entityOrDtoInstance %>) {
+        log.debug("Request to save <%= entityClass %> : {}", <%= entityOrDtoInstance %>);
+<%- include('../common/save', {...this, viaService: false, returnDirectly: true, isController: false}); -%>
+    }

@@ -17,6 +17,8 @@ jobs:
                     - imperative-sql-jwt-maven
                 include:
                     - app-type: imperative-sql-jwt-maven
+                      entity: sample
+                    - app-type: imperative-sql-jwt-maven
                       entity: sqllight
         env:
             JHI_APP: ${{ matrix.app-type }}

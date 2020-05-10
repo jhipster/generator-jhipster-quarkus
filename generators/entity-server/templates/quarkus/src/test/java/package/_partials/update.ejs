@@ -90,7 +90,7 @@
 
         assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeUpdate);
         var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().filter(it -> updated<%= entityOrDtoClass %>.id.equals(it.id)).findFirst().get();
-<%- include('./web_object_verification_template', {...this, prefix: 'UPDATED_'}); -%>
+<%- include('./object_verification', {...this, prefix: 'UPDATED_'}); -%>
     }
 
     @Test

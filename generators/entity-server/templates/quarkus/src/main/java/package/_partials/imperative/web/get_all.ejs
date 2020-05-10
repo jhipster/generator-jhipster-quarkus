@@ -1,0 +1,82 @@
+<%#
+ Copyright 2013-2020 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+    /**
+     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %>.
+     *<%_ if (hasPagination) { %>
+     * @param pageRequest the pagination information.
+    <%_ } _%>
+    <%_ if (fieldsContainOwnerManyToMany) { _%>
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+    <%_ } _%>
+     * @return the {@link Response} with status {@code 200 (OK)} and the list of <%= entityInstancePlural %> in body.
+     */
+    @GET
+    <%_ if (databaseType === 'sql' && fieldsContainOwnerManyToMany && !viaService) { _%>
+    @Transactional
+    <%_ } _%>
+    <%_ if (hasPagination) { _%>
+    public Response getAll<%= entityClassPlural %>(@BeanParam PageRequestVM pageRequest, @Context UriInfo uriInfo<% if (reactive) { %>, ServerHttpRequest request<% } %><% if (fieldsContainNoOwnerOneToOne) { %>, @RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany) { %>, @QueryParam(value = "eagerload") boolean eagerload<% } %>) {
+        log.debug("REST request to get a page of <%= entityClassPlural %>");
+        var page = pageRequest.toPage();
+            <%_ if (viaService) { _%>
+                <%_ if (fieldsContainOwnerManyToMany) { _%>
+        Paged<<%= entityOrDtoClass %>> result;
+        if (eagerload) {
+            result = <%= entityInstance %>Service.findAllWithEagerRelationships(page);
+        } else {
+            result = <%= entityInstance %>Service.findAll(page);
+        }
+                <%_ } else { _%>
+        Paged<<%= entityOrDtoClass %>> result = <%= entityInstance %>Service.findAll(page);
+                <%_ } _%>
+        <%_ } else { _%>
+            <%_ if (fieldsContainOwnerManyToMany) { _%>
+        Paged<<%= entityOrDtoClass %>> result;
+        if (eagerload) {
+            var <%= entityInstancePlural %> = <%= dataAccessObject %>.findAllWithEagerRelationships().page(page).list();
+            var totalCount = <%= dataAccessObject %>.findAll().count();
+            var pageCount = <%= dataAccessObject %>.findAll().page(page).pageCount();
+            result = new Paged<>(page.index, page.size, totalCount, pageCount, <%= entityInstancePlural %>);
+        } else {
+            result = new Paged<>(<%= dataAccessObject %>.findAll().page(page));
+        }
+            <%_ } else { _%>
+        result = <%= dataAccessObject %>.findAll(page);
+            <%_ } _%>
+        <%_ if (hasDto) { _%>
+        result = result.map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
+        <%_ } _%>
+        <%_ } _%>
+        var response = Response.ok().entity(result.content);
+        response = PaginationUtil.withPaginationInfo(response, uriInfo, result);
+        return response.build();
+    }
+    <%_ } else { _%>
+    public List<<%= entityOrDtoClass %>> getAll<%= entityClassPlural %>(<% if (fieldsContainNoOwnerOneToOne) { %>@RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany && fieldsContainNoOwnerOneToOne) { %>,<% } %><% if (fieldsContainOwnerManyToMany) { %>@QueryParam(value = "eagerload") boolean eagerload<% }%>) {
+        log.debug("REST request to get all <%= entityClassPlural %>");
+        <%_ if (viaService) { _%>
+        return <%= entityInstance %>Service.findAll();
+        <%_ } else if (hasDto) { _%>
+        List<<%= entityClass %>> <%= entityInstancePlural %> = <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
+        return <%= mapper %>.toDto(<%= entityInstancePlural %>);
+        <%_ } else { _%>
+        return <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
+        <%_ } _%>
+    }
+    <%_ } _%>

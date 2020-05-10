@@ -17,18 +17,18 @@
  limitations under the License.
 -%>
     /**
-     * Get one <%= entityInstance %> by id.
+     * {@code GET  /<%= entityApiUrl %>/:id} : get the "id" <%= entityInstance %>.
      *
-     * @param id the id of the entity.
-     * @return the entity.
+     * @param id the id of the <%= entityOrDtoInstance %> to retrieve.
+     * @return the {@link Response} with status {@code 200 (OK)} and with body the <%= entityOrDtoInstance %>, or with status {@code 404 (Not Found)}.
      */
-    <%_ if (hasServiceImpl) { _%>
-    @Override
-    <%_ } _%>
-    <%_ if (databaseType === 'sql' && isUsingMapsId === true) { _%>
+    @GET
+    @Path("/{id}")
+    <%_ if (databaseType === 'sql' && isUsingMapsId === true && !viaService) { _%>
     @Transactional(readOnly = true)
-    <%_ } _%>
-    public Optional<<%= entityOrDtoClass %>> findOne(<%= primaryKeyType %> id) {
-        log.debug("Request to get <%= entityClass %> : {}", id);
-<%- include('./get_template', {...this, viaService: false, returnDirectly:true}); -%>
+    <%_ } %>
+    public Response get<%= entityClass %>(@PathParam("id") <%= primaryKeyType %> id) {
+        log.debug("REST request to get <%= entityClass %> : {}", id);
+<%- include('../common/get', {...this, returnDirectly: false}); -%>
+        return ResponseUtil.wrapOrNotFound(<%= entityOrDtoInstance %>);
     }

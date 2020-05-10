@@ -18,7 +18,7 @@
 -%>
 package <%=packageName%>.web.rest;
 
-<%- include('../../common/web_imports_template', this); -%>
+<%- include('../../_partials/imperative/web/imports', this); -%>
 
 /**
  * REST controller for managing {@link <%= packageName %>.domain.<%= asEntity(entityClass) %>}.
@@ -38,20 +38,25 @@ public class <%= entityClass %>Resource {
     String applicationName;
 
 <%_ } _%>
-<%- include('../../common/inject_template', { ...this, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isController: true}); -%>
+<%- include('../../_partials/imperative/common/inject', { ...this, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isController: true}); -%>
 <%_ if (!readOnly) { _%>
-<%- include('../../common/web_imperative_create_template', this); -%>
+<%- include('../../_partials/imperative/web/create', this); -%>
 
-<%- include('../../common/web_imperative_update_template', this); -%>
+<%- include('../../_partials/imperative/web/update', this); -%>
 
-<%- include('../../common/web_imperative_delete_template', this); -%>
+<%- include('../../_partials/imperative/web/delete', this); -%>
 
 <%_ } _%>
-<%- include('../../common/web_imperative_get_all_template', this); -%>
+<%_ if (jpaMetamodelFiltering) {  %>
+<%- include('../../_partials/imperative/web/get_all_filtered', this); -%>
+<%_ } else { _%>
+<%- include('../../_partials/imperative/web/get_all', this); -%>
+<%_ } _%>
 
-<%- include('../../common/web_imperative_get_template', this); -%>
+
+<%- include('../../_partials/imperative/web/get', this); -%>
 <%_ if (searchEngine === 'elasticsearch') { _%>
 
-<%- include('../../common/web_imperative_search_template', this); -%>
+<%- include('../../_partials/imperative/web/search', this); -%>
 <%_ } _%>
 }

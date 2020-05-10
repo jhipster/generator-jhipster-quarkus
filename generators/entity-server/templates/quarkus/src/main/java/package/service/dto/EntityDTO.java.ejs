@@ -26,6 +26,9 @@ let importSet = false;
 const uniqueEnums = {};
 _%>
 <%- include ../../domain/imports -%>
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
 <%_ if (typeof javadoc != 'undefined') { _%>
 import io.swagger.annotations.ApiModel;
 <%_ } if (importApiModelProperty === true) { _%>
@@ -74,6 +77,7 @@ import <%= packageName %>.domain.enumeration.<%= uniqueEnums[idx] %>;
 <%_ if (typeof javadoc !== 'undefined') { _%>
 @ApiModel(description = "<%- formatAsApiDescription(javadoc) %>")
 <%_ } _%>
+@RegisterForReflection
 public class <%= asDto(entityClass) %> implements Serializable {
     <% if (!embedded) { %>
     public <%= primaryKeyType %> id;

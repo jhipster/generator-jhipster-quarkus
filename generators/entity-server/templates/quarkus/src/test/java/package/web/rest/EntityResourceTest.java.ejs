@@ -18,7 +18,7 @@
 -%>
 package <%=packageName%>.web.rest;
 
-<%- include('../../common/web_imports_template', this); -%>
+<%- include('../../_partials/imports', this); -%>
 
 @QuarkusTest
 public class <%= entityClass%>ResourceTest {
@@ -29,7 +29,7 @@ public class <%= entityClass%>ResourceTest {
     private static final TypeRef<List<<%= entityOrDtoClass%>>> LIST_OF_ENTITY_TYPE = new TypeRef<>() {
     };
 
-<%- include('../../common/web_defaults_template', this); -%>
+<%- include('../../_partials/defaults', this); -%>
 
     String adminToken;
 
@@ -80,16 +80,16 @@ public class <%= entityClass%>ResourceTest {
     }
 
     <%_ if (!readOnly) { _%>
-<%- include('../../common/web_create_template', this); -%>
+<%- include('../../_partials/create', this); -%>
 
-<%- include('../../common/web_create_with_field_required_template', this); -%>
+<%- include('../../_partials/create_with_field_required', this); -%>
 
-<%- include('../../common/web_update_template', this); -%>
+<%- include('../../_partials/update', this); -%>
 
-<%- include('../../common/web_delete_template', this); -%>
+<%- include('../../_partials/delete', this); -%>
 
     <%_ } _%>
-<%- include('../../common/web_get_all_template', this); -%>
+<%- include('../../_partials/get_all', this); -%>
 
-<%- include('../../common/web_get_template', this); -%>
+<%- include('../../_partials/get', this); -%>
 }

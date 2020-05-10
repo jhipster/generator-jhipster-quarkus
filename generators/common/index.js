@@ -1,6 +1,8 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const CommonGenerator = require('generator-jhipster/generators/common');
+const writeFiles = require('./files').writeFiles;
+const jhipsterQuarkusVersion = require('../../package.json').version;
 
 module.exports = class extends CommonGenerator {
     constructor(args, opts) {
@@ -71,13 +73,19 @@ module.exports = class extends CommonGenerator {
     }
 
     get default() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._default();
+        const phaseFromJHipster = super._default();
+        const phaseFromQuarkus = {
+            defineJHipsterQuarkusVersion() {
+                this.jhipsterQuarkusVersion = jhipsterQuarkusVersion;
+            }
+        };
+        return Object.assign(phaseFromJHipster, phaseFromQuarkus);
     }
 
     get writing() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._writing();
+        const phaseFromJHipster = super._writing();
+        const phaseFromQuarkus = writeFiles();
+        return Object.assign(phaseFromJHipster, phaseFromQuarkus);
     }
 
     get install() {
