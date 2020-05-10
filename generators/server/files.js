@@ -55,7 +55,8 @@ const serverFiles = {
                 'templates/mail/activationEmail.html',
                 'templates/mail/creationEmail.html',
                 'templates/mail/passwordResetEmail.html',
-                'application.properties'
+                'application.properties',
+                'resources-config.json'
             ]
         }
     ],

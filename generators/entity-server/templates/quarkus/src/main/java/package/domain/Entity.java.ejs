@@ -56,7 +56,9 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.json.bind.annotation.JsonbTransient;
 <%_ if (!viaRepository) { _%>
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-<%_ } if (databaseType === 'cassandra') { _%>
+<%_ } _%>
+import io.quarkus.runtime.annotations.RegisterForReflection;
+<%_ if (databaseType === 'cassandra') { _%>
 import org.springframework.data.annotation.Id;
     <%_ if (fieldsContainBlob) { _%>
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -160,6 +162,7 @@ import static org.springframework.data.couchbase.core.mapping.id.GenerationStrat
 <%_ } if (searchEngine === 'elasticsearch') { _%>
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "<%= entityInstance.toLowerCase() %>")
 <%_ } _%>
+@RegisterForReflection
 public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;

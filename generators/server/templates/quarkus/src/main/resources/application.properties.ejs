@@ -36,3 +36,7 @@ jhipster.security.authentication.jwt.token-validity-in-seconds=86400
 jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2592000
 jhipster.mail.base-url=http://127.0.0.1:8080
 jhipster.mail.base-url=http://127.0.0.1:8080
+
+quarkus.native.additional-build-args=\
+    -H:ResourceConfigurationFiles=resources-config.json,\
+    --initialize-at-run-time=<%= packageName %>.security.RandomUtil
