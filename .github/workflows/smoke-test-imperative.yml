@@ -4,7 +4,7 @@ env:
     JHI_SCRIPTS: ./test-integration/scripts
 jobs:
     applications:
-        name: ${{ matrix.app-type }}
+        name: ${{ matrix.app }}
         runs-on: ${{ matrix.os }}
         if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
         timeout-minutes: 20
@@ -15,7 +15,10 @@ jobs:
                 os: [ubuntu-latest]
                 app:
                     - imperative-sql-jwt-maven-sample
-                    - imperative-sql-jwt-maven-sqllight
+                    - imperative-sql-jwt-maven-sqlight
+                include:
+                    - app: imperative-sql-jwt-maven-sample
+                    - app: imperative-sql-jwt-maven-sqlight
         env:
             JHI_APP: ${{ matrix.app }}
         steps:
