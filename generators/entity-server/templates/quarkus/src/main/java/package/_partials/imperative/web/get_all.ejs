@@ -57,7 +57,7 @@
             result = new Paged<>(<%= dataAccessObject %>.findAll().page(page));
         }
             <%_ } else { _%>
-        result = <%= dataAccessObject %>.findAll(page);
+        var result = new Paged<>(<%= dataAccessObject %>.findAll().page(page));
             <%_ } _%>
         <%_ if (hasDto) { _%>
         result = result.map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));

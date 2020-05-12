@@ -43,7 +43,7 @@
         }
     }
 
-    const fieldType = fields[idx].fieldType;
+    let fieldType = fields[idx].fieldType;
     const fieldTypeBlobContent = fields[idx].fieldTypeBlobContent;
     const isEnum = fields[idx].fieldIsEnum;
     let enumValue1;
@@ -59,6 +59,7 @@
     }
 
     if (fieldType === 'String' || fieldTypeBlobContent === 'text') {
+        fieldType = 'String'; //use String rather than byte[]
         // Generate Strings, using the min and max string length if they are configured
         let sampleTextString = "";
         let updatedTextString = "";
