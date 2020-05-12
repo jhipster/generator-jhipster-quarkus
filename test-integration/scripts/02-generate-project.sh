@@ -17,6 +17,6 @@ cd "$JHI_FOLDER_APP"
 ls -al .
 
 
-runOptions="--blueprints quarkus --skip-checks --force --no-insight --skip-install import-jdl project.jh"
+runOptions="--blueprints quarkus --skip-checks --force --no-insight --skip-install"
 
-jhipster $runOptions
+jhipster import-jdl project.jh $runOptions

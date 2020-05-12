@@ -23,8 +23,8 @@ fi
 rm -rf "$JHI_WORKSPACE" && mkdir -p "$JHI_WORKSPACE"
 
 for sample in $(ls -1 "$JHI_SAMPLES"); do
-        echo "*********************** Generating project $PROJECT"
-        JHI_APP=$sample
+        JHI_APP=${sample%.*}
+        echo "*********************** Generating project $JHI_APP"
         JHI_FOLDER_APP="$JHI_WORKSPACE/$JHI_APP"
         $mydir/generate-sample.sh generate "$JHI_FOLDER_APP" "$JHI_APP"
 

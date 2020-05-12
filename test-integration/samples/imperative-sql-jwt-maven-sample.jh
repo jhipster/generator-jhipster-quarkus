@@ -1,40 +1,37 @@
 application {
-    config {
-      baseName blog,
-      applicationType monolith,
-      packageName com.jhipster.demo.blog,
-      prodDatabaseType mysql,
-      cacheProvider hazelcast,
-      buildTool maven,
-      clientFramework react,
-      useSass true,
-      testFrameworks [protractor]
-    }
-    entities *
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName jhipsterSampleApplication
+    buildTool maven
+    databaseType sql
+    packageName io.github.jhipster.sample
+    prodDatabaseType mysql
   }
 
-  entity Blog {
-    name String required minlength(3)
-    handle String required minlength(2)
-  }
+  entities *
+}
 
-  entity Post {
-    title String required
-    content TextBlob required
-    date Instant required
-  }
+entity BankAccount {
+  name String required,
+  balance BigDecimal required
+}
+entity Label {
+  label String required minlength(3)
+}
+entity Operation {
+  date Instant required,
+  description String,
+  amount BigDecimal required
+}
+relationship OneToMany {
+  BankAccount{operation} to Operation{bankAccount(name)}
+}
+relationship ManyToOne {
+  BankAccount{user(login)} to User
+}
+relationship ManyToMany {
+  Operation{label(label)} to Label{operation}
+}
 
-  entity Tag {
-    name String required minlength(2)
-  }
-
-  relationship ManyToOne {
-    Blog{user(login)} to User
-    Post{blog(name)} to Blog
-  }
-
-  relationship ManyToMany {
-    Post{tag(name)} to Tag{entry}
-  }
-
-  paginate Post, Tag with infinite-scroll
+paginate Operation with infinite-scroll
