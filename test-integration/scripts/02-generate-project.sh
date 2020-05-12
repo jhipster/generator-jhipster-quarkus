@@ -8,10 +8,15 @@ else
 fi
 
 #-------------------------------------------------------------------------------
-# Regenerate project with entities
+# Generate project with jhipster
 #-------------------------------------------------------------------------------
+rm -rf "$JHI_FOLDER_APP"
+mkdir -p "$JHI_FOLDER_APP"
+cp -f "$JHI_SAMPLES"/"$JHI_APP".jh "$JHI_FOLDER_APP"/project.jh
 cd "$JHI_FOLDER_APP"
+ls -al .
 
-runOptions="--blueprints quarkus --skip-checks --force --no-insight --skip-install --with-entities"
+
+runOptions="--blueprints quarkus --skip-checks --force --no-insight --skip-install import-jdl project.jh"
 
 jhipster $runOptions

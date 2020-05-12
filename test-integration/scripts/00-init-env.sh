@@ -22,11 +22,6 @@ if [[ "$JHI_SAMPLES" == "" ]]; then
     JHI_SAMPLES="$JHI_INTEG"/samples
 fi
 
-# folder for entities
-if [[ "$JHI_ENTITIES" == "" ]]; then
-    JHI_ENTITIES="$JHI_INTEG"/entities
-fi
-
 # folder for scripts
 if [[ "$JHI_SCRIPTS" == "" ]]; then
     JHI_SCRIPTS="$JHI_INTEG"/scripts
