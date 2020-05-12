@@ -15,10 +15,10 @@ jobs:
                 os: [ubuntu-latest]
                 app:
                     - imperative-sql-jwt-maven-sample
-                    - imperative-sql-jwt-maven-sqlight
+                    - imperative-sql-jwt-maven-sqllight
                 include:
                     - app: imperative-sql-jwt-maven-sample
-                    - app: imperative-sql-jwt-maven-sqlight
+                    - app: imperative-sql-jwt-maven-sqllight
         env:
             JHI_APP: ${{ matrix.app }}
         steps:
