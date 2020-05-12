@@ -33,11 +33,14 @@
         log.debug("Request to get all <%= entityClassPlural %>");
         <%_ if(hasPagination) { _%>
         return new Paged<>(<%= dataAccessObject %>.findAll().page(page))<% if(!hasDto) { %>;<% } else { %>
-            .map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
+            .map(<%= entityInstance %> -> <%= mapper %>.toDto((<%= entityClass %>) <%= entityInstance %>));
             <%_ } _%>
         <%_ } else { _%>
-        return <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list()<% if(!hasDto) { %>;<% } else { %>
-            .map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
+            <%_ if(hasDto) { _%>
+        List<<%=entityClass %>> <%= entityInstancePlural %> = <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
+        return <%= mapper %>.toDto(<%= entityInstancePlural %>);
+            <%_ } else { _%>
+            return <%= dataAccessObject %>.<% if (fieldsContainOwnerManyToMany) { %>findAllWithEagerRelationships()<% } else { %>findAll()<% } %>.list();
             <%_ } _%>
         <%_ } _%>
     }
@@ -57,11 +60,14 @@
         var totalCount = <%= dataAccessObject %>.findAll().count();
         var pageCount = <%= dataAccessObject %>.findAll().page(page).pageCount();
         return new Paged<>(page.index, page.size, totalCount, pageCount, <%= entityInstancePlural %>)<% if(!hasDto) { %>;<% } else { %>
-            .map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
+            .map(<%= entityInstance %> -> <%= mapper %>.toDto((<%= entityClass %>) <%= entityInstance %>));
             <%_ } _%>
         <%_ } else { _%>
-        return <%= dataAccessObject %>.findAllWithEagerRelationships().list()<% if(!hasDto) { %>;<% } else { %>
-            .map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
+            <%_ if(hasDto) { _%>
+        List<<%=entityClass %>> = <%= dataAccessObject %>.findAllWithEagerRelationships().list();
+        return <%= mapper %>.toDto();
+            <%_ } else {_%>
+        return <%= dataAccessObject %>.findAllWithEagerRelationships().list();
             <%_ } _%>
         <%_ } _%>
     }

@@ -4,7 +4,7 @@ env:
     JHI_SCRIPTS: ./test-integration/scripts
 jobs:
     applications:
-        name: ${{ matrix.app-type }}
+        name: ${{ matrix.app }}
         runs-on: ${{ matrix.os }}
         if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
         timeout-minutes: 20
@@ -13,16 +13,14 @@ jobs:
             matrix:
                 node_version: [12.16.2]
                 os: [ubuntu-latest]
-                app-type:
-                    - imperative-sql-jwt-maven
+                app:
+                    - imperative-sql-jwt-maven-sample
+                    - imperative-sql-jwt-maven-sqllight
                 include:
-                    - app-type: imperative-sql-jwt-maven
-                      entity: sample
-                    - app-type: imperative-sql-jwt-maven
-                      entity: sqllight
+                    - app: imperative-sql-jwt-maven-sample
+                    - app: imperative-sql-jwt-maven-sqllight
         env:
-            JHI_APP: ${{ matrix.app-type }}
-            JHI_ENTITY: ${{ matrix.entity }}
+            JHI_APP: ${{ matrix.app }}
         steps:
             - uses: actions/checkout@v1
             - uses: actions/setup-java@v1
@@ -32,13 +30,7 @@ jobs:
               run: git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
             - name: Prepare JHipster env
               run: sudo $JHI_SCRIPTS/01-install-global-jhipster.sh
-            - name: 'Generate JHipster Application without entities'
-              run: $JHI_SCRIPTS/02-generate-project-only.sh $JHI_APP
-            - name: 'Run JHipster Application server test without entities'
-              run: $JHI_SCRIPTS/05-run-server-test.sh $JHI_APP
-            - name: 'Copy Entities'
-              run: $JHI_SCRIPTS/03-copy-entities.sh $JHI_ENTITY
-            - name: 'Generate JHipster Application with entities'
-              run: $JHI_SCRIPTS/04-generate-project-with-entities.sh $JHI_APP
-            - name: 'Run JHipster Application server test with entities'
-              run: $JHI_SCRIPTS/05-run-server-test.sh $JHI_APP
+            - name: 'Generate JHipster Application'
+              run: $JHI_SCRIPTS/02-generate-project.sh $JHI_APP
+            - name: 'Run JHipster Application server test'
+              run: $JHI_SCRIPTS/03-run-server-test.sh $JHI_APP
