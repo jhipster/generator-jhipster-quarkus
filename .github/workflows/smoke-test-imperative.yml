@@ -14,12 +14,8 @@ jobs:
                 node_version: [12.16.2]
                 os: [ubuntu-latest]
                 app:
-                    - imperative-sql-jwt-maven
-                include:
-                    - app-type: imperative-sql-jwt-maven
-                      entity: sample
-                    - app-type: imperative-sql-jwt-maven
-                      entity: sqllight
+                    - imperative-sql-jwt-maven-sample
+                    - imperative-sql-jwt-maven-sqllight
         env:
             JHI_APP: ${{ matrix.app }}
         steps:
