@@ -2,7 +2,7 @@
 const chalk = require('chalk');
 const os = require('os');
 const ServerGenerator = require('generator-jhipster/generators/server');
-const customServerPrompt = require('./prompts');
+const prompts = require('./prompts');
 const writeFiles = require('./files').writeFiles;
 
 module.exports = class extends ServerGenerator {
@@ -64,9 +64,11 @@ module.exports = class extends ServerGenerator {
 
     get prompting() {
         const phaseFromJHipster = super._prompting();
-        phaseFromJHipster.askForServerSideOpts = customServerPrompt.askForServerSideOpts;
-
-        return phaseFromJHipster;
+        const phaseFromQuarkus = {
+            askForServerSideOpts: prompts.askForServerSideOpts,
+            askForOptionalItems: undefined
+        };
+        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get configuring() {

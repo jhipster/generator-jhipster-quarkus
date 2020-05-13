@@ -40,44 +40,44 @@ function askForServerSideOpts(meta) {
             default: 'com.mycompany.myapp',
             store: true
         },
-        {
-            when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
-            type: 'list',
-            name: 'serviceDiscoveryType',
-            message: 'Which service discovery server do you want to use?',
-            choices: [
-                {
-                    value: 'eureka',
-                    name: 'JHipster Registry (uses Eureka, provides Spring Cloud Config support and monitoring dashboards)'
-                },
-                {
-                    value: 'consul',
-                    name: 'Consul'
-                },
-                {
-                    value: false,
-                    name: 'No service discovery'
-                }
-            ],
-            default: 'eureka'
-        },
-        {
-            when: applicationType === 'monolith',
-            type: 'list',
-            name: 'serviceDiscoveryType',
-            message: 'Do you want to use the JHipster Registry to configure, monitor and scale your application?',
-            choices: [
-                {
-                    value: false,
-                    name: 'No'
-                },
-                {
-                    value: 'eureka',
-                    name: 'Yes'
-                }
-            ],
-            default: false
-        },
+        // {
+        //     when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
+        //     type: 'list',
+        //     name: 'serviceDiscoveryType',
+        //     message: 'Which service discovery server do you want to use?',
+        //     choices: [
+        //         {
+        //             value: 'eureka',
+        //             name: 'JHipster Registry (uses Eureka, provides Spring Cloud Config support and monitoring dashboards)'
+        //         },
+        //         {
+        //             value: 'consul',
+        //             name: 'Consul'
+        //         },
+        //         {
+        //             value: false,
+        //             name: 'No service discovery'
+        //         }
+        //     ],
+        //     default: 'eureka'
+        // },
+        // {
+        //     when: applicationType === 'monolith',
+        //     type: 'list',
+        //     name: 'serviceDiscoveryType',
+        //     message: 'Do you want to use the JHipster Registry to configure, monitor and scale your application?',
+        //     choices: [
+        //         {
+        //             value: false,
+        //             name: 'No'
+        //         },
+        //         {
+        //             value: 'eureka',
+        //             name: 'Yes'
+        //         }
+        //     ],
+        //     default: false
+        // },
         /*
         {
             when: response =>
@@ -116,22 +116,6 @@ function askForServerSideOpts(meta) {
             default: 0
         },
         */
-        {
-            when: response =>
-                (applicationType === 'gateway' || applicationType === 'microservice') && response.authenticationType === 'uaa',
-            type: 'input',
-            name: 'uaaBaseName',
-            message: 'What is the folder path of your UAA application?',
-            default: '../uaa',
-            validate: input => {
-                const uaaAppData = this.getUaaAppName(input);
-
-                if (uaaAppData && uaaAppData.baseName && uaaAppData.applicationType === 'uaa') {
-                    return true;
-                }
-                return `Could not find a valid JHipster UAA server in path "${input}"`;
-            }
-        },
         {
             type: 'list',
             name: 'databaseType',
@@ -204,72 +188,73 @@ function askForServerSideOpts(meta) {
                     }
                 ].concat(constants.SQL_DB_OPTIONS.find(it => it.value === response.prodDatabaseType)),
             default: 0
-        },
-        {
-            when: () => !reactive,
-            type: 'list',
-            name: 'cacheProvider',
-            message: 'Do you want to use the Spring cache abstraction?',
-            choices: [
-                {
-                    value: 'ehcache',
-                    name: 'Yes, with the Ehcache implementation (local cache, for a single node)'
-                },
-                {
-                    value: 'caffeine',
-                    name: 'Yes, with the Caffeine implementation (local cache, for a single node)'
-                },
-                {
-                    value: 'hazelcast',
-                    name:
-                        'Yes, with the Hazelcast implementation (distributed cache, for multiple nodes, supports rate-limiting for gateway applications)'
-                },
-                {
-                    value: 'infinispan',
-                    name: '[BETA] Yes, with the Infinispan implementation (hybrid cache, for multiple nodes)'
-                },
-                {
-                    value: 'memcached',
-                    name:
-                        'Yes, with Memcached (distributed cache) - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
-                },
-                {
-                    value: 'redis',
-                    name: 'Yes, with the Redis implementation'
-                },
-                {
-                    value: 'no',
-                    name: 'No - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
-                }
-            ],
-            default: applicationType === 'microservice' || applicationType === 'uaa' ? 2 : 0
-        },
-        {
-            when: response =>
-                ((response.cacheProvider !== 'no' && response.cacheProvider !== 'memcached') || applicationType === 'gateway') &&
-                response.databaseType === 'sql' &&
-                !reactive,
-            type: 'confirm',
-            name: 'enableHibernateCache',
-            message: 'Do you want to use Hibernate 2nd level cache?',
-            default: true
-        },
-        {
-            type: 'list',
-            name: 'buildTool',
-            message: 'Would you like to use Maven or Gradle for building the backend?',
-            choices: [
-                {
-                    value: 'maven',
-                    name: 'Maven'
-                },
-                {
-                    value: 'gradle',
-                    name: 'Gradle'
-                }
-            ],
-            default: 'maven'
         }
+        // ,
+        // {
+        //     when: () => !reactive,
+        //     type: 'list',
+        //     name: 'cacheProvider',
+        //     message: 'Do you want to use the Spring cache abstraction?',
+        //     choices: [
+        //         {
+        //             value: 'ehcache',
+        //             name: 'Yes, with the Ehcache implementation (local cache, for a single node)'
+        //         },
+        //         {
+        //             value: 'caffeine',
+        //             name: 'Yes, with the Caffeine implementation (local cache, for a single node)'
+        //         },
+        //         {
+        //             value: 'hazelcast',
+        //             name:
+        //                 'Yes, with the Hazelcast implementation (distributed cache, for multiple nodes, supports rate-limiting for gateway applications)'
+        //         },
+        //         {
+        //             value: 'infinispan',
+        //             name: '[BETA] Yes, with the Infinispan implementation (hybrid cache, for multiple nodes)'
+        //         },
+        //         {
+        //             value: 'memcached',
+        //             name:
+        //                 'Yes, with Memcached (distributed cache) - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
+        //         },
+        //         {
+        //             value: 'redis',
+        //             name: 'Yes, with the Redis implementation'
+        //         },
+        //         {
+        //             value: 'no',
+        //             name: 'No - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
+        //         }
+        //     ],
+        //     default: applicationType === 'microservice' || applicationType === 'uaa' ? 2 : 0
+        // },
+        // {
+        //     when: response =>
+        //         ((response.cacheProvider !== 'no' && response.cacheProvider !== 'memcached') || applicationType === 'gateway') &&
+        //         response.databaseType === 'sql' &&
+        //         !reactive,
+        //     type: 'confirm',
+        //     name: 'enableHibernateCache',
+        //     message: 'Do you want to use Hibernate 2nd level cache?',
+        //     default: true
+        // },
+        // {
+        //     type: 'list',
+        //     name: 'buildTool',
+        //     message: 'Would you like to use Maven or Gradle for building the backend?',
+        //     choices: [
+        //         {
+        //             value: 'maven',
+        //             name: 'Maven'
+        //         },
+        //         {
+        //             value: 'gradle',
+        //             name: 'Gradle'
+        //         }
+        //     ],
+        //     default: 'maven'
+        // }
     ];
 
     if (meta) return prompts; // eslint-disable-line consistent-return
