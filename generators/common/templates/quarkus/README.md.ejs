@@ -316,37 +316,6 @@ To use those tests, you must install Gatling from [https://gatling.io/](https://
 <% } %>
 For more information, refer to the [Running tests page][].
 
-### Code quality
-
-Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
-
-```
-docker-compose -f src/main/docker/sonar.yml up -d
-```
-
-You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner)<% if (buildTool) { %> or by using the <% if (buildTool === 'maven') { %>maven<% } %><% if (buildTool === 'gradle') { %>gradle<% } %> plugin<% } %>.
-
-Then, run a Sonar analysis:
-
-<%_ if (buildTool === 'maven') { _%>
-```
-./mvnw -Pprod clean verify sonar:sonar
-```
-
-If you need to re-run the Sonar phase, please be sure to specify at least the `initialize` phase since Sonar properties are loaded from the sonar-project.properties file.
-
-```
-./mvnw initialize sonar:sonar
-```
-or
-<%_ } else if (buildTool === 'gradle') { _%>
-```
-./gradlew -Pprod clean check jacocoTestReport sonarqube
-```
-<%_ } _%>
-
-For more information, refer to the [Code quality page][].
-
 ## Using Docker to simplify development (optional)
 
 You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
@@ -359,20 +328,6 @@ To stop it and remove the container, run:
 
     docker-compose -f src/main/docker/<%= prodDatabaseType %>.yml down
 <% } %>
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a docker image of your app by running:
-
-    <% if (buildTool === 'maven') { %>./mvnw -Pprod verify jib:dockerBuild<% } %><% if (buildTool === 'gradle') { %>./gradlew bootJar -Pprod jibDockerBuild<% } %>
-
-Then run:
-
-    docker-compose -f src/main/docker/app.yml up -d
-
-For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
 [JHipster Homepage and latest documentation]: <%= DOCUMENTATION_URL %>
 [JHipster <%= jhipsterVersion %> archive]: <%= DOCUMENTATION_ARCHIVE_URL %>

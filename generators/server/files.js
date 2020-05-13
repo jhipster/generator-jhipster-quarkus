@@ -19,6 +19,7 @@
 const mkdirp = require('mkdirp');
 const cleanup = require('generator-jhipster/generators/cleanup');
 const constants = require('generator-jhipster/generators/generator-constants');
+const jhipsterFiles = require('generator-jhipster/generators/server/files').serverFiles;
 
 /* Constants use throughout */
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
@@ -309,6 +310,7 @@ const serverFiles = {
 };
 
 const serverFilesFromJHipster = {
+    docker: jhipsterFiles.docker,
     serverResource: [
         {
             condition: generator => generator.databaseType === 'sql',
