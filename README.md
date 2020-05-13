@@ -108,7 +108,9 @@ jhipster -d --blueprint quarkus
 
 ✅ Generate App generation - `jhipster --blueprints quarkus`
 
-✅ Entity generation - `jhipster entity <entity-name> --blueprints quarkus`
+✅ Entity generation - `jhipster --blueprints quarkus entity <entity-name>`
+
+✅ JDL import - `jhipster --blueprints quarkus import-jdl sample.jh`
 
 # Contributors ✨
 
