@@ -266,7 +266,6 @@ function askForServerSideOpts(meta) {
 
         // force authentication type to jwt
         this.authenticationType = 'jwt';
-        this.buildTool = 'maven';
 
         // JWT authentication is mandatory with Eureka, so the JHipster Registry
         // can control the applications
@@ -305,7 +304,9 @@ function askForServerSideOpts(meta) {
         this.devDatabaseType = props.devDatabaseType;
         this.prodDatabaseType = props.prodDatabaseType;
         this.searchEngine = props.searchEngine;
-        this.buildTool = props.buildTool;
+        // this.buildTool = props.buildTool;
+        // Force maven
+        this.buildTool = 'maven';
         this.uaaBaseName = this.getUaaAppName(props.uaaBaseName).baseName;
 
         if (this.databaseType === 'no') {
