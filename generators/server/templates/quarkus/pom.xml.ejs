@@ -41,7 +41,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Dependency properties -->
-        <quarkus.platform.version>1.3.0.Final</quarkus.platform.version>
+        <quarkus.platform.version><%= quarkusVersion %></quarkus.platform.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
         <archunit-junit5.version>0.12.0</archunit-junit5.version>
 
@@ -67,7 +67,7 @@
         <%_ if (enableSwaggerCodegen) { _%>
         <openapi-generator-maven-plugin.version>3.2.3</openapi-generator-maven-plugin.version>
         <%_ } _%>
-        <quarkus-plugin.version>1.3.0.Final</quarkus-plugin.version>
+        <quarkus-plugin.version><%= quarkusVersion %></quarkus-plugin.version>
 
         <!-- Plugin properties -->
         <checkstyle.version>8.27</checkstyle.version>
