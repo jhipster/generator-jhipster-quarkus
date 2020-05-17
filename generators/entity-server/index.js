@@ -2,8 +2,6 @@
 const chalk = require('chalk');
 const EntityServerGenerator = require('generator-jhipster/generators/entity-server');
 const writeFiles = require('./files').writeFiles;
-const prompts = require('./prompts');
-const constants = require('../generator-quarkus-constants');
 
 module.exports = class extends EntityServerGenerator {
     constructor(args, opts) {
@@ -15,55 +13,57 @@ module.exports = class extends EntityServerGenerator {
     }
 
     get initializing() {
-        const phaseFromJHipster = super._initializing();
-        const phaseFromQuarkus = {
-            ...phaseFromJHipster,
-            setupConfigQuarkus() {
-                if (!this.useConfigurationFile) {
-                    this.dataAccess = constants.DEFAULT_DATA_ACCESS;
-                } else {
-                    this.dataAccess = this.fileData.dataAccess || constants.DEFAULT_DATA_ACCESS;
-                }
-            }
-        };
-        return phaseFromQuarkus;
+        /**
+         * Any method beginning with _ can be reused from the superclass `EntityServerGenerator`
+         *
+         * There are multiple ways to customize a phase from JHipster.
+         *
+         * 1. Let JHipster handle a phase, blueprint doesnt override anything.
+         * ```
+         *      return super._initializing();
+         * ```
+         *
+         * 2. Override the entire phase, this is when the blueprint takes control of a phase
+         * ```
+         *      return {
+         *          myCustomInitPhaseStep() {
+         *              // Do all your stuff here
+         *          },
+         *          myAnotherCustomInitPhaseStep(){
+         *              // Do all your stuff here
+         *          }
+         *      };
+         * ```
+         *
+         * 3. Partially override a phase, this is when the blueprint gets the phase from JHipster and customizes it.
+         * ```
+         *      const phaseFromJHipster = super._initializing();
+         *      const myCustomPhaseSteps = {
+         *          displayLogo() {
+         *              // override the displayLogo method from the _initializing phase of JHipster
+         *          },
+         *          myCustomInitPhaseStep() {
+         *              // Do all your stuff here
+         *          },
+         *      }
+         *      return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
+         * ```
+         */
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._initializing();
     }
 
     get prompting() {
-        const phaseFromJHipster = super._prompting();
-        const phaseFromQuarkus = {
-            /* pre entity hook needs to be written here */
-            // askForMicroserviceJson: prompts.askForMicroserviceJson,
-            /* ask question to user if s/he wants to update entity */
-            askForUpdate: phaseFromJHipster.askForUpdate,
-            askForFields: phaseFromJHipster.askForFields,
-            askForFieldsToRemove: phaseFromJHipster.askForFieldsToRemove,
-            askForRelationships: phaseFromJHipster.askForRelationships,
-            askForRelationsToRemove: phaseFromJHipster.askForRelationsToRemove,
-            askForTableName: phaseFromJHipster.askForTableName,
-            askForDataAccess: prompts.askForDataAccess,
-            askForService: prompts.askForService,
-            askForDTO: phaseFromJHipster.askForDTO,
-            // askForFiltering: phaseFromJHipster.askForFiltering,
-            // askForReadOnly: phaseFromJHipster.askForReadOnly,
-            askForPagination: phaseFromJHipster.askForPagination
-        };
-        return phaseFromQuarkus;
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._prompting();
     }
 
     get configuring() {
-        const phaseFromJHipster = super._configuring();
+        // const phaseFromJHipster = super._configuring();
         const phaseFromQuarkus = {
             disableFluentMethods() {
                 this.fluentMethods = false;
             },
-            configureEntityQuarkus() {
-                if (!this.storageData) {
-                    this.storageData = {};
-                }
-                this.storageData.dataAccess = this.dataAccess;
-            },
-            ...phaseFromJHipster,
             fixRelationshipsPk() {
                 // TODO remove after JHipster 6.8.0
                 // https://github.com/jhipster/generator-jhipster/blob/master/generators/entity/index.js#L894

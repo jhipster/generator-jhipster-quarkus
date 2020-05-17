@@ -1,2 +1,0 @@
-hello quarkus!
-It's dummy.txt
