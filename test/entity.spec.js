@@ -10,7 +10,7 @@ const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
 // const SERVER_MAIN_RES_DIR = constants.SERVER_MAIN_RES_DIR;
 // const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
 
-describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
+describe('Subgenerator entity of quarkus JHipster blueprint', () => {
     describe('with default options (no repository, no service, no dto, no pagination)', () => {
         before(done => {
             helpers
@@ -27,9 +27,9 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 })
                 .withGenerators([
                     [
-                        require('../generators/entity-server'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity-server',
-                        path.join(__dirname, '../generators/entity-server/index.js')
+                        require('../generators/entity'), // eslint-disable-line global-require
+                        'jhipster-quarkus:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
                     ]
                 ])
                 .withArguments(['foo'])
@@ -65,6 +65,10 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 'public class Foo extends PanacheEntityBase implements Serializable'
             );
         });
+        it('stores the Active Record pattern choice', () => {
+            assert.file('.jhipster/Foo.json');
+            assert.fileContent('.jhipster/Foo.json', '"dataAccess": "activeRecord"');
+        });
     });
     describe('with repository', () => {
         before(done => {
@@ -82,9 +86,9 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 })
                 .withGenerators([
                     [
-                        require('../generators/entity-server'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity-server',
-                        path.join(__dirname, '../generators/entity-server/index.js')
+                        require('../generators/entity'), // eslint-disable-line global-require
+                        'jhipster-quarkus:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
                     ]
                 ])
                 .withArguments(['foo'])
@@ -112,6 +116,10 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 'public class FooRepository implements PanacheRepository<Foo>'
             );
         });
+        it('stores the Repository pattern choice', () => {
+            assert.file('.jhipster/Foo.json');
+            assert.fileContent('.jhipster/Foo.json', '"dataAccess": "repository"');
+        });
     });
 
     describe('with dto', () => {
@@ -130,9 +138,9 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 })
                 .withGenerators([
                     [
-                        require('../generators/entity-server'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity-server',
-                        path.join(__dirname, '../generators/entity-server/index.js')
+                        require('../generators/entity'), // eslint-disable-line global-require
+                        'jhipster-quarkus:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
                     ]
                 ])
                 .withArguments(['foo'])
@@ -179,9 +187,9 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 })
                 .withGenerators([
                     [
-                        require('../generators/entity-server'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity-server',
-                        path.join(__dirname, '../generators/entity-server/index.js')
+                        require('../generators/entity'), // eslint-disable-line global-require
+                        'jhipster-quarkus:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
                     ]
                 ])
                 .withArguments(['foo'])
@@ -228,9 +236,9 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 })
                 .withGenerators([
                     [
-                        require('../generators/entity-server'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity-server',
-                        path.join(__dirname, '../generators/entity-server/index.js')
+                        require('../generators/entity'), // eslint-disable-line global-require
+                        'jhipster-quarkus:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
                     ]
                 ])
                 .withArguments(['foo'])
@@ -277,9 +285,9 @@ describe('Subgenerator entity-server of quarkus JHipster blueprint', () => {
                 })
                 .withGenerators([
                     [
-                        require('../generators/entity-server'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity-server',
-                        path.join(__dirname, '../generators/entity-server/index.js')
+                        require('../generators/entity'), // eslint-disable-line global-require
+                        'jhipster-quarkus:entity',
+                        path.join(__dirname, '../generators/entity/index.js')
                     ]
                 ])
                 .withArguments(['foo'])
