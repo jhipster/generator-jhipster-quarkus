@@ -7,7 +7,7 @@
         "jhipster-blueprint",
         "jhipster-6"
     ],
-    "homepage": "https://github.com/jhipster/generator-jhipster-quarkus",
+    "homepage": "https://github.com/jhipster/jhipster-quarkus",
     "author": {
         "name": "Daniel Petisme",
         "email": "daniel@jhipster.tech",
@@ -22,7 +22,7 @@
     "main": "generators/app/index.js",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/jhipster/generator-jhipster-quarkus.git"
+        "url": "git+https://github.com/jhipster/jhipster-quarkus.git"
     },
     "dependencies": {
         "chalk": "2.4.2",
@@ -74,6 +74,6 @@
     ],
     "license": "Apache-2.0",
     "bugs": {
-        "url": "https://github.com/jhipster/generator-jhipster-quarkus/issues"
+        "url": "https://github.com/jhipster/jhipster-quarkus/issues"
     }
 }
