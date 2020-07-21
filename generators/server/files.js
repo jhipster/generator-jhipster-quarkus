@@ -36,6 +36,7 @@ const serverFiles = {
             templates: [{ file: 'checkstyle.xml', options: { interpolate: INTERPOLATE_REGEX } }]
         },
         {
+            condition: generator => generator.buildTool === 'maven',
             templates: [
                 { file: 'mvnw', method: 'copy', noEjs: true },
                 { file: 'mvnw.cmd', method: 'copy', noEjs: true },
@@ -43,6 +44,22 @@ const serverFiles = {
                 { file: '.mvn/wrapper/maven-wrapper.properties', method: 'copy', noEjs: true },
                 { file: '.mvn/wrapper/MavenWrapperDownloader.java', method: 'copy', noEjs: true },
                 { file: 'pom.xml', options: { interpolate: INTERPOLATE_REGEX } }
+            ]
+        },
+        {
+            condition: generator => generator.buildTool === 'gradle',
+            templates: [
+                'build.gradle',
+                'settings.gradle',
+                'gradle.properties',
+                'gradle/sonar.gradle',
+                'gradle/docker.gradle',
+                { file: 'gradle/profile_dev.gradle', options: { interpolate: INTERPOLATE_REGEX } },
+                { file: 'gradle/profile_prod.gradle', options: { interpolate: INTERPOLATE_REGEX } },
+                { file: 'gradlew', method: 'copy', noEjs: true },
+                { file: 'gradlew.bat', method: 'copy', noEjs: true },
+                { file: 'gradle/wrapper/gradle-wrapper.jar', method: 'copy', noEjs: true },
+                'gradle/wrapper/gradle-wrapper.properties'
             ]
         }
     ],
