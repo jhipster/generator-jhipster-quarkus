@@ -52,7 +52,7 @@ module.exports = class extends ServerGenerator {
     }
 
     get writing() {
-        return writeFiles();
+        return writeFiles(this.buildTool);
     }
 
     get install() {
