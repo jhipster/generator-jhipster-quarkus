@@ -16,28 +16,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-jib {
-    from {
-        image = "<%= DOCKER_JAVA_JRE %>"
-    }
-    to {
-        image = "<%= baseName.toLowerCase() %>:latest"
-    }
-    container {
-        entrypoint = ["bash", "-c", "/entrypoint.sh"]
-        ports = ["<%= serverPort %>"<% if (cacheProvider === 'hazelcast') { %>, "5701/udp" <% } %>]
-        environment = [
-            <%_ if (cacheProvider === 'infinispan') { _%>
-            JAVA_OPTS: "-Djgroups.tcp.address=NON_LOOPBACK -Djava.net.preferIPv4Stack=true",
-            <%_ } _%>
-            SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS",
-            JHIPSTER_SLEEP: "0"
-        ]
-        creationTime = "USE_CURRENT_TIMESTAMP"
-    }
-    extraDirectories {
-      paths = file("<%= MAIN_DIR %>jib")
-      permissions = ["/entrypoint.sh": "755"]
-    }
+task containerImageBuild {
+    group = 'jib'
+    System.setProperty('quarkus.container-image.build', 'true')
+    finalizedBy 'assemble'
+}
+
+task containerImagePush {
+    group = 'jib'
+    System.setProperty('quarkus.container-image.build', 'true')
+    System.setProperty('container-image.push', 'true')
+    finalizedBy 'assemble'
 }
 

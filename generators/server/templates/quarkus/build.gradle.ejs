@@ -33,7 +33,6 @@ plugins {
     id 'checkstyle'
     id "maven-publish"
     id "jacoco"
-    id "com.google.cloud.tools.jib"
     id "com.gorylenko.gradle-git-properties"
     <%_ if (enableSwaggerCodegen) { _%>
     id "org.openapi.generator"
@@ -218,6 +217,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.quarkus:quarkus-container-image-jib'
     implementation "io.quarkus:quarkus-undertow"
     implementation "io.quarkus:quarkus-resteasy"
     implementation "io.quarkus:quarkus-resteasy-jsonb"
@@ -276,12 +276,6 @@ if (project.hasProperty("nodeInstall")) {
         yarnVersion = "${yarn_version}"
         download = true
     }
-}
-<%_ } _%>
-<%_ if (embeddableLaunchScript) { _%>
-
-bootJar {
-    launchScript()
 }
 <%_ } _%>
 compileJava.dependsOn processResources
