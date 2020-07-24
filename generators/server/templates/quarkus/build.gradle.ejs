@@ -50,9 +50,11 @@ plugins {
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
+<%_ if (!skipClient) { _%>
 node {
     download = true
 }
+<% } %>
 
 group = "<%= packageName %>"
 version = "0.0.1-SNAPSHOT"
@@ -174,18 +176,8 @@ liquibase {
             url "<% if (devDatabaseType === 'mysql') { %>jdbc:mysql://localhost:3306/<%= baseName %><% } else if (devDatabaseType === 'mariadb') { %>jdbc:mariadb://localhost:3306/<%= baseName %><% } else if (devDatabaseType === 'postgresql') { %>jdbc:postgresql://localhost:5432/<%= baseName %><% } else if (devDatabaseType === 'h2Disk') { %>jdbc:h2:file:./build/h2db/db/<%= lowercaseBaseName %><% } else if (devDatabaseType === 'oracle') { %>jdbc:oracle:thin:@localhost:1521:<%= baseName %><% } else if (devDatabaseType === 'mssql') { %>jdbc:sqlserver://localhost:1433;database=<%= baseName %><% } %>"
             username "<% if (devDatabaseType === 'mysql') { %>root<% } else if (devDatabaseType === 'postgresql' || devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { %><%= baseName %><% } else if (devDatabaseType === 'mssql') { %>SA<% } %>"
             password "<% if (devDatabaseType === 'mssql') { %>yourStrong(!)Password<% } %>"
-            changeLogFile "<%= SERVER_MAIN_RES_DIR %>config/liquibase/master.xml"
-            defaultSchemaName "<% if (devDatabaseType === 'mysql') { %><%= baseName %><% } else if (devDatabaseType === 'postgresql') { %><% } %>"
-            logLevel "debug"
-            classpath "<%= SERVER_MAIN_RES_DIR %>"
-        }
-        diffLog {
-            driver "<% if (devDatabaseType === 'mysql') { %>com.mysql.cj.jdbc.Driver<% } else if (devDatabaseType === 'mariadb') { %>org.mariadb.jdbc.Driver<% } else if (devDatabaseType === 'postgresql') { %>org.postgresql.Driver<% } else if (devDatabaseType === 'h2Disk') { %>org.h2.Driver<% } else if (devDatabaseType === 'oracle') { %>oracle.jdbc.OracleDriver<% } %>"
-            url "<% if (devDatabaseType === 'mysql') { %>jdbc:mysql://localhost:3306/<%= baseName %><% } else if (devDatabaseType === 'mariadb') { %>jdbc:mariadb://localhost:3306/<%= baseName %><% } else if (devDatabaseType === 'postgresql') { %>jdbc:postgresql://localhost:5432/<%= baseName %><% } else if (devDatabaseType === 'h2Disk') { %>jdbc:h2:file:./build/h2db/db/<%= lowercaseBaseName %><% } else if (devDatabaseType === 'oracle') { %>jdbc:oracle:thin:@localhost:1521:<%= baseName %><% } else if (devDatabaseType === 'mssql') { %>jdbc:sqlserver://localhost:1433;database=<%= baseName %><% } %>"
-            username "<% if (devDatabaseType === 'mysql') { %>root<% } else if (devDatabaseType === 'postgresql' || devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { %><%= baseName %><% } else if (devDatabaseType === 'mssql') { %>SA<% } %>"
-            password "<% if (devDatabaseType === 'mssql') { %>yourStrong(!)Password<% } %>"
             changeLogFile project.ext.diffChangelogFile
-            referenceUrl "hibernate:spring:<%= packageName %>.domain?dialect=<% if (devDatabaseType === 'mysql') { %>org.hibernate.dialect.MySQL8Dialect<% } else if (devDatabaseType === 'mariadb') { %>org.hibernate.dialect.MariaDB103Dialect<% } else if (devDatabaseType === 'postgresql') { %>io.github.jhipster.domain.util.FixedPostgreSQL10Dialect<% } else if (devDatabaseType === 'h2Disk') { %>org.hibernate.dialect.H2Dialect<% } else if (devDatabaseType === 'oracle') { %>org.hibernate.dialect.Oracle12cDialect<% } else if (devDatabaseType === 'mssql') { %>org.hibernate.dialect.SQLServer2012Dialect<% } %>&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
+            referenceUrl "hibernate:spring:<%= packageName %>.domain?dialect=<% if (devDatabaseType === 'mysql') { %>org.hibernate.dialect.MySQL8Dialect<% } else if (devDatabaseType === 'mariadb') { %>org.hibernate.dialect.MariaDB103Dialect<% } else if (devDatabaseType === 'postgresql') { %>org.hibernate.dialect.PostgreSQLDialect<% } else if (devDatabaseType === 'h2Disk') { %>org.hibernate.dialect.H2Dialect<% } else if (devDatabaseType === 'oracle') { %>org.hibernate.dialect.Oracle12cDialect<% } else if (devDatabaseType === 'mssql') { %>org.hibernate.dialect.SQLServer2012Dialect<% } %>"
             defaultSchemaName "<% if (devDatabaseType === 'mysql') { %><%= baseName %><% } else if (devDatabaseType === 'postgresql') { %><% } %>"
             logLevel "debug"
             classpath "$buildDir/classes/java/main"
@@ -194,7 +186,6 @@ liquibase {
             <%_ } _%>
         }
     }
-
     runList = project.ext.runList
 }
 <%_ } _%>
@@ -227,15 +218,19 @@ dependencies {
     implementation "io.quarkus:quarkus-hibernate-orm-panache"
 <%_ if (devDatabaseType === 'mariadb' || prodDatabaseType === 'mariadb') { _%>
     implementation "io.quarkus:quarkus-jdbc-mariadb"
+    liquibaseRuntime "io.quarkus:quarkus-jdbc-mariadb"
 <%_ } _%>
 <%_ if (devDatabaseType === 'mssql' || prodDatabaseType === 'mssql') { _%>
     implementation "io.quarkus:quarkus-jdbc-mssql"
+    liquibaseRuntime "io.quarkus:quarkus-jdbc-mssql"
 <%_ } _%>
 <%_ if (devDatabaseType === 'mysql' || prodDatabaseType === 'mysql') { _%>
     implementation "io.quarkus:quarkus-jdbc-mysql"
+    liquibaseRuntime "io.quarkus:quarkus-jdbc-mysql"
 <%_ } _%>
 <%_ if (devDatabaseType === 'postgresql' || prodDatabaseType === 'postgresql') { _%>
     implementation "io.quarkus:quarkus-jdbc-postgresql"
+    liquibaseRuntime "io.quarkus:quarkus-jdbc-postgresql"
 <%_ } _%>
     implementation "io.quarkus:quarkus-jdbc-h2"
     implementation "io.quarkus:quarkus-test-h2"
@@ -244,6 +239,13 @@ dependencies {
     implementation "io.quarkus:quarkus-smallrye-jwt"
     implementation "org.mapstruct:mapstruct:${mapstruct_version}"
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+
+    liquibaseRuntime "org.liquibase:liquibase-core"
+    liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibase_hibernate5_version}"
+    liquibaseRuntime sourceSets.main.compileClasspath
+    liquibaseRuntime 'ch.qos.logback:logback-core:1.2.3'
+    liquibaseRuntime 'ch.qos.logback:logback-classic:1.2.3'
+    liquibaseRuntime 'org.springframework.data:spring-data-jpa:2.3.1.RELEASE'
 
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
 
