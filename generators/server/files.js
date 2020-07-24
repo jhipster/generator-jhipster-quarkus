@@ -101,8 +101,8 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java`
                 },
                 {
-                    file: 'package/config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java.java',
-                    renameTo: generator => `${generator.javaDir}config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java.java`
+                    file: 'package/config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java',
+                    renameTo: generator => `${generator.javaDir}config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java`
                 }
             ]
         }
