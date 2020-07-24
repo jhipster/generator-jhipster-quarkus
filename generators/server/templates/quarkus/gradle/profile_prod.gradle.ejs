@@ -55,4 +55,5 @@ task copyWebApp(type: Copy){
 processResources.dependsOn webpack
 copyWebApp.dependsOn processResources
 quarkusBuild.dependsOn copyWebApp
+quarkusDev.dependsOn copyWebApp
 <%_ } _%>
