@@ -25,10 +25,17 @@ let importJsonIgnoreProperties = false;
 let importSet = false;
 const uniqueEnums = {};
 _%>
-
+<%_ include('../../domain/imports', {
+    fields: fields,
+    relationships: relationships,
+    importApiModelProperty: importApiModelProperty,
+    importJsonIgnore: importJsonIgnore,
+    importJsonIgnoreProperties: importJsonIgnoreProperties,
+    importSet: importSet,
+    uniqueEnums: uniqueEnums
+}) _%>
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-
 <%_ if (typeof javadoc != 'undefined') { _%>
 import io.swagger.annotations.ApiModel;
 <%_ } if (importApiModelProperty === true) { _%>
@@ -66,10 +73,11 @@ import java.util.UUID;
 <%_ } _%>
 <%_ if (fieldsContainBlob && databaseType === 'sql') { _%>
 import javax.persistence.Lob;
-<%_ } _%>
-<%_ for(let idx; idx < uniqueEnums.length; i++) { _%>
-import <%= packageName %>.domain.enumeration.<%= uniqueEnums[idx] %>;
-<%_ } _%>
+<%_ }
+Object.keys(uniqueEnums).forEach(function(element) { _%>
+
+import <%=packageName%>.domain.enumeration.<%= element %>;
+<%_ }); _%>
 
 /**
  * A DTO for the {@link <%= packageName %>.domain.<%= asEntity(entityClass) %>} entity.
