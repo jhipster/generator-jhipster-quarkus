@@ -65,15 +65,8 @@ processResources {
 }
 
 <%_ if (!skipClient) { _%>
-task copyWebApp(type: Copy){
-    from 'build/resources/main/static'
-    into 'build/resources/main/META-INF/resources'
-}
 
 processResources.dependsOn webpack
-copyWebApp.dependsOn processResources
-quarkusBuild.dependsOn copyWebApp
-quarkusDev.dependsOn copyWebApp
 <%_ } _%>
 
 
