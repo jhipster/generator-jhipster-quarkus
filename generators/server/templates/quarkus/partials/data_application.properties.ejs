@@ -82,6 +82,8 @@ quarkus.datasource.min-size=2
 quarkus.hibernate-orm.database.generation=none
 quarkus.hibernate-orm.log.sql=false
 quarkus.hibernate-orm.sql-load-script=no-file
+quarkus.hibernate-orm.implicit-naming-strategy=<%=packageName%>.config.hibernate.JHipsterCompatibleImplicitNamingStrategy
+quarkus.hibernate-orm.physical-naming-strategy = <%=packageName%>.config.hibernate.JHipsterCompatiblePhysicalNamingStrategy
 
 quarkus.liquibase.change-log=config/liquibase/master.xml
 %dev.quarkus.liquibase.migrate-at-start=true

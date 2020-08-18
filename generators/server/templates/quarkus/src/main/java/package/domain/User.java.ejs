@@ -45,8 +45,19 @@ import org.hibernate.annotations.BatchSize;
 public class User extends PanacheEntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
 
+
     @Id
+<%_ if (databaseType === 'sql') { _%>
+<%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+<%_ }  else { _%>
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
+<%_ } _%>
+<%_ } _%>
+<%_ if (databaseType === 'couchbase') { _%>
+    @GeneratedValue(strategy = UNIQUE, delimiter = ID_DELIMITER)
+<%_ } _%>
     public Long id;
 
     @NotNull
