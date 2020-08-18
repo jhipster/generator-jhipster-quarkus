@@ -29,7 +29,7 @@
         "faker": "^4.1.0",
         "generator-jhipster": "6.8.0",
         "glob": "7.1.4",
-        "lodash": "4.17.15",
+        "lodash": "4.17.19",
         "mkdirp": "0.5.1"
     },
     "devDependencies": {
