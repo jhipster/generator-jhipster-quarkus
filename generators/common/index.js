@@ -77,21 +77,9 @@ module.exports = class extends CommonGenerator {
         const phaseFromQuarkus = {
             defineJHipsterQuarkusVersion() {
                 this.jhipsterQuarkusVersion = jhipsterQuarkusVersion;
-            },
-            setupSharedOptions() {
-                this.BUILD_DIR = this.getBuildDirectoryForBuildTool(this.buildTool);
-                this.CLIENT_DIST_DIR = this.getResourceBuildDirectoryForBuildToolQuarkus(this.buildTool);
             }
         };
         return Object.assign(phaseFromJHipster, phaseFromQuarkus);
-    }
-
-    /**
-     * Get resource build directory used by buildTool
-     * @param {string} buildTool - buildTool
-     */
-    getResourceBuildDirectoryForBuildToolQuarkus(buildTool) {
-        return buildTool === 'maven' ? 'target/classes/' : 'build/resources/main/META-INF/resources';
     }
 
     get writing() {
