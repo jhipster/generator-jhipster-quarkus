@@ -16,11 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const path = require('path');
 const constants = require('generator-jhipster/generators/generator-constants');
 const faker = require('faker');
 const jhipsterUtils = require('generator-jhipster/generators/utils');
-const utils = require('../utils');
 
 const randexp = jhipsterUtils.RandexpWithFaker;
 /* Constants use throughout */
@@ -363,7 +361,7 @@ function writeFiles() {
 
         writeEnumFiles() {
             // TODO replace this with proper function.
-            //const fetchFromInstalledKHipster = subpath => path.join(__dirname, subpath);
+            // const fetchFromInstalledKHipster = subpath => path.join(__dirname, subpath);
             this.fields.forEach(field => {
                 if (!field.fieldIsEnum) {
                     return;
@@ -373,7 +371,7 @@ function writeFiles() {
                 const enumInfo = {
                     ...jhipsterUtils.getEnumInfo(field, this.clientRootFolder),
                     angularAppName: this.angularAppName,
-                    packageName: this.packageName,
+                    packageName: this.packageName
                 };
                 // eslint-disable-next-line no-console
                 if (!this.skipServer) {
@@ -389,7 +387,7 @@ function writeFiles() {
                     );
                 }
             });
-        },
+        }
     };
 }
 
