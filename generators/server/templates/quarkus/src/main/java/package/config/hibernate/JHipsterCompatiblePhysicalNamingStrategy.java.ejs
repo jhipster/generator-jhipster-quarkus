@@ -1,0 +1,75 @@
+<%#
+ Copyright 2013-2020 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.config.hibernate;
+
+import org.hibernate.boot.model.naming.Identifier;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
+import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
+
+import java.util.Locale;
+
+public class JHipsterCompatiblePhysicalNamingStrategy implements PhysicalNamingStrategy {
+
+    @Override
+    public Identifier toPhysicalCatalogName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        return apply(name, jdbcEnvironment);
+    }
+
+    @Override
+    public Identifier toPhysicalSchemaName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        return apply(name, jdbcEnvironment);
+    }
+
+    @Override
+    public Identifier toPhysicalTableName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        return apply(name, jdbcEnvironment);
+    }
+
+    @Override
+    public Identifier toPhysicalSequenceName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        return apply(name, jdbcEnvironment);
+    }
+
+    @Override
+    public Identifier toPhysicalColumnName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        return apply(name, jdbcEnvironment);
+    }
+
+    protected Identifier getIdentifier(String name, boolean quoted, JdbcEnvironment jdbcEnvironment) {
+        return new Identifier(name.toLowerCase(Locale.ROOT), quoted);
+    }
+
+    private boolean isUnderscoreRequired(char before, char current, char after) {
+        return Character.isLowerCase(before) && Character.isUpperCase(current) && Character.isLowerCase(after);
+    }
+
+    private Identifier apply(Identifier name, JdbcEnvironment jdbcEnvironment) {
+        if (name == null) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder(name.getText().replace('.', '_'));
+        for (int i = 1; i < builder.length() - 1; i++) {
+            if (isUnderscoreRequired(builder.charAt(i - 1), builder.charAt(i), builder.charAt(i + 1))) {
+                builder.insert(i++, '_');
+            }
+        }
+        return getIdentifier(builder.toString(), name.isQuoted(), jdbcEnvironment);
+    }
+
+}
