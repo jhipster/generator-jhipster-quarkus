@@ -16,11 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 const constants = require('generator-jhipster/generators/generator-constants');
 const faker = require('faker');
 const jhipsterUtils = require('generator-jhipster/generators/utils');
-const utils = require('../utils');
 
 const randexp = jhipsterUtils.RandexpWithFaker;
 /* Constants use throughout */
@@ -362,21 +360,31 @@ function writeFiles() {
         },
 
         writeEnumFiles() {
+            // TODO replace this with proper function.
+            // const fetchFromInstalledKHipster = subpath => path.join(__dirname, subpath);
             this.fields.forEach(field => {
-                if (field.fieldIsEnum === true) {
-                    const fieldType = field.fieldType;
-                    const enumInfo = utils.buildEnumInfo(field, this.angularAppName, this.packageName, this.clientRootFolder);
-                    if (!this.skipServer) {
-                        this.template(
-                            `${this.fetchFromInstalledJHipster(
-                                'entity-server/templates'
-                            )}/${SERVER_MAIN_SRC_DIR}package/domain/enumeration/Enum.java.ejs`,
-                            `${SERVER_MAIN_SRC_DIR}${this.packageFolder}/domain/enumeration/${fieldType}.java`,
-                            this,
-                            {},
-                            enumInfo
-                        );
-                    }
+                if (!field.fieldIsEnum) {
+                    return;
+                }
+
+                const fieldType = field.fieldType;
+                const enumInfo = {
+                    ...jhipsterUtils.getEnumInfo(field, this.clientRootFolder),
+                    angularAppName: this.angularAppName,
+                    packageName: this.packageName
+                };
+                // eslint-disable-next-line no-console
+                if (!this.skipServer) {
+                    const pathToTemplateFile = `${this.fetchFromInstalledJHipster(
+                        'entity-server/templates'
+                    )}/${SERVER_MAIN_SRC_DIR}package/domain/enumeration/Enum.java.ejs`;
+                    this.template(
+                        pathToTemplateFile,
+                        `${SERVER_MAIN_SRC_DIR}${this.packageFolder}/domain/enumeration/${fieldType}.java`,
+                        this,
+                        {},
+                        enumInfo
+                    );
                 }
             });
         }
