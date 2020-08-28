@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const AppGenerator = require('generator-jhipster/generators/app');
+const constants = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
 
 module.exports = class extends AppGenerator {
@@ -16,6 +17,7 @@ module.exports = class extends AppGenerator {
     }
 
     get initializing() {
+        constants.CLIENT_DIST_DIR = 'META-INF/resources';
         const phaseFromJHipster = super._initializing();
         const phaseFromQuarkus = {
             displayLogo() {

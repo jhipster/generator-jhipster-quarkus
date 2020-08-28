@@ -496,47 +496,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- JHipster Quarkus hack to move from target/classes/static to /target/classes/META-INF/resources -->
-                    <plugin>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>JHipster Quarkus copy static to META-INF/resources</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/META-INF/resources/</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${basedir}/target/classes/static/</directory>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>JHipster Quarkus remove static</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                                <configuration>
-                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
-                                    <filesets>
-                                        <fileset>
-                                            <directory>${basedir}/target/classes/static</directory>
-                                        </fileset>
-                                    </filesets>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                 </plugins>
             </build>
             <properties>

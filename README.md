@@ -46,7 +46,7 @@ npm update -g generator-jhipster-quarkus
 
 # Usage
 
-To use this blueprint, run the below command
+To use this blueprint, run the command below:
 
 ```bash
 
@@ -64,13 +64,13 @@ Note: If you do not want to link the blueprint(step 3) to each project being cre
 
 ```bash
 
-cd quarkus
+cd jhipster-quarkus
 
 npm link
 
 ```
 
-2. Link a development version of JHipster to your blueprint (optional: required only if you want to use a non-released JHipster version, like the master branch or your own custom fork)
+2. Link the development version of JHipster to your blueprint (optional: required only if you want to use a non-released JHipster version, like the master branch or your own custom fork)
 
 ```bash
 
