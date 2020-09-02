@@ -114,6 +114,10 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`
                 },
                 {
+                    file: 'package/config/LocalDateProvider.java',
+                    renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`
+                },
+                {
                     file: 'package/config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java',
                     renameTo: generator => `${generator.javaDir}config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java`
                 },
