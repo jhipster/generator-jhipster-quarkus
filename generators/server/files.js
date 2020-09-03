@@ -117,7 +117,7 @@ const serverFiles = {
                     file: 'package/config/JHipsterInfo.java',
                     renameTo: generator => `${generator.javaDir}config/JHipsterInfo.java`
                 },
-                }
+                {
                     file: 'package/config/LocalDateProvider.java',
                     renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`
                 },
