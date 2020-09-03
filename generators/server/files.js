@@ -117,6 +117,10 @@ const serverFiles = {
                     file: 'package/config/JHipsterInfo.java',
                     renameTo: generator => `${generator.javaDir}config/JHipsterInfo.java`
                 },
+                }
+                    file: 'package/config/LocalDateProvider.java',
+                    renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`
+                },
                 {
                     file: 'package/config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java',
                     renameTo: generator => `${generator.javaDir}config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java`
@@ -133,6 +137,10 @@ const serverFiles = {
                 {
                     file: 'package/config/mock/JHipsterInfoMock.java',
                     renameTo: generator => `${generator.javaDir}/config/mock/JHipsterInfoMock.java`
+                },
+                {
+                    file: 'package/config/LocalDateProviderTest.java',
+                    renameTo: generator => `${generator.javaDir}/config/LocalDateProviderTest.java`
                 }
             ]
         }
