@@ -126,6 +126,15 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java`
                 }
             ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/config/LocalDateProviderTest.java',
+                    renameTo: generator => `${generator.javaDir}/config/LocalDateProviderTest.java`
+                }
+            ]
         }
     ],
     serverJavaDomain: [
