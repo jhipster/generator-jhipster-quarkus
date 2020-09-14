@@ -261,8 +261,7 @@ function askForServerSideOpts(meta) {
     this.prompt(prompts).then(props => {
         this.serviceDiscoveryType = props.serviceDiscoveryType;
 
-        // force authentication type to jwt
-        this.authenticationType = 'jwt';
+        this.authenticationType = props.authenticationType;
 
         // JWT authentication is mandatory with Eureka, so the JHipster Registry
         // can control the applications
@@ -270,7 +269,6 @@ function askForServerSideOpts(meta) {
         if (this.serviceDiscoveryType === 'eureka' && this.authenticationType !== 'uaa' && this.authenticationType !== 'oauth2') {
             this.authenticationType = 'jwt';
         }
-
         */
 
         if (this.authenticationType === 'session') {
