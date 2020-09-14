@@ -40,7 +40,6 @@ function askForServerSideOpts(meta) {
             default: 'com.mycompany.myapp',
             store: true
         },
-        // {
         //     when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
         //     type: 'list',
         //     name: 'serviceDiscoveryType',
@@ -78,7 +77,6 @@ function askForServerSideOpts(meta) {
         //     ],
         //     default: false
         // },
-        /*
         {
             when: response =>
                 (applicationType === 'monolith' && response.serviceDiscoveryType !== 'eureka') ||
@@ -93,12 +91,12 @@ function askForServerSideOpts(meta) {
                         name: 'JWT authentication (stateless, with a token)'
                     }
                 ];
-                if (applicationType === 'monolith' && response.serviceDiscoveryType !== 'eureka') {
+                /* if (applicationType === 'monolith' && response.serviceDiscoveryType !== 'eureka') {
                     opts.push({
                         value: 'session',
-                        name: 'HTTP Session Authentication (stateful, default Spring Security mechanism)'
+                        name: 'HTTP Session Authentication (stateful, default Quarkus mechanism)'
                     });
-                }
+                } */
                 opts.push({
                     value: 'oauth2',
                     name: 'OAuth 2.0 / OIDC Authentication (stateful, works with Keycloak and Okta)'
@@ -115,7 +113,6 @@ function askForServerSideOpts(meta) {
             },
             default: 0
         },
-        */
         {
             type: 'list',
             name: 'databaseType',
