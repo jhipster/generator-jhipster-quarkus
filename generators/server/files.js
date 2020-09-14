@@ -299,10 +299,7 @@ const serverFiles = {
                     file: 'package/web/rest/AccountResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/AccountResource.java`
                 },
-                {
-                    file: 'package/web/rest/SpaFilter.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
-                },
+
                 {
                     file: 'package/web/rest/UserJWTController.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserJWTController.java`
@@ -318,6 +315,16 @@ const serverFiles = {
                 {
                     file: 'package/web/util/ResponseUtil.java',
                     renameTo: generator => `${generator.javaDir}web/util/ResponseUtil.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    condition: generator => !generator.skipClient,
+                    file: 'package/web/rest/SpaFilter.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
                 }
             ]
         },
