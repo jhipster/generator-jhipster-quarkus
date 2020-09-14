@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const EntityGenerator = require('generator-jhipster/generators/entity');
+const _ = require('lodash');
 const prompts = require('./prompts');
 const constants = require('../generator-quarkus-constants');
 
@@ -17,7 +18,8 @@ module.exports = class extends EntityGenerator {
         this.configOptions = jhContext.configOptions || {};
 
         // This sets up options for this sub generator and is being reused from JHipster
-        jhContext.setupEntityOptions(this, jhContext, this);
+        const name = _.upperFirst(this.options.name).replace('.json', '');
+        this.entityStorage = jhContext.getEntityConfig(name);
     }
 
     get initializing() {
