@@ -26,15 +26,6 @@ quarkus.mailer.ssl=false
 quarkus.mailer.username=
 quarkus.mailer.password=
 
-mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
-mp.jwt.verify.issuer=https://www.jhipster.tech
-quarkus.smallrye-jwt.enabled=true
-
-jhipster.security.authentication.jwt.private-key.location=/jwt/privateKey.pem
-jhipster.security.authentication.jwt.issuer=https://www.jhipster.tech
-jhipster.security.authentication.jwt.token-validity-in-seconds=86400
-jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2592000
-jhipster.mail.base-url=http://127.0.0.1:8080
 
 quarkus.native.additional-build-args=\
     -H:ResourceConfigurationFiles=resources-config.json,\
@@ -46,3 +37,31 @@ quarkus.container-image.group=
 quarkus.container-image.name=<%= baseName %>
 quarkus.container-image.tag=latest
 <%_ } _%>
+
+<%_ if (authenticationType === 'oauth2') { _%>
+
+    # Oauth2 and OIDC
+    quarkus.oidc.enabled=true
+    quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
+    quarkus.oidc.client-id=internal
+    quarkus.oidc.credentials.secret=internal
+    quarkus.oidc.authentication.scopes=openid,profile
+    quarkus.oidc.application-type=web-app
+    quarkus.oidc.authentication.redirect-path=/
+
+<%_ } _%>
+
+<%_ if (authenticationType !== 'oauth2') { _%>
+
+    mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
+    mp.jwt.verify.issuer=https://www.jhipster.tech
+    quarkus.smallrye-jwt.enabled=true
+
+    jhipster.security.authentication.jwt.private-key.location=/jwt/privateKey.pem
+    jhipster.security.authentication.jwt.issuer=https://www.jhipster.tech
+    jhipster.security.authentication.jwt.token-validity-in-seconds=86400
+    jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2592000
+    jhipster.mail.base-url=http://127.0.0.1:8080
+
+<%_ } _%>
+
