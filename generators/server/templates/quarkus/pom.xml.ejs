@@ -132,6 +132,15 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
+
+        <%_ if (authenticationType === 'oauth2') { _%>
+
+            <dependency>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-oidc</artifactId>
+            </dependency>
+
+        <%_ } _%>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
