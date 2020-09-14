@@ -203,11 +203,13 @@
                         <target>${java.version}</target>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>com.github.eirslett</groupId>
-                    <artifactId>frontend-maven-plugin</artifactId>
-                    <version>${frontend-maven-plugin.version}</version>
-                </plugin>
+                <%_ if (!skipClient) { _%>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>${frontend-maven-plugin.version}</version>
+                    </plugin>
+                <%_ } _%>
                 <plugin>
                     <groupId>pl.project13.maven</groupId>
                     <artifactId>git-commit-id-plugin</artifactId>
@@ -451,58 +453,61 @@
         </plugins>
     </build>
     <profiles>
-        <profile>
-            <id>webpack</id>
-            <activation>
-                <file>
-                    <missing>${basedir}/target/classes/META-INF/resources/app/main.bundle.js</missing>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>install node and npm</id>
-                                <goals>
-                                    <goal>install-node-and-npm</goal>
-                                </goals>
-                                <configuration>
-                                    <nodeVersion>${node.version}</nodeVersion>
-                                    <npmVersion>${npm.version}</npmVersion>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>npm install</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>webpack build dev</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                                <configuration>
-                                    <arguments>run webpack:build</arguments>
-                                    <environmentVariables>
-                                        <APP_VERSION>${project.version}</APP_VERSION>
-                                    </environmentVariables>
-                                    <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <properties>
-                <!-- default Quarkus profiles -->
-                <quarkus.profile>dev</quarkus.profile>
-            </properties>
-        </profile>
+
+        <%_ if (!skipClient) { _%>
+            <profile>
+                <id>webpack</id>
+                <activation>
+                    <file>
+                        <missing>${basedir}/target/classes/META-INF/resources/app/main.bundle.js</missing>
+                    </file>
+                </activation>
+                <build>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.github.eirslett</groupId>
+                            <artifactId>frontend-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>install node and npm</id>
+                                    <goals>
+                                        <goal>install-node-and-npm</goal>
+                                    </goals>
+                                    <configuration>
+                                        <nodeVersion>${node.version}</nodeVersion>
+                                        <npmVersion>${npm.version}</npmVersion>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>npm install</id>
+                                    <goals>
+                                        <goal>npm</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>webpack build dev</id>
+                                    <goals>
+                                        <goal>npm</goal>
+                                    </goals>
+                                    <phase>generate-resources</phase>
+                                    <configuration>
+                                        <arguments>run webpack:build</arguments>
+                                        <environmentVariables>
+                                            <APP_VERSION>${project.version}</APP_VERSION>
+                                        </environmentVariables>
+                                        <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </build>
+                <properties>
+                    <!-- default Quarkus profiles -->
+                    <quarkus.profile>dev</quarkus.profile>
+                </properties>
+            </profile>
+        <%_ } _%>
         <profile>
             <id>dev</id>
             <activation>
@@ -544,6 +549,8 @@
                             </filesets>
                         </configuration>
                     </plugin>
+
+                    <%_ if (!skipClient) { _%>
                     <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
@@ -594,6 +601,8 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <%_ } _%>
+                    
                     <!-- JHipster Quarkus hack to move from target/classes/static to /target/classes/META-INF/resources -->
                     <plugin>
                         <artifactId>maven-resources-plugin</artifactId>
