@@ -215,7 +215,6 @@ dependencies {
     implementation "io.quarkus:quarkus-mailer"
     implementation "io.quarkus:quarkus-hibernate-orm-panache"
     implementation "io.quarkus:quarkus-hibernate-validator"
-    implementation "io.quarkus:quarkus-hibernate-orm-panache"
 <%_ if (devDatabaseType === 'mariadb' || prodDatabaseType === 'mariadb') { _%>
     implementation "io.quarkus:quarkus-jdbc-mariadb"
     liquibaseRuntime "io.quarkus:quarkus-jdbc-mariadb"
@@ -237,6 +236,7 @@ dependencies {
     implementation "io.quarkus:quarkus-liquibase"
     implementation "io.quarkus:quarkus-elytron-security"
     implementation "io.quarkus:quarkus-smallrye-jwt"
+    implementation "io.quarkus:quarkus-smallrye-openapi"
     implementation "org.mapstruct:mapstruct:${mapstruct_version}"
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 
@@ -250,6 +250,7 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
 
     testImplementation "io.quarkus:quarkus-junit5"
+    testImplementation "io.quarkus:quarkus-junit5-mockito"
     testImplementation "io.rest-assured:rest-assured"
     testImplementation "org.assertj:assertj-core"
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"

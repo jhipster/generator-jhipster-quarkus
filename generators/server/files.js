@@ -114,6 +114,10 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`
                 },
                 {
+                    file: 'package/config/JHipsterInfo.java',
+                    renameTo: generator => `${generator.javaDir}config/JHipsterInfo.java`
+                },
+                {
                     file: 'package/config/LocalDateProvider.java',
                     renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`
                 },
@@ -130,6 +134,10 @@ const serverFiles = {
         {
             path: SERVER_TEST_SRC_DIR,
             templates: [
+                {
+                    file: 'package/config/mock/JHipsterInfoMock.java',
+                    renameTo: generator => `${generator.javaDir}/config/mock/JHipsterInfoMock.java`
+                },
                 {
                     file: 'package/config/LocalDateProviderTest.java',
                     renameTo: generator => `${generator.javaDir}/config/LocalDateProviderTest.java`
@@ -213,6 +221,10 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/dto/UserDTO.java`
                 },
                 {
+                    file: 'package/service/dto/ManagementInfoDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/ManagementInfoDTO.java`
+                },
+                {
                     file: 'package/service/AuthenticationService.java',
                     renameTo: generator => `${generator.javaDir}service/AuthenticationService.java`
                 },
@@ -227,6 +239,10 @@ const serverFiles = {
                 {
                     file: 'package/service/MailService.java',
                     renameTo: generator => `${generator.javaDir}service/MailService.java`
+                },
+                {
+                    file: 'package/service/ManagementInfoService.java',
+                    renameTo: generator => `${generator.javaDir}service/ManagementInfoService.java`
                 },
                 {
                     file: 'package/service/UsernameAlreadyUsedException.java',
@@ -300,6 +316,10 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}web/rest/AccountResource.java`
                 },
                 {
+                    file: 'package/web/rest/ManagementInfoResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResource.java`
+                },
+                {
                     file: 'package/web/rest/SpaFilter.java',
                     renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
                 },
@@ -335,6 +355,10 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/UserResourceTest.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResourceTest.java`
+                },
+                {
+                    file: 'package/web/rest/ManagementInfoResourceTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResourceTest.java`
                 }
             ]
         }
