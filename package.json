@@ -13,9 +13,6 @@
         "email": "daniel@jhipster.tech",
         "url": ""
     },
-    "contributors": [
-        "Angelo Manganiello <angelo.mang@libero.it> (https://github.com/amanganiello90)"
-    ],
     "files": [
         "generators"
     ],
