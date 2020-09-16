@@ -3,8 +3,9 @@ const chalk = require('chalk');
 const ClientGenerator = require('generator-jhipster/generators/client');
 const constants = require('generator-jhipster/generators/generator-constants');
 const writeAngularFiles = require('./files-angular').writeFiles;
+const writeReactFiles = require('./files-react').writeFiles;
 
-const { ANGULAR } = constants.SUPPORTED_CLIENT_FRAMEWORKS;
+const { ANGULAR, REACT } = constants.SUPPORTED_CLIENT_FRAMEWORKS;
 
 module.exports = class extends ClientGenerator {
     constructor(args, opts) {
@@ -47,6 +48,9 @@ module.exports = class extends ClientGenerator {
                 if (this.skipClient) return;
                 if (this.clientFramework === ANGULAR) {
                     return writeAngularFiles.call(this);
+                }
+                if (this.clientFramework === REACT) {
+                    return writeReactFiles.call(this);
                 }
             }
         };
