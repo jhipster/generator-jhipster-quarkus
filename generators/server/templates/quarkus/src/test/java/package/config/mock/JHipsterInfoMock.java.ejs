@@ -16,21 +16,21 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-package <%=packageName%>.config;
+package <%=packageName%>.config.mock;
 
-/**
- * Application constants.
- */
-public final class Constants {
-    // Regex for acceptable logins
-    public static final String LOGIN_REGEX = "^[_.@A-Za-z0-9-]*$";
+import <%=packageName%>.config.JHipsterInfo;
+import io.quarkus.test.Mock;
 
-    public static final String SYSTEM_ACCOUNT = "system";
-    public static final String DEFAULT_LANGUAGE = "en";
-    public static final String ANONYMOUS_USER = "anonymoususer";
+import javax.enterprise.context.ApplicationScoped;
 
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+@Mock
+@ApplicationScoped
+public class JHipsterInfoMock implements JHipsterInfo {
 
-    public static final String LOCAL_DATE_FORMAT = "yyyy-MM-dd";
-    private Constants() {}
+    public static Boolean enable;
+
+    @Override
+    public Boolean isEnable() {
+        return enable;
+    }
 }

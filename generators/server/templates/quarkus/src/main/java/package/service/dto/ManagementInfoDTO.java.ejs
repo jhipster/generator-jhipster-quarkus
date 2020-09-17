@@ -16,21 +16,23 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-package <%=packageName%>.config;
+package <%=packageName%>.service.dto;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+import javax.json.bind.annotation.JsonbProperty;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Application constants.
- */
-public final class Constants {
-    // Regex for acceptable logins
-    public static final String LOGIN_REGEX = "^[_.@A-Za-z0-9-]*$";
+*  DTO to emulate /management/info response
+*/
+@RegisterForReflection
+public class ManagementInfoDTO {
 
-    public static final String SYSTEM_ACCOUNT = "system";
-    public static final String DEFAULT_LANGUAGE = "en";
-    public static final String ANONYMOUS_USER = "anonymoususer";
+    public List<String> activeProfiles = new ArrayList<>();
 
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    @JsonbProperty("display-ribbon-on-profiles")
+    public String displayRibbonOnProfiles;
 
-    public static final String LOCAL_DATE_FORMAT = "yyyy-MM-dd";
-    private Constants() {}
 }
