@@ -7,31 +7,7 @@ const ANGULAR_DIR = constants.ANGULAR_DIR;
 
 describe('Subgenerator client of quarkus JHipster blueprint', () => {
     describe('Angular tests', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/client')
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true
-                })
-                .withGenerators([
-                    [
-                        require('../generators/client'), // eslint-disable-line global-require
-                        'jhipster-quarkus:client',
-                        path.join(__dirname, '../generators/client/index.js')
-                    ]
-                ])
-                .withPrompts({
-                    baseName: 'jhipster',
-                    clientFramework: 'angularX',
-                    enableTranslation: true,
-                    nativeLanguage: 'en',
-                    languages: ['fr']
-                })
-                .on('end', done);
-        });
+        before(initTests('angularX'));
 
         it('Angular health check files contain expected content', () => {
             assert.fileContent(
@@ -51,7 +27,15 @@ describe('Subgenerator client of quarkus JHipster blueprint', () => {
     });
 
     describe('React tests', () => {
-        before(done => {
+        before(initTests('react'));
+
+        it('React health check files contain expected content', () => {
+            assert.fileContent(`${ANGULAR_DIR}modules/administration/health/health.tsx`, '<td>{data[configPropKey].name</td>');
+        });
+    });
+
+    function initTests(framework) {
+        return done => {
             helpers
                 .run('generator-jhipster/generators/client')
                 .withOptions({
@@ -62,23 +46,19 @@ describe('Subgenerator client of quarkus JHipster blueprint', () => {
                 })
                 .withGenerators([
                     [
-                        require('../generators/client'), // eslint-disable-line global-require
+                        require('../generators/client/index.js'), // eslint-disable-line global-require
                         'jhipster-quarkus:client',
                         path.join(__dirname, '../generators/client/index.js')
                     ]
                 ])
                 .withPrompts({
                     baseName: 'jhipster',
-                    clientFramework: 'react',
+                    clientFramework: framework,
                     enableTranslation: true,
                     nativeLanguage: 'en',
                     languages: ['fr']
                 })
                 .on('end', done);
-        });
-
-        it('React health check files contain expected content', () => {
-            assert.fileContent(`${ANGULAR_DIR}modules/administration/health/health.tsx`, '<td>{data[configPropKey].name</td>');
-        });
-    });
+        };
+    }
 });
