@@ -18,19 +18,14 @@
 -%>
 package <%=packageName%>.config;
 
-/**
- * Application constants.
- */
-public final class Constants {
-    // Regex for acceptable logins
-    public static final String LOGIN_REGEX = "^[_.@A-Za-z0-9-]*$";
+import io.quarkus.arc.config.ConfigProperties;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-    public static final String SYSTEM_ACCOUNT = "system";
-    public static final String DEFAULT_LANGUAGE = "en";
-    public static final String ANONYMOUS_USER = "anonymoususer";
 
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+@ConfigProperties(prefix = "jhipster.info")
+public interface JHipsterInfo {
 
-    public static final String LOCAL_DATE_FORMAT = "yyyy-MM-dd";
-    private Constants() {}
+    @ConfigProperty(name = "swagger.enable", defaultValue = "true")
+    Boolean isEnable();
+
 }

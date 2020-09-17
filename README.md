@@ -112,11 +112,10 @@ jhipster -d --blueprint quarkus
 
 ✅ JDL import - `jhipster --blueprints quarkus import-jdl sample.jh`
 
-# Contributors ✨
+# ❤️ for community
 
-Thanks goes to these wonderful people:
-
-<table><tr><td  align="center"><a  href="https://github.com/danielpetisme"><img  src="https://avatars3.githubusercontent.com/u/593564?s=400&v=4"  width="100px;"  alt="Daniel Petisme (founder stream lead)"/><br/><sub><b>Daniel Petisme</b><br/><b>(founder stream lead)</b></sub></a></td><td  align="center"><a  href="https://github.com/amanganiello90"><img  src="https://avatars3.githubusercontent.com/u/20536757?s=400&v=4"  width="100px;"  alt="Angelo Manganiello"/><br  /><sub><b>Angelo Manganiello</b></sub></a></td></tr></table>
+Interested in contributing?
+Check out [JHipster contributing guide](https://github.com/jhipster/generator-jhipster/blob/master/CONTRIBUTING.md) to get started.
 
 # License
 
