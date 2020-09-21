@@ -320,9 +320,9 @@ const serverFiles = {
         },
         {
             path: SERVER_MAIN_SRC_DIR,
+            condition: generator => !generator.skipClient,
             templates: [
                 {
-                    condition: generator => !generator.skipClient,
                     file: 'package/web/rest/SpaFilter.java',
                     renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
                 }
