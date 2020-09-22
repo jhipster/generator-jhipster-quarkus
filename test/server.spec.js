@@ -43,5 +43,15 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.file(expectedFiles.server);
             assert.file(expectedFiles.maven);
         });
+
+        it('pom.xml contains health check dependency', () => {
+            assert.fileContent(
+                'pom.xml',
+                '        <dependency>\n' +
+                    '            <groupId>io.quarkus</groupId>\n' +
+                    '            <artifactId>quarkus-smallrye-health</artifactId>\n' +
+                    '        </dependency>'
+            );
+        });
     });
 });
