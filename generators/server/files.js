@@ -320,10 +320,6 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResource.java`
                 },
                 {
-                    file: 'package/web/rest/SpaFilter.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
-                },
-                {
                     file: 'package/web/rest/UserJWTController.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserJWTController.java`
                 },
