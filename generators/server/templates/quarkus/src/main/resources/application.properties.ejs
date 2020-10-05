@@ -39,6 +39,18 @@ jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2
 jhipster.mail.base-url=http://127.0.0.1:8080
 jhipster.info.swagger.enable=true
 
+quarkus.http.auth.permission.auth.paths=/api/authenticate/,/api/register,/api/activate,/api/account/reset-password/init,/api/account/reset-password/finish,/management/health,/management/info,/management/prometheus
+quarkus.http.auth.permission.auth.policy=permit
+quarkus.http.auth.permission.auth.methods=POST
+
+quarkus.http.auth.policy.admin-role.roles-allowed=ROLE_ADMIN
+quarkus.http.auth.permission.admin.paths=/api/users,/management/**
+quarkus.http.auth.permission.admin.policy=admin-role
+
+quarkus.http.auth.policy.user-role.roles-allowed=ROLE_USER
+quarkus.http.auth.permission.user.paths=/api/**
+quarkus.http.auth.permission.user.policy=user-role
+
 quarkus.smallrye-openapi.path=/v2/api-docs
 quarkus.swagger-ui.always-include=true
 quarkus.swagger-ui.path=/swagger-ui
