@@ -31,9 +31,10 @@
     @Transactional
     <%_ } _%>
     <%_ if (hasPagination) { _%>
-    public Response getAll<%= entityClassPlural %>(@BeanParam PageRequestVM pageRequest, @Context UriInfo uriInfo<% if (reactive) { %>, ServerHttpRequest request<% } %><% if (fieldsContainNoOwnerOneToOne) { %>, @RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany) { %>, @QueryParam(value = "eagerload") boolean eagerload<% } %>) {
+    public Response getAll<%= entityClassPlural %>(@BeanParam PageRequestVM pageRequest, @BeanParam SortRequestVM sortRequest, @Context UriInfo uriInfo<% if (reactive) { %>, ServerHttpRequest request<% } %><% if (fieldsContainNoOwnerOneToOne) { %>, @RequestParam(required = false) String filter<% } %><% if (fieldsContainOwnerManyToMany) { %>, @QueryParam(value = "eagerload") boolean eagerload<% } %>) {
         log.debug("REST request to get a page of <%= entityClassPlural %>");
         var page = pageRequest.toPage();
+        var sort = sortRequest.toSort();
             <%_ if (viaService) { _%>
                 <%_ if (fieldsContainOwnerManyToMany) { _%>
         Paged<<%= entityOrDtoClass %>> result;
@@ -54,10 +55,10 @@
             var pageCount = <%= dataAccessObject %>.findAll().page(page).pageCount();
             result = new Paged<>(page.index, page.size, totalCount, pageCount, <%= entityInstancePlural %>);
         } else {
-            result = new Paged<>(<%= dataAccessObject %>.findAll().page(page));
+            result = new Paged<>(<%= dataAccessObject %>.findAll(sort).page(page));
         }
             <%_ } else { _%>
-        var result = new Paged<>(<%= dataAccessObject %>.findAll().page(page));
+        var result = new Paged<>(<%= dataAccessObject %>.findAll(sort).page(page));
             <%_ } _%>
         <%_ if (hasDto) { _%>
         result = result.map(<%= entityInstance %> -> <%= mapper %>.toDto(<%= entityInstance %>));
