@@ -229,16 +229,13 @@ function askForServerSideOpts(meta) {
         //     ],
         //     default: applicationType === 'microservice' || applicationType === 'uaa' ? 2 : 0
         // },
-        // {
-        //     when: response =>
-        //         ((response.cacheProvider !== 'no' && response.cacheProvider !== 'memcached') || applicationType === 'gateway') &&
-        //         response.databaseType === 'sql' &&
-        //         !reactive,
-        //     type: 'confirm',
-        //     name: 'enableHibernateCache',
-        //     message: 'Do you want to use Hibernate 2nd level cache?',
-        //     default: true
-        // },
+        {
+            when: response => response.databaseType === 'sql' && !reactive,
+            type: 'confirm',
+            name: 'enableHibernateCache',
+            message: 'Do you want to use Hibernate 2nd level cache?',
+            default: true
+        },
         {
             type: 'list',
             name: 'buildTool',
