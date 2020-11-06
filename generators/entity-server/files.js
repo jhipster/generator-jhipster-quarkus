@@ -121,6 +121,11 @@ const serverFiles = {
                     file: 'package/web/rest/vm/PageRequestVM.java',
                     renameTo: generator => `${generator.packageFolder}/web/rest/vm/PageRequestVM.java`,
                     useBluePrint: true
+                },
+                {
+                    file: 'package/web/rest/vm/SortRequestVM.java',
+                    renameTo: generator => `${generator.packageFolder}/web/rest/vm/SortRequestVM.java`,
+                    useBluePrint: true
                 }
             ]
         },

@@ -260,12 +260,13 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
 
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paged.java`);
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/PageRequestVM.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/SortRequestVM.java`);
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/PaginationUtil.java`);
         });
         it('update Web finder signature', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/FooResource.java`,
-                'public Response getAllFoos(@BeanParam PageRequestVM pageRequest, @Context UriInfo uriInfo)'
+                'public Response getAllFoos(@BeanParam PageRequestVM pageRequest, @BeanParam SortRequestVM sortRequest, @Context UriInfo uriInfo)'
             );
         });
     });
@@ -309,6 +310,7 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
 
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/Paged.java`);
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/PageRequestVM.java`);
+            assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/SortRequestVM.java`);
             assert.file(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/PaginationUtil.java`);
         });
         it('update service finder signature', () => {
