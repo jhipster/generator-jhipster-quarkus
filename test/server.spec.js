@@ -9,40 +9,7 @@ const { SERVER_MAIN_RES_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/server')
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true
-                })
-                .withGenerators([
-                    [
-                        require('../generators/server'), // eslint-disable-line global-require
-                        'jhipster-quarkus:server',
-                        path.join(__dirname, '../generators/server/index.js')
-                    ]
-                ])
-                .withPrompts({
-                    baseName: 'sampleMysql',
-                    packageName: 'com.mycompany.myapp',
-                    applicationType: 'monolith',
-                    databaseType: 'sql',
-                    devDatabaseType: 'h2Disk',
-                    prodDatabaseType: 'mysql',
-                    cacheProvider: 'ehcache',
-                    authenticationType: 'session',
-                    enableTranslation: true,
-                    nativeLanguage: 'en',
-                    languages: ['fr', 'de'],
-                    buildTool: 'maven',
-                    enableHibernateCache: true,
-                    rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
-                })
-                .on('end', done);
-        });
+        before(buildGeneratorContext());
 
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server);
@@ -65,40 +32,11 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     });
 
     describe('With maven Mysql no second cache level', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/server')
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true
-                })
-                .withGenerators([
-                    [
-                        require('../generators/server'), // eslint-disable-line global-require
-                        'jhipster-quarkus:server',
-                        path.join(__dirname, '../generators/server/index.js')
-                    ]
-                ])
-                .withPrompts({
-                    baseName: 'sampleMysql',
-                    packageName: 'com.mycompany.myapp',
-                    applicationType: 'monolith',
-                    databaseType: 'sql',
-                    devDatabaseType: 'h2Disk',
-                    prodDatabaseType: 'mysql',
-                    cacheProvider: 'ehcache',
-                    authenticationType: 'session',
-                    enableTranslation: true,
-                    nativeLanguage: 'en',
-                    languages: ['fr', 'de'],
-                    buildTool: 'maven',
-                    enableHibernateCache: false,
-                    rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
-                })
-                .on('end', done);
-        });
+        before(
+            buildGeneratorContext({
+                enableHibernateCache: false
+            })
+        );
 
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server);
@@ -110,3 +48,41 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         });
     });
 });
+
+function buildGeneratorContext(prompts) {
+    return done => {
+        helpers
+            .run('generator-jhipster/generators/server')
+            .withOptions({
+                'from-cli': true,
+                skipInstall: true,
+                blueprint: 'quarkus',
+                skipChecks: true
+            })
+            .withGenerators([
+                [
+                    require('../generators/server'), // eslint-disable-line global-require
+                    'jhipster-quarkus:server',
+                    path.join(__dirname, '../generators/server/index.js')
+                ]
+            ])
+            .withPrompts({
+                baseName: 'sampleMysql',
+                packageName: 'com.mycompany.myapp',
+                applicationType: 'monolith',
+                databaseType: 'sql',
+                devDatabaseType: 'h2Disk',
+                prodDatabaseType: 'mysql',
+                cacheProvider: 'ehcache',
+                authenticationType: 'session',
+                enableTranslation: true,
+                nativeLanguage: 'en',
+                languages: ['fr', 'de'],
+                buildTool: 'maven',
+                enableHibernateCache: true,
+                rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5',
+                ...prompts
+            })
+            .on('end', done);
+    };
+}
