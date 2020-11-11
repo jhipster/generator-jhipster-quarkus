@@ -25,6 +25,10 @@ import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.security.BCryptPasswordHasher;
 import <%=packageName%>.security.RandomUtil;
 import <%=packageName%>.service.dto.UserDTO;
+<%_ if (cacheProvider === 'caffeine') { _%>
+import io.quarkus.cache.CacheInvalidateAll;
+import io.quarkus.cache.CacheResult;
+<%_ } _%>
 import io.quarkus.panache.common.Page;
 import java.time.Instant;
 import java.util.HashSet;
@@ -44,6 +48,9 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     final BCryptPasswordHasher passwordHasher;
+<%_ if (cacheProvider === 'caffeine') { _%>
+    private final String USERS_CACHE = "users";
+<%_ } _%>
 
     @Inject
     public UserService(BCryptPasswordHasher passwordHasher) {
@@ -151,6 +158,9 @@ public class UserService {
         return true;
     }
 
+    <%_ if (cacheProvider === 'caffeine') { _%>
+    @CacheInvalidateAll(cacheName = USERS_CACHE)
+    <%_ } _%>
     public User createUser(UserDTO userDTO) {
         User user = new User();
         user.login = userDTO.login.toLowerCase();
@@ -282,6 +292,9 @@ public class UserService {
         return User.findOneWithAuthoritiesByLogin(login);
     }
 
+    <%_ if (cacheProvider === 'caffeine') { _%>
+    @CacheResult(cacheName = USERS_CACHE)
+    <%_ } _%>
     public List<UserDTO> getAllManagedUsers() {
         return User.findAllByLoginNot(Page.ofSize(20), Constants.ANONYMOUS_USER).stream().map(UserDTO::new).collect(Collectors.toList());
     }

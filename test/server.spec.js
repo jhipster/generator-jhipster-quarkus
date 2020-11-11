@@ -5,7 +5,7 @@ const constants = require('generator-jhipster/generators/generator-constants');
 
 const expectedFiles = require('./utils/expected-files');
 
-const { SERVER_MAIN_RES_DIR } = constants;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
@@ -46,6 +46,86 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
         it('second cache level property is false', () => {
             assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.hibernate-orm.second-level-caching-enabled=false');
+        });
+    });
+
+    describe('With maven Mysql and caffeine cache', () => {
+        before(
+            buildGeneratorContext({
+                cacheProvider: 'caffeine'
+            })
+        );
+
+        it('should pom.xml contains Quarkus cache dependency', () => {
+            assert.fileContent(
+                'pom.xml',
+                '        <dependency>\n' +
+                    '            <groupId>io.quarkus</groupId>\n' +
+                    '            <artifactId>quarkus-cache</artifactId>\n' +
+                    '        </dependency>'
+            );
+        });
+
+        it('should UserService contains cache implementation', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                'import io.quarkus.cache.CacheInvalidateAll;\nimport io.quarkus.cache.CacheResult;'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                'private final String USERS_CACHE = "users";'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                '@CacheInvalidateAll(cacheName = USERS_CACHE)\n'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                '@CacheResult(cacheName = USERS_CACHE)'
+            );
+        });
+    });
+
+    describe('With maven Mysql and no cache', () => {
+        before(
+            buildGeneratorContext({
+                cacheProvider: 'no'
+            })
+        );
+
+        it('should pom.xml not contains Quarkus cache dependency', () => {
+            assert.noFileContent(
+                'pom.xml',
+                '        <dependency>\n' +
+                    '            <groupId>io.quarkus</groupId>\n' +
+                    '            <artifactId>quarkus-cache</artifactId>\n' +
+                    '        </dependency>'
+            );
+        });
+
+        it('should UserService not contains cache implementation', () => {
+            assert.noFileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                'import io.quarkus.cache.CacheInvalidateAll;\nimport io.quarkus.cache.CacheResult;'
+            );
+
+            assert.noFileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                'private final String USERS_CACHE = "users";'
+            );
+
+            assert.noFileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                '@CacheInvalidateAll(cacheName = USERS_CACHE)\n'
+            );
+
+            assert.noFileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                '@CacheResult(cacheName = USERS_CACHE)'
+            );
         });
     });
 });
