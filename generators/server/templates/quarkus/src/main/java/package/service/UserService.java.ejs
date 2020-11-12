@@ -126,11 +126,10 @@ public class UserService {
                     }
                 }
             );
-        var encryptedPassword = passwordHasher.hash(password);
         var newUser = new User();
         newUser.login = userDTO.login.toLowerCase();
         // new user gets initially a generated password
-        newUser.password = encryptedPassword;
+        newUser.password = passwordHasher.hash(password);
         newUser.firstName = userDTO.firstName;
         newUser.lastName = userDTO.lastName;
         if (userDTO.email != null) {
@@ -178,19 +177,17 @@ public class UserService {
         } else {
             user.langKey = userDTO.langKey;
         }
-        String encryptedPassword = passwordHasher.hash(RandomUtil.generatePassword());
-        user.password = encryptedPassword;
+        user.password = passwordHasher.hash(RandomUtil.generatePassword());
         user.resetKey = RandomUtil.generateResetKey();
         user.resetDate = Instant.now();
         user.activated = true;
         if (userDTO.authorities != null) {
-            Set<Authority> authorities = userDTO
+            user.authorities = userDTO
                 .authorities.stream()
                 .map(authority -> Authority.<Authority>findByIdOptional(authority))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
-            user.authorities = authorities;
         }
         User.persist(user);
         <%_ if (cacheManagerIsAvailable) { _%>
@@ -291,8 +288,7 @@ public class UserService {
                     if (!passwordHasher.checkPassword(currentClearTextPassword, currentEncryptedPassword)) {
                         throw new InvalidPasswordException();
                     }
-                    String encryptedPassword = passwordHasher.hash(newPassword);
-                    user.password = encryptedPassword;
+                    user.password = passwordHasher.hash(newPassword);
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
                     <%_ } _%>
