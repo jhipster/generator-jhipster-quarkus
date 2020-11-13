@@ -19,6 +19,9 @@
 package <%=packageName%>.domain;
 
 import <%=packageName%>.config.Constants;
+<%_ if (cacheManagerIsAvailable) { _%>
+import io.quarkus.cache.CacheResult;
+<%_ } _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Page;
 import io.quarkus.runtime.annotations.RegisterForReflection;
@@ -44,7 +47,10 @@ import org.hibernate.annotations.BatchSize;
 //@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class User extends PanacheEntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
-
+<%_ if (cacheManagerIsAvailable) { _%>
+    public static final String USERS_BY_EMAIL_CACHE = "usersByEmail";
+    public static final String USERS_BY_LOGIN_CACHE = "usersByLogin";
+<%_ } _%>
 
     @Id
 <%_ if (databaseType === 'sql') { _%>
@@ -214,12 +220,14 @@ public class User extends PanacheEntityBase implements Serializable {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.id = ?1", id).firstResultOptional();
     }
 
+    <% if (cacheManagerIsAvailable) { %>@CacheResult(cacheName = USERS_BY_LOGIN_CACHE)<% } %>
     public static Optional<User> findOneWithAuthoritiesByLogin(String login) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)
             //            .withHint(QueryHints.HINT_CACHEABLE, "true")
             .firstResultOptional();
     }
 
+    <% if (cacheManagerIsAvailable) { %>@CacheResult(cacheName = USERS_BY_EMAIL_CACHE)<% } %>
     public static Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)
             //            .withHint(QueryHints.HINT_CACHEABLE, "true")

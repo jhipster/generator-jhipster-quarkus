@@ -25,9 +25,8 @@ import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.security.BCryptPasswordHasher;
 import <%=packageName%>.security.RandomUtil;
 import <%=packageName%>.service.dto.UserDTO;
-<%_ if (cacheProvider === 'caffeine') { _%>
-import io.quarkus.cache.CacheInvalidateAll;
-import io.quarkus.cache.CacheResult;
+<%_ if (cacheManagerIsAvailable) { _%>
+import io.quarkus.cache.CacheInvalidate;
 <%_ } _%>
 import io.quarkus.panache.common.Page;
 import java.time.Instant;
@@ -48,9 +47,6 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     final BCryptPasswordHasher passwordHasher;
-<%_ if (cacheProvider === 'caffeine') { _%>
-    private final String USERS_CACHE = "users";
-<%_ } _%>
 
     @Inject
     public UserService(BCryptPasswordHasher passwordHasher) {
@@ -66,7 +62,9 @@ public class UserService {
                     // activate given user for the registration key.
                     user.activated = true;
                     user.activationKey = null;
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Activated user: {}", user);
                     return user;
                 }
@@ -83,7 +81,9 @@ public class UserService {
                     user.password = passwordHasher.hash(newPassword);
                     user.resetKey = null;
                     user.resetDate = null;
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     return user;
                 }
             );
@@ -97,7 +97,9 @@ public class UserService {
                 user -> {
                     user.resetKey = RandomUtil.generateResetKey();
                     user.resetDate = Instant.now();
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     return user;
                 }
             );
@@ -144,7 +146,9 @@ public class UserService {
         Authority.<Authority>findByIdOptional(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.authorities = authorities;
         User.persist(newUser);
-        //        this.clearUserCaches(newUser);
+        <%_ if (cacheManagerIsAvailable) { _%>
+        this.clearUserCaches(newUser);
+        <%_ } _%>
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
@@ -154,13 +158,12 @@ public class UserService {
             return false;
         }
         User.delete("id", existingUser.id);
-        //        this.clearUserCaches(existingUser);
+        <%_ if (cacheManagerIsAvailable) { _%>
+        this.clearUserCaches(existingUser);
+        <%_ } _%>
         return true;
     }
 
-    <%_ if (cacheProvider === 'caffeine') { _%>
-    @CacheInvalidateAll(cacheName = USERS_CACHE)
-    <%_ } _%>
     public User createUser(UserDTO userDTO) {
         User user = new User();
         user.login = userDTO.login.toLowerCase();
@@ -190,7 +193,9 @@ public class UserService {
             user.authorities = authorities;
         }
         User.persist(user);
-        //        this.clearUserCaches(user);
+        <%_ if (cacheManagerIsAvailable) { _%>
+        this.clearUserCaches(user);
+        <%_ } _%>
         log.debug("Created Information for User: {}", user);
         return user;
     }
@@ -217,7 +222,9 @@ public class UserService {
                     }
                     user.langKey = langKey;
                     user.imageUrl = imageUrl;
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Changed Information for User: {}", user);
                 }
             );
@@ -251,7 +258,9 @@ public class UserService {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .forEach(managedAuthorities::add);
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Changed Information for User: {}", user);
                     return user;
                 }
@@ -265,7 +274,9 @@ public class UserService {
             .ifPresent(
                 user -> {
                     User.delete("id", user.id);
-                    //            this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Deleted User: {}", user);
                 }
             );
@@ -282,7 +293,9 @@ public class UserService {
                     }
                     String encryptedPassword = passwordHasher.hash(newPassword);
                     user.password = encryptedPassword;
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Changed password for User: {}", user);
                 }
             );
@@ -292,9 +305,6 @@ public class UserService {
         return User.findOneWithAuthoritiesByLogin(login);
     }
 
-    <%_ if (cacheProvider === 'caffeine') { _%>
-    @CacheResult(cacheName = USERS_CACHE)
-    <%_ } _%>
     public List<UserDTO> getAllManagedUsers() {
         return User.findAllByLoginNot(Page.ofSize(20), Constants.ANONYMOUS_USER).stream().map(UserDTO::new).collect(Collectors.toList());
     }
@@ -302,4 +312,19 @@ public class UserService {
     public List<String> getAuthorities() {
         return Authority.<Authority>streamAll().map(authority -> authority.name).collect(Collectors.toList());
     }
+
+    <%_ if (cacheManagerIsAvailable) { _%>
+    public void clearUserCaches(User user) {
+        this.clearUserCachesByLogin(user.login);
+        if (user.email != null) {
+            this.clearUserCachesByEmail(user.email);
+        }
+    }
+
+    @CacheInvalidate(cacheName = User.USERS_BY_EMAIL_CACHE)
+    public void clearUserCachesByEmail(String email) {}
+
+    @CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)
+    public void clearUserCachesByLogin(String login) {}
+    <%_ } _%>
 }

@@ -69,22 +69,17 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('should UserService contains cache implementation', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                'import io.quarkus.cache.CacheInvalidateAll;\nimport io.quarkus.cache.CacheResult;'
+                'import io.quarkus.cache.CacheInvalidate;'
             );
 
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                'private final String USERS_CACHE = "users";'
+                '@CacheInvalidate(cacheName = User.USERS_BY_EMAIL_CACHE)'
             );
 
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '@CacheInvalidateAll(cacheName = USERS_CACHE)\n'
-            );
-
-            assert.fileContent(
-                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '@CacheResult(cacheName = USERS_CACHE)'
+                '@CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)'
             );
         });
     });
@@ -109,22 +104,17 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('should UserService not contains cache implementation', () => {
             assert.noFileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                'import io.quarkus.cache.CacheInvalidateAll;\nimport io.quarkus.cache.CacheResult;'
+                'import io.quarkus.cache.CacheInvalidate;'
             );
 
             assert.noFileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                'private final String USERS_CACHE = "users";'
+                '@CacheInvalidate(cacheName = User.USERS_BY_EMAIL_CACHE)'
             );
 
             assert.noFileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '@CacheInvalidateAll(cacheName = USERS_CACHE)\n'
-            );
-
-            assert.noFileContent(
-                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '@CacheResult(cacheName = USERS_CACHE)'
+                '@CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)'
             );
         });
     });
