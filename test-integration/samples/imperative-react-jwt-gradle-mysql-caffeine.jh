@@ -1,12 +1,15 @@
 application {
   config {
     applicationType monolith
+    clientFramework react
     authenticationType jwt
     baseName jhipsterSampleApplication
-    buildTool maven
+    buildTool gradle
     databaseType sql
     packageName io.github.jhipster.sample
     prodDatabaseType mysql
+    enableHibernateCache true
+    cacheProvider caffeine
   }
 
   entities *
@@ -22,7 +25,7 @@ entity Label {
 entity Operation {
   date Instant required,
   description String,
-  amount BigDecimal required
+  amount BigDecimal required unique
 }
 relationship OneToMany {
   BankAccount{operation} to Operation{bankAccount(name)}
