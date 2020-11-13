@@ -5,10 +5,7 @@ const helpers = require('yeoman-test');
 const constants = require('generator-jhipster/generators/generator-constants');
 const expectedFiles = require('./utils/expected-files').entity;
 
-// const CLIENT_MAIN_SRC_DIR = constants.CLIENT_MAIN_SRC_DIR;
-const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
-// const SERVER_MAIN_RES_DIR = constants.SERVER_MAIN_RES_DIR;
-// const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
+const { SERVER_MAIN_SRC_DIR } = constants;
 
 describe('Subgenerator entity of quarkus JHipster blueprint', () => {
     describe('with default options (no repository, no service, no dto, no pagination)', () => {
@@ -69,13 +66,16 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
             assert.file('.jhipster/Foo.json');
             assert.fileContent('.jhipster/Foo.json', '"dataAccess": "activeRecord"');
         });
+        it('contains javax persistence cache annotation', () => {
+            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Foo.java`, '@Cacheable');
+        });
     });
-    describe('with repository', () => {
+    describe('with repository and no hibernate second level cache', () => {
         before(done => {
             helpers
                 .run('generator-jhipster/generators/entity')
                 .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
+                    fse.copySync(path.join(__dirname, '../test/templates/ngx-nocache'), dir);
                 })
                 .withOptions({
                     'from-cli': true,
@@ -119,6 +119,9 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
         it('stores the Repository pattern choice', () => {
             assert.file('.jhipster/Foo.json');
             assert.fileContent('.jhipster/Foo.json', '"dataAccess": "repository"');
+        });
+        it('not contains javax persistence cache annotation', () => {
+            assert.noFileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Foo.java`, '@Cacheable');
         });
     });
 
@@ -220,7 +223,7 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
             );
         });
     });
-    describe('with pagination', () => {
+    describe('with pagination and readOnly', () => {
         before(done => {
             helpers
                 .run('generator-jhipster/generators/entity')
@@ -248,7 +251,8 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
                     dataAccess: 'activeRecord',
                     dto: 'no',
                     service: 'no',
-                    pagination: 'pagination'
+                    pagination: 'pagination',
+                    readOnly: true
                 })
                 .on('end', done);
         });
@@ -267,6 +271,12 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/FooResource.java`,
                 'public Response getAllFoos(@BeanParam PageRequestVM pageRequest, @BeanParam SortRequestVM sortRequest, @Context UriInfo uriInfo)'
+            );
+        });
+        it('contains READ_ONLY Hibernate cache annotation', () => {
+            assert.noFileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Foo.java`,
+                '@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)'
             );
         });
     });
