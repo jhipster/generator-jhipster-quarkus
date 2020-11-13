@@ -31,6 +31,24 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         });
     });
 
+    describe('With monolith Gradle Mysql', () => {
+        before(
+            buildGeneratorContext({
+                buildTool: 'gradle',
+                cacheProvider: 'caffeine'
+            })
+        );
+
+        it('creates expected files for default configuration for server generator', () => {
+            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.gradle);
+        });
+
+        it('build.gradle contains health check dependency', () => {
+            assert.fileContent('build.gradle', "implementation 'io.quarkus:quarkus-cache'");
+        });
+    });
+
     describe('With maven Mysql no second cache level', () => {
         before(
             buildGeneratorContext({

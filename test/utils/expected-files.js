@@ -4,6 +4,18 @@ const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, SERVER_TEST_SRC_DIR, DOCKER_DI
 
 const expectedFiles = {
     maven: ['pom.xml', 'mvnw', 'mvnw.cmd', '.mvn/wrapper/maven-wrapper.jar', '.mvn/wrapper/maven-wrapper.properties'],
+    gradle: [
+        'build.gradle',
+        'gradlew',
+        'gradle.properties',
+        'settings.gradle',
+        'gradle/docker.gradle',
+        'gradle/profile_dev.gradle',
+        'gradle/profile_prod.gradle',
+        'gradle/sonar.gradle',
+        'gradle/wrapper/gradle-wrapper.jar',
+        'gradle/wrapper/gradle-wrapper.properties'
+    ],
 
     docker: [`${DOCKER_DIR}Dockerfile.jvm`, `${DOCKER_DIR}Dockerfile.native`, `${DOCKER_DIR}Dockerfile.fast-jar`],
 
