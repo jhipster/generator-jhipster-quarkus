@@ -132,7 +132,7 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
-        <%_ if (cacheProvider === 'caffeine') { _%>
+        <%_ if (cacheManagerIsAvailable) { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-cache</artifactId>
