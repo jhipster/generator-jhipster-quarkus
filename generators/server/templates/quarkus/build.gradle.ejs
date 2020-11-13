@@ -237,6 +237,9 @@ dependencies {
     implementation "io.quarkus:quarkus-elytron-security"
     implementation "io.quarkus:quarkus-smallrye-jwt"
     implementation "io.quarkus:quarkus-smallrye-openapi"
+<%_ if (cacheManagerIsAvailable) { _%>
+    implementation 'io.quarkus:quarkus-cache'
+<%_ } _%>
     implementation "io.quarkus:quarkus-smallrye-health"
     implementation "io.quarkus:quarkus-micrometer"
     implementation "io.micrometer:micrometer-registry-prometheus"
