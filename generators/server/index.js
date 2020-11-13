@@ -42,8 +42,15 @@ module.exports = class extends ServerGenerator {
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._configuring();
+        const phaseFromJHipster = super._configuring();
+        const phaseFromQuarkus = {
+            configureGlobalQuarkus() {
+                // Override JHipster cacheManagerIsAvailable property to only handle Quarkus caches
+                this.cacheManagerIsAvailable = ['caffeine'].includes(this.cacheProvider);
+            }
+        };
+
+        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get default() {
