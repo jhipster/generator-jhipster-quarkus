@@ -24,6 +24,14 @@ const DEFAULT_SERVER_ANSWERS = {
     rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
 };
 
+const DEFAULT_CLIENT_ANSWERS = {
+    baseName: 'jhipster',
+    clientFramework: 'angularX',
+    enableTranslation: true,
+    nativeLanguage: 'en',
+    languages: ['fr']
+};
+
 const DEFAULT_QUARKUS_BP_OPTIONS = {
     'from-cli': true,
     skipInstall: true,
@@ -41,6 +49,7 @@ const DEFAULT_YORC_FILENAME = 'ngx-blueprint';
 module.exports = {
     DEFAULT_ENTITY_ANSWERS,
     DEFAULT_SERVER_ANSWERS,
+    DEFAULT_CLIENT_ANSWERS,
     DEFAULT_QUARKUS_BP_OPTIONS,
     DEFAULT_QUARKUS_ENTITY_BP_OPTIONS,
     DEFAULT_YORC_FILENAME

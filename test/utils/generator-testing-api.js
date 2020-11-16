@@ -2,6 +2,7 @@ const GeneratorTestBuilder = require('./generator-builder');
 const {
     DEFAULT_ENTITY_ANSWERS,
     DEFAULT_SERVER_ANSWERS,
+    DEFAULT_CLIENT_ANSWERS,
     DEFAULT_QUARKUS_ENTITY_BP_OPTIONS,
     DEFAULT_QUARKUS_BP_OPTIONS,
     DEFAULT_YORC_FILENAME
@@ -31,7 +32,17 @@ function buildServerGeneratorContext(answers = DEFAULT_SERVER_ANSWERS, options =
     };
 }
 
+function buildClientGeneratorContext(answers = DEFAULT_CLIENT_ANSWERS, options = DEFAULT_QUARKUS_BP_OPTIONS) {
+    return done => {
+        new GeneratorTestBuilder('client')
+            .withPrompts({ ...DEFAULT_CLIENT_ANSWERS, ...answers })
+            .withOptions({ ...DEFAULT_QUARKUS_ENTITY_BP_OPTIONS, ...options })
+            .build(done);
+    };
+}
+
 module.exports = {
     buildEntityGeneratorContext,
-    buildServerGeneratorContext
+    buildServerGeneratorContext,
+    buildClientGeneratorContext
 };
