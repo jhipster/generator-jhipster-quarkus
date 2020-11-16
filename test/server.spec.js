@@ -1,15 +1,14 @@
-const path = require('path');
 const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
 const constants = require('generator-jhipster/generators/generator-constants');
 
+const { buildServerGeneratorContext } = require('./utils/generator-testing-api');
 const expectedFiles = require('./utils/expected-files');
 
 const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
-        before(buildGeneratorContext());
+        before(buildServerGeneratorContext());
 
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server);
@@ -33,7 +32,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
     describe('With monolith Gradle Mysql', () => {
         before(
-            buildGeneratorContext({
+            buildServerGeneratorContext({
                 buildTool: 'gradle',
                 cacheProvider: 'caffeine'
             })
@@ -51,7 +50,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
     describe('With maven Mysql no second cache level', () => {
         before(
-            buildGeneratorContext({
+            buildServerGeneratorContext({
                 enableHibernateCache: false
             })
         );
@@ -69,7 +68,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
     describe('With maven Mysql and caffeine cache', () => {
         before(
-            buildGeneratorContext({
+            buildServerGeneratorContext({
                 cacheProvider: 'caffeine'
             })
         );
@@ -104,7 +103,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
     describe('With maven Mysql and no cache', () => {
         before(
-            buildGeneratorContext({
+            buildServerGeneratorContext({
                 cacheProvider: 'no'
             })
         );
@@ -137,41 +136,3 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         });
     });
 });
-
-function buildGeneratorContext(prompts) {
-    return done => {
-        helpers
-            .run('generator-jhipster/generators/server')
-            .withOptions({
-                'from-cli': true,
-                skipInstall: true,
-                blueprint: 'quarkus',
-                skipChecks: true
-            })
-            .withGenerators([
-                [
-                    require('../generators/server'), // eslint-disable-line global-require
-                    'jhipster-quarkus:server',
-                    path.join(__dirname, '../generators/server/index.js')
-                ]
-            ])
-            .withPrompts({
-                baseName: 'sampleMysql',
-                packageName: 'com.mycompany.myapp',
-                applicationType: 'monolith',
-                databaseType: 'sql',
-                devDatabaseType: 'h2Disk',
-                prodDatabaseType: 'mysql',
-                cacheProvider: 'ehcache',
-                authenticationType: 'session',
-                enableTranslation: true,
-                nativeLanguage: 'en',
-                languages: ['fr', 'de'],
-                buildTool: 'maven',
-                enableHibernateCache: true,
-                rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5',
-                ...prompts
-            })
-            .on('end', done);
-    };
-}
