@@ -41,8 +41,15 @@ function buildClientGeneratorContext(answers = DEFAULT_CLIENT_ANSWERS, options =
     };
 }
 
+function buildCommonGeneratorContext(options = DEFAULT_QUARKUS_BP_OPTIONS) {
+    return done => {
+        new GeneratorTestBuilder('common').withOptions({ ...DEFAULT_QUARKUS_ENTITY_BP_OPTIONS, ...options }).build(done);
+    };
+}
+
 module.exports = {
     buildEntityGeneratorContext,
     buildServerGeneratorContext,
-    buildClientGeneratorContext
+    buildClientGeneratorContext,
+    buildCommonGeneratorContext
 };
