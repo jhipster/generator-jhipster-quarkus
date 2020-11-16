@@ -1,45 +1,13 @@
-const path = require('path');
-const fse = require('fs-extra');
 const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
 const constants = require('generator-jhipster/generators/generator-constants');
 const expectedFiles = require('./utils/expected-files').entity;
+const { buildEntityGeneratorContext } = require('./utils/generator-testing-api');
 
 const { SERVER_MAIN_SRC_DIR } = constants;
 
 describe('Subgenerator entity of quarkus JHipster blueprint', () => {
     describe('with default options (no repository, no service, no dto, no pagination)', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/entity')
-                .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
-                })
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true,
-                    creationTimestamp: '2019-11-06'
-                })
-                .withGenerators([
-                    [
-                        require('../generators/entity'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity',
-                        path.join(__dirname, '../generators/entity/index.js')
-                    ]
-                ])
-                .withArguments(['foo'])
-                .withPrompts({
-                    fieldAdd: false,
-                    relationshipAdd: false,
-                    dataAccess: 'activeRecord',
-                    dto: 'no',
-                    service: 'no',
-                    pagination: 'no'
-                })
-                .on('end', done);
-        });
+        before(buildEntityGeneratorContext());
 
         it('creates expected entity as active record and resources files', () => {
             assert.file(expectedFiles.server);
@@ -71,37 +39,7 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
         });
     });
     describe('with repository and no hibernate second level cache', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/entity')
-                .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, '../test/templates/ngx-nocache'), dir);
-                })
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true,
-                    creationTimestamp: '2019-11-06'
-                })
-                .withGenerators([
-                    [
-                        require('../generators/entity'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity',
-                        path.join(__dirname, '../generators/entity/index.js')
-                    ]
-                ])
-                .withArguments(['foo'])
-                .withPrompts({
-                    fieldAdd: false,
-                    relationshipAdd: false,
-                    dataAccess: 'repository',
-                    dto: 'no',
-                    service: 'no',
-                    pagination: 'no'
-                })
-                .on('end', done);
-        });
+        before(buildEntityGeneratorContext({ dataAccess: 'repository' }, {}, 'ngx-nocache'));
 
         it('creates expected entity with the corresponding repository', () => {
             assert.file(expectedFiles.server);
@@ -126,37 +64,7 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
     });
 
     describe('with dto', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/entity')
-                .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
-                })
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true,
-                    creationTimestamp: '2019-11-06'
-                })
-                .withGenerators([
-                    [
-                        require('../generators/entity'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity',
-                        path.join(__dirname, '../generators/entity/index.js')
-                    ]
-                ])
-                .withArguments(['foo'])
-                .withPrompts({
-                    fieldAdd: false,
-                    relationshipAdd: false,
-                    dataAccess: 'activeRecord',
-                    dto: 'mapstruct',
-                    service: 'serviceClass',
-                    pagination: 'no'
-                })
-                .on('end', done);
-        });
+        before(buildEntityGeneratorContext({ dto: 'mapstruct', service: 'serviceClass', pagination: 'no' }, {}));
 
         it('creates expected entity with the corresponding dto', () => {
             assert.file(expectedFiles.server);
@@ -175,37 +83,7 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
         });
     });
     describe('with dto and service interface and service implementation', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/entity')
-                .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
-                })
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true,
-                    creationTimestamp: '2019-11-06'
-                })
-                .withGenerators([
-                    [
-                        require('../generators/entity'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity',
-                        path.join(__dirname, '../generators/entity/index.js')
-                    ]
-                ])
-                .withArguments(['foo'])
-                .withPrompts({
-                    fieldAdd: false,
-                    relationshipAdd: false,
-                    dataAccess: 'activeRecord',
-                    dto: 'mapstruct',
-                    service: 'serviceImpl',
-                    pagination: 'no'
-                })
-                .on('end', done);
-        });
+        before(buildEntityGeneratorContext({ dto: 'mapstruct', service: 'serviceImpl', pagination: 'no' }, {}));
 
         it('creates expected entity with the corresponding dto', () => {
             assert.file(expectedFiles.server);
@@ -224,38 +102,7 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
         });
     });
     describe('with pagination and readOnly', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/entity')
-                .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
-                })
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true,
-                    creationTimestamp: '2019-11-06'
-                })
-                .withGenerators([
-                    [
-                        require('../generators/entity'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity',
-                        path.join(__dirname, '../generators/entity/index.js')
-                    ]
-                ])
-                .withArguments(['foo'])
-                .withPrompts({
-                    fieldAdd: false,
-                    relationshipAdd: false,
-                    dataAccess: 'activeRecord',
-                    dto: 'no',
-                    service: 'no',
-                    pagination: 'pagination',
-                    readOnly: true
-                })
-                .on('end', done);
-        });
+        before(buildEntityGeneratorContext({ pagination: 'pagination', readOnly: true }, {}));
 
         it('creates expected pagination file', () => {
             assert.file(expectedFiles.server);
@@ -281,39 +128,9 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
         });
     });
     describe('with pagination(infinite-scroll), service and dto', () => {
-        before(done => {
-            helpers
-                .run('generator-jhipster/generators/entity')
-                .inTmpDir(dir => {
-                    fse.copySync(path.join(__dirname, '../test/templates/ngx-blueprint'), dir);
-                })
-                .withOptions({
-                    'from-cli': true,
-                    skipInstall: true,
-                    blueprint: 'quarkus',
-                    skipChecks: true,
-                    creationTimestamp: '2019-11-06'
-                })
-                .withGenerators([
-                    [
-                        require('../generators/entity'), // eslint-disable-line global-require
-                        'jhipster-quarkus:entity',
-                        path.join(__dirname, '../generators/entity/index.js')
-                    ]
-                ])
-                .withArguments(['foo'])
-                .withPrompts({
-                    fieldAdd: false,
-                    relationshipAdd: false,
-                    dataAccess: 'activeRecord',
-                    dto: 'mapstruct',
-                    service: 'serviceClass',
-                    pagination: 'infinite-scroll'
-                })
-                .on('end', done);
-        });
+        before(buildEntityGeneratorContext({ dto: 'mapstruct', service: 'serviceClass', pagination: 'infinite-scroll' }, {}));
 
-        it('creates expected pagination file', () => {
+        it('creates expected infinite-scroll file', () => {
             assert.file(expectedFiles.server);
             assert.file(expectedFiles.fakeData);
             assert.file(expectedFiles.serverLiquibase);
