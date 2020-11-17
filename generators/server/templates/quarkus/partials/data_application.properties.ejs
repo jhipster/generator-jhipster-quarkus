@@ -85,6 +85,9 @@ quarkus.hibernate-orm.sql-load-script=no-file
 quarkus.hibernate-orm.implicit-naming-strategy=<%=packageName%>.config.hibernate.JHipsterCompatibleImplicitNamingStrategy
 quarkus.hibernate-orm.physical-naming-strategy=<%=packageName%>.config.hibernate.JHipsterCompatiblePhysicalNamingStrategy
 quarkus.hibernate-orm.second-level-caching-enabled=<%= enableHibernateCache %>
+<%_ if (enableHibernateCache) { _%>
+# jhipster-quarkus-needle-hibernate-cache-add-entry
+<%_ } _%>
 
 quarkus.liquibase.change-log=config/liquibase/master.xml
 %dev.quarkus.liquibase.migrate-at-start=true

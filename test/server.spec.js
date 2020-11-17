@@ -38,6 +38,10 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                     'quarkus.cache.caffeine."usersByLogin".expire-after-write=3600S'
             );
         });
+
+        it('contains hibernate second level cache needle', () => {
+            assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, '# jhipster-quarkus-needle-hibernate-cache-add-entry');
+        });
     });
 
     describe('With monolith Gradle Mysql', () => {
