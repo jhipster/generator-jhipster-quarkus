@@ -18,7 +18,10 @@
 -%>
 application.name=<%= baseName %>
 
-<%- include('../../../partials/data_application.properties.ejs', { baseName: baseName, BUILD_DIR: BUILD_DIR, devDatabaseType:devDatabaseType, prodDatabaseType: prodDatabaseType}) -%>
+<%- include('../../../partials/data_application.properties.ejs', { baseName: baseName, BUILD_DIR: BUILD_DIR, devDatabaseType:devDatabaseType, prodDatabaseType: prodDatabaseType }) -%>
+<% if(cacheManagerIsAvailable) { %>
+<%- include('../../../partials/cache_application.properties.ejs') -%>
+<% } %>
 quarkus.mailer.from=<%= dasherizedBaseName %>@localhost
 quarkus.mailer.host=localhost
 quarkus.mailer.port=25

@@ -28,6 +28,16 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('second cache level property is true', () => {
             assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.hibernate-orm.second-level-caching-enabled=true');
         });
+
+        it('User and Authority cache properties are set', () => {
+            assert.noFileContent(
+                `${SERVER_MAIN_RES_DIR}application.properties`,
+                'quarkus.cache.caffeine."usersByEmail".maximum-size=100\n' +
+                    'quarkus.cache.caffeine."usersByEmail".expire-after-write=3600S\n' +
+                    'quarkus.cache.caffeine."usersByLogin".maximum-size=100\n' +
+                    'quarkus.cache.caffeine."usersByLogin".expire-after-write=3600S'
+            );
+        });
     });
 
     describe('With monolith Gradle Mysql', () => {
@@ -97,6 +107,16 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
                 '@CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)'
+            );
+        });
+
+        it('User and Authority cache properties are set', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_RES_DIR}application.properties`,
+                'quarkus.cache.caffeine."usersByEmail".maximum-size=100\n' +
+                    'quarkus.cache.caffeine."usersByEmail".expire-after-write=3600S\n' +
+                    'quarkus.cache.caffeine."usersByLogin".maximum-size=100\n' +
+                    'quarkus.cache.caffeine."usersByLogin".expire-after-write=3600S'
             );
         });
     });
