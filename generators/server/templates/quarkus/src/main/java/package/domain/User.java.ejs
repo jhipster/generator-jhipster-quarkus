@@ -40,7 +40,6 @@ import org.hibernate.annotations.BatchSize;
 <%_ if (enableHibernateCache) { _%>
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cache;
-import org.hibernate.jpa.QueryHints;
 <%_ } _%>
 
 /**
@@ -231,18 +230,12 @@ public class User extends PanacheEntityBase implements Serializable {
     <% if (cacheManagerIsAvailable) { %>@CacheResult(cacheName = USERS_BY_LOGIN_CACHE)<% } %>
     public static Optional<User> findOneWithAuthoritiesByLogin(String login) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)
-        <%_ if (enableHibernateCache) { _%>
-            .withHint(QueryHints.HINT_CACHEABLE, "true")
-        <%_ } _%>
             .firstResultOptional();
     }
 
     <% if (cacheManagerIsAvailable) { %>@CacheResult(cacheName = USERS_BY_EMAIL_CACHE)<% } %>
     public static Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)
-        <%_ if (enableHibernateCache) { _%>
-            .withHint(QueryHints.HINT_CACHEABLE, "true")
-        <%_ } _%>
             .firstResultOptional();
     }
 
