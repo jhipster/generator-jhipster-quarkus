@@ -17,6 +17,8 @@
  limitations under the License.
 -%>
 ## configure your caches
+quarkus.cache.type=<%= cacheProvider %>
+quarkus.cache.enabled=true
 <%_ if (cacheProvider === 'caffeine') { _%>
 quarkus.cache.caffeine."usersByEmail".maximum-size=<%= CACHE_MAXIMUM_SIZE %>
 quarkus.cache.caffeine."usersByEmail".expire-after-write=<%= CACHE_EXPIRE_AFTER_WRITE %>

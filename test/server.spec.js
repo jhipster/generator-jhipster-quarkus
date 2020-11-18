@@ -114,6 +114,11 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             );
         });
 
+        it('Quarkus caffeine cache is enabled', () => {
+            assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.cache.enabled=true');
+            assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.cache.type=caffeine');
+        });
+
         it('User and Authority cache properties are set', () => {
             assert.fileContent(
                 `${SERVER_MAIN_RES_DIR}application.properties`,
