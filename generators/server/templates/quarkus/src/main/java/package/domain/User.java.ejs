@@ -226,12 +226,18 @@ public class User extends PanacheEntityBase implements Serializable {
     public static Optional<User> findOneWithAuthoritiesById(Long id) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.id = ?1", id).firstResultOptional();
     }
-    <% if (cacheProvider === 'caffeine') { %>@CacheResult(cacheName = USERS_BY_LOGIN_CACHE)<% } %>
+
+    <%_ if (cacheProvider === 'caffeine') { _%>
+    @CacheResult(cacheName = USERS_BY_LOGIN_CACHE)
+    <%_ } _%>
     public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByLogin(String login) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)
             <% if (cacheProvider === 'redis') { %>.firstResult<% } else { %>.firstResultOptional<% } %>();
     }
-    <% if (cacheProvider === 'caffeine') { %>@CacheResult(cacheName = USERS_BY_EMAIL_CACHE)<% } %>
+
+    <%_ if (cacheProvider === 'caffeine') { _%>
+    @CacheResult(cacheName = USERS_BY_EMAIL_CACHE)
+    <%_ } _%>
     public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)
             <% if (cacheProvider === 'redis') { %>.firstResult<% } else { %>.firstResultOptional<% } %>();
