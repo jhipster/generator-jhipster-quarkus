@@ -4,7 +4,7 @@ const constants = require('generator-jhipster/generators/generator-constants');
 const { buildServerGeneratorContext } = require('./utils/generator-testing-api');
 const expectedFiles = require('./utils/expected-files');
 
-const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR } = constants;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
@@ -198,6 +198,13 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('should contains redis file', () => {
             assert.file(expectedFiles.cache.common);
             assert.file(expectedFiles.cache.redis);
+        });
+
+        it('should contains docker compose redis file from JHipster', () => {
+            assert.file(`${DOCKER_DIR}redis.yml`);
+            assert.file(`${DOCKER_DIR}redis-cluster.yml`);
+            assert.file(`${DOCKER_DIR}redis/connectRedisCluster.sh`);
+            assert.file(`${DOCKER_DIR}redis/Redis-Cluster.Dockerfile`);
         });
     });
 });
