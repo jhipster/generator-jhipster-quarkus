@@ -220,20 +220,19 @@ function askForServerSideOpts(meta) {
                     name:
                         'Yes, with Memcached (distributed cache) - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
                 },
+                */
                 {
                     value: 'redis',
                     name: 'Yes, with the Redis implementation'
                 },
-                */
                 {
                     value: 'no',
                     name: 'No - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
                 }
             ]
-            // default: applicationType === 'microservice' || applicationType === 'uaa' ? 2 : 0
         },
         {
-            when: response => response.databaseType === 'sql' && !reactive,
+            when: response => response.databaseType === 'sql' && !reactive && !['redis'].includes(response.cacheProvider),
             type: 'confirm',
             name: 'enableHibernateCache',
             message: 'Do you want to use Hibernate 2nd level cache?',
@@ -317,6 +316,10 @@ function askForServerSideOpts(meta) {
         } else if (['mongodb', 'neo4j', 'couchbase', 'cassandra'].includes(this.databaseType)) {
             this.devDatabaseType = this.databaseType;
             this.prodDatabaseType = this.databaseType;
+            this.enableHibernateCache = false;
+        }
+
+        if (['redis'].includes(this.cacheProvider)) {
             this.enableHibernateCache = false;
         }
         done();
