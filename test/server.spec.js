@@ -13,6 +13,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server);
             assert.file(expectedFiles.maven);
+            assert.noFile(expectedFiles.cache.common);
         });
 
         it('pom.xml contains health check dependency', () => {
@@ -30,7 +31,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         });
 
         it('User and Authority cache properties are set', () => {
-            assert.noFileContent(
+            assert.fileContent(
                 `${SERVER_MAIN_RES_DIR}application.properties`,
                 'quarkus.cache.caffeine."usersByEmail".maximum-size=100\n' +
                     'quarkus.cache.caffeine."usersByEmail".expire-after-write=3600S\n' +
@@ -155,6 +156,10 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             })
         );
 
+        it("don't create cache files", () => {
+            assert.noFile(expectedFiles.cache.common);
+        });
+
         it('should pom.xml not contains Quarkus cache dependency', () => {
             assert.noFileContent(
                 'pom.xml',
@@ -180,6 +185,19 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
                 '@CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)'
             );
+        });
+    });
+
+    describe('With maven Mysql and Redis cache', () => {
+        before(
+            buildServerGeneratorContext({
+                cacheProvider: 'redis'
+            })
+        );
+
+        it('should contains redis file', () => {
+            assert.file(expectedFiles.cache.common);
+            assert.file(expectedFiles.cache.redis);
         });
     });
 });

@@ -70,6 +70,16 @@ const expectedFiles = {
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`
     ],
+    cache: {
+        common: [`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/cache/CacheErrorException.java`],
+        redis: [
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/cache/redis/RedisCache.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/cache/redis/UserRedisCache.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/Foo.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/FooRedisCache.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/RedisCacheTest.java`
+        ]
+    },
     entity: {
         server: [
             '.jhipster/Foo.json',

@@ -97,6 +97,50 @@ const serverFiles = {
             ]
         }
     ],
+    serverJavaCache: [
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => !['no', 'caffeine'].includes(generator.cacheProvider),
+            templates: [
+                {
+                    file: 'package/cache/CacheErrorException.java',
+                    renameTo: generator => `${generator.javaDir}cache/CacheErrorException.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => generator.cacheProvider === 'redis',
+            templates: [
+                {
+                    file: 'package/cache/redis/RedisCache.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/RedisCache.java`
+                },
+                {
+                    file: 'package/cache/redis/UserRedisCache.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/UserRedisCache.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            condition: generator => generator.cacheProvider === 'redis',
+            templates: [
+                {
+                    file: 'package/cache/redis/Foo.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/Foo.java`
+                },
+                {
+                    file: 'package/cache/redis/FooRedisCache.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/FooRedisCache.java`
+                },
+                {
+                    file: 'package/cache/redis/RedisCacheTest.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/RedisCacheTest.java`
+                }
+            ]
+        }
+    ],
     serverJavaConfig: [
         {
             path: SERVER_MAIN_SRC_DIR,
