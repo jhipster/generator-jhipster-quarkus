@@ -17,11 +17,13 @@
  limitations under the License.
 -%>
 ## configure your caches
+<%_ if (cacheProvider === 'caffeine') { _%>
 quarkus.cache.type=<%= cacheProvider %>
 quarkus.cache.enabled=true
-<%_ if (cacheProvider === 'caffeine') { _%>
 quarkus.cache.caffeine."usersByEmail".maximum-size=<%= CACHE_MAXIMUM_SIZE %>
 quarkus.cache.caffeine."usersByEmail".expire-after-write=<%= CACHE_EXPIRE_AFTER_WRITE %>
 quarkus.cache.caffeine."usersByLogin".maximum-size=<%= CACHE_MAXIMUM_SIZE %>
 quarkus.cache.caffeine."usersByLogin".expire-after-write=<%= CACHE_EXPIRE_AFTER_WRITE %>
+<%_ } else if (cacheProvider === 'redis') { _%>
+quarkus.redis.hosts=redis://localhost:6379
 <%_ } _%>
