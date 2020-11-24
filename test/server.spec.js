@@ -206,5 +206,65 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.file(`${DOCKER_DIR}redis/connectRedisCluster.sh`);
             assert.file(`${DOCKER_DIR}redis/Redis-Cluster.Dockerfile`);
         });
+
+        it('should contains redis code in UserService', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                '        List <Object> keys = new ArrayList<>();\n' +
+                    '        keys.add(user.login);\n' +
+                    '\n' +
+                    '        if (user.email != null) {\n' +
+                    '            keys.add(user.email);\n' +
+                    '        }\n' +
+                    '\n' +
+                    '        userRedisCache.evict(keys);'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                'return userRedisCache.get(login, () -> User.findOneWithAuthoritiesByLogin(login));'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                '    @Inject\n    UserRedisCache userRedisCache;'
+            );
+        });
+
+        it('should contains redis code in UserService', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
+                '    @Inject\n    UserRedisCache userRedisCache;'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
+                '    @Inject\n    UserRedisCache userRedisCache;'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
+                '            return userRedisCache.get(login, () -> User.findOneWithAuthoritiesByEmailIgnoreCase(login))\n' +
+                    '                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
+                '        return userRedisCache.get(lowercaseLogin, () -> User.findOneWithAuthoritiesByLogin(lowercaseLogin))\n' +
+                    '            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));'
+            );
+        });
+
+        it('should contains redis code in User', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
+                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)\n            .firstResult();'
+            );
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
+                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)\n' +
+                    '            .firstResult();'
+            );
+        });
     });
 });

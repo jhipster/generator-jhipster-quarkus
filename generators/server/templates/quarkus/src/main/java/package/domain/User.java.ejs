@@ -19,7 +19,7 @@
 package <%=packageName%>.domain;
 
 import <%=packageName%>.config.Constants;
-<%_ if (cacheManagerIsAvailable) { _%>
+<%_ if (cacheProvider === 'caffeine') { _%>
 import io.quarkus.cache.CacheResult;
 <%_ } _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -52,7 +52,7 @@ import org.hibernate.annotations.Cache;
 <%_ } _%>
 public class User extends PanacheEntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
-<%_ if (cacheManagerIsAvailable) { _%>
+<%_ if (cacheProvider === 'caffeine') { _%>
     public static final String USERS_BY_EMAIL_CACHE = "usersByEmail";
     public static final String USERS_BY_LOGIN_CACHE = "usersByLogin";
 <%_ } _%>
@@ -226,17 +226,15 @@ public class User extends PanacheEntityBase implements Serializable {
     public static Optional<User> findOneWithAuthoritiesById(Long id) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.id = ?1", id).firstResultOptional();
     }
-
-    <% if (cacheManagerIsAvailable) { %>@CacheResult(cacheName = USERS_BY_LOGIN_CACHE)<% } %>
-    public static Optional<User> findOneWithAuthoritiesByLogin(String login) {
+    <% if (cacheProvider === 'caffeine') { %>@CacheResult(cacheName = USERS_BY_LOGIN_CACHE)<% } %>
+    public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByLogin(String login) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)
-            .firstResultOptional();
+            <% if (cacheProvider === 'redis') { %>.firstResult<% } else { %>.firstResultOptional<% } %>();
     }
-
-    <% if (cacheManagerIsAvailable) { %>@CacheResult(cacheName = USERS_BY_EMAIL_CACHE)<% } %>
-    public static Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
+    <% if (cacheProvider === 'caffeine') { %>@CacheResult(cacheName = USERS_BY_EMAIL_CACHE)<% } %>
+    public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)
-            .firstResultOptional();
+            <% if (cacheProvider === 'redis') { %>.firstResult<% } else { %>.firstResultOptional<% } %>();
     }
 
     public static List<User> findAllByLoginNot(Page page, String login) {

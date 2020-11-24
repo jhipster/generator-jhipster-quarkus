@@ -25,15 +25,14 @@ import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.security.BCryptPasswordHasher;
 import <%=packageName%>.security.RandomUtil;
 import <%=packageName%>.service.dto.UserDTO;
-<%_ if (cacheManagerIsAvailable) { _%>
+<%_ if (cacheProvider === 'caffeine') { _%>
 import io.quarkus.cache.CacheInvalidate;
+<%_ } else if (cacheProvider === 'redis') { _%>
+import <%= packageName %>.cache.redis.UserRedisCache;
 <%_ } _%>
 import io.quarkus.panache.common.Page;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -47,6 +46,11 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     final BCryptPasswordHasher passwordHasher;
+
+    <%_ if (cacheProvider === 'redis') { _%>
+    @Inject
+    UserRedisCache userRedisCache;
+    <%_ } _%>
 
     @Inject
     public UserService(BCryptPasswordHasher passwordHasher) {
@@ -298,7 +302,11 @@ public class UserService {
     }
 
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
+    <%_ if (cacheProvider === 'redis') { _%>
+        return userRedisCache.get(login, () -> User.findOneWithAuthoritiesByLogin(login));
+    <%_ } else { _%>
         return User.findOneWithAuthoritiesByLogin(login);
+    <%_ } _%>
     }
 
     public List<UserDTO> getAllManagedUsers() {
@@ -311,12 +319,25 @@ public class UserService {
 
     <%_ if (cacheManagerIsAvailable) { _%>
     public void clearUserCaches(User user) {
+        <%_ if (cacheProvider === 'redis') { _%>
+        List <Object> keys = new ArrayList<>();
+        keys.add(user.login);
+
+        if (user.email != null) {
+            keys.add(user.email);
+        }
+
+        userRedisCache.evict(keys);
+        <%_ } else if (cacheProvider === 'caffeine') { _%>
         this.clearUserCachesByLogin(user.login);
         if (user.email != null) {
             this.clearUserCachesByEmail(user.email);
         }
+        <%_ } _%>
     }
+    <%_ } _%>
 
+    <%_ if (cacheProvider === 'caffeine') { _%>
     @CacheInvalidate(cacheName = User.USERS_BY_EMAIL_CACHE)
     public void clearUserCachesByEmail(String email) {}
 
