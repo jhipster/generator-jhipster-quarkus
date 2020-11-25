@@ -32,7 +32,8 @@ import <%= packageName %>.service.dto.<%= dtoClass %>;
 import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
 <%_ if (cacheProvider === 'redis') { _%>
-import <%= packageName %>.cache.redis.UserRedisCache;
+import redis.embedded.RedisServer;
+import java.io.IOException;
 <%_ } _%>
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
