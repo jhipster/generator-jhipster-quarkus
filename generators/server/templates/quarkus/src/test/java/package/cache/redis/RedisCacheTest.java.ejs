@@ -47,13 +47,13 @@ class RedisCacheTest {
     static RedisServer server;
 
     @BeforeAll
-    public static void setup() throws IOException {
+    public static void startRedisServer() throws IOException {
         server = new RedisServer(6379);
         server.start();
     }
 
     @AfterAll
-    public static void tearDown() {
+    public static void stopRedisServer() {
         server.stop();
     }
 
