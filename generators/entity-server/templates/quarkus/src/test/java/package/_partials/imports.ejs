@@ -31,6 +31,9 @@ import <%= packageName %>.service.dto.<%= dtoClass %>;
 <%_ } _%>
 import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
+<%_ if (cacheProvider === 'redis') { _%>
+import <%= packageName %>.cache.redis.UserRedisCache;
+<%_ } _%>
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 <%_ if (databaseType === 'sql') { _%>
