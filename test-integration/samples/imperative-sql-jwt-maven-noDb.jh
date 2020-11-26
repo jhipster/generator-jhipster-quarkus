@@ -1,0 +1,41 @@
+application {
+    config {
+      applicationType monolith
+      authenticationType jwt
+      baseName jhipsterSampleApplication
+      buildTool maven
+      packageName io.github.jhipster.sample
+      databaseType no
+      devDatabaseType no
+      prodDatabaseType no
+      skipUserManagement true
+    }
+
+    entities *
+}
+
+entity BankAccount {
+  name String required,
+  balance BigDecimal required
+}
+entity Label {
+  label String required minlength(3)
+}
+entity Operation {
+  date Instant required,
+  description String,
+  amount BigDecimal required unique
+}
+relationship OneToMany {
+  BankAccount{operation} to Operation{bankAccount(name)}
+}
+relationship ManyToOne {
+  BankAccount{user(login)} to User
+}
+relationship ManyToMany {
+  Operation{label(label)} to Label{operation}
+}
+
+dto BankAccount, Label, Operation with mapstruct
+paginate Operation with pagination
+service Operation with serviceImpl

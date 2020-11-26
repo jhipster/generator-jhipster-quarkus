@@ -16,9 +16,11 @@ jobs:
                 app:
                     - imperative-sql-jwt-maven-sample
                     - imperative-sql-jwt-maven-sqllight
+                    - imperative-sql-jwt-maven-noDb
                 include:
                     - app: imperative-sql-jwt-maven-sample
                     - app: imperative-sql-jwt-maven-sqllight
+                    - app: imperative-sql-jwt-maven-noDb
         env:
             JHI_APP: ${{ matrix.app }}
         steps:
