@@ -57,8 +57,8 @@
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
         <maven-checkstyle.version>3.1.0</maven-checkstyle.version>
         <%_ if (!skipClient) { _%>
-            <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
-            <%_ } _%>
+        <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+        <%_ } _%>
         <git-commit-id-plugin.version>4.0.0</git-commit-id-plugin.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
@@ -110,10 +110,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-mailer</artifactId>
         </dependency>
+<%_ if(databaseType !== 'no') { _%>
 <%- include('./partials/data_pom.xml.ejs', {
   devDatabaseType:devDatabaseType,
   prodDatabaseType:
   prodDatabaseType}) _%>
+<%_ } _%>
 <%- include('./partials/security_pom.xml.ejs', {
   }) _%>
         <dependency>
