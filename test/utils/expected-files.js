@@ -19,7 +19,6 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/HeaderUtil.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`
         ],
 
@@ -27,6 +26,8 @@ const expectedFiles = {
             `${SERVER_MAIN_RES_DIR}config/liquibase/master.xml`,
             `${SERVER_MAIN_RES_DIR}config/liquibase/changelog/00000000000000_initial_schema.xml`
         ],
+
+        h2: [`${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`],
 
         hibernate: [
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java`,

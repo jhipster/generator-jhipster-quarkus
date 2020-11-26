@@ -93,12 +93,18 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}/ArchTest.java`
                 },
                 {
-                    file: 'package/TestResources.java',
-                    renameTo: generator => `${generator.javaDir}/TestResources.java`
-                },
-                {
                     file: 'package/TestUtil.java',
                     renameTo: generator => `${generator.javaDir}/TestUtil.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.databaseType === 'sql',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/TestResources.java',
+                    renameTo: generator => `${generator.javaDir}/TestResources.java`
                 }
             ]
         }
