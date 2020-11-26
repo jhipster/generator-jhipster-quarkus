@@ -309,7 +309,13 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/errors/BadRequestAlertException.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/BadRequestAlertException.java`
-                },
+                }
+            ]
+        },
+        {
+            condition: generator => !generator.skipUserManagement,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
                 {
                     file: 'package/web/rest/errors/EmailAlreadyUsedException.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/EmailAlreadyUsedException.java`

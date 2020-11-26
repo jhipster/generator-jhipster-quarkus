@@ -19,9 +19,7 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JsonbConfiguration.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/jwt/TokenProvider.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/EmailAlreadyUsedException.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/EmailNotFoundException.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/LoginAlreadyUsedException.java`,
+
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/KeyAndPasswordVM.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/LoginVM.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/ManagedUserVM.java`,
@@ -66,6 +64,9 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/MailService.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UsernameAlreadyUsedException.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/EmailAlreadyUsedException.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/EmailNotFoundException.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/LoginAlreadyUsedException.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/mapper/UserMapperTest.java`
         ]
     },
