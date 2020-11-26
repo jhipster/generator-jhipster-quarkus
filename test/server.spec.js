@@ -13,6 +13,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server);
+            assert.file(expectedFiles.hibernateServer);
             assert.file(expectedFiles.maven);
         });
 
@@ -28,6 +29,22 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
         it('second cache level property is true', () => {
             assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.hibernate-orm.second-level-caching-enabled=true');
+        });
+    });
+
+    describe('With monolith Maven no db', () => {
+        before(
+            buildGeneratorContext({
+                databaseType: 'no',
+                devDatabaseType: 'no',
+                prodDatabaseType: 'no'
+            })
+        );
+
+        it('creates expected files for default configuration for server generator', () => {
+            assert.file(expectedFiles.server);
+            assert.noFile(expectedFiles.hibernateServer);
+            assert.file(expectedFiles.maven);
         });
     });
 

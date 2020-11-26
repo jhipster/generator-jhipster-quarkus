@@ -120,7 +120,13 @@ const serverFiles = {
                 {
                     file: 'package/config/LocalDateProvider.java',
                     renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`
-                },
+                }
+            ]
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => generator.databaseType === 'sql',
+            templates: [
                 {
                     file: 'package/config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java',
                     renameTo: generator => `${generator.javaDir}config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java`
