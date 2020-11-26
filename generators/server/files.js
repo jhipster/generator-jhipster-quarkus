@@ -190,16 +190,22 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}security/jwt/TokenProvider.java`
                 },
                 {
+                    file: 'package/security/RandomUtil.java',
+                    renameTo: generator => `${generator.javaDir}security/RandomUtil.java`
+                }
+            ]
+        },
+        {
+            condition: generator => !generator.skipUserManagement,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
                     file: 'package/security/AuthoritiesConstants.java',
                     renameTo: generator => `${generator.javaDir}security/AuthoritiesConstants.java`
                 },
                 {
                     file: 'package/security/BCryptPasswordHasher.java',
                     renameTo: generator => `${generator.javaDir}security/BCryptPasswordHasher.java`
-                },
-                {
-                    file: 'package/security/RandomUtil.java',
-                    renameTo: generator => `${generator.javaDir}security/RandomUtil.java`
                 },
                 {
                     file: 'package/security/UsernameNotFoundException.java',
