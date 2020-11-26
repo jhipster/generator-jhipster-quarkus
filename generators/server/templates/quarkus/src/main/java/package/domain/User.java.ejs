@@ -19,35 +19,42 @@
 package <%=packageName%>.domain;
 
 import <%=packageName%>.config.Constants;
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Page;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+<%_ } _%>
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
+<%_ if (databaseType === 'sql') { _%>
 import java.util.List;
 import java.util.Optional;
+<%_ } _%>
 import java.util.Set;
-import javax.json.bind.annotation.JsonbTransient;
+<%_ if (databaseType === 'sql') { _%>
 import javax.persistence.*;
+import org.hibernate.annotations.BatchSize;
+<%_ } _%>
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.BatchSize;
 
 /**
  * A user.
  */
+<%_ if (databaseType === 'sql') { _%>
 @Entity
 @Table(name = "<%= jhiTablePrefix %>_user")
+<%_ } _%>
 //@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class User extends PanacheEntityBase implements Serializable {
+public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } %>implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
-    @Id
 <%_ if (databaseType === 'sql') { _%>
+    @Id
 <%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 <%_ }  else { _%>
@@ -63,54 +70,76 @@ public class User extends PanacheEntityBase implements Serializable {
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
+<%_ if (databaseType === 'sql') { _%>
     @Column(length = 50, unique = true, nullable = false)
+<%_ } _%>
     public String login;
 
-    @JsonbTransient
     @NotNull
     @Size(min = 60, max = 60)
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "password_hash", length = 60, nullable = false)
+<%_ } _%>
+    @JsonbTransient
     public String password;
 
     @Size(max = 50)
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "first_name", length = 50)
+<%_ } _%>
     public String firstName;
 
     @Size(max = 50)
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "last_name", length = 50)
+<%_ } _%>
     public String lastName;
 
     @Email
     @Size(min = 5, max = 254)
+<%_ if (databaseType === 'sql') { _%>
     @Column(length = 254, unique = true)
+<%_ } _%>
     public String email;
 
     @NotNull
+<%_ if (databaseType === 'sql') { _%>
     @Column(nullable = false)
+<%_ } _%>
     public boolean activated = false;
 
     @Size(min = 2, max = 10)
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "lang_key", length = 10)
+<%_ } _%>
     public String langKey;
 
     @Size(max = 256)
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "image_url", length = 256)
+<%_ } _%>
     public String imageUrl;
 
     @Size(max = 20)
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "activation_key", length = 20)
+<%_ } _%>
     @JsonbTransient
     public String activationKey;
 
     @Size(max = 20)
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "reset_key", length = 20)
+<%_ } _%>
     @JsonbTransient
     public String resetKey;
 
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "reset_date")
+<%_ } _%>
     public Instant resetDate = null;
 
-    @JsonbTransient
+<%_ if (databaseType === 'sql') { _%>
     @ManyToMany
     @JoinTable(
         name = "<%= jhiTablePrefix %>_user_authority",
@@ -119,26 +148,36 @@ public class User extends PanacheEntityBase implements Serializable {
     )
     //    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     @BatchSize(size = 20)
+<%_ } _%>
+    @JsonbTransient
     public Set<Authority> authorities = new HashSet<>();
 
     //To move to an audit mechanism
     //    @CreatedBy
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)
+<%_ } _%>
     @JsonbTransient
     public String createdBy = "";
 
     //    @CreatedDate
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "created_date", updatable = false)
+<%_ } _%>
     @JsonbTransient
     public Instant createdDate = Instant.now();
 
     //    @LastModifiedBy
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "last_modified_by", length = 50)
+<%_ } _%>
     @JsonbTransient
     public String lastModifiedBy = "";
 
     //    @LastModifiedDate
+<%_ if (databaseType === 'sql') { _%>
     @Column(name = "last_modified_date")
+<%_ } _%>
     @JsonbTransient
     public Instant lastModifiedDate = Instant.now();
 
@@ -190,6 +229,7 @@ public class User extends PanacheEntityBase implements Serializable {
         );
     }
 
+<%_ if (databaseType === 'sql') { _%>
     public static Optional<User> findOneByActivationKey(String activationKey) {
         return find("activationKey", activationKey).firstResultOptional();
     }
@@ -229,4 +269,5 @@ public class User extends PanacheEntityBase implements Serializable {
     public static List<User> findAllByLoginNot(Page page, String login) {
         return find("login != ?1", login).page(page).list();
     }
+<%_ } _%>
 }
