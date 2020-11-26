@@ -223,6 +223,21 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
+                    file: 'package/service/dto/ManagementInfoDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/ManagementInfoDTO.java`
+                },
+
+                {
+                    file: 'package/service/ManagementInfoService.java',
+                    renameTo: generator => `${generator.javaDir}service/ManagementInfoService.java`
+                }
+            ]
+        },
+        {
+            condition: generator => !generator.skipUserManagement,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
                     file: 'package/service/mapper/UserMapper.java',
                     renameTo: generator => `${generator.javaDir}service/mapper/UserMapper.java`
                 },
@@ -265,15 +280,24 @@ const serverFiles = {
                 {
                     file: 'package/service/UserService.java',
                     renameTo: generator => `${generator.javaDir}service/UserService.java`
+                },
+                {
+                    file: 'package/service/MailService.java',
+                    renameTo: generator => `${generator.javaDir}service/MailService.java`
                 }
             ]
         },
         {
+            condition: generator => !generator.skipUserManagement,
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
                     file: 'package/service/mapper/UserMapperTest.java',
                     renameTo: generator => `${generator.javaDir}/service/mapper/UserMapperTest.java`
+                },
+                {
+                    file: 'package/domain/UserTest.java',
+                    renameTo: generator => `${generator.javaDir}/domain/UserTest.java`
                 }
             ]
         }
