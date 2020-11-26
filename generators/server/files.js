@@ -188,10 +188,6 @@ const serverFiles = {
                 {
                     file: 'package/security/jwt/TokenProvider.java',
                     renameTo: generator => `${generator.javaDir}security/jwt/TokenProvider.java`
-                },
-                {
-                    file: 'package/security/RandomUtil.java',
-                    renameTo: generator => `${generator.javaDir}security/RandomUtil.java`
                 }
             ]
         },
@@ -214,6 +210,10 @@ const serverFiles = {
                 {
                     file: 'package/security/UserNotActivatedException.java',
                     renameTo: generator => `${generator.javaDir}security/UserNotActivatedException.java`
+                },
+                {
+                    file: 'package/security/RandomUtil.java',
+                    renameTo: generator => `${generator.javaDir}security/RandomUtil.java`
                 }
             ]
         }
