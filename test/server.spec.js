@@ -12,8 +12,9 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         before(buildGeneratorContext());
 
         it('creates expected files for default configuration for server generator', () => {
-            assert.file(expectedFiles.server);
-            assert.file(expectedFiles.hibernateServer);
+            assert.file(expectedFiles.server.common);
+            assert.file(expectedFiles.server.userManagement);
+            assert.file(expectedFiles.server.hibernate);
             assert.file(expectedFiles.maven);
         });
 
@@ -37,13 +38,15 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             buildGeneratorContext({
                 databaseType: 'no',
                 devDatabaseType: 'no',
-                prodDatabaseType: 'no'
+                prodDatabaseType: 'no',
+                skipUserManagement: true
             })
         );
 
         it('creates expected files for default configuration for server generator', () => {
-            assert.file(expectedFiles.server);
-            assert.noFile(expectedFiles.hibernateServer);
+            assert.file(expectedFiles.server.common);
+            assert.noFile(expectedFiles.server.userManagement);
+            assert.noFile(expectedFiles.server.hibernate);
             assert.file(expectedFiles.maven);
         });
     });
@@ -56,7 +59,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         );
 
         it('creates expected files for default configuration for server generator', () => {
-            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.server.common);
             assert.file(expectedFiles.maven);
         });
 

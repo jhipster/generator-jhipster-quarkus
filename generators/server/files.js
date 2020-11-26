@@ -153,6 +153,7 @@ const serverFiles = {
     ],
     serverJavaDomain: [
         {
+            condition: generator => !generator.skipUserManagement,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
@@ -166,6 +167,7 @@ const serverFiles = {
             ]
         },
         {
+            condition: generator => !generator.skipUserManagement,
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
@@ -266,10 +268,6 @@ const serverFiles = {
                 {
                     file: 'package/service/mapper/UserMapperTest.java',
                     renameTo: generator => `${generator.javaDir}/service/mapper/UserMapperTest.java`
-                },
-                {
-                    file: 'package/domain/UserTest.java',
-                    renameTo: generator => `${generator.javaDir}/domain/UserTest.java`
                 }
             ]
         }
