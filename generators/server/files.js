@@ -340,6 +340,28 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
+                    file: 'package/web/rest/ManagementInfoResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResource.java`
+                },
+                {
+                    file: 'package/web/rest/SpaFilter.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
+                },
+                {
+                    file: 'package/web/util/HeaderUtil.java',
+                    renameTo: generator => `${generator.javaDir}web/util/HeaderUtil.java`
+                },
+                {
+                    file: 'package/web/util/ResponseUtil.java',
+                    renameTo: generator => `${generator.javaDir}web/util/ResponseUtil.java`
+                }
+            ]
+        },
+        {
+            condition: generator => !generator.skipUserManagement,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
                     file: 'package/web/rest/vm/KeyAndPasswordVM.java',
                     renameTo: generator => `${generator.javaDir}web/rest/vm/KeyAndPasswordVM.java`
                 },
@@ -356,32 +378,26 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}web/rest/AccountResource.java`
                 },
                 {
-                    file: 'package/web/rest/ManagementInfoResource.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResource.java`
-                },
-                {
-                    file: 'package/web/rest/SpaFilter.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
-                },
-                {
                     file: 'package/web/rest/UserJWTController.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserJWTController.java`
                 },
                 {
                     file: 'package/web/rest/UserResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResource.java`
-                },
-                {
-                    file: 'package/web/util/HeaderUtil.java',
-                    renameTo: generator => `${generator.javaDir}web/util/HeaderUtil.java`
-                },
-                {
-                    file: 'package/web/util/ResponseUtil.java',
-                    renameTo: generator => `${generator.javaDir}web/util/ResponseUtil.java`
                 }
             ]
         },
         {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/ManagementInfoResourceTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResourceTest.java`
+                }
+            ]
+        },
+        {
+            condition: generator => !generator.skipUserManagement,
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
@@ -395,10 +411,6 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/UserResourceTest.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResourceTest.java`
-                },
-                {
-                    file: 'package/web/rest/ManagementInfoResourceTest.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResourceTest.java`
                 }
             ]
         }
