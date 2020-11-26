@@ -10,10 +10,6 @@ const expectedFiles = {
             `${SERVER_MAIN_RES_DIR}application.properties`,
             `${SERVER_MAIN_RES_DIR}jwt/privateKey.pem`,
             `${SERVER_MAIN_RES_DIR}META-INF/resources/publicKey.pem`,
-            `${SERVER_MAIN_RES_DIR}templates/mail/activationEmail.html`,
-            `${SERVER_MAIN_RES_DIR}templates/mail/activationEmail.html`,
-            `${SERVER_MAIN_RES_DIR}templates/mail/creationEmail.html`,
-            `${SERVER_MAIN_RES_DIR}templates/mail/passwordResetEmail.html`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/Constants.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JsonbConfiguration.java`,
@@ -38,6 +34,9 @@ const expectedFiles = {
         ],
 
         userManagement: [
+            `${SERVER_MAIN_RES_DIR}templates/mail/activationEmail.html`,
+            `${SERVER_MAIN_RES_DIR}templates/mail/creationEmail.html`,
+            `${SERVER_MAIN_RES_DIR}templates/mail/passwordResetEmail.html`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Authority.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/AuthorityTest.java`,
