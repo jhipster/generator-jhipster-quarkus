@@ -48,6 +48,7 @@ const expectedFiles = {
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/AuthorityTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/UserTest.java`,
+        `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/MailServiceIT.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/mapper/UserMapperTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerTest.java`,
