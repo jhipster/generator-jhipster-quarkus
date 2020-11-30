@@ -66,11 +66,7 @@ const serverFiles = {
     serverResource: [
         {
             path: SERVER_MAIN_RES_DIR,
-            templates: [
-                { file: 'default_banner.txt', method: 'copy', noEjs: true },
-                'application.properties',
-                'resources-config.json'
-            ]
+            templates: [{ file: 'default_banner.txt', method: 'copy', noEjs: true }, 'application.properties', 'resources-config.json']
         },
         {
             condition: generator => generator.authenticationType === 'jwt',
@@ -80,7 +76,7 @@ const serverFiles = {
                 { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
                 'templates/mail/activationEmail.html',
                 'templates/mail/creationEmail.html',
-                'templates/mail/passwordResetEmail.html',
+                'templates/mail/passwordResetEmail.html'
             ]
         }
     ],
@@ -183,7 +179,6 @@ const serverFiles = {
         {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
-
                 {
                     file: 'package/security/AuthoritiesConstants.java',
                     renameTo: generator => `${generator.javaDir}security/AuthoritiesConstants.java`
@@ -213,9 +208,9 @@ const serverFiles = {
                 {
                     file: 'package/security/BCryptPasswordHasher.java',
                     renameTo: generator => `${generator.javaDir}security/BCryptPasswordHasher.java`
-                },
-            ],
-        },
+                }
+            ]
+        }
     ],
     serverJavaService: [
         {
@@ -378,11 +373,11 @@ const serverFiles = {
             templates: [
                 {
                     file: 'package/web/rest/AuthInfoResource.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/AuthInfoResource.java`,
+                    renameTo: generator => `${generator.javaDir}web/rest/AuthInfoResource.java`
                 },
                 {
                     file: 'package/web/rest/LogoutResource.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/LogoutResource.java`,
+                    renameTo: generator => `${generator.javaDir}web/rest/LogoutResource.java`
                 }
             ]
         },
