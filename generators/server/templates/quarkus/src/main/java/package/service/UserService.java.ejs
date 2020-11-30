@@ -21,20 +21,34 @@ package <%=packageName%>.service;
 import <%=packageName%>.config.Constants;
 import <%=packageName%>.domain.Authority;
 import <%=packageName%>.domain.User;
+<%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.security.BCryptPasswordHasher;
 import <%=packageName%>.security.RandomUtil;
+<%_ } _%>
 import <%=packageName%>.service.dto.UserDTO;
 import io.quarkus.panache.common.Page;
 import java.time.Instant;
+<%_ if (authenticationType === 'oauth2') { _%>
+import java.util.Collection;
+<%_ } _%>
+<%_ if (authenticationType === 'jwt') { _%>
 import java.util.HashSet;
+<%_ } _%>
 import java.util.List;
 import java.util.Optional;
+<%_ if (authenticationType === 'jwt') { _%>
 import java.util.Set;
+<%_ } _%>
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
+<%_ if (authenticationType === 'jwt') { _%>
 import javax.inject.Inject;
+<%_ } _%>
 import javax.transaction.Transactional;
+<%_ if (authenticationType === 'oauth2') { _%>
+import org.eclipse.microprofile.jwt.JsonWebToken;
+<%_ } _%>
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +56,8 @@ import org.slf4j.LoggerFactory;
 @Transactional
 public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
+
+<%_ if (authenticationType !== 'oauth2') { _%>
 
     final BCryptPasswordHasher passwordHasher;
 
@@ -185,30 +201,31 @@ public class UserService {
         return user;
     }
 
-    /**
-     * Update basic information (first name, last name, email, language) for the current user.
-     *
-     * @param login     the login to find the user to update.
-     * @param firstName first name of user.
-     * @param lastName  last name of user.
-     * @param email     email id of user.
-     * @param langKey   language key.
-     * @param imageUrl  image URL of user.
-     */
-    public void updateUser(String login, String firstName, String lastName, String email, String langKey, String imageUrl) {
+    public void deleteUser(String login) {
         User
             .findOneByLogin(login)
             .ifPresent(
                 user -> {
-                    user.firstName = firstName;
-                    user.lastName = lastName;
-                    if (email != null) {
-                        user.email = email.toLowerCase();
+                    User.delete("id", user.id);
+                    //            this.clearUserCaches(user);
+                    log.debug("Deleted User: {}", user);
+                }
+            );
+    }
+
+    public void changePassword(String login, String currentClearTextPassword, String newPassword) {
+        User
+            .findOneByLogin(login)
+            .ifPresent(
+                user -> {
+                    String currentEncryptedPassword = user.password;
+                    if (!passwordHasher.checkPassword(currentClearTextPassword, currentEncryptedPassword)) {
+                        throw new InvalidPasswordException();
                     }
-                    user.langKey = langKey;
-                    user.imageUrl = imageUrl;
+                    String encryptedPassword = passwordHasher.hash(newPassword);
+                    user.password = encryptedPassword;
                     //                this.clearUserCaches(user);
-                    log.debug("Changed Information for User: {}", user);
+                    log.debug("Changed password for User: {}", user);
                 }
             );
     }
@@ -249,31 +266,31 @@ public class UserService {
             .map(UserDTO::new);
     }
 
-    public void deleteUser(String login) {
+<%_ } _%>
+    /**
+     * Update basic information (first name, last name, email, language) for the current user.
+     *
+     * @param login     the login to find the user to update.
+     * @param firstName first name of user.
+     * @param lastName  last name of user.
+     * @param email     email id of user.
+     * @param langKey   language key.
+     * @param imageUrl  image URL of user.
+     */
+    public void updateUser(String login, String firstName, String lastName, String email, String langKey, String imageUrl) {
         User
             .findOneByLogin(login)
             .ifPresent(
                 user -> {
-                    User.delete("id", user.id);
-                    //            this.clearUserCaches(user);
-                    log.debug("Deleted User: {}", user);
-                }
-            );
-    }
-
-    public void changePassword(String login, String currentClearTextPassword, String newPassword) {
-        User
-            .findOneByLogin(login)
-            .ifPresent(
-                user -> {
-                    String currentEncryptedPassword = user.password;
-                    if (!passwordHasher.checkPassword(currentClearTextPassword, currentEncryptedPassword)) {
-                        throw new InvalidPasswordException();
+                    user.firstName = firstName;
+                    user.lastName = lastName;
+                    if (email != null) {
+                        user.email = email.toLowerCase();
                     }
-                    String encryptedPassword = passwordHasher.hash(newPassword);
-                    user.password = encryptedPassword;
+                    user.langKey = langKey;
+                    user.imageUrl = imageUrl;
                     //                this.clearUserCaches(user);
-                    log.debug("Changed password for User: {}", user);
+                    log.debug("Changed Information for User: {}", user);
                 }
             );
     }
@@ -289,4 +306,109 @@ public class UserService {
     public List<String> getAuthorities() {
         return Authority.<Authority>streamAll().map(authority -> authority.name).collect(Collectors.toList());
     }
+
+<%_ if (authenticationType == 'oauth2') { _%>
+    private User syncUserWithIdP(JsonWebToken jwt, User user) {
+        // save authorities in to sync user roles/groups between IdP and JHipster's local database
+        Collection<String> dbAuthorities = getAuthorities();
+        Collection<String> userAuthorities =
+            user.authorities.stream().map(authority -> authority.name).collect(Collectors.toList());
+        for (String authority : userAuthorities) {
+            if (!dbAuthorities.contains(authority)) {
+                log.debug("Saving authority '{}' in local database", authority);
+                Authority authorityToSave = new Authority();
+                authorityToSave.name = authority;
+                authorityToSave.persist();
+            }
+        }
+        // save account in to sync users between IdP and JHipster's local database
+        Optional<User> existingUser = User.findOneByLogin(user.login);
+        if (existingUser.isPresent()) {
+            // if IdP sends last updated information, use it to determine if an update should happen
+            if (jwt.getClaim("updated_at") != null) {
+                Instant dbModifiedDate = existingUser.get().lastModifiedDate;
+                Instant idpModifiedDate = (Instant) jwt.getClaim("updated_at");
+                if (idpModifiedDate.isAfter(dbModifiedDate)) {
+                    log.debug("Updating user '{}' in local database", user.login);
+                    updateUser(user.login, user.firstName, user.lastName, user.email,
+                        user.langKey, user.imageUrl);
+                }
+                // no last updated info, blindly update
+            } else {
+                log.debug("Updating user '{}' in local database", user.login);
+                updateUser(user.login, user.firstName, user.lastName, user.email,
+                    user.langKey, user.imageUrl);
+            }
+        } else {
+            log.debug("Saving user '{}' in local database", user.login);
+//            user.persist();
+//            this.clearUserCaches(user);
+        }
+        return user;
+    }
+
+    /**
+     * Returns the user from an OAuth 2.0 login or resource server with JWT.
+     * Synchronizes the user in the local repository.
+     *
+     * @param jwt the authentication token.
+     * @return the user from the authentication.
+     */
+     public UserDTO getUserFromAuthentication(JsonWebToken jwt) {
+        User user = getUser(jwt);
+//        var authorities = jwt.claim()
+        return new UserDTO(syncUserWithIdP(jwt, user));
+    }
+
+    private static User getUser(JsonWebToken jwt) {
+        User user = new User();
+        // handle resource server JWT, where sub claim is email and uid is ID
+        if (jwt.getClaim("uid") != null) {
+            user.id = 1L; // (String) jwt.getClaim("uid");
+            user.login = jwt.getClaim("sub");
+        } else {
+            user.id = 1L; // (String) jwt.getClaim("sub");
+        }
+        if (jwt.getClaim("preferred_username") != null) {
+            user.login = ((String) jwt.getClaim("preferred_username")).toLowerCase();
+        } else if (user.login == null) {
+            user.login = "111"; //user.id;
+        }
+        if (jwt.getClaim("given_name") != null) {
+            user.firstName = jwt.getClaim("given_name");
+        }
+        if (jwt.getClaim("family_name") != null) {
+            user.lastName = jwt.getClaim("family_name");
+        }
+        if (jwt.getClaim("email_verified") != null) {
+            user.activated = jwt.getClaim("email_verified");
+        }
+        if (jwt.getClaim("email") != null) {
+            user.email = ((String) jwt.getClaim("email")).toLowerCase();
+        } else {
+            user.email = jwt.getClaim("sub");
+        }
+        if (jwt.getClaim("langKey") != null) {
+            user.langKey = (String) jwt.getClaim("langKey");
+        } else if (jwt.getClaim("locale") != null) {
+            // trim off country code if it exists
+            String locale = jwt.getClaim("locale");
+            if (locale.contains("_")) {
+                locale = locale.substring(0, locale.indexOf('_'));
+            } else if (locale.contains("-")) {
+                locale = locale.substring(0, locale.indexOf('-'));
+            }
+            user.langKey = locale.toLowerCase();
+        } else {
+            // set langKey to default if not specified by IdP
+            user.langKey = Constants.DEFAULT_LANGUAGE;
+        }
+        if (jwt.getClaim("picture") != null) {
+            user.imageUrl = jwt.getClaim("picture");
+        }
+        user.activated = true;
+        return user;
+    }
+<%_ } _%>
+
 }

@@ -66,12 +66,14 @@ public class User extends PanacheEntityBase implements Serializable {
     @Column(length = 50, unique = true, nullable = false)
     public String login;
 
+<%_ if (authenticationType !== 'oauth2') { _%>
     @JsonbTransient
     @NotNull
     @Size(min = 60, max = 60)
     @Column(name = "password_hash", length = 60, nullable = false)
     public String password;
 
+<%_ } _%>
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
     public String firstName;
@@ -97,6 +99,7 @@ public class User extends PanacheEntityBase implements Serializable {
     @Column(name = "image_url", length = 256)
     public String imageUrl;
 
+<%_ if (authenticationType !== 'oauth2') { _%>
     @Size(max = 20)
     @Column(name = "activation_key", length = 20)
     @JsonbTransient
@@ -110,6 +113,7 @@ public class User extends PanacheEntityBase implements Serializable {
     @Column(name = "reset_date")
     public Instant resetDate = null;
 
+<%_ } _%>
     @JsonbTransient
     @ManyToMany
     @JoinTable(
@@ -177,6 +181,7 @@ public class User extends PanacheEntityBase implements Serializable {
             ", imageUrl='" +
             imageUrl +
             '\'' +
+<%_ if (authenticationType !== 'oauth2') { _%>
             ", activated='" +
             activated +
             '\'' +
@@ -186,10 +191,12 @@ public class User extends PanacheEntityBase implements Serializable {
             ", activationKey='" +
             activationKey +
             '\'' +
+<%_ } _%>
             "}"
         );
     }
 
+<%_ if (authenticationType !== 'oauth2') { _%>
     public static Optional<User> findOneByActivationKey(String activationKey) {
         return find("activationKey", activationKey).firstResultOptional();
     }
@@ -202,6 +209,7 @@ public class User extends PanacheEntityBase implements Serializable {
         return find("resetKey", resetKey).firstResultOptional();
     }
 
+<%_ } _%>
     public static Optional<User> findOneByEmailIgnoreCase(String email) {
         return find("LOWER(email) = LOWER(?1)", email).firstResultOptional();
     }

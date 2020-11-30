@@ -20,10 +20,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-elytron-security</artifactId>
         </dependency>
+<%_ if (authenticationType === 'jwt') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-jwt</artifactId>
         </dependency>
+<%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>

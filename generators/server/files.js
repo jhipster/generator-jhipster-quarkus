@@ -68,13 +68,19 @@ const serverFiles = {
             path: SERVER_MAIN_RES_DIR,
             templates: [
                 { file: 'default_banner.txt', method: 'copy', noEjs: true },
+                'application.properties',
+                'resources-config.json'
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'jwt',
+            path: SERVER_MAIN_RES_DIR,
+            templates: [
                 { file: 'jwt/privateKey.pem', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
                 'templates/mail/activationEmail.html',
                 'templates/mail/creationEmail.html',
                 'templates/mail/passwordResetEmail.html',
-                'application.properties',
-                'resources-config.json'
             ]
         }
     ],
@@ -177,17 +183,10 @@ const serverFiles = {
         {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
-                {
-                    file: 'package/security/jwt/TokenProvider.java',
-                    renameTo: generator => `${generator.javaDir}security/jwt/TokenProvider.java`
-                },
+
                 {
                     file: 'package/security/AuthoritiesConstants.java',
                     renameTo: generator => `${generator.javaDir}security/AuthoritiesConstants.java`
-                },
-                {
-                    file: 'package/security/BCryptPasswordHasher.java',
-                    renameTo: generator => `${generator.javaDir}security/BCryptPasswordHasher.java`
                 },
                 {
                     file: 'package/security/RandomUtil.java',
@@ -202,7 +201,21 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}security/UserNotActivatedException.java`
                 }
             ]
-        }
+        },
+        {
+            condition: generator => generator.authenticationType === 'jwt',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/security/jwt/TokenProvider.java',
+                    renameTo: generator => `${generator.javaDir}security/jwt/TokenProvider.java`
+                },
+                {
+                    file: 'package/security/BCryptPasswordHasher.java',
+                    renameTo: generator => `${generator.javaDir}security/BCryptPasswordHasher.java`
+                },
+            ],
+        },
     ],
     serverJavaService: [
         {
@@ -213,16 +226,30 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/mapper/UserMapper.java`
                 },
                 {
-                    file: 'package/service/dto/PasswordChangeDTO.java',
-                    renameTo: generator => `${generator.javaDir}service/dto/PasswordChangeDTO.java`
-                },
-                {
                     file: 'package/service/dto/UserDTO.java',
                     renameTo: generator => `${generator.javaDir}service/dto/UserDTO.java`
                 },
                 {
                     file: 'package/service/dto/ManagementInfoDTO.java',
                     renameTo: generator => `${generator.javaDir}service/dto/ManagementInfoDTO.java`
+                },
+                {
+                    file: 'package/service/ManagementInfoService.java',
+                    renameTo: generator => `${generator.javaDir}service/ManagementInfoService.java`
+                },
+                {
+                    file: 'package/service/UserService.java',
+                    renameTo: generator => `${generator.javaDir}service/UserService.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'jwt',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/dto/PasswordChangeDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/PasswordChangeDTO.java`
                 },
                 {
                     file: 'package/service/AuthenticationService.java',
@@ -241,16 +268,8 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/MailService.java`
                 },
                 {
-                    file: 'package/service/ManagementInfoService.java',
-                    renameTo: generator => `${generator.javaDir}service/ManagementInfoService.java`
-                },
-                {
                     file: 'package/service/UsernameAlreadyUsedException.java',
                     renameTo: generator => `${generator.javaDir}service/UsernameAlreadyUsedException.java`
-                },
-                {
-                    file: 'package/service/UserService.java',
-                    renameTo: generator => `${generator.javaDir}service/UserService.java`
                 }
             ]
         },
@@ -275,7 +294,13 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/errors/BadRequestAlertException.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/BadRequestAlertException.java`
-                },
+                }
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'jwt',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
                 {
                     file: 'package/web/rest/errors/EmailAlreadyUsedException.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/EmailAlreadyUsedException.java`
@@ -300,14 +325,6 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
-                    file: 'package/web/rest/vm/KeyAndPasswordVM.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/vm/KeyAndPasswordVM.java`
-                },
-                {
-                    file: 'package/web/rest/vm/LoginVM.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/vm/LoginVM.java`
-                },
-                {
                     file: 'package/web/rest/vm/ManagedUserVM.java',
                     renameTo: generator => `${generator.javaDir}web/rest/vm/ManagedUserVM.java`
                 },
@@ -324,10 +341,6 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
                 },
                 {
-                    file: 'package/web/rest/UserJWTController.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTController.java`
-                },
-                {
                     file: 'package/web/rest/UserResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResource.java`
                 },
@@ -338,6 +351,38 @@ const serverFiles = {
                 {
                     file: 'package/web/util/ResponseUtil.java',
                     renameTo: generator => `${generator.javaDir}web/util/ResponseUtil.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'jwt',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/vm/KeyAndPasswordVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/vm/KeyAndPasswordVM.java`
+                },
+                {
+                    file: 'package/web/rest/vm/LoginVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/vm/LoginVM.java`
+                },
+                {
+                    file: 'package/web/rest/UserJWTController.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTController.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'oauth2',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/AuthInfoResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AuthInfoResource.java`,
+                },
+                {
+                    file: 'package/web/rest/LogoutResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/LogoutResource.java`,
                 }
             ]
         },
@@ -399,6 +444,7 @@ const serverFilesFromJHipster = {
         {
             condition: generator =>
                 (generator.authenticationType === 'oauth2' &&
+                    generator.applicationType !== 'microservice' &&
                     generator.applicationType !== 'microservice' &&
                     generator.databaseType === 'sql') ||
                 (!generator.skipUserManagement && generator.databaseType === 'sql'),

@@ -18,22 +18,30 @@
 -%>
 package <%=packageName%>.web.rest;
 
+<%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.domain.User;
 import <%=packageName%>.service.InvalidPasswordException;
 import <%=packageName%>.service.MailService;
+<%_ } _%>
 import <%=packageName%>.service.UserService;
+<%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.service.UsernameAlreadyUsedException;
 import <%=packageName%>.service.dto.PasswordChangeDTO;
+<%_ } _%>
 import <%=packageName%>.service.dto.UserDTO;
+<%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.web.rest.errors.EmailAlreadyUsedException;
 import <%=packageName%>.web.rest.errors.EmailNotFoundException;
 import <%=packageName%>.web.rest.errors.LoginAlreadyUsedException;
 import <%=packageName%>.web.rest.vm.KeyAndPasswordVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
+<%_ } _%>
 import io.quarkus.security.Authenticated;
+<%_ if (authenticationType === 'jwt') { _%>
 import java.security.Principal;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
+<%_ } _%>
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -43,6 +51,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+<%_ if (authenticationType === 'oauth2') { _%>
+import org.eclipse.microprofile.jwt.JsonWebToken;
+<%_ } _%>
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,14 +74,70 @@ public class AccountResource {
         }
     }
 
+<%_ if (authenticationType !== 'oauth2') { _%>
     final MailService mailService;
 
+<%_ } _%>
     final UserService userService;
 
     @Inject
-    public AccountResource(MailService mailService, UserService userService) {
+    public AccountResource(<%_ if (authenticationType !== 'oauth2') { _%>MailService mailService, <%_ } _%>UserService userService) {
+<%_ if (authenticationType !== 'oauth2') { _%>
         this.mailService = mailService;
+<%_ } _%>
         this.userService = userService;
+    }
+
+    /**
+     * {@code GET /account} : get the current user.
+     *
+     * @return the current user.
+     * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
+     */
+    @GET
+    @Path("/account")
+    @Authenticated
+    public UserDTO getAccount(@Context SecurityContext ctx) {
+<%_ if (authenticationType === 'jwt') { _%>
+        return userService
+            .getUserWithAuthoritiesByLogin(ctx.getUserPrincipal().getName())
+            .map(UserDTO::new)
+            .orElseThrow(() -> new AccountResourceException("User could not be found"));
+<%_ } _%>
+<%_ if (authenticationType === 'oauth2') { _%>
+        var principal = ctx.getUserPrincipal();
+        if (principal instanceof JsonWebToken) {
+            return userService.getUserFromAuthentication((JsonWebToken) principal);
+        } else {
+            throw new AccountResourceException("User could not be found");
+        }
+<%_ } _%>
+    }
+
+<%_ if (authenticationType !== 'oauth2') { _%>
+    /**
+     * {@code POST /account} : update the current user information.
+     *
+     * @param userDTO the current user information.
+     * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
+     * @throws RuntimeException          {@code 500 (Internal Server Error)} if the user login wasn't found.
+     */
+    @POST
+    @Path("/account")
+    public Response saveAccount(@Valid UserDTO userDTO, @Context SecurityContext ctx) {
+        var userLogin = Optional
+            .ofNullable(ctx.getUserPrincipal().getName())
+            .orElseThrow(() -> new AccountResourceException("Current user login not found"));
+        var existingUser = User.findOneByEmailIgnoreCase(userDTO.email);
+        if (existingUser.isPresent() && (!existingUser.get().login.equalsIgnoreCase(userLogin))) {
+            throw new EmailAlreadyUsedException();
+        }
+        var user = User.findOneByLogin(userLogin);
+        if (!user.isPresent()) {
+            throw new AccountResourceException("User could not be found");
+        }
+        userService.updateUser(userLogin, userDTO.firstName, userDTO.lastName, userDTO.email, userDTO.langKey, userDTO.imageUrl);
+        return Response.ok().build();
     }
 
     /**
@@ -127,47 +194,6 @@ public class AccountResource {
     public String isAuthenticated(@Context SecurityContext ctx) {
         log.debug("REST request to check if the current user is authenticated");
         return Optional.ofNullable(ctx.getUserPrincipal()).map(Principal::getName).orElse("");
-    }
-
-    /**
-     * {@code GET /account} : get the current user.
-     *
-     * @return the current user.
-     * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
-     */
-    @GET
-    @Path("/account")
-    @Authenticated
-    public UserDTO getAccount(@Context SecurityContext ctx) {
-        return userService
-            .getUserWithAuthoritiesByLogin(ctx.getUserPrincipal().getName())
-            .map(UserDTO::new)
-            .orElseThrow(() -> new AccountResourceException("User could not be found"));
-    }
-
-    /**
-     * {@code POST /account} : update the current user information.
-     *
-     * @param userDTO the current user information.
-     * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
-     * @throws RuntimeException          {@code 500 (Internal Server Error)} if the user login wasn't found.
-     */
-    @POST
-    @Path("/account")
-    public Response saveAccount(@Valid UserDTO userDTO, @Context SecurityContext ctx) {
-        var userLogin = Optional
-            .ofNullable(ctx.getUserPrincipal().getName())
-            .orElseThrow(() -> new AccountResourceException("Current user login not found"));
-        var existingUser = User.findOneByEmailIgnoreCase(userDTO.email);
-        if (existingUser.isPresent() && (!existingUser.get().login.equalsIgnoreCase(userLogin))) {
-            throw new EmailAlreadyUsedException();
-        }
-        var user = User.findOneByLogin(userLogin);
-        if (!user.isPresent()) {
-            throw new AccountResourceException("User could not be found");
-        }
-        userService.updateUser(userLogin, userDTO.firstName, userDTO.lastName, userDTO.email, userDTO.langKey, userDTO.imageUrl);
-        return Response.ok().build();
     }
 
     /**
@@ -231,4 +257,5 @@ public class AccountResource {
             password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH
         );
     }
+<%_ } _%>
 }
