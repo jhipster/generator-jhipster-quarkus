@@ -18,14 +18,30 @@
 -%>
 task containerImageBuild {
     group = 'jib'
-    System.setProperty('quarkus.container-image.build', 'true')
+    doFirst {
+        System.setProperty('quarkus.container-image.build', 'true')
+    }
     finalizedBy 'assemble'
 }
 
 task containerImagePush {
     group = 'jib'
-    System.setProperty('quarkus.container-image.build', 'true')
-    System.setProperty('container-image.push', 'true')
+    doFirst {
+        System.setProperty('quarkus.container-image.build', 'true')
+        System.setProperty('quarkus.container-image.push', 'true')
+    }
+    finalizedBy 'assemble'
+}
+
+task containerNativeImage {
+    group = 'jib'
+    doFirst {
+        System.setProperty('quarkus.container-image.build', 'true')
+        System.setProperty('quarkus.container-image.push', 'true')
+        System.setProperty('quarkus.native.container-build', 'true')
+        System.setProperty('quarkus.container-image.build', 'true')
+        System.setProperty('quarkus.package.type', 'native')
+    }
     finalizedBy 'assemble'
 }
 

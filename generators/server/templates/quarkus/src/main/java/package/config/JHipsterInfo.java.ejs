@@ -16,11 +16,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-elytron-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-smallrye-jwt</artifactId>
-        </dependency>
+package <%=packageName%>.config;
+
+import io.quarkus.arc.config.ConfigProperties;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+
+@ConfigProperties(prefix = "jhipster.info")
+public interface JHipsterInfo {
+
+    @ConfigProperty(name = "swagger.enable", defaultValue = "true")
+    Boolean isEnable();
+
+}

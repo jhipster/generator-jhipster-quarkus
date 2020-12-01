@@ -16,11 +16,21 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-elytron-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-smallrye-jwt</artifactId>
-        </dependency>
+package <%=packageName%>.config.mock;
+
+import <%=packageName%>.config.JHipsterInfo;
+import io.quarkus.test.Mock;
+
+import javax.enterprise.context.ApplicationScoped;
+
+@Mock
+@ApplicationScoped
+public class JHipsterInfoMock implements JHipsterInfo {
+
+    public static Boolean enable;
+
+    @Override
+    public Boolean isEnable() {
+        return enable;
+    }
+}

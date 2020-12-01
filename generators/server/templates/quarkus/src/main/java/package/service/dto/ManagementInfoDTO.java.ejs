@@ -16,11 +16,23 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-elytron-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-smallrye-jwt</artifactId>
-        </dependency>
+package <%=packageName%>.service.dto;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+import javax.json.bind.annotation.JsonbProperty;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+*  DTO to emulate /management/info response
+*/
+@RegisterForReflection
+public class ManagementInfoDTO {
+
+    public List<String> activeProfiles = new ArrayList<>();
+
+    @JsonbProperty("display-ribbon-on-profiles")
+    public String displayRibbonOnProfiles;
+
+}
