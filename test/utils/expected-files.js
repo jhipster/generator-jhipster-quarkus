@@ -3,10 +3,13 @@ const constants = require('generator-jhipster/generators/generator-constants');
 const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
 const SERVER_MAIN_RES_DIR = constants.SERVER_MAIN_RES_DIR;
 const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
+const DOCKER_DIR = constants.DOCKER_DIR;
 // const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
 
 const expectedFiles = {
     maven: ['pom.xml', 'mvnw', 'mvnw.cmd', '.mvn/wrapper/maven-wrapper.jar', '.mvn/wrapper/maven-wrapper.properties'],
+
+    docker: [`${DOCKER_DIR}Dockerfile.jvm`, `${DOCKER_DIR}Dockerfile.native`, `${DOCKER_DIR}Dockerfile.fast-jar`],
 
     server: [
         `${SERVER_MAIN_RES_DIR}application.properties`,

@@ -42,6 +42,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server);
             assert.file(expectedFiles.maven);
+            assert.file(expectedFiles.docker);
         });
     });
 });
