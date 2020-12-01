@@ -104,19 +104,13 @@ docker-compose -f src/main/docker/keycloak.yml up
 
 The security settings in `src/main/resources/config/application.yml` are configured for this image.
 
-```yaml
-spring:
-  ...
-  security:
-    oauth2:
-      client:
-        provider:
-          oidc:
-            issuer-uri: http://localhost:9080/auth/realms/jhipster
-        registration:
-          oidc:
-            client-id: web_app
-            client-secret: web_app
+```properties
+quarkus.oidc.enabled=true
+quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
+quarkus.oidc.client-id=web_app
+quarkus.oidc.credentials.secret=web_app
+quarkus.oidc.authentication.scopes=profile
+quarkus.oidc.application-type=web-app
 ```
 
 ### Okta
@@ -125,20 +119,13 @@ If you'd like to use Okta instead of Keycloak, you'll need to change a few thing
 
 Modify `src/main/resources/config/application.yml` to use your Okta settings.
 
-```yaml
-spring:
-  ...
-  security:
-    oauth2:
-      client:
-        provider:
-          oidc:
-            issuer-uri: https://{yourOktaDomain}/oauth2/default
-        registration:
-          oidc:
-            client-id: {clientId}
-            client-secret: {clientSecret}
-security:
+```properties
+quarkus.oidc.enabled=true
+quarkus.oidc.auth-server-url=https://{yourOktaDomain}/oauth2/default
+quarkus.oidc.client-id={clientId}
+quarkus.oidc.credentials.secret={clientSecret}
+quarkus.oidc.authentication.scopes=profile
+quarkus.oidc.application-type=web-app
 ```
 
 Create an OIDC App in Okta to get a `{clientId}` and `{clientSecret}`. To do this, log in to your Okta Developer account and navigate to **Applications** > **Add Application**. Click **Web** and click the **Next** button. Give the app a name you’ll remember, specify `http://localhost:8080` as a Base URI, and `http://localhost:8080/login/oauth2/code/oidc` as a Login Redirect URI. Click **Done**, then Edit and add `http://localhost:8080` as a Logout redirect URI. Copy and paste the client ID and secret into your `application.yml` file.
