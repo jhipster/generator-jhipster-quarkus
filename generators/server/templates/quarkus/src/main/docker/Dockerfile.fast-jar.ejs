@@ -3,7 +3,11 @@
 #
 # Before building the docker image run:
 #
-# mvn package
+<%_ if(buildTool === 'maven') { _%>
+# ./mvnw -Pprod clean verify
+<%_ } else { _%>
+# ./gradlew -Pprod clean bootJar
+<%_ } _%>
 #
 # Then, build the image with:
 #
