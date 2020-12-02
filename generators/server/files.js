@@ -302,6 +302,10 @@ const serverFiles = {
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
+                    file: 'package/service/MailServiceIT.java',
+                    renameTo: generator => `${generator.javaDir}/service/MailServiceIT.java`
+                },
+                {
                     file: 'package/service/mapper/UserMapperTest.java',
                     renameTo: generator => `${generator.javaDir}/service/mapper/UserMapperTest.java`
                 },
