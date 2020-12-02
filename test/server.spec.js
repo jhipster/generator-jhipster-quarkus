@@ -65,7 +65,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
     describe('With monolith Gradle Mysql', () => {
         before(
-            buildGeneratorContext({
+            buildServerGeneratorContext({
                 buildTool: 'gradle',
                 cacheProvider: 'caffeine'
             })
