@@ -1,15 +1,17 @@
 application {
-    config {
-      applicationType monolith
-      authenticationType jwt
-      baseName jhipsterSampleApplication
-      buildTool maven
-      databaseType sql
-      packageName io.github.jhipster.sample
-      prodDatabaseType mysql
-    }
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName jhipsterSampleApplication
+    buildTool maven
+    databaseType sql
+    packageName io.github.jhipster.sample
+    prodDatabaseType mysql
+    enableHibernateCache true
+    cacheProvider caffeine
+  }
 
-    entities *
+  entities *
 }
 
 entity BankAccount {
@@ -34,6 +36,4 @@ relationship ManyToMany {
   Operation{label(label)} to Label{operation}
 }
 
-dto BankAccount, Label, Operation with mapstruct
-paginate Operation with pagination
-service Operation with serviceImpl
+paginate Operation with infinite-scroll

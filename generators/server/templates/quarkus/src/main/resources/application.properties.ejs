@@ -18,7 +18,13 @@
 -%>
 application.name=<%= baseName %>
 
+<%_ if(databaseType !== 'no') { _%>
 <%- include('../../../partials/data_application.properties.ejs', { baseName: baseName, BUILD_DIR: BUILD_DIR, devDatabaseType:devDatabaseType, prodDatabaseType: prodDatabaseType}) -%>
+<%_ } _%>
+<% if(cacheManagerIsAvailable) { %>
+<%- include('../../../partials/cache_application.properties.ejs') -%>
+<% } %>
+
 quarkus.mailer.from=<%= dasherizedBaseName %>@localhost
 quarkus.mailer.host=localhost
 quarkus.mailer.port=25
@@ -41,6 +47,7 @@ jhipster.info.swagger.enable=true
 
 quarkus.http.auth.permission.public.paths=/api/authenticate,/api/register,/api/activate,/api/account/reset-password/init,/api/account/reset-password/finish,/management/health,/management/info,/management/prometheus
 quarkus.http.auth.permission.public.policy=permit
+<%_ if(!skipUserManagement) { _%>
 
 quarkus.http.auth.policy.admin-role.roles-allowed=ROLE_ADMIN
 quarkus.http.auth.permission.admin.paths=/api/users,/management/**
@@ -49,6 +56,7 @@ quarkus.http.auth.permission.admin.policy=admin-role
 quarkus.http.auth.policy.user-role.roles-allowed=ROLE_USER
 quarkus.http.auth.permission.user.paths=/api/**
 quarkus.http.auth.permission.user.policy=user-role
+<%_ } _%>
 
 quarkus.smallrye-openapi.path=/v2/api-docs
 quarkus.swagger-ui.always-include=true
@@ -57,8 +65,8 @@ quarkus.swagger-ui.path=/swagger-ui
 quarkus.native.additional-build-args=\
     -H:ResourceConfigurationFiles=resources-config.json,\
     --initialize-at-run-time=<%= packageName %>.security.RandomUtil
-
 <%if (buildTool === 'gradle') { _%>
+
 # Docker image build properties, for more information https://quarkus.io/guides/container-image
 quarkus.container-image.group=
 quarkus.container-image.name=<%= baseName %>

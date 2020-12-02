@@ -24,11 +24,7 @@ const jhipsterFiles = require('generator-jhipster/generators/server/files').serv
 /* Constants use throughout */
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
 const DOCKER_DIR = constants.DOCKER_DIR;
-// const TEST_DIR = constants.TEST_DIR;
-const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
-const SERVER_MAIN_RES_DIR = constants.SERVER_MAIN_RES_DIR;
-const SERVER_TEST_SRC_DIR = constants.SERVER_TEST_SRC_DIR;
-const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, SERVER_TEST_SRC_DIR, SERVER_TEST_RES_DIR } = constants;
 
 const serverFiles = {
     serverBuild: [
@@ -77,7 +73,22 @@ const serverFiles = {
                 'templates/mail/activationEmail.html',
                 'templates/mail/creationEmail.html',
                 'templates/mail/passwordResetEmail.html'
+                'application.properties',
+                'resources-config.json'
             ]
+        },
+        {
+            condition: generator => !generator.skipUserManagement,
+            path: SERVER_MAIN_RES_DIR,
+            templates: [
+                'templates/mail/activationEmail.html',
+                'templates/mail/creationEmail.html',
+                'templates/mail/passwordResetEmail.html'
+            ]
+        },
+        {
+            path: SERVER_TEST_RES_DIR,
+            templates: ['application.properties']
         }
     ],
     serverTestSupport: [
@@ -89,12 +100,62 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}/ArchTest.java`
                 },
                 {
-                    file: 'package/TestResources.java',
-                    renameTo: generator => `${generator.javaDir}/TestResources.java`
-                },
-                {
                     file: 'package/TestUtil.java',
                     renameTo: generator => `${generator.javaDir}/TestUtil.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.databaseType === 'sql',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/TestResources.java',
+                    renameTo: generator => `${generator.javaDir}/TestResources.java`
+                }
+            ]
+        }
+    ],
+    serverJavaCache: [
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => !['no', 'caffeine'].includes(generator.cacheProvider),
+            templates: [
+                {
+                    file: 'package/cache/CacheErrorException.java',
+                    renameTo: generator => `${generator.javaDir}cache/CacheErrorException.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => generator.cacheProvider === 'redis',
+            templates: [
+                {
+                    file: 'package/cache/redis/RedisCache.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/RedisCache.java`
+                },
+                {
+                    file: 'package/cache/redis/UserRedisCache.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/UserRedisCache.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            condition: generator => generator.cacheProvider === 'redis',
+            templates: [
+                {
+                    file: 'package/cache/redis/Foo.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/Foo.java`
+                },
+                {
+                    file: 'package/cache/redis/FooRedisCache.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/FooRedisCache.java`
+                },
+                {
+                    file: 'package/cache/redis/RedisCacheTest.java',
+                    renameTo: generator => `${generator.javaDir}cache/redis/RedisCacheTest.java`
                 }
             ]
         }
@@ -122,7 +183,13 @@ const serverFiles = {
                 {
                     file: 'package/config/LocalDateProvider.java',
                     renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`
-                },
+                }
+            ]
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => generator.databaseType === 'sql',
+            templates: [
                 {
                     file: 'package/config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java',
                     renameTo: generator => `${generator.javaDir}config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java`
@@ -149,6 +216,7 @@ const serverFiles = {
     ],
     serverJavaDomain: [
         {
+            condition: generator => !generator.skipUserManagement,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
@@ -162,6 +230,7 @@ const serverFiles = {
             ]
         },
         {
+            condition: generator => !generator.skipUserManagement,
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
@@ -194,6 +263,10 @@ const serverFiles = {
                 {
                     file: 'package/security/UserNotActivatedException.java',
                     renameTo: generator => `${generator.javaDir}security/UserNotActivatedException.java`
+                },
+                {
+                    file: 'package/security/RandomUtil.java',
+                    renameTo: generator => `${generator.javaDir}security/RandomUtil.java`
                 }
             ]
         },
@@ -214,6 +287,21 @@ const serverFiles = {
     ],
     serverJavaService: [
         {
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/dto/ManagementInfoDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/ManagementInfoDTO.java`
+                },
+
+                {
+                    file: 'package/service/ManagementInfoService.java',
+                    renameTo: generator => `${generator.javaDir}service/ManagementInfoService.java`
+                }
+            ]
+        },
+        {
+            condition: generator => !generator.skipUserManagement,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
@@ -269,8 +357,13 @@ const serverFiles = {
             ]
         },
         {
+            condition: generator => !generator.skipUserManagement,
             path: SERVER_TEST_SRC_DIR,
             templates: [
+                {
+                    file: 'package/service/MailServiceIT.java',
+                    renameTo: generator => `${generator.javaDir}/service/MailServiceIT.java`
+                },
                 {
                     file: 'package/service/mapper/UserMapperTest.java',
                     renameTo: generator => `${generator.javaDir}/service/mapper/UserMapperTest.java`
@@ -320,6 +413,7 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
+
                     file: 'package/web/rest/vm/ManagedUserVM.java',
                     renameTo: generator => `${generator.javaDir}web/rest/vm/ManagedUserVM.java`
                 },
@@ -338,14 +432,25 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/UserResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResource.java`
-                },
+                }
+            ]
+        },
+        {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
                 {
-                    file: 'package/web/util/HeaderUtil.java',
-                    renameTo: generator => `${generator.javaDir}web/util/HeaderUtil.java`
-                },
+                    file: 'package/web/rest/ManagementInfoResourceTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResourceTest.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => !generator.skipClient,
+            templates: [
                 {
-                    file: 'package/web/util/ResponseUtil.java',
-                    renameTo: generator => `${generator.javaDir}web/util/ResponseUtil.java`
+                    file: 'package/web/rest/SpaFilter.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/SpaFilter.java`
                 }
             ]
         },
@@ -382,6 +487,7 @@ const serverFiles = {
             ]
         },
         {
+
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
@@ -395,10 +501,6 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/UserResourceTest.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResourceTest.java`
-                },
-                {
-                    file: 'package/web/rest/ManagementInfoResourceTest.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResourceTest.java`
                 }
             ]
         }
@@ -406,8 +508,7 @@ const serverFiles = {
     docker: [
         {
             path: DOCKER_DIR,
-            condition: generator => generator.buildTool === 'maven',
-            templates: ['Dockerfile.jvm', 'Dockerfile.native']
+            templates: ['Dockerfile.jvm', 'Dockerfile.native', 'Dockerfile.fast-jar']
         }
     ]
 };
