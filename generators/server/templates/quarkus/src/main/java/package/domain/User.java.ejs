@@ -55,19 +55,17 @@ import org.hibernate.annotations.Cache;
 <%_ if (databaseType === 'sql') { _%>
 @Entity
 @Table(name = "<%= jhiTablePrefix %>_user")
-<%_ } _%>
 <%_ if (enableHibernateCache) { _%>
 @Cacheable
 <%_ } _%>
+<%_ } _%>
 public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } %>implements Serializable {
-public class User extends PanacheEntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
 <%_ if (cacheProvider === 'caffeine') { _%>
     public static final String USERS_BY_EMAIL_CACHE = "usersByEmail";
     public static final String USERS_BY_LOGIN_CACHE = "usersByLogin";
 <%_ } _%>
 
-    @Id
 <%_ if (databaseType === 'sql') { _%>
     @Id
 <%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
