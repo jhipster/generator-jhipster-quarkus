@@ -366,8 +366,7 @@ const serverFiles = {
     docker: [
         {
             path: DOCKER_DIR,
-            condition: generator => generator.buildTool === 'maven',
-            templates: ['Dockerfile.jvm', 'Dockerfile.native']
+            templates: ['Dockerfile.jvm', 'Dockerfile.native', 'Dockerfile.fast-jar']
         }
     ]
 };
