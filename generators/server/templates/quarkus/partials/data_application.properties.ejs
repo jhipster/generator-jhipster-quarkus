@@ -18,62 +18,62 @@
 -%>
 ## configure your datasource
 <%_ if (devDatabaseType === 'h2Disk') { _%>
-%dev.quarkus.datasource.db-kind=h2
 %dev.quarkus.datasource.jdbc.url=jdbc:h2:file:./<%= BUILD_DIR %>h2db/db/<%= baseName.toLowerCase() %>;DB_CLOSE_DELAY=-1
+%dev.quarkus.datasource.db-kind=h2
 %dev.quarkus.datasource.username=<%= baseName %>
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (devDatabaseType === 'h2Memory') { _%>
-%dev.quarkus.datasource.db-kind=h2
 %dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:<%= baseName.toLowerCase() %>;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+%dev.quarkus.datasource.db-kind=h2
 %dev.quarkus.datasource.username=<%= baseName %>
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (devDatabaseType === 'mariadb') { _%>
-%dev.quarkus.datasource.db-kind=mariadb
 %dev.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
+%dev.quarkus.datasource.db-kind=mariadb
 %dev.quarkus.datasource.username=<%= baseName %>
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mariadb') { _%>
-%prod.quarkus.datasource.db-kind=mariadb
 %prod.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
+%prod.quarkus.datasource.db-kind=mariadb
 %prod.quarkus.datasource.username=root
 %prod.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (devDatabaseType === 'mssql') { _%>
-%dev.quarkus.datasource.db-kind=mssql
 %dev.quarkus.datasource.jdbc.url=jdbc:sqlserver://localhost:1433;database=<%= baseName %>
+%dev.quarkus.datasource.db-kind=sqlserver
 %dev.quarkus.datasource.username=SA
 %dev.quarkus.datasource.password=yourStrong(!)Password
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mssql') { _%>
-%prod.quarkus.datasource.db-kind=mssql
 %prod.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
+%prod.quarkus.datasource.db-kind=sqlserver
 %prod.quarkus.datasource.username=SA
 %prod.quarkus.datasource.password=yourStrong(!)Password
 <%_ } _%>
 <%_ if (devDatabaseType === 'mysql') { _%>
-%dev.quarkus.datasource.db-kind=mysql
 %dev.quarkus.datasource.jdbc.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
+%dev.quarkus.datasource.db-kind=mysql
 %dev.quarkus.datasource.username=root
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mysql') { _%>
-%prod.quarkus.datasource.db-kind=mysql
 %prod.quarkus.datasource.jdbc.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
+%prod.quarkus.datasource.db-kind=mysql
 %prod.quarkus.datasource.username=root
 %prod.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (devDatabaseType === 'postgresql') { _%>
-%dev.quarkus.datasource.db-kind=postgresql
 %dev.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/<%= baseName %>
+%dev.quarkus.datasource.db-kind=postgresql
 %dev.quarkus.datasource.username=<%= baseName %>
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (prodDatabaseType === 'postgresql') { _%>
-%prod.quarkus.datasource.db-kind=postgresql
 %prod.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/<%= baseName %>
+%prod.quarkus.datasource.db-kind=postgresql
 %prod.quarkus.datasource.username=<%= baseName %>
 %prod.quarkus.datasource.password=
 <%_ } _%>
@@ -83,11 +83,12 @@ quarkus.hibernate-orm.database.generation=none
 quarkus.hibernate-orm.log.sql=false
 quarkus.hibernate-orm.sql-load-script=no-file
 quarkus.hibernate-orm.implicit-naming-strategy=<%=packageName%>.config.hibernate.JHipsterCompatibleImplicitNamingStrategy
-quarkus.hibernate-orm.physical-naming-strategy = <%=packageName%>.config.hibernate.JHipsterCompatiblePhysicalNamingStrategy
+quarkus.hibernate-orm.physical-naming-strategy=<%=packageName%>.config.hibernate.JHipsterCompatiblePhysicalNamingStrategy
+quarkus.hibernate-orm.second-level-caching-enabled=<%= enableHibernateCache %>
 
 quarkus.liquibase.change-log=config/liquibase/master.xml
 %dev.quarkus.liquibase.migrate-at-start=true
 
 %test.quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:test
-%test.quarkus.datasource.driver=org.h2.Driver
+%test.quarkus.datasource.db-kind=h2
 %test.quarkus.liquibase.migrate-at-start=true

@@ -1,10 +1,8 @@
 # generator-jhipster-quarkus
 
-[![NPM version][npm-image]][npm-url]
+[![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Generator Build Status][github-actions-generator-ci-image]][github-actions-url]
 
-[![Dependency Status][daviddm-image]][daviddm-url]
-
-[![Generator Build Status][github-actions-generator-ci-image]][github-actions-url]
+<img src="https://raw.githubusercontent.com/jhipster/jhipster-artwork/main/family/jhipster_family_member_8.png" alt="JHipster Quarkus Family Member" width=200 style="max-width:50%;">
 
 > ## 🛠 Mode: In Development
 
