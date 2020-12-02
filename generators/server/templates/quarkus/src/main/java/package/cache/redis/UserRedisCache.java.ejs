@@ -16,14 +16,23 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-## configure your caches
-<%_ if (cacheProvider === 'caffeine') { _%>
-quarkus.cache.type=<%= cacheProvider %>
-quarkus.cache.enabled=true
-quarkus.cache.caffeine."usersByEmail".maximum-size=<%= CACHE_MAXIMUM_SIZE %>
-quarkus.cache.caffeine."usersByEmail".expire-after-write=<%= CACHE_EXPIRE_AFTER_WRITE %>
-quarkus.cache.caffeine."usersByLogin".maximum-size=<%= CACHE_MAXIMUM_SIZE %>
-quarkus.cache.caffeine."usersByLogin".expire-after-write=<%= CACHE_EXPIRE_AFTER_WRITE %>
-<%_ } else if (cacheProvider === 'redis') { _%>
-quarkus.redis.hosts=redis://localhost:6379
-<%_ } _%>
+package <%= packageName %>.cache.redis;
+
+import <%= packageName %>.domain.User;
+
+import javax.inject.Singleton;
+
+/**
+ * This cache manager is used to manage users in the Redis cache.
+ *
+ * An entry per user and per identifier.
+ *
+ * e.g. USER:admin or USER:admin@localhost (or anything you want)
+ */
+@Singleton
+public class UserRedisCache extends RedisCache<User> {
+
+    public UserRedisCache() {
+        super("USER:");
+    }
+}

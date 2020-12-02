@@ -22,6 +22,9 @@ import <%=packageName%>.domain.User;
 import <%=packageName%>.security.BCryptPasswordHasher;
 import <%=packageName%>.security.UserNotActivatedException;
 import <%=packageName%>.security.UsernameNotFoundException;
+<%_ if (cacheProvider === 'redis') { _%>
+import <%= packageName %>.cache.redis.UserRedisCache;
+<%_ } _%>
 import io.quarkus.security.AuthenticationFailedException;
 import io.quarkus.security.runtime.QuarkusPrincipal;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
@@ -40,6 +43,11 @@ public class AuthenticationService {
         "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 
     final BCryptPasswordHasher passwordHasher;
+
+    <%_ if (cacheProvider === 'redis') { _%>
+    @Inject
+    UserRedisCache userRedisCache;
+    <%_ } _%>
 
     @Inject
     public AuthenticationService(BCryptPasswordHasher passwordHasher) {
@@ -62,13 +70,21 @@ public class AuthenticationService {
         log.debug("Authenticating {}", login);
 
         if (login.matches(emailValidator)) {
+        <%_ if (cacheProvider === 'redis') { _%>
+            return userRedisCache.get(login, () -> User.findOneWithAuthoritiesByEmailIgnoreCase(login))
+        <%_ } else { _%>
             return User
                 .findOneWithAuthoritiesByEmailIgnoreCase(login)
+        <%_ } _%>
                 .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
         }
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
+        <%_ if (cacheProvider === 'redis') { _%>
+        return userRedisCache.get(lowercaseLogin, () -> User.findOneWithAuthoritiesByLogin(lowercaseLogin))
+        <%_ } else { _%>
         return User
             .findOneWithAuthoritiesByLogin(lowercaseLogin)
+        <%_ } _%>
             .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
     }
 

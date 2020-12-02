@@ -31,17 +31,25 @@ import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
+<%_ if (cacheProvider === 'redis') { _%>
+import redis.embedded.RedisServer;
+import java.io.IOException;
+<%_ } _%>
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.ws.rs.core.HttpHeaders;
 
 import liquibase.Liquibase;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 @QuarkusTest
 public class UserJWTControllerTest {
+
+<%_ if (cacheProvider === 'redis') { _%>
+    static RedisServer server;
+<%_ } _%>
+
     @Inject
     LiquibaseFactory liquibaseFactory;
 
@@ -58,6 +66,21 @@ public class UserJWTControllerTest {
             e.printStackTrace();
         }
     }
+
+    <%_ if (cacheProvider === 'redis') { _%>
+    @BeforeAll
+    public static void startRedisServer() throws IOException {
+        server = new RedisServer(6379);
+        server.start();
+    }
+    <%_ } _%>
+
+    <%_ if (cacheProvider === 'redis') { _%>
+    @AfterAll
+    public static void stopRedisServer() {
+        server.stop();
+    }
+    <%_ } _%>
 
     private void registerUser(ManagedUserVM user) {
         //Registering user

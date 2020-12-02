@@ -4,7 +4,7 @@ const constants = require('generator-jhipster/generators/generator-constants');
 const { buildServerGeneratorContext } = require('./utils/generator-testing-api');
 const expectedFiles = require('./utils/expected-files');
 
-const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR } = constants;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
@@ -13,6 +13,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server);
             assert.file(expectedFiles.maven);
+            assert.noFile(expectedFiles.cache.common);
         });
 
         it('pom.xml contains health check dependency', () => {
@@ -30,7 +31,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         });
 
         it('User and Authority cache properties are set', () => {
-            assert.noFileContent(
+            assert.fileContent(
                 `${SERVER_MAIN_RES_DIR}application.properties`,
                 'quarkus.cache.caffeine."usersByEmail".maximum-size=100\n' +
                     'quarkus.cache.caffeine."usersByEmail".expire-after-write=3600S\n' +
@@ -41,6 +42,24 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
         it('contains hibernate second level cache needle', () => {
             assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, '# jhipster-quarkus-needle-hibernate-cache-add-entry');
+        });
+    });
+
+    describe('With monolith Gradle Mysql', () => {
+        before(
+            buildServerGeneratorContext({
+                buildTool: 'gradle',
+                cacheProvider: 'caffeine'
+            })
+        );
+
+        it('creates expected files for default configuration for server generator', () => {
+            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.gradle);
+        });
+
+        it('build.gradle contains health check dependency', () => {
+            assert.fileContent('build.gradle', "implementation 'io.quarkus:quarkus-cache'");
         });
     });
 
@@ -137,6 +156,10 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             })
         );
 
+        it("don't create cache files", () => {
+            assert.noFile(expectedFiles.cache.common);
+        });
+
         it('should pom.xml not contains Quarkus cache dependency', () => {
             assert.noFileContent(
                 'pom.xml',
@@ -161,6 +184,86 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.noFileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
                 '@CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)'
+            );
+        });
+    });
+
+    describe('With maven Mysql and Redis cache', () => {
+        before(
+            buildServerGeneratorContext({
+                cacheProvider: 'redis'
+            })
+        );
+
+        it('should contains redis file', () => {
+            assert.file(expectedFiles.cache.common);
+            assert.file(expectedFiles.cache.redis);
+        });
+
+        it('should contains docker compose redis file from JHipster', () => {
+            assert.file(`${DOCKER_DIR}redis.yml`);
+            assert.file(`${DOCKER_DIR}redis-cluster.yml`);
+            assert.file(`${DOCKER_DIR}redis/connectRedisCluster.sh`);
+            assert.file(`${DOCKER_DIR}redis/Redis-Cluster.Dockerfile`);
+        });
+
+        it('should contains redis code in UserService', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                '        List <Object> keys = new ArrayList<>();\n' +
+                    '        keys.add(user.login);\n' +
+                    '\n' +
+                    '        if (user.email != null) {\n' +
+                    '            keys.add(user.email);\n' +
+                    '        }\n' +
+                    '\n' +
+                    '        userRedisCache.evict(keys);'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                'return userRedisCache.get(login, () -> User.findOneWithAuthoritiesByLogin(login));'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
+                '    @Inject\n    UserRedisCache userRedisCache;'
+            );
+        });
+
+        it('should contains redis code in UserService', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
+                '    @Inject\n    UserRedisCache userRedisCache;'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
+                '    @Inject\n    UserRedisCache userRedisCache;'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
+                '            return userRedisCache.get(login, () -> User.findOneWithAuthoritiesByEmailIgnoreCase(login))\n' +
+                    '                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));'
+            );
+
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
+                '        return userRedisCache.get(lowercaseLogin, () -> User.findOneWithAuthoritiesByLogin(lowercaseLogin))\n' +
+                    '            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));'
+            );
+        });
+
+        it('should contains redis code in User', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
+                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)\n            .firstResult();'
+            );
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
+                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)\n' +
+                    '            .firstResult();'
             );
         });
     });

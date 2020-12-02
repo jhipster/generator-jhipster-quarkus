@@ -31,14 +31,16 @@ import <%= packageName %>.service.dto.<%= dtoClass %>;
 <%_ } _%>
 import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
+<%_ if (cacheProvider === 'redis') { _%>
+import redis.embedded.RedisServer;
+import java.io.IOException;
+<%_ } _%>
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 <%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
 <%_ } _%>
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import javax.inject.Inject;
 

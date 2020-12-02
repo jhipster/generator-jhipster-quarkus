@@ -132,10 +132,20 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
-        <%_ if (cacheManagerIsAvailable) { _%>
+        <%_ if (cacheProvider === 'caffeine') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-cache</artifactId>
+        </dependency>
+        <%_ } _%>
+        <%_ if (cacheProvider === 'redis') { _%>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-redis-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.quarkus</groupId>
+            <artifactId>camel-quarkus-jackson</artifactId>
         </dependency>
         <%_ } _%>
         <dependency>
@@ -190,6 +200,14 @@
             <classifier>runtime</classifier>
             <scope>test</scope>
         </dependency>
+        <%_ if (cacheProvider === 'redis') { _%>
+        <dependency>
+            <groupId>com.github.kstyrc</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>0.6</version>
+            <scope>test</scope>
+        </dependency>
+        <%_ } _%>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
     <build>

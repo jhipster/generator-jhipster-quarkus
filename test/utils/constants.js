@@ -14,7 +14,7 @@ const DEFAULT_SERVER_ANSWERS = {
     databaseType: 'sql',
     devDatabaseType: 'h2Disk',
     prodDatabaseType: 'mysql',
-    cacheProvider: 'ehcache',
+    cacheProvider: 'caffeine',
     authenticationType: 'session',
     enableTranslation: true,
     nativeLanguage: 'en',
