@@ -11,7 +11,10 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         before(buildServerGeneratorContext());
 
         it('creates expected files for default configuration for server generator', () => {
-            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.server.common);
+            assert.file(expectedFiles.server.userManagement);
+            assert.file(expectedFiles.server.hibernate);
+            assert.file(expectedFiles.server.h2);
             assert.file(expectedFiles.maven);
             assert.noFile(expectedFiles.cache.common);
         });
@@ -54,7 +57,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         );
 
         it('creates expected files for default configuration for server generator', () => {
-            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.server.common);
             assert.file(expectedFiles.gradle);
         });
 
@@ -72,12 +75,31 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         );
 
         it('creates expected files for default configuration for server generator', () => {
-            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.server.common);
             assert.file(expectedFiles.gradle);
         });
 
         it('build.gradle contains health check dependency', () => {
             assert.fileContent('build.gradle', "implementation 'io.quarkus:quarkus-cache'");
+        });
+    });
+
+    describe('With monolith Maven no db', () => {
+        before(
+            buildServerGeneratorContext({
+                databaseType: 'no',
+                devDatabaseType: 'no',
+                prodDatabaseType: 'no',
+                skipUserManagement: true
+            })
+        );
+
+        it('creates expected files for default configuration for server generator', () => {
+            assert.file(expectedFiles.server.common);
+            assert.noFile(expectedFiles.server.userManagement);
+            assert.noFile(expectedFiles.server.hibernate);
+            assert.noFile(expectedFiles.server.h2);
+            assert.file(expectedFiles.maven);
         });
     });
 
@@ -89,7 +111,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         );
 
         it('creates expected files for default configuration for server generator', () => {
-            assert.file(expectedFiles.server);
+            assert.file(expectedFiles.server.common);
             assert.file(expectedFiles.maven);
             assert.file(expectedFiles.docker);
         });

@@ -110,10 +110,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-mailer</artifactId>
         </dependency>
+<%_ if(databaseType !== 'no') { _%>
 <%- include('./partials/data_pom.xml.ejs', {
   devDatabaseType:devDatabaseType,
   prodDatabaseType:
   prodDatabaseType}) _%>
+<%_ } _%>
 <%- include('./partials/security_pom.xml.ejs', {
   }) _%>
         <dependency>

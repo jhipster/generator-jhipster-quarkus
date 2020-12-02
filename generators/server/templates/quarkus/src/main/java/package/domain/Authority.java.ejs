@@ -18,14 +18,18 @@
 -%>
 package <%=packageName%>.domain;
 
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+<%_ } _%>
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import java.io.Serializable;
 import java.util.Objects;
+<%_ if (databaseType === 'sql') { _%>
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+<%_ } _%>
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 <%_ if (enableHibernateCache) { _%>
@@ -35,19 +39,23 @@ import javax.persistence.*;
 /**
  * An authority (a security role).
  */
+<%_ if (databaseType === 'sql') { _%>
 @Entity
 @Table(name = "<%= jhiTablePrefix %>_authority")
 <%_ if (enableHibernateCache) { _%>
 @Cacheable
 <%_ } _%>
+<%_ } _%>
 @RegisterForReflection
-public class Authority extends PanacheEntityBase implements Serializable {
+public class Authority <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } %>implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotNull
     @Size(max = 50)
+<%_ if (databaseType === 'sql') { _%>
     @Id
     @Column(length = 50)
+<%_ } _%>
     public String name;
 
     public Authority() {
