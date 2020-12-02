@@ -86,7 +86,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
     describe('With monolith Maven no db', () => {
         before(
-            buildGeneratorContext({
+            buildServerGeneratorContext({
                 databaseType: 'no',
                 devDatabaseType: 'no',
                 prodDatabaseType: 'no',
