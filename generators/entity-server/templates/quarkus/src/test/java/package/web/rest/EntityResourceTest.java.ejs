@@ -31,6 +31,10 @@ public class <%= entityClass%>ResourceTest {
 
 <%- include('../../_partials/defaults', this); -%>
 
+<%_ if (cacheProvider === 'redis') { _%>
+    static RedisServer server;
+<%_ } _%>
+
     String adminToken;
 
     <%= entityOrDtoClass %> <%= entityOrDtoInstance %>;
@@ -59,6 +63,21 @@ public class <%= entityClass%>ResourceTest {
             e.printStackTrace();
         }
     }
+
+    <%_ if (cacheProvider === 'redis') { _%>
+    @BeforeAll
+    public static void startRedisServer() throws IOException {
+        server = new RedisServer(6379);
+        server.start();
+    }
+    <%_ } _%>
+
+    <%_ if (cacheProvider === 'redis') { _%>
+    @AfterAll
+    public static void stopRedisServer() {
+        server.stop();
+    }
+    <%_ } _%>
 
     /**
      * Create an entity for this test.

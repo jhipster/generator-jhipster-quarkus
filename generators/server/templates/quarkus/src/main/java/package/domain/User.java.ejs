@@ -19,6 +19,9 @@
 package <%=packageName%>.domain;
 
 import <%=packageName%>.config.Constants;
+<%_ if (cacheProvider === 'caffeine') { _%>
+import io.quarkus.cache.CacheResult;
+<%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Page;
@@ -41,6 +44,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+<%_ if (enableHibernateCache) { _%>
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cache;
+<%_ } _%>
 
 /**
  * A user.
@@ -49,10 +56,18 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "<%= jhiTablePrefix %>_user")
 <%_ } _%>
-//@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+<%_ if (enableHibernateCache) { _%>
+@Cacheable
+<%_ } _%>
 public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } %>implements Serializable {
+public class User extends PanacheEntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
+<%_ if (cacheProvider === 'caffeine') { _%>
+    public static final String USERS_BY_EMAIL_CACHE = "usersByEmail";
+    public static final String USERS_BY_LOGIN_CACHE = "usersByLogin";
+<%_ } _%>
 
+    @Id
 <%_ if (databaseType === 'sql') { _%>
     @Id
 <%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
@@ -146,7 +161,9 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
         joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
         inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") }
     )
-    //    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+    <%_ if (enableHibernateCache) { _%>
+    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+    <%_ } _%>
     @BatchSize(size = 20)
 <%_ } _%>
     @JsonbTransient
@@ -254,16 +271,20 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.id = ?1", id).firstResultOptional();
     }
 
-    public static Optional<User> findOneWithAuthoritiesByLogin(String login) {
+    <%_ if (cacheProvider === 'caffeine') { _%>
+    @CacheResult(cacheName = USERS_BY_LOGIN_CACHE)
+    <%_ } _%>
+    public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByLogin(String login) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)
-            //            .withHint(QueryHints.HINT_CACHEABLE, "true")
-            .firstResultOptional();
+            <% if (cacheProvider === 'redis') { %>.firstResult<% } else { %>.firstResultOptional<% } %>();
     }
 
-    public static Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
+    <%_ if (cacheProvider === 'caffeine') { _%>
+    @CacheResult(cacheName = USERS_BY_EMAIL_CACHE)
+    <%_ } _%>
+    public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)
-            //            .withHint(QueryHints.HINT_CACHEABLE, "true")
-            .firstResultOptional();
+            <% if (cacheProvider === 'redis') { %>.firstResult<% } else { %>.firstResultOptional<% } %>();
     }
 
     public static List<User> findAllByLoginNot(Page page, String login) {

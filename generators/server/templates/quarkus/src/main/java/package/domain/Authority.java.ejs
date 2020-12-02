@@ -32,6 +32,9 @@ import javax.persistence.Table;
 <%_ } _%>
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+<%_ if (enableHibernateCache) { _%>
+import javax.persistence.*;
+<%_ } _%>
 
 /**
  * An authority (a security role).
@@ -39,8 +42,10 @@ import javax.validation.constraints.Size;
 <%_ if (databaseType === 'sql') { _%>
 @Entity
 @Table(name = "<%= jhiTablePrefix %>_authority")
+<%_ if (enableHibernateCache) { _%>
+@Cacheable
 <%_ } _%>
-//@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+<%_ } _%>
 @RegisterForReflection
 public class Authority <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } %>implements Serializable {
     private static final long serialVersionUID = 1L;
