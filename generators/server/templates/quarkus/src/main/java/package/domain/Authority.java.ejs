@@ -28,13 +28,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+<%_ if (enableHibernateCache) { _%>
+import javax.persistence.*;
+<%_ } _%>
 
 /**
  * An authority (a security role).
  */
 @Entity
 @Table(name = "<%= jhiTablePrefix %>_authority")
-//@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+<%_ if (enableHibernateCache) { _%>
+@Cacheable
+<%_ } _%>
 @RegisterForReflection
 public class Authority extends PanacheEntityBase implements Serializable {
     private static final long serialVersionUID = 1L;

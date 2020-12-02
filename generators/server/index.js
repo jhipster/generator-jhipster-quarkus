@@ -4,7 +4,7 @@ const os = require('os');
 const ServerGenerator = require('generator-jhipster/generators/server');
 const prompts = require('./prompts');
 const writeFiles = require('./files').writeFiles;
-const quarkusVersion = require('../generator-quarkus-constants').QUARKUS_VERSION;
+const { QUARKUS_VERSION, CACHE_MAXIMUM_SIZE, CACHE_EXPIRE_AFTER_WRITE } = require('../generator-quarkus-constants');
 
 module.exports = class extends ServerGenerator {
     constructor(args, opts) {
@@ -26,7 +26,9 @@ module.exports = class extends ServerGenerator {
         const phaseFromJHipster = super._initializing();
         const phaseFromQuarkus = {
             defineQuarkusConstants() {
-                this.quarkusVersion = quarkusVersion;
+                this.quarkusVersion = QUARKUS_VERSION;
+                this.CACHE_MAXIMUM_SIZE = CACHE_MAXIMUM_SIZE;
+                this.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
             }
         };
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
@@ -42,8 +44,15 @@ module.exports = class extends ServerGenerator {
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
-        return super._configuring();
+        const phaseFromJHipster = super._configuring();
+        const phaseFromQuarkus = {
+            configureGlobalQuarkus() {
+                // Override JHipster cacheManagerIsAvailable property to only handle Quarkus caches
+                this.cacheManagerIsAvailable = ['caffeine'].includes(this.cacheProvider);
+            }
+        };
+
+        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get default() {

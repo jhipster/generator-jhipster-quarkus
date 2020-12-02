@@ -1,9 +1,21 @@
 const constants = require('generator-jhipster/generators/generator-constants');
 
-const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, SERVER_TEST_SRC_DIR, DOCKER_DIR /* , SERVER_TEST_RES_DIR */ } = constants;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, SERVER_TEST_SRC_DIR, DOCKER_DIR, SERVER_TEST_RES_DIR } = constants;
 
 const expectedFiles = {
     maven: ['pom.xml', 'mvnw', 'mvnw.cmd', '.mvn/wrapper/maven-wrapper.jar', '.mvn/wrapper/maven-wrapper.properties'],
+    gradle: [
+        'build.gradle',
+        'gradlew',
+        'gradle.properties',
+        'settings.gradle',
+        'gradle/docker.gradle',
+        'gradle/profile_dev.gradle',
+        'gradle/profile_prod.gradle',
+        'gradle/sonar.gradle',
+        'gradle/wrapper/gradle-wrapper.jar',
+        'gradle/wrapper/gradle-wrapper.properties'
+    ],
 
     docker: [`${DOCKER_DIR}Dockerfile.jvm`, `${DOCKER_DIR}Dockerfile.native`, `${DOCKER_DIR}Dockerfile.fast-jar`],
 
@@ -47,6 +59,7 @@ const expectedFiles = {
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserResource.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/HeaderUtil.java`,
         `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
+        `${SERVER_TEST_RES_DIR}application.properties`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/AuthorityTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/UserTest.java`,
         `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/mapper/UserMapperTest.java`,

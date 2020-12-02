@@ -70,7 +70,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 <%_ } if (!hasDto && importApiModelProperty === true) { _%>
 import io.swagger.annotations.ApiModelProperty;
-<%_ } if (readOnly) { _%>
+<%_ } if (enableHibernateCache) { _%>
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 <%_ } if (hasTextBlob === true || (fieldsContainUUID === true && ['mysql', 'mariadb'].includes(prodDatabaseType))) { _%>
@@ -149,9 +149,9 @@ import static org.springframework.data.couchbase.core.mapping.id.GenerationStrat
 <%_ if (databaseType === 'sql') { _%>
 @Entity
 @Table(name = "<%= entityTableName %>")
-    <%_ if (readOnly) { _%>
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-    <%_ } _%>
+<%_ if (enableHibernateCache) { _%>
+<% if (readOnly) { %>@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)<% } else { %>@Cacheable<% } %>
+<%_ } _%>
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
 @Document(collection = "<%= entityTableName %>")
@@ -288,8 +288,8 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
             if (databaseType === 'sql') {
     _%>
     @OneToMany(mappedBy = "<%= otherEntityRelationshipName %>")
-                <%_ if (readOnly) { _%>
-    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+                <%_ if (enableHibernateCache) { _%>
+    @Cache(usage = CacheConcurrencyStrategy.<% if (readOnly) { %>READ_ONLY<% } else { %>READ_WRITE<% } %>)
                 <%_ } _%>
             <%_ } else if (databaseType === 'mongodb' || databaseType === 'couchbase') {
             if (databaseType === 'mongodb') { _%>
@@ -333,9 +333,9 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
     <%_ } else if (relationshipType === 'many-to-many') {
         if (databaseType === 'sql') { _%>
     @ManyToMany<% if (ownerSide === false) { %>(mappedBy = "<%= otherEntityRelationshipNamePlural %>")<% } %>
-        <%_ if (readOnly) { _%>
-    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-        <%_ } _%>
+            <%_ if (enableHibernateCache) { _%>
+    @Cache(usage = CacheConcurrencyStrategy.<% if (readOnly) { %>READ_ONLY<% } else { %>READ_WRITE<% } %>)
+            <%_ } _%>
         <%_ if (ownerSide === true) {
             if (relationshipValidate) { _%>
     <%- include(fetchFromInstalledJHipster('entity-server/templates') + '/src/main/java/package/domain/relationship_validators', {

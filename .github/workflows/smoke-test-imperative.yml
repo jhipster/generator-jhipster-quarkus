@@ -14,11 +14,13 @@ jobs:
                 node_version: [12.16.2]
                 os: [ubuntu-latest]
                 app:
-                    - imperative-sql-jwt-maven-sample
-                    - imperative-sql-jwt-maven-sqllight
+                    - imperative-ngx-jwt-maven-mysql-caffeine
+                    - imperative-ngx-jwt-maven-psql-nocache
+                    - imperative-react-jwt-gradle-mysql-caffeine
                 include:
-                    - app: imperative-sql-jwt-maven-sample
-                    - app: imperative-sql-jwt-maven-sqllight
+                    - app: imperative-ngx-jwt-maven-mysql-caffeine
+                    - app: imperative-ngx-jwt-maven-psql-nocache
+                    - app: imperative-react-jwt-gradle-mysql-caffeine
         env:
             JHI_APP: ${{ matrix.app }}
         steps:

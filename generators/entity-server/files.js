@@ -20,6 +20,8 @@ const constants = require('generator-jhipster/generators/generator-constants');
 const faker = require('faker');
 const jhipsterUtils = require('generator-jhipster/generators/utils');
 
+const NeedleApi = require('../needle-api');
+
 const randexp = jhipsterUtils.RandexpWithFaker;
 /* Constants use throughout */
 const SERVER_MAIN_SRC_DIR = constants.SERVER_MAIN_SRC_DIR;
@@ -351,16 +353,16 @@ function writeFiles() {
                     }
                     this.addChangelogToLiquibase(`${this.changelogDate}_added_entity_${this.entityClass}`);
                 }
+            }
+        },
 
-                if (['ehcache', 'caffeine', 'infinispan', 'redis'].includes(this.cacheProvider) && this.enableHibernateCache) {
-                    this.addEntityToCache(
-                        this.asEntity(this.entityClass),
-                        this.relationships,
-                        this.packageName,
-                        this.packageFolder,
-                        this.cacheProvider
-                    );
-                }
+        updateCacheConfiguration() {
+            if (this.enableHibernateCache) {
+                new NeedleApi(this).quarkusServerCache.addEntityConfigurationToPropertiesFile(
+                    this.asEntity(this.entityClass),
+                    this.relationships,
+                    this.packageName
+                );
             }
         },
 

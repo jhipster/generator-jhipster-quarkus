@@ -132,6 +132,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
+        <%_ if (cacheManagerIsAvailable) { _%>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-cache</artifactId>
+        </dependency>
+        <%_ } _%>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>

@@ -189,46 +189,49 @@ function askForServerSideOpts(meta) {
                 ].concat(constants.SQL_DB_OPTIONS.find(it => it.value === response.prodDatabaseType)),
             default: 0
         },
-        // ,
-        // {
-        //     when: () => !reactive,
-        //     type: 'list',
-        //     name: 'cacheProvider',
-        //     message: 'Do you want to use the Spring cache abstraction?',
-        //     choices: [
-        //         {
-        //             value: 'ehcache',
-        //             name: 'Yes, with the Ehcache implementation (local cache, for a single node)'
-        //         },
-        //         {
-        //             value: 'caffeine',
-        //             name: 'Yes, with the Caffeine implementation (local cache, for a single node)'
-        //         },
-        //         {
-        //             value: 'hazelcast',
-        //             name:
-        //                 'Yes, with the Hazelcast implementation (distributed cache, for multiple nodes, supports rate-limiting for gateway applications)'
-        //         },
-        //         {
-        //             value: 'infinispan',
-        //             name: '[BETA] Yes, with the Infinispan implementation (hybrid cache, for multiple nodes)'
-        //         },
-        //         {
-        //             value: 'memcached',
-        //             name:
-        //                 'Yes, with Memcached (distributed cache) - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
-        //         },
-        //         {
-        //             value: 'redis',
-        //             name: 'Yes, with the Redis implementation'
-        //         },
-        //         {
-        //             value: 'no',
-        //             name: 'No - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
-        //         }
-        //     ],
-        //     default: applicationType === 'microservice' || applicationType === 'uaa' ? 2 : 0
-        // },
+        {
+            when: () => !reactive,
+            type: 'list',
+            name: 'cacheProvider',
+            message: 'Do you want to use the Quarkus cache abstraction?',
+            choices: [
+                /*
+                {
+                    value: 'ehcache',
+                    name: 'Yes, with the Ehcache implementation (local cache, for a single node)'
+                },
+                */
+                {
+                    value: 'caffeine',
+                    name: 'Yes, with the Caffeine implementation (local cache, for a single node)'
+                },
+                /*
+                {
+                    value: 'hazelcast',
+                    name:
+                        'Yes, with the Hazelcast implementation (distributed cache, for multiple nodes, supports rate-limiting for gateway applications)'
+                },
+                {
+                    value: 'infinispan',
+                    name: '[BETA] Yes, with the Infinispan implementation (hybrid cache, for multiple nodes)'
+                },
+                {
+                    value: 'memcached',
+                    name:
+                        'Yes, with Memcached (distributed cache) - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
+                },
+                {
+                    value: 'redis',
+                    name: 'Yes, with the Redis implementation'
+                },
+                */
+                {
+                    value: 'no',
+                    name: 'No - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
+                }
+            ]
+            // default: applicationType === 'microservice' || applicationType === 'uaa' ? 2 : 0
+        },
         {
             when: response => response.databaseType === 'sql' && !reactive,
             type: 'confirm',

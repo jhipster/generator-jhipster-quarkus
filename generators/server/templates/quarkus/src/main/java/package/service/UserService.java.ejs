@@ -25,6 +25,9 @@ import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.security.BCryptPasswordHasher;
 import <%=packageName%>.security.RandomUtil;
 import <%=packageName%>.service.dto.UserDTO;
+<%_ if (cacheManagerIsAvailable) { _%>
+import io.quarkus.cache.CacheInvalidate;
+<%_ } _%>
 import io.quarkus.panache.common.Page;
 import java.time.Instant;
 import java.util.HashSet;
@@ -59,7 +62,9 @@ public class UserService {
                     // activate given user for the registration key.
                     user.activated = true;
                     user.activationKey = null;
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Activated user: {}", user);
                     return user;
                 }
@@ -76,7 +81,9 @@ public class UserService {
                     user.password = passwordHasher.hash(newPassword);
                     user.resetKey = null;
                     user.resetDate = null;
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     return user;
                 }
             );
@@ -90,7 +97,9 @@ public class UserService {
                 user -> {
                     user.resetKey = RandomUtil.generateResetKey();
                     user.resetDate = Instant.now();
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     return user;
                 }
             );
@@ -117,11 +126,10 @@ public class UserService {
                     }
                 }
             );
-        var encryptedPassword = passwordHasher.hash(password);
         var newUser = new User();
         newUser.login = userDTO.login.toLowerCase();
         // new user gets initially a generated password
-        newUser.password = encryptedPassword;
+        newUser.password = passwordHasher.hash(password);
         newUser.firstName = userDTO.firstName;
         newUser.lastName = userDTO.lastName;
         if (userDTO.email != null) {
@@ -137,7 +145,9 @@ public class UserService {
         Authority.<Authority>findByIdOptional(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.authorities = authorities;
         User.persist(newUser);
-        //        this.clearUserCaches(newUser);
+        <%_ if (cacheManagerIsAvailable) { _%>
+        this.clearUserCaches(newUser);
+        <%_ } _%>
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
@@ -147,7 +157,9 @@ public class UserService {
             return false;
         }
         User.delete("id", existingUser.id);
-        //        this.clearUserCaches(existingUser);
+        <%_ if (cacheManagerIsAvailable) { _%>
+        this.clearUserCaches(existingUser);
+        <%_ } _%>
         return true;
     }
 
@@ -165,22 +177,22 @@ public class UserService {
         } else {
             user.langKey = userDTO.langKey;
         }
-        String encryptedPassword = passwordHasher.hash(RandomUtil.generatePassword());
-        user.password = encryptedPassword;
+        user.password = passwordHasher.hash(RandomUtil.generatePassword());
         user.resetKey = RandomUtil.generateResetKey();
         user.resetDate = Instant.now();
         user.activated = true;
         if (userDTO.authorities != null) {
-            Set<Authority> authorities = userDTO
+            user.authorities = userDTO
                 .authorities.stream()
                 .map(authority -> Authority.<Authority>findByIdOptional(authority))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
-            user.authorities = authorities;
         }
         User.persist(user);
-        //        this.clearUserCaches(user);
+        <%_ if (cacheManagerIsAvailable) { _%>
+        this.clearUserCaches(user);
+        <%_ } _%>
         log.debug("Created Information for User: {}", user);
         return user;
     }
@@ -207,7 +219,9 @@ public class UserService {
                     }
                     user.langKey = langKey;
                     user.imageUrl = imageUrl;
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Changed Information for User: {}", user);
                 }
             );
@@ -241,7 +255,9 @@ public class UserService {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .forEach(managedAuthorities::add);
-                    //                this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Changed Information for User: {}", user);
                     return user;
                 }
@@ -255,7 +271,9 @@ public class UserService {
             .ifPresent(
                 user -> {
                     User.delete("id", user.id);
-                    //            this.clearUserCaches(user);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Deleted User: {}", user);
                 }
             );
@@ -270,9 +288,10 @@ public class UserService {
                     if (!passwordHasher.checkPassword(currentClearTextPassword, currentEncryptedPassword)) {
                         throw new InvalidPasswordException();
                     }
-                    String encryptedPassword = passwordHasher.hash(newPassword);
-                    user.password = encryptedPassword;
-                    //                this.clearUserCaches(user);
+                    user.password = passwordHasher.hash(newPassword);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
                     log.debug("Changed password for User: {}", user);
                 }
             );
@@ -289,4 +308,19 @@ public class UserService {
     public List<String> getAuthorities() {
         return Authority.<Authority>streamAll().map(authority -> authority.name).collect(Collectors.toList());
     }
+
+    <%_ if (cacheManagerIsAvailable) { _%>
+    public void clearUserCaches(User user) {
+        this.clearUserCachesByLogin(user.login);
+        if (user.email != null) {
+            this.clearUserCachesByEmail(user.email);
+        }
+    }
+
+    @CacheInvalidate(cacheName = User.USERS_BY_EMAIL_CACHE)
+    public void clearUserCachesByEmail(String email) {}
+
+    @CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)
+    public void clearUserCachesByLogin(String login) {}
+    <%_ } _%>
 }
