@@ -34,6 +34,9 @@ import <%= packageName %>.cache.redis.UserRedisCache;
 <%_ } _%>
 import io.quarkus.panache.common.Page;
 import java.time.Instant;
+<%_ if (cacheManagerIsAvailable) { _%>
+import java.util.ArrayList;
+<%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
 import java.util.Collection;
 <%_ } _%>
