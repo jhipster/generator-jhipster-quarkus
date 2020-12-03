@@ -220,11 +220,11 @@ function askForServerSideOpts(meta) {
                 */
                 {
                     value: 'redis',
-                    name: 'Yes, with the Redis implementation'
+                    name: 'Yes, with the Redis implementation - Warning, this will disable the Hibernate 2nd level cache!'
                 },
                 {
                     value: 'no',
-                    name: 'No - Warning, when using an SQL database, this will disable the Hibernate 2nd level cache!'
+                    name: 'No'
                 }
             ]
         },
