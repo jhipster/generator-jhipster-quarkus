@@ -94,6 +94,24 @@ public class UserService {
             );
     }
 
+    public void changePassword(String login, String currentClearTextPassword, String newPassword) {
+        User
+            .findOneByLogin(login)
+            .ifPresent(
+                user -> {
+                    String currentEncryptedPassword = user.password;
+                    if (!passwordHasher.checkPassword(currentClearTextPassword, currentEncryptedPassword)) {
+                        throw new InvalidPasswordException();
+                    }
+                    user.password = passwordHasher.hash(newPassword);
+                    <%_ if (cacheManagerIsAvailable) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
+                    log.debug("Changed password for User: {}", user);
+                }
+            );
+    }
+
     public Optional<User> completePasswordReset(String newPassword, String key) {
         log.debug("Reset user password for reset key {}", key);
         return User
@@ -234,24 +252,6 @@ public class UserService {
             );
     }
 
-    public void 
-    ssword(String login, String currentClearTextPassword, String newPassword) {
-        User
-            .findOneByLogin(login)
-            .ifPresent(
-                user -> {
-                    String currentEncryptedPassword = user.password;
-                    if (!passwordHasher.checkPassword(currentClearTextPassword, currentEncryptedPassword)) {
-                        throw new InvalidPasswordException();
-                    }
-                    String encryptedPassword = passwordHasher.hash(newPassword);
-                    user.password = encryptedPassword;
-                    this.clearUserCaches(user);
-                    log.debug("Changed password for User: {}", user);
-                }
-            );
-    }
-
     /**
      * Update all information for a specific user, and return the modified user.
      *
@@ -371,8 +371,8 @@ public class UserService {
             }
         } else {
             log.debug("Saving user '{}' in local database", user.login);
-//            user.persist();
-//            this.clearUserCaches(user);
+            user.persist();
+            this.clearUserCaches(user);
         }
         return user;
     }
