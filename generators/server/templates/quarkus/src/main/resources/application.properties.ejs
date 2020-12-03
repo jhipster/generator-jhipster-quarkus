@@ -36,14 +36,16 @@ quarkus.micrometer.export.prometheus.path=/management/jhimetrics
 
 quarkus.smallrye-health.root-path=/management/health
 
-<%_ if (authenticationType !== 'oauth2') { _%>
+mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
+mp.jwt.verify.issuer=https://www.jhipster.tech
+quarkus.smallrye-jwt.enabled=true
+
 jhipster.security.authentication.jwt.private-key.location=/jwt/privateKey.pem
 jhipster.security.authentication.jwt.issuer=https://www.jhipster.tech
 jhipster.security.authentication.jwt.token-validity-in-seconds=86400
 jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2592000
 jhipster.mail.base-url=http://127.0.0.1:8080
 jhipster.info.swagger.enable=true
-<%_ } _%>
 
 quarkus.http.auth.permission.public.paths=/api/authenticate,/api/register,/api/activate,/api/account/reset-password/init,/api/account/reset-password/finish,/management/health,/management/info,/management/prometheus
 quarkus.http.auth.permission.public.policy=permit
@@ -73,7 +75,7 @@ quarkus.container-image.name=<%= baseName %>
 quarkus.container-image.tag=latest
 <%_ } _%>
 
-<%_ if (authenticationType === 'oauth2') { _%>
+<%if (authenticationType === 'oauth2') { _%>
 # Oauth 2.0 and OIDC
 quarkus.oidc.enabled=true
 quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
@@ -87,16 +89,3 @@ quarkus.oidc.authentication.restore-path-after-redirect=false
 
 jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout
 <%_ } _%>
-
-<%_ if (authenticationType !== 'oauth2') { _%>
-mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
-mp.jwt.verify.issuer=https://www.jhipster.tech
-quarkus.smallrye-jwt.enabled=true
-
-jhipster.security.authentication.jwt.private-key.location=/jwt/privateKey.pem
-jhipster.security.authentication.jwt.issuer=https://www.jhipster.tech
-jhipster.security.authentication.jwt.token-validity-in-seconds=86400
-jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2592000
-jhipster.mail.base-url=http://127.0.0.1:8080
-<%_ } _%>
-

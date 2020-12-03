@@ -62,15 +62,18 @@ const serverFiles = {
     serverResource: [
         {
             path: SERVER_MAIN_RES_DIR,
-            templates: [{ file: 'default_banner.txt', method: 'copy', noEjs: true }, 'application.properties']
+            templates: [
+                { file: 'default_banner.txt', method: 'copy', noEjs: true },
+                { file: 'jwt/privateKey.pem', method: 'copy', noEjs: true },
+                { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
+                'application.properties',
+                'resources-config.json'
+            ]
         },
         {
             condition: generator => !generator.skipUserManagement,
             path: SERVER_MAIN_RES_DIR,
             templates: [
-                { file: 'jwt/privateKey.pem', method: 'copy', noEjs: true },
-                { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
-                'resources-config.json',
                 'templates/mail/activationEmail.html',
                 'templates/mail/creationEmail.html',
                 'templates/mail/passwordResetEmail.html'
@@ -236,6 +239,15 @@ const serverFiles = {
     ],
     serverJavaSecurity: [
         {
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/security/jwt/TokenProvider.java',
+                    renameTo: generator => `${generator.javaDir}security/jwt/TokenProvider.java`
+                }
+            ]
+        },
+        {
             condition: generator => !generator.skipUserManagement,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
@@ -246,10 +258,6 @@ const serverFiles = {
                 {
                     file: 'package/security/BCryptPasswordHasher.java',
                     renameTo: generator => `${generator.javaDir}security/BCryptPasswordHasher.java`
-                },
-                {
-                    file: 'package/security/jwt/TokenProvider.java',
-                    renameTo: generator => `${generator.javaDir}security/jwt/TokenProvider.java`
                 },
                 {
                     file: 'package/security/UsernameNotFoundException.java',

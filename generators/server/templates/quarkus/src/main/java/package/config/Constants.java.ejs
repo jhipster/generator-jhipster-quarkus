@@ -22,7 +22,7 @@ package <%=packageName%>.config;
  * Application constants.
  */
 public final class Constants {
-<%_ if(!skipUserManagement) { _%>
+<%_ if (authenticationType === 'jwt') { _%>
     // Regex for acceptable logins
     public static final String LOGIN_REGEX = "^[_.@A-Za-z0-9-]*$";
 

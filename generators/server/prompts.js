@@ -4,7 +4,7 @@
 const chalk = require('chalk');
 
 const constants = require('generator-jhipster/generators/generator-constants');
-const { getBase64Secret, getRandomHex } = require('generator-jhipster/generators/utils');
+const { getBase64Secret } = require('generator-jhipster/generators/utils');
 
 module.exports = {
     askForServerSideOpts
@@ -270,21 +270,13 @@ function askForServerSideOpts(meta) {
         }
         */
 
-        if (this.authenticationType === 'session') {
-            this.rememberMeKey = getRandomHex();
-        }
-
-        if (this.authenticationType === 'jwt' || this.applicationType === 'microservice') {
+        if (this.authenticationType === 'jwt') {
             this.jwtSecretKey = getBase64Secret(null, 64);
         }
 
-        // user-management will be handled by UAA app, oauth expects users to be managed in IpP
-        if ((this.applicationType === 'gateway' && this.authenticationType === 'uaa') || this.authenticationType === 'oauth2') {
+        // oauth expects users to be managed in IpP
+        if (this.authenticationType === 'oauth2') {
             this.skipUserManagement = true;
-        }
-
-        if (this.applicationType === 'uaa') {
-            this.authenticationType = 'uaa';
         }
 
         this.packageName = props.packageName;

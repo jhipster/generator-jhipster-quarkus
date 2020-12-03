@@ -22,9 +22,12 @@ const expectedFiles = {
     server: {
         common: [
             `${SERVER_MAIN_RES_DIR}application.properties`,
+            `${SERVER_MAIN_RES_DIR}jwt/privateKey.pem`,
+            `${SERVER_MAIN_RES_DIR}META-INF/resources/publicKey.pem`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/Constants.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JsonbConfiguration.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/jwt/TokenProvider.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/HeaderUtil.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
@@ -46,9 +49,6 @@ const expectedFiles = {
         ],
 
         userManagement: [
-            `${SERVER_MAIN_RES_DIR}jwt/privateKey.pem`,
-            `${SERVER_MAIN_RES_DIR}META-INF/resources/publicKey.pem`,
-            `${SERVER_MAIN_RES_DIR}resources-config.json`,
             `${SERVER_MAIN_RES_DIR}templates/mail/activationEmail.html`,
             `${SERVER_MAIN_RES_DIR}templates/mail/creationEmail.html`,
             `${SERVER_MAIN_RES_DIR}templates/mail/passwordResetEmail.html`,
@@ -57,7 +57,6 @@ const expectedFiles = {
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/AuthorityTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/UserTest.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/BCryptPasswordHasher.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/jwt/TokenProvider.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/UsernameNotFoundException.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/UserNotActivatedException.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/RandomUtil.java`,
