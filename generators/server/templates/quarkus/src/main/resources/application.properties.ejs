@@ -79,8 +79,13 @@ quarkus.oidc.enabled=true
 quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
 quarkus.oidc.client-id=web_app
 quarkus.oidc.credentials.secret=web_app
-quarkus.oidc.authentication.scopes=profile
 quarkus.oidc.application-type=web-app
+quarkus.oidc.authentication.scopes=profile,address,email,jhipster,microprofile-jwt,offline_access,phone
+quarkus.oidc.authentication.cookie-path=/
+quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc
+quarkus.oidc.authentication.restore-path-after-redirect=false
+
+jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout
 <%_ } _%>
 
 <%_ if (authenticationType !== 'oauth2') { _%>

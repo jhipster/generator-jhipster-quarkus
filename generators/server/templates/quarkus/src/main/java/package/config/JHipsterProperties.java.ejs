@@ -22,7 +22,7 @@ import io.quarkus.arc.config.ConfigProperties;
 
 @ConfigProperties(prefix = "jhipster")
 public class JHipsterProperties {
-<%_ if (authenticationType !== 'oauth2') { _%>
+<%_ if (authenticationType === 'jwt') { _%>
     public Security security;
     public Mail mail;
 
@@ -47,6 +47,13 @@ public class JHipsterProperties {
 
     public static class Mail {
         public String baseUrl;
+    }
+<%_ } _%>
+<%_ if (authenticationType === 'oauth2') { _%>
+    public Oidc oidc;
+
+    public static class Oidc {
+        public String logoutUrl;
     }
 <%_ } _%>
 }
