@@ -424,7 +424,11 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/LogoutResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/LogoutResource.java`
-                }
+                },
+                {
+                    file: 'package/web/rest/UserOauth2Controller.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserOauth2Controller.java`
+                },
             ]
         },
         {
