@@ -43,7 +43,7 @@ if (!viaService) {
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= entityOrDtoInstance %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>Id();
         <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityOrDtoInstance %>::<%= mapsIdAssoc.relationshipName %>);
         <%_ } _%>
-        <%= entityInstance %> = <%= dataAccessObject %>.persistOrUpdate(<%= entityInstance %>);
+        <% if (databaseType === 'sql') { %><%= entityInstance %> = <% } %><%= dataAccessObject %>.persistOrUpdate(<%= entityInstance %>);
         <%= returnPrefix %> <%= mapper %>.toDto(<%= entityInstance %>);
     <%_ } else {
         resultEntity = 'result';
