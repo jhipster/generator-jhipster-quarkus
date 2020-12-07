@@ -244,6 +244,9 @@ public class UserService {
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
                     <%_ } _%>
+                    <%_ if (databaseType === 'mongodb') { _%>
+                    user.update();
+                    <%_ } _%>
                     log.debug("Deleted User: {}", user);
                 }
             );
@@ -279,6 +282,9 @@ public class UserService {
                         .forEach(managedAuthorities::add);
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
+                    <%_ } _%>
+                    <%_ if (databaseType === 'mongodb') { _%>
+                    user.update();
                     <%_ } _%>
                     log.debug("Changed Information for User: {}", user);
                     return user;
