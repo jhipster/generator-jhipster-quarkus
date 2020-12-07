@@ -77,6 +77,7 @@
 %prod.quarkus.datasource.username=<%= baseName %>
 %prod.quarkus.datasource.password=
 <%_ } _%>
+<%_ if (databaseType === 'sql') { _%>
 quarkus.datasource.jdbc.max-size=8
 quarkus.datasource.jdbc.min-size=2
 quarkus.hibernate-orm.database.generation=none
@@ -86,13 +87,22 @@ quarkus.hibernate-orm.implicit-naming-strategy=<%=packageName%>.config.hibernate
 quarkus.hibernate-orm.physical-naming-strategy=<%=packageName%>.config.hibernate.JHipsterCompatiblePhysicalNamingStrategy
 quarkus.hibernate-orm.second-level-caching-enabled=<%= enableHibernateCache %>
 %test.quarkus.hibernate-orm.second-level-caching-enabled=false
+<%_ } _%>
 <%_ if (enableHibernateCache) { _%>
 # jhipster-quarkus-needle-hibernate-cache-add-entry
 <%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+%dev.quarkus.mongodb.connection-string=mongodb://localhost:27017
+%dev.quarkus.mongodb.database=<%= baseName %>
+%prod.quarkus.mongodb.connection-string=mongodb://localhost:27017
+%prod.quarkus.mongodb.database=<%= baseName %>
+<%_ } _%>
 
+<%_ if (databaseType === 'sql') { _%>
 quarkus.liquibase.change-log=config/liquibase/master.xml
 %dev.quarkus.liquibase.migrate-at-start=true
 
 %test.quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:test
 %test.quarkus.datasource.db-kind=h2
 %test.quarkus.liquibase.migrate-at-start=true
+<%_ } _%>

@@ -418,5 +418,15 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                     '            </dependency>'
             );
         });
+
+        it('application.properties contains MongoDb entries', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_RES_DIR}application.properties`,
+                '%dev.quarkus.mongodb.connection-string=mongodb://localhost:27017\n' +
+                    '%dev.quarkus.mongodb.database=sample\n' +
+                    '%prod.quarkus.mongodb.connection-string=mongodb://localhost:27017\n' +
+                    '%prod.quarkus.mongodb.database=sample'
+            );
+        });
     });
 });
