@@ -37,6 +37,7 @@ module.exports = class extends EntityGenerator {
     }
 
     get prompting() {
+        const generator = this;
         const phaseFromJHipster = super._prompting();
         const phaseFromQuarkus = {
             /* pre entity hook needs to be written here */
@@ -45,8 +46,18 @@ module.exports = class extends EntityGenerator {
             askForUpdate: phaseFromJHipster.askForUpdate,
             askForFields: phaseFromJHipster.askForFields,
             askForFieldsToRemove: phaseFromJHipster.askForFieldsToRemove,
-            askForRelationships: phaseFromJHipster.askForRelationships,
-            askForRelationsToRemove: phaseFromJHipster.askForRelationsToRemove,
+            askForRelationships: () => {
+                if (generator.context.databaseType === 'mongodb') {
+                    return;
+                }
+                phaseFromJHipster.askForRelationships.call(generator);
+            },
+            askForRelationsToRemove: () => {
+                if (generator.context.databaseType === 'mongodb') {
+                    return;
+                }
+                phaseFromJHipster.askForRelationsToRemove.call(generator);
+            },
             askForTableName: phaseFromJHipster.askForTableName,
             askForDataAccess: prompts.askForDataAccess,
             askForService: prompts.askForService,
