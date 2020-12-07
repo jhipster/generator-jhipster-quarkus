@@ -60,6 +60,7 @@ public class InitialSetupMigration {
     Authority userAuthority = new Authority(AuthoritiesConstants.USER);
 
     <%= asEntity('User') %> anonymousUser = new <%= asEntity('User') %>();
+    anonymousUser.id = "user-1";
     anonymousUser.login = "anonymoususer";
     <%_ if (authenticationType !== 'oauth2') { _%>
     anonymousUser.password = "$2a$10$j8S5d7Sr7.8VTOYNviDPOeWX8KcYILUVJBsYV83Y5NtECayypx9lO";
@@ -72,6 +73,7 @@ public class InitialSetupMigration {
     anonymousUser.createdDate = Instant.now();
 
     <%= asEntity('User') %> adminUser = new <%= asEntity('User') %>();
+    adminUser.id = "user-2";
     adminUser.login = "admin";
     <%_ if (authenticationType !== 'oauth2') { _%>
     adminUser.password = "$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC";
@@ -86,6 +88,7 @@ public class InitialSetupMigration {
     adminUser.authorities.add(userAuthority);
 
     <%= asEntity('User') %> userUser = new <%= asEntity('User') %>();
+    userUser.id = "user-3";
     userUser.login = "user";
     <%_ if (authenticationType !== 'oauth2') { _%>
     userUser.password = "$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K";
