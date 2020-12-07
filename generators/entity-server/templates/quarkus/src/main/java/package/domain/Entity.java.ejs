@@ -52,10 +52,14 @@ const uniqueEnums = {};
         }
     }
 _%>
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+<%_ } _%>
 import javax.json.bind.annotation.JsonbTransient;
 <%_ if (!viaRepository) { _%>
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+<%_ } _%>
 <%_ } _%>
 import io.quarkus.runtime.annotations.RegisterForReflection;
 <%_ if (databaseType === 'cassandra') { _%>
@@ -76,12 +80,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 <%_ } if (hasTextBlob === true || (fieldsContainUUID === true && ['mysql', 'mariadb'].includes(prodDatabaseType))) { _%>
 import org.hibernate.annotations.Type;
 <%_ } if (databaseType === 'mongodb') { _%>
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Document;
-    <%_ if (hasRelationship) { _%>
-import org.springframework.data.mongodb.core.mapping.DBRef;
-    <%_ } _%>
+import io.quarkus.mongodb.panache.MongoEntity;
+import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
+import org.bson.codecs.pojo.annotations.BsonId;
 <%_ } else if (databaseType === 'couchbase') { _%>
 import org.springframework.data.annotation.Id;
 import com.couchbase.client.java.repository.annotation.Field;
@@ -154,7 +155,7 @@ import static org.springframework.data.couchbase.core.mapping.id.GenerationStrat
 <%_ } _%>
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
-@Document(collection = "<%= entityTableName %>")
+@MongoEntity(collection="<%= entityTableName %>")
 <%_ } if (databaseType === 'couchbase') { _%>
 @Document
 <%_ } if (databaseType === 'cassandra') { _%>
@@ -163,7 +164,7 @@ import static org.springframework.data.couchbase.core.mapping.id.GenerationStrat
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "<%= entityInstance.toLowerCase() %>")
 <%_ } _%>
 @RegisterForReflection
-public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements Serializable {
+public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql') { %>PanacheEntityBase<% } else if (databaseType === 'mongodb') { %>PanacheMongoEntityBase<% }%> implements Serializable {
 
     private static final long serialVersionUID = 1L;
     <%_ if (databaseType === 'couchbase') { _%>
@@ -174,7 +175,11 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
     private String prefix = PREFIX;
     <%_ } _%>
 
+    <%_ if (databaseType === 'mongodb') { _%>
+    @BsonId
+    <%_ } else { _%>
     @Id
+    <%_ } _%>
     <%_ if (databaseType === 'sql') { _%>
         <%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -238,7 +243,7 @@ public class <%= asEntity(entityClass) %> extends PanacheEntityBase implements S
     @Column(name = "<%-fieldNameAsDatabaseColumn %>"<% if (fieldValidate === true) { %><% if (fieldValidateRules.includes('maxlength')) { %>, length = <%= fieldValidateRulesMaxlength %><% } %><% if (required) { %>, nullable = false<% } %><% if (unique) { %>, unique = true<% } %><% } %>)
         <%_ }
     } _%>
-    <%_ if (databaseType === 'mongodb' || databaseType === 'couchbase') { _%>
+    <%_ if (databaseType === 'couchbase') { _%>
     @Field("<%=fieldNameUnderscored %>")
     <%_ } _%>
     <%_ if (fieldTypeBlobContent !== 'text') { _%>
