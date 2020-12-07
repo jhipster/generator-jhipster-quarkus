@@ -8,7 +8,7 @@ const DEFAULT_ENTITY_ANSWERS = {
 };
 
 const DEFAULT_SERVER_ANSWERS = {
-    baseName: 'sampleMysql',
+    baseName: 'sample',
     packageName: 'com.mycompany.myapp',
     applicationType: 'monolith',
     databaseType: 'sql',
