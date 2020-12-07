@@ -216,6 +216,22 @@ const serverFiles = {
             ],
         },
         {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator =>
+                generator.databaseType === 'mongodb' &&
+                (!generator.skipUserManagement || (generator.skipUserManagement && generator.authenticationType === 'oauth2')),
+            templates: [
+                {
+                    file: 'package/config/dbmigrations/InitialSetupMigration.java',
+                    renameTo: generator => `${generator.javaDir}config/dbmigrations/InitialSetupMigration.java`
+                },
+                {
+                    file: 'package/config/MongockConfiguration.java',
+                    renameTo: generator => `${generator.javaDir}config/MongockConfiguration.java`
+                }
+            ]
+        },
+        {
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {

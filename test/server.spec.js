@@ -18,6 +18,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.file(expectedFiles.server.h2);
             assert.file(expectedFiles.maven);
             assert.noFile(expectedFiles.cache.common);
+            assert.noFile(expectedFiles.server.mongoDb);
         });
 
         it('pom.xml contains health check dependency', () => {
@@ -75,6 +76,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server.common);
             assert.file(expectedFiles.gradle);
+            assert.noFile(expectedFiles.server.mongoDb);
         });
 
         it('build.gradle contains health check dependency', () => {
@@ -97,6 +99,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.noFile(expectedFiles.server.userManagement);
             assert.noFile(expectedFiles.server.hibernate);
             assert.noFile(expectedFiles.server.h2);
+            assert.noFile(expectedFiles.server.mongoDb);
             assert.file(expectedFiles.maven);
         });
     });
@@ -218,6 +221,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('should contains redis file', () => {
             assert.file(expectedFiles.cache.common);
             assert.file(expectedFiles.cache.redis);
+            assert.noFile(expectedFiles.server.mongoDb);
         });
 
         it('should contains docker compose redis file from JHipster', () => {
@@ -357,6 +361,62 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('should build.gradle contains Quarkus OIDC dependency', () => {
             assert.fileContent('build.gradle', 'implementation "io.quarkus:quarkus-oidc"');
             assert.noFileContent('build.gradle', 'implementation "io.quarkus:quarkus-smallrye-jwt"');
+        });
+    });
+
+    describe('With maven MongoDb', () => {
+        before(
+            buildServerGeneratorContext({
+                databaseType: 'mongodb',
+                devDatabaseType: 'mongodb',
+                prodDatabaseType: 'mongodb',
+                enableHibernateCache: false
+            })
+        );
+
+        it('should contains MongoDb files', () => {
+            assert.file(expectedFiles.server.mongoDb);
+        });
+
+        it('pom.xml contains Mongo dependencies', () => {
+            assert.fileContent(
+                'pom.xml',
+                '        <dependency>\n' +
+                    '            <groupId>io.quarkus</groupId>\n' +
+                    '            <artifactId>quarkus-mongodb-panache</artifactId>\n' +
+                    '        </dependency>'
+            );
+        });
+
+        it('pom.xml contains Mongock dependencies', () => {
+            assert.fileContent(
+                'pom.xml',
+                '        <dependency>\n' +
+                    '            <groupId>com.github.cloudyrock.mongock</groupId>\n' +
+                    '            <artifactId>mongock-standalone</artifactId>\n' +
+                    '        </dependency>\n' +
+                    '        <dependency>\n' +
+                    '            <groupId>com.github.cloudyrock.mongock</groupId>\n' +
+                    '            <artifactId>mongodb-sync-v4-driver</artifactId>\n' +
+                    '        </dependency>\n' +
+                    '        <dependency>\n' +
+                    '            <groupId>org.mongodb</groupId>\n' +
+                    '            <artifactId>mongodb-driver-sync</artifactId>\n' +
+                    // eslint-disable-next-line no-template-curly-in-string
+                    '            <version>${mongodb-driver-sync.version}</version>\n' +
+                    '        </dependency>'
+            );
+            assert.fileContent(
+                'pom.xml',
+                '            <dependency>\n' +
+                    '                <groupId>com.github.cloudyrock.mongock</groupId>\n' +
+                    '                <artifactId>mongock-bom</artifactId>\n' +
+                    // eslint-disable-next-line no-template-curly-in-string
+                    '                <version>${mongock-bom.version}</version>\n' +
+                    '                <type>pom</type>\n' +
+                    '                <scope>import</scope>\n' +
+                    '            </dependency>'
+            );
         });
     });
 });

@@ -231,6 +231,13 @@ dependencies {
     implementation "io.quarkus:quarkus-jdbc-postgresql"
     liquibaseRuntime "io.quarkus:quarkus-jdbc-postgresql"
 <%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+    implementation "io.quarkus:quarkus-mongodb-panache"
+    implementation "com.github.cloudyrock.mongock:mongock-standalone"
+    implementation "com.github.cloudyrock.mongock:mongodb-sync-v4-driver:${mongodb_driverSync_version}"
+    implementation "org.mongodb:mongodb-driver-sync"
+    implementation "org.apache.commons:commons-lang3"
+<%_ } _%>
     implementation "io.quarkus:quarkus-jdbc-h2"
     implementation "io.quarkus:quarkus-test-h2"
     implementation "io.quarkus:quarkus-liquibase"
@@ -254,14 +261,18 @@ dependencies {
     implementation "io.micrometer:micrometer-registry-prometheus"
     implementation "org.mapstruct:mapstruct:${mapstruct_version}"
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+<%_ if (databaseType === 'mongodb') { _%>
+    implementation enforcedPlatform("com.github.cloudyrock.mongock:mongock-bom:${mongockBom_version}")
+<%_ } _%>
 
+<%_ if (databaseType === 'sql') { _%>
     liquibaseRuntime "org.liquibase:liquibase-core"
     liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibase_hibernate5_version}"
     liquibaseRuntime sourceSets.main.compileClasspath
     liquibaseRuntime 'ch.qos.logback:logback-core:1.2.3'
     liquibaseRuntime 'ch.qos.logback:logback-classic:1.2.3'
-    liquibaseRuntime 'org.springframework.data:spring-data-jpa:2.3.1.RELEASE'
 
+<%_ } _%>
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
 
     testImplementation "io.quarkus:quarkus-junit5"
