@@ -21,6 +21,10 @@ package <%=packageName%>.domain;
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 <%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+import io.quarkus.mongodb.panache.MongoEntity;
+import io.quarkus.mongodb.panache.PanacheMongoEntity;
+<%_ } _%>
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import java.io.Serializable;
 import java.util.Objects;
@@ -45,9 +49,11 @@ import javax.persistence.*;
 <%_ if (enableHibernateCache) { _%>
 @Cacheable
 <%_ } _%>
+<%_ } else if (databaseType === 'mongodb') { _%>
+@MongoEntity(collection="<%= jhiTablePrefix %>_authority")
 <%_ } _%>
 @RegisterForReflection
-public class Authority <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } %>implements Serializable {
+public class Authority <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } else if (databaseType === 'mongodb') { %>extends PanacheMongoEntity <% }%>implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotNull
