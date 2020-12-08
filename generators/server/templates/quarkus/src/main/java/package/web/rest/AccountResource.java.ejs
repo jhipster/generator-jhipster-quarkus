@@ -178,6 +178,7 @@ public class AccountResource {
             user.imageUrl = jwt.getClaim("picture");
         }
         user.activated = true;
+        user.authorities = jwt.getClaim("groups");
         return user;
     }
 <%_ } _%>
