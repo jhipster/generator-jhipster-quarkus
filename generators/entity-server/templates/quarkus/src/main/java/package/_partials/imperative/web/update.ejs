@@ -34,7 +34,7 @@
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 <%- include('../common/save', {...this, returnDirectly: false}); -%>
-        var response = Response.ok().entity(result);
+        var response = Response.ok().entity(<% if (databaseType === 'sql') { %>result<% } else { %><%= entityOrDtoInstance %><% } %>);
         HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= entityOrDtoInstance %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();
     }
