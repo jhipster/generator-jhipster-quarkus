@@ -99,7 +99,7 @@
             .when()
             <%_
                 let nonExistingId = 'UNKNOWN';
-                if (primaryKeyType === 'Long') {
+                if (['Long', 'String'].includes(primaryKeyType)) {
                     nonExistingId = 'Long.MAX_VALUE';
                 } else if (primaryKeyType === 'UUID') {
                     nonExistingId = 'UUID.randomUUID().toString()';

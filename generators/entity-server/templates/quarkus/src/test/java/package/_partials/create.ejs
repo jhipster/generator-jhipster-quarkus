@@ -79,7 +79,7 @@
             .size();
 
         // Create the <%= entityClass %> with an existing ID
-        <%= entityOrDtoInstance %>.id = 1L;
+        <%= entityOrDtoInstance %>.id = <% if (databaseType === 'mongodb') { %>"1"<% } else { %>1L<% }%>;
 
         // An entity with an existing ID cannot be created, so this API call must fail
         given()

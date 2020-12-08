@@ -34,7 +34,9 @@ import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.service.dto.UserDTO;
 import <%=packageName%>.service.mapper.UserMapper;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.liquibase.LiquibaseFactory;
+<%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import java.time.Instant;
@@ -43,7 +45,9 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.HttpHeaders;
 
+<%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
+<%_ } _%>
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 
@@ -74,8 +78,10 @@ public class UserResourceTest {
 
     ManagedUserVM managedUserVM;
 
+<%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } _%>
 
     @BeforeAll
     static void jsonMapper() {
@@ -88,6 +94,7 @@ public class UserResourceTest {
         this.adminToken = TestUtil.getAdminToken();
     }
 
+<%_ if (databaseType === 'sql') { _%>
     @BeforeEach
     public void databaseFixture() {
         try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
@@ -98,6 +105,7 @@ public class UserResourceTest {
             e.printStackTrace();
         }
     }
+<%_ } _%>
 
     @BeforeEach
     public void initTest() {
@@ -140,7 +148,7 @@ public class UserResourceTest {
 
     @Test
     public void createUserWithExistingId() {
-        managedUserVM.id = 1L;
+        managedUserVM.id = <% if (databaseType === 'mongodb') { %>"1"<% } else { %>1l<% }%>;
         // An entity with an existing ID cannot be created, so this API call must fail
         given()
             .auth()
@@ -601,7 +609,7 @@ public class UserResourceTest {
     public void testUserDTOtoUser() {
         var userMapper = new UserMapper();
         var userDTO = new UserDTO();
-        userDTO.id = 1L;
+        userDTO.id = <% if (databaseType === 'mongodb') { %>"1"<% } else { %>1l<% }%>;
         userDTO.login = DEFAULT_LOGIN;
         userDTO.firstName = DEFAULT_FIRSTNAME;
         userDTO.lastName = DEFAULT_LASTNAME;
@@ -614,7 +622,7 @@ public class UserResourceTest {
         userDTO.authorities = Set.of(AuthoritiesConstants.USER);
 
         User user = userMapper.userDTOToUser(userDTO);
-        assertThat(user.id).isEqualTo(1L);
+        assertThat(user.id).isEqualTo(<% if (databaseType === 'mongodb') { %>"1"<% } else { %>1l<% }%>);
         assertThat(user.login).isEqualTo(DEFAULT_LOGIN);
         assertThat(user.firstName).isEqualTo(DEFAULT_FIRSTNAME);
         assertThat(user.lastName).isEqualTo(DEFAULT_LASTNAME);
@@ -633,7 +641,7 @@ public class UserResourceTest {
     public void testUserToUserDTO() {
         var userMapper = new UserMapper();
         var user = new User();
-        user.id = 1L;
+        user.id = <% if (databaseType === 'mongodb') { %>"1"<% } else { %>1l<% }%>;
         user.login = DEFAULT_LOGIN;
         user.password = DEFAULT_PASSWORD;
         user.firstName = DEFAULT_FIRSTNAME;
@@ -652,7 +660,7 @@ public class UserResourceTest {
 
         UserDTO userDTO = userMapper.userToUserDTO(user);
 
-        assertThat(userDTO.id).isEqualTo(1L);
+        assertThat(userDTO.id).isEqualTo(<% if (databaseType === 'mongodb') { %>"1"<% } else { %>1l<% }%>);
         assertThat(userDTO.login).isEqualTo(DEFAULT_LOGIN);
         assertThat(userDTO.firstName).isEqualTo(DEFAULT_FIRSTNAME);
         assertThat(userDTO.lastName).isEqualTo(DEFAULT_LASTNAME);

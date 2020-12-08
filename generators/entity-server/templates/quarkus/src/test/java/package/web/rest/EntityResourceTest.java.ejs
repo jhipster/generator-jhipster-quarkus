@@ -39,8 +39,10 @@ public class <%= entityClass%>ResourceTest {
 
     <%= entityOrDtoClass %> <%= entityOrDtoInstance %>;
 
+<%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } _%>
 
     @BeforeAll
     static void jsonMapper() {
@@ -53,6 +55,7 @@ public class <%= entityClass%>ResourceTest {
         this.adminToken = TestUtil.getAdminToken();
     }
 
+<%_ if (databaseType === 'sql') { _%>
     @BeforeEach
     public void databaseFixture() {
         try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
@@ -63,6 +66,7 @@ public class <%= entityClass%>ResourceTest {
             e.printStackTrace();
         }
     }
+<%_ } _%>
 
     <%_ if (cacheProvider === 'redis') { _%>
     @BeforeAll

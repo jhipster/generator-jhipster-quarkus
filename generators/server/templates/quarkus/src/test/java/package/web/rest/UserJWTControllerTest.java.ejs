@@ -27,7 +27,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import <%=packageName%>.TestUtil;
 import <%=packageName%>.web.rest.vm.LoginVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.liquibase.LiquibaseFactory;
+<%_ } _%>
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
@@ -36,18 +38,23 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.ws.rs.core.HttpHeaders;
 
+<%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
+<%_ } _%>
 import org.junit.jupiter.api.*;
 
 @QuarkusTest
 public class UserJWTControllerTest {
 
+<%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } _%>
 
     @Inject
     MockMailbox mailbox;
 
+<%_ if (databaseType === 'sql') { _%>
     @BeforeEach
     public void databaseFixture() {
         try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
@@ -58,6 +65,7 @@ public class UserJWTControllerTest {
             e.printStackTrace();
         }
     }
+<%_ } _%>
 
     private void registerUser(ManagedUserVM user) {
         //Registering user

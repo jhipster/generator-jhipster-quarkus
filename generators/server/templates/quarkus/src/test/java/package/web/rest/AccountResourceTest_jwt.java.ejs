@@ -38,7 +38,9 @@ import <%=packageName%>.service.dto.UserDTO;
 import <%=packageName%>.web.rest.vm.KeyAndPasswordVM;
 import <%=packageName%>.web.rest.vm.LoginVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.liquibase.LiquibaseFactory;
+<%_ } _%>
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
@@ -52,15 +54,19 @@ import javax.inject.Inject;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
+<%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
+<%_ } _%>
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 
 @QuarkusTest
 public class AccountResourceTest {
 
+<%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } _%>
 
     @Inject
     MockMailbox mailbox;
@@ -70,6 +76,7 @@ public class AccountResourceTest {
         mailbox.clear();
     }
 
+<%_ if (databaseType === 'sql') { _%>
     @BeforeEach
     public void databaseFixture() {
         try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
@@ -80,6 +87,7 @@ public class AccountResourceTest {
             e.printStackTrace();
         }
     }
+<%_ } _%>
 
     @BeforeAll
     static void jsonMapper() {
