@@ -71,12 +71,14 @@ public class LogoutResource {
     @Authenticated
     public Response logout() {
         request.getSession().invalidate();
-        asList(request.getCookies()).forEach(cookie -> {
-            cookie.setValue("");
-            cookie.setPath("/");
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
-        });
+        var cookies = request.getCookies();
+        if (cookies != null)
+            asList(cookies).forEach(cookie -> {
+                cookie.setValue("");
+                cookie.setPath(cookiePath);
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            });
         var logoutDetails = Map.of(
             "logoutUrl", jHipsterProperties.oidc.logoutUrl,
             "idToken", jwt.getTokenID()
