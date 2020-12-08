@@ -35,6 +35,9 @@
         <%= entityOrDtoInstance %>.id = UUID.randomUUID();
         <%_ } _%>
 <%- include('../common/save', {...this, returnDirectly: false, isController: true}); -%>
+        <%_ if (databaseType === 'mongodb' && !viaService) { _%>
+        <%= entityClass %> result = <%= entityClass %>.findById(<%= entityOrDtoInstance %>.id);
+        <%_ } _%>
         var response = Response.created(fromPath(uriInfo.getPath()).path(result.id<% if (pkType !== 'String') { %>.toString()<% } %>).build()).entity(result);
         HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, result.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();

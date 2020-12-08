@@ -52,7 +52,7 @@ if (!viaService) {
         <%= dataTypeName %> <%= otherEntityName %>Id = <%= entityOrDtoInstance %>.get<%= mapsIdAssoc.relationshipNameCapitalized %>().getId();
         <%= mapsIdRepoInstance %>.findById(<%= otherEntityName %>Id).ifPresent(<%= entityOrDtoInstance%>::<%= otherEntityName %>);
         <%_ } _%>
-        <%= returnPrefix %> <%= dataAccessObject %>.persistOrUpdate(<%= entityInstance %>);
+        <% if (databaseType === 'sql') { %><%= returnPrefix %> <% } %><%= dataAccessObject %>.persistOrUpdate(<%= entityInstance %>);
         <%_ } if (searchEngine === 'elasticsearch') { _%>
         <%= entityInstance %>SearchRepository.persistOrUpdate(<%= resultEntity %>);
             <%_ if (returnDirectly) { _%>
