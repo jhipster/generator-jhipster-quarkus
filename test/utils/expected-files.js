@@ -58,11 +58,11 @@ const expectedFiles = {
 
         oauth2: [
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/UserVM.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/AuthInfoResource.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AuthInfoResource.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResource.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserOauth2Controller.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResourceTest.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/KeycloakServerTestResource.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResourceTest.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/KeycloakServerTestResource.java`,
             `${SERVER_TEST_RES_DIR}jhipster-test-realm.json`
         ],
 

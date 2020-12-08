@@ -453,10 +453,6 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
-                    file: 'package/web/rest/AccountResource.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/AccountResource.java`
-                },
-                {
                     file: 'package/web/rest/ManagementInfoResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResource.java`
                 },
