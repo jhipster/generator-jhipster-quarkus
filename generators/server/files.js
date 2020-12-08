@@ -62,11 +62,14 @@ const serverFiles = {
     serverResource: [
         {
             path: SERVER_MAIN_RES_DIR,
+            templates: [{ file: 'default_banner.txt', method: 'copy', noEjs: true }, 'application.properties']
+        },
+        {
+            condition: generator => generator.authenticationType === 'jwt',
+            path: SERVER_MAIN_RES_DIR,
             templates: [
-                { file: 'default_banner.txt', method: 'copy', noEjs: true },
                 { file: 'jwt/privateKey.pem', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
-                'application.properties',
                 'resources-config.json'
             ]
         },
@@ -82,6 +85,11 @@ const serverFiles = {
         {
             path: SERVER_TEST_RES_DIR,
             templates: ['application.properties']
+        },
+        {
+            condition: generator => generator.authenticationType === 'oauth2',
+            path: SERVER_TEST_RES_DIR,
+            templates: [{ file: 'jhipster-test-realm.json', method: 'copy', noEjs: true }]
         }
     ],
     serverTestSupport: [
@@ -99,12 +107,22 @@ const serverFiles = {
             ]
         },
         {
-            condition: generator => generator.databaseType === 'sql',
+            condition: generator => generator.databaseType === 'sql' || generator.databaseType === 'oauth2',
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
                     file: 'package/TestResources.java',
                     renameTo: generator => `${generator.javaDir}/TestResources.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'oauth2',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/KeycloakServerTestResource.java',
+                    renameTo: generator => `${generator.javaDir}/KeycloakServerTestResource.java`
                 }
             ]
         }
@@ -239,6 +257,7 @@ const serverFiles = {
     ],
     serverJavaSecurity: [
         {
+            condition: generator => generator.authenticationType === 'jwt',
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
@@ -397,8 +416,46 @@ const serverFiles = {
     ],
     serverJavaWeb: [
         {
+            condition: generator => generator.databaseType !== 'no',
             path: SERVER_MAIN_SRC_DIR,
             templates: [
+                {
+                    file: 'package/web/rest/AccountResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AccountResource.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.databaseType !== 'no' && generator.authenticationType === 'jwt',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/AccountResourceTest_jwt.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AccountResourceTest.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'oauth2',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/AccountResourceTest_oauth2.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AccountResourceTest.java`
+                },
+                {
+                    file: 'package/web/rest/LogoutResourceTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/LogoutResourceTest.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/AccountResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AccountResource.java`
+                },
                 {
                     file: 'package/web/rest/ManagementInfoResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResource.java`
@@ -414,9 +471,42 @@ const serverFiles = {
             ]
         },
         {
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/ManagementInfoResourceTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResourceTest.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'jwt' && generator.databaseType !== 'no',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/UserJWTController.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTController.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.authenticationType === 'jwt' && generator.databaseType !== 'no',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/web/rest/UserJWTControllerTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTControllerTest.java`
+                }
+            ]
+        },
+        {
             condition: generator => generator.authenticationType === 'oauth2',
             path: SERVER_MAIN_SRC_DIR,
             templates: [
+                {
+                    file: 'package/web/rest/vm/UserVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/vm/UserVM.java`
+                },
                 {
                     file: 'package/web/rest/AuthInfoResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/AuthInfoResource.java`
@@ -428,7 +518,7 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/UserOauth2Controller.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserOauth2Controller.java`
-                },
+                }
             ]
         },
         {
@@ -448,29 +538,12 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}web/rest/vm/ManagedUserVM.java`
                 },
                 {
-                    file: 'package/web/rest/AccountResource.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/AccountResource.java`
-                },
-                {
                     file: 'package/web/rest/ManagementInfoResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResource.java`
                 },
                 {
-                    file: 'package/web/rest/UserJWTController.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTController.java`
-                },
-                {
                     file: 'package/web/rest/UserResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResource.java`
-                }
-            ]
-        },
-        {
-            path: SERVER_TEST_SRC_DIR,
-            templates: [
-                {
-                    file: 'package/web/rest/ManagementInfoResourceTest.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResourceTest.java`
                 }
             ]
         },
@@ -488,14 +561,6 @@ const serverFiles = {
             condition: generator => !generator.skipUserManagement,
             path: SERVER_TEST_SRC_DIR,
             templates: [
-                {
-                    file: 'package/web/rest/AccountResourceTest.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/AccountResourceTest.java`
-                },
-                {
-                    file: 'package/web/rest/UserJWTControllerTest.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/UserJWTControllerTest.java`
-                },
                 {
                     file: 'package/web/rest/UserResourceTest.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResourceTest.java`

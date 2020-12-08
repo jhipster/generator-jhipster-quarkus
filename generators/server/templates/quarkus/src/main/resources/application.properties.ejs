@@ -36,6 +36,7 @@ quarkus.micrometer.export.prometheus.path=/management/jhimetrics
 
 quarkus.smallrye-health.root-path=/management/health
 
+<%if (authenticationType === 'jwt') { _%>
 mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
 mp.jwt.verify.issuer=https://www.jhipster.tech
 quarkus.smallrye-jwt.enabled=true
@@ -47,7 +48,6 @@ jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2
 jhipster.mail.base-url=http://127.0.0.1:8080
 jhipster.info.swagger.enable=true
 
-<%if (authenticationType === 'jwt') { _%>
 quarkus.http.auth.permission.public.paths=/api/authenticate,/api/register,/api/activate,/api/account/reset-password/init,/api/account/reset-password/finish,/management/health,/management/info,/management/prometheus
 quarkus.http.auth.permission.public.policy=permit
 <%_ } _%>
@@ -83,7 +83,7 @@ quarkus.oidc.enabled=true
 quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
 quarkus.oidc.client-id=web_app
 quarkus.oidc.credentials.secret=web_app
-quarkus.oidc.application-type=web-app
+quarkus.oidc.application-type=hybrid
 quarkus.oidc.authentication.scopes=profile,address,email,jhipster,microprofile-jwt,offline_access,phone
 quarkus.oidc.authentication.cookie-path=/
 quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc

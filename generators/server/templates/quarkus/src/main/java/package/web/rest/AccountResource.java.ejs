@@ -18,38 +18,49 @@
 -%>
 package <%=packageName%>.web.rest;
 
+<%_ if (authenticationType === 'oauth2') { _%>
+import <%=packageName%>.config.Constants;
+<%_ } _%>
 <%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.domain.User;
 import <%=packageName%>.service.InvalidPasswordException;
 import <%=packageName%>.service.MailService;
-<%_ } _%>
 import <%=packageName%>.service.UserService;
-<%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.service.UsernameAlreadyUsedException;
 import <%=packageName%>.service.dto.PasswordChangeDTO;
-<%_ } _%>
 import <%=packageName%>.service.dto.UserDTO;
-<%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.web.rest.errors.EmailAlreadyUsedException;
 import <%=packageName%>.web.rest.errors.EmailNotFoundException;
 import <%=packageName%>.web.rest.errors.LoginAlreadyUsedException;
 import <%=packageName%>.web.rest.vm.KeyAndPasswordVM;
 import <%=packageName%>.web.rest.vm.ManagedUserVM;
 <%_ } _%>
+<%_ if (authenticationType === 'oauth2') { _%>
+import <%=packageName%>.web.rest.vm.UserVM;
+<%_ } _%>
+
 import io.quarkus.security.Authenticated;
 <%_ if (authenticationType === 'jwt') { _%>
 import java.security.Principal;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 <%_ } _%>
+<%_ if (!skipUserManagement) { _%>
 import javax.annotation.security.PermitAll;
+<%_ } _%>
 import javax.enterprise.context.RequestScoped;
+<%_ if (authenticationType === 'jwt') { _%>
 import javax.inject.Inject;
+<%_ } _%>
+<%_ if (!skipUserManagement) { _%>
 import javax.validation.Valid;
+<%_ } _%>
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+<%_ if (!skipUserManagement) { _%>
 import javax.ws.rs.core.Response;
+<%_ } _%>
 import javax.ws.rs.core.SecurityContext;
 <%_ if (authenticationType === 'oauth2') { _%>
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -74,17 +85,14 @@ public class AccountResource {
         }
     }
 
-<%_ if (authenticationType !== 'oauth2') { _%>
+<%_ if (authenticationType === 'jwt') { _%>
     final MailService mailService;
 
-<%_ } _%>
     final UserService userService;
 
     @Inject
-    public AccountResource(<%_ if (authenticationType !== 'oauth2') { _%>MailService mailService, <%_ } _%>UserService userService) {
-<%_ if (authenticationType !== 'oauth2') { _%>
+    public AccountResource(MailService mailService, UserService userService) {
         this.mailService = mailService;
-<%_ } _%>
         this.userService = userService;
     }
 
@@ -98,21 +106,81 @@ public class AccountResource {
     @Path("/account")
     @Authenticated
     public UserDTO getAccount(@Context SecurityContext ctx) {
-<%_ if (authenticationType === 'jwt') { _%>
         return userService
             .getUserWithAuthoritiesByLogin(ctx.getUserPrincipal().getName())
             .map(UserDTO::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
+    }
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
+    /**
+     * {@code GET /account} : get the current user.
+     *
+     * @return the current user.
+     * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
+     */
+    @GET
+    @Path("/account")
+    @Authenticated
+    public UserVM getAccount(@Context SecurityContext ctx) {
         var principal = ctx.getUserPrincipal();
         if (principal instanceof JsonWebToken) {
-            return userService.getUserFromAuthentication((JsonWebToken) principal);
+            return getUserFromAuthentication((JsonWebToken) principal);
         } else {
             throw new AccountResourceException("User could not be found");
         }
-<%_ } _%>
     }
+
+    private static UserVM getUserFromAuthentication(JsonWebToken jwt) {
+        UserVM user = new UserVM();
+        // handle resource server JWT, where sub claim is email and uid is ID
+        if (jwt.getClaim("uid") != null) {
+            user.id = 1L; // (String) jwt.getClaim("uid");
+            user.login = jwt.getClaim("sub");
+        } else {
+            user.id = 1L; // (String) jwt.getClaim("sub");
+        }
+        if (jwt.getClaim("preferred_username") != null) {
+            user.login = ((String) jwt.getClaim("preferred_username")).toLowerCase();
+        } else if (user.login == null) {
+            user.login = "111"; //user.id;
+        }
+        if (jwt.getClaim("given_name") != null) {
+            user.firstName = jwt.getClaim("given_name");
+        }
+        if (jwt.getClaim("family_name") != null) {
+            user.lastName = jwt.getClaim("family_name");
+        }
+        if (jwt.getClaim("email_verified") != null) {
+            user.activated = jwt.getClaim("email_verified");
+        }
+        if (jwt.getClaim("email") != null) {
+            user.email = ((String) jwt.getClaim("email")).toLowerCase();
+        } else {
+            user.email = jwt.getClaim("sub");
+        }
+        if (jwt.getClaim("langKey") != null) {
+            user.langKey = (String) jwt.getClaim("langKey");
+        } else if (jwt.getClaim("locale") != null) {
+            // trim off country code if it exists
+            String locale = jwt.getClaim("locale");
+            if (locale.contains("_")) {
+                locale = locale.substring(0, locale.indexOf('_'));
+            } else if (locale.contains("-")) {
+                locale = locale.substring(0, locale.indexOf('-'));
+            }
+            user.langKey = locale.toLowerCase();
+        } else {
+            // set langKey to default if not specified by IdP
+            user.langKey = Constants.DEFAULT_LANGUAGE;
+        }
+        if (jwt.getClaim("picture") != null) {
+            user.imageUrl = jwt.getClaim("picture");
+        }
+        user.activated = true;
+        return user;
+    }
+<%_ } _%>
 
 <%_ if (!skipUserManagement) { _%>
     /**

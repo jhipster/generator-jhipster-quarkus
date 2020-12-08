@@ -7,7 +7,7 @@ module.exports = class {
         this.runContext = helpers.run(`generator-jhipster/generators/${generatorName}`).withGenerators([
             [
                 // eslint-disable-next-line import/no-dynamic-require
-                require(`../../generators/${generatorName}`), // eslint-disable-line global-require
+                require(`../../generators/${generatorName}/index.js`), // eslint-disable-line global-require
                 `jhipster-quarkus:${generatorName}`,
                 path.join(__dirname, `../../generators/${generatorName}/index.js`)
             ]

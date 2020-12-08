@@ -30,6 +30,7 @@ quarkus.micrometer.export.prometheus.path=/management/jhimetrics
 
 quarkus.smallrye-health.root-path=/management/health
 
+<%if (authenticationType === 'jwt') { _%>
 mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
 mp.jwt.verify.issuer=https://www.jhipster.tech
 quarkus.smallrye-jwt.enabled=true
@@ -43,6 +44,8 @@ jhipster.info.swagger.enable=true
 
 quarkus.http.auth.permission.public.paths=/api/authenticate,/api/register,/api/activate,/api/account/reset-password/init,/api/account/reset-password/finish,/management/health,/management/info,/management/prometheus
 quarkus.http.auth.permission.public.policy=permit
+<%_ } _%>
+<%_ if(!skipUserManagement) { _%>
 
 quarkus.http.auth.policy.admin-role.roles-allowed=ROLE_ADMIN
 quarkus.http.auth.permission.admin.paths=/api/users,/management/**
@@ -51,6 +54,7 @@ quarkus.http.auth.permission.admin.policy=admin-role
 quarkus.http.auth.policy.user-role.roles-allowed=ROLE_USER
 quarkus.http.auth.permission.user.paths=/api/**
 quarkus.http.auth.permission.user.policy=user-role
+<%_ } _%>
 
 quarkus.smallrye-openapi.path=/v2/api-docs
 quarkus.swagger-ui.always-include=true
@@ -59,10 +63,25 @@ quarkus.swagger-ui.path=/swagger-ui
 quarkus.native.additional-build-args=\
     -H:ResourceConfigurationFiles=resources-config.json,\
     --initialize-at-run-time=<%= packageName %>.security.RandomUtil
-
 <%if (buildTool === 'gradle') { _%>
+
 # Docker image build properties, for more information https://quarkus.io/guides/container-image
 quarkus.container-image.group=
 quarkus.container-image.name=<%= baseName %>
 quarkus.container-image.tag=latest
+<%_ } _%>
+
+<%if (authenticationType === 'oauth2') { _%>
+# Oauth 2.0 and OIDC
+quarkus.oidc.enabled=true
+quarkus.oidc.auth-server-url=http://localhost:8180/auth/realms/jhipster-test/
+quarkus.oidc.client-id=web_app
+quarkus.oidc.credentials.secret=web_app
+quarkus.oidc.application-type=service
+quarkus.oidc.authentication.scopes=profile,address,email,jhipster,microprofile-jwt,offline_access,phone
+quarkus.oidc.authentication.cookie-path=/
+quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc
+quarkus.oidc.authentication.restore-path-after-redirect=false
+
+jhipster.oidc.logout-url=http://localhost:8180/auth/realms/jhipster-test/protocol/openid-connect/logout
 <%_ } _%>

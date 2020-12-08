@@ -22,17 +22,16 @@ const expectedFiles = {
     server: {
         common: [
             `${SERVER_MAIN_RES_DIR}application.properties`,
-            `${SERVER_MAIN_RES_DIR}jwt/privateKey.pem`,
-            `${SERVER_MAIN_RES_DIR}META-INF/resources/publicKey.pem`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/Constants.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JsonbConfiguration.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/jwt/TokenProvider.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java`,
+            // `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/HeaderUtil.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`,
+            // `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceTest.java`,
             `${SERVER_TEST_RES_DIR}application.properties`
         ],
 
@@ -46,6 +45,25 @@ const expectedFiles = {
         hibernate: [
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java`
+        ],
+
+        jwt: [
+            `${SERVER_MAIN_RES_DIR}resources-config.json`,
+            `${SERVER_MAIN_RES_DIR}jwt/privateKey.pem`,
+            `${SERVER_MAIN_RES_DIR}META-INF/resources/publicKey.pem`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/jwt/TokenProvider.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTController.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerTest.java`
+        ],
+
+        oauth2: [
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/UserVM.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/AuthInfoResource.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResource.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserOauth2Controller.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResourceTest.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/KeycloakServerTestResource.java`,
+            `${SERVER_TEST_RES_DIR}jhipster-test-realm.json`
         ],
 
         userManagement: [
@@ -75,11 +93,7 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/KeyAndPasswordVM.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/LoginVM.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/ManagedUserVM.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTController.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserResource.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserResourceTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/MailServiceIT.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/mapper/UserMapperTest.java`
