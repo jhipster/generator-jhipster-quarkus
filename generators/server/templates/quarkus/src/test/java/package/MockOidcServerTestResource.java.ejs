@@ -90,8 +90,7 @@ public class MockOidcServerTestResource implements QuarkusTestResourceLifecycleM
 
         log.info("Mock OIDC server started: {}", server.baseUrl());
         return Map.of(
-            "quarkus.oidc.auth-server-url", server.baseUrl() + "/jhipster-mock-oidc",
-            "quarkus.oidc.client-id", "dummy"
+            "quarkus.oidc.auth-server-url", server.baseUrl() + "/jhipster-mock-oidc"
         );
     }
 

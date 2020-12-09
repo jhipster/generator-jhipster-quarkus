@@ -78,11 +78,11 @@ quarkus.container-image.tag=latest
 <%_ } _%>
 
 <%if (authenticationType === 'oauth2') { _%>
-# Oauth 2.0 and OIDC
+# OAuth 2.0 and OIDC
 quarkus.oidc.enabled=true
 quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
-quarkus.oidc.client-id=web_app
-quarkus.oidc.credentials.secret=web_app
+%dev.quarkus.oidc.client-id=web_app
+%dev.quarkus.oidc.credentials.secret=web_app
 quarkus.oidc.application-type=hybrid
 quarkus.oidc.authentication.scopes=profile,address,email,jhipster,microprofile-jwt,offline_access,phone
 quarkus.oidc.authentication.cookie-path=/
@@ -91,6 +91,7 @@ quarkus.oidc.authentication.restore-path-after-redirect=false
 
 jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout
 
-%test.quarkus.oidc.authentication.cookie-path=/
+%test.quarkus.oidc.client-id=dummy
+%test.quarkus.oidc.application-type=service
 %test.jhipster.oidc.logout-url=some-dummy-logoutUrl
 <%_ } _%>
