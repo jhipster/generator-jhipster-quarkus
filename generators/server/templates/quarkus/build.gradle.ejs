@@ -245,6 +245,10 @@ dependencies {
 <%_ if (cacheManagerIsAvailable) { _%>
     implementation 'io.quarkus:quarkus-cache'
 <%_ } _%>
+<%_ if (cacheProvider === 'redis') { _%>
+    implementation 'io.quarkus:quarkus-redis-client'
+    implementation 'org.apache.camel.quarkus:camel-quarkus-jackson'
+<%_ } _%>
     implementation "io.quarkus:quarkus-smallrye-health"
     implementation "io.quarkus:quarkus-micrometer"
     implementation "io.micrometer:micrometer-registry-prometheus"
@@ -267,6 +271,9 @@ dependencies {
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
 <%_ if (authenticationType === 'oauth2') { _%>
     testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremock_version}"
+<%_ } _%>
+<%_ if (cacheProvider === 'redis') { _%>
+    testImplementation "com.github.kstyrc:embedded-redis:${embeddedRedisVersion}"
 <%_ } _%>
 
     //Adding the engine dependency to the surefire-plugin unfortunately does not work in the current version.

@@ -42,6 +42,9 @@ jackson_databind_nullable_version=<%= JACKSON_DATABIND_NULLABLE_VERSION %>
 typesafe_config_version=1.4.0
 liquibase_hibernate5_version=3.8
 liquibaseTaskPrefix=liquibase
+<%_ if (cacheProvider === 'redis') { _%>
+embeddedRedisVersion=0.6
+<%_ } _%>
 
 <%_ if (databaseType === 'sql' || authenticationType === 'uaa') { _%>
 jaxb_runtime_version=2.3.2
