@@ -271,6 +271,7 @@ dependencies {
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
 <%_ if (authenticationType === 'oauth2') { _%>
     testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremock_version}"
+<%_ } _%>
 <%_ if (cacheProvider === 'redis') { _%>
     testImplementation "com.github.kstyrc:embedded-redis:${embeddedRedisVersion}"
 <%_ } _%>
