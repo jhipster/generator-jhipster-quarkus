@@ -32,7 +32,6 @@ const expectedFiles = {
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`,
             // `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceTest.java`,
-            `${SERVER_TEST_RES_DIR}application.properties`
         ],
 
         liquibase: [

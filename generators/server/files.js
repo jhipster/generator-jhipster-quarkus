@@ -81,10 +81,6 @@ const serverFiles = {
                 'templates/mail/creationEmail.html',
                 'templates/mail/passwordResetEmail.html'
             ]
-        },
-        {
-            path: SERVER_TEST_RES_DIR,
-            templates: ['application.properties']
         }
     ],
     serverTestSupport: [
