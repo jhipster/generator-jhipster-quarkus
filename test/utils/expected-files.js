@@ -1,6 +1,6 @@
 const constants = require('generator-jhipster/generators/generator-constants');
 
-const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, SERVER_TEST_SRC_DIR, DOCKER_DIR, SERVER_TEST_RES_DIR } = constants;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, SERVER_TEST_SRC_DIR, DOCKER_DIR } = constants;
 
 const expectedFiles = {
     maven: ['pom.xml', 'mvnw', 'mvnw.cmd', '.mvn/wrapper/maven-wrapper.jar', '.mvn/wrapper/maven-wrapper.properties'],
@@ -30,7 +30,7 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/HeaderUtil.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`
             // `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/AccountResourceTest.java`,
         ],
 
