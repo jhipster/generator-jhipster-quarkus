@@ -95,12 +95,21 @@ const serverFiles = {
             ]
         },
         {
-            condition: generator => generator.databaseType === 'sql',
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
                     file: 'package/TestResources.java',
                     renameTo: generator => `${generator.javaDir}/TestResources.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.cacheProvider === 'redis',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/RedisCacheTestResource.java',
+                    renameTo: generator => `${generator.javaDir}/RedisCacheTestResource.java`
                 }
             ]
         }
