@@ -21,14 +21,10 @@ package <%= packageName %>.cache.redis;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import <%= packageName %>.domain.User;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import redis.embedded.RedisServer;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +41,9 @@ class RedisCacheTest {
 
     private final String FOO_PREFIX = "Foo:";
 
-    @AfterEach
+    @BeforeEach
     public void clearCache() {
+        userRedisCache.clear();
         fooRedisCache.clear();
     }
 
