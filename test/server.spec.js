@@ -422,10 +422,13 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('application.properties contains MongoDb entries', () => {
             assert.fileContent(
                 `${SERVER_MAIN_RES_DIR}application.properties`,
-                '%dev.quarkus.mongodb.connection-string=mongodb://localhost:27017\n' +
-                    '%dev.quarkus.mongodb.database=sample\n' +
-                    '%prod.quarkus.mongodb.connection-string=mongodb://localhost:27017\n' +
-                    '%prod.quarkus.mongodb.database=sample'
+                'jhi.mongodb.port=27017\n' +
+                    '%test.jhi.mongodb.port=37017\n' +
+                    'jhi.mongodb.host=localhost\n' +
+                    '%prod.jhi.mongodb.host=localhost\n' +
+                    // eslint-disable-next-line no-template-curly-in-string
+                    'quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}\n' +
+                    'quarkus.mongodb.database=sample'
             );
         });
     });
