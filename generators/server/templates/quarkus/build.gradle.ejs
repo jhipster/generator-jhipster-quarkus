@@ -237,7 +237,7 @@ dependencies {
     implementation "io.quarkus:quarkus-elytron-security"
     implementation "io.quarkus:quarkus-smallrye-jwt"
     implementation "io.quarkus:quarkus-smallrye-openapi"
-<%_ if (cacheManagerIsAvailable) { _%>
+<%_ if (cacheProvider === 'caffeine') { _%>
     implementation 'io.quarkus:quarkus-cache'
 <%_ } _%>
 <%_ if (cacheProvider === 'redis') { _%>
