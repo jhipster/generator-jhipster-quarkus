@@ -213,8 +213,10 @@ dependencies {
     implementation "io.quarkus:quarkus-resteasy"
     implementation "io.quarkus:quarkus-resteasy-jsonb"
     implementation "io.quarkus:quarkus-mailer"
+<%_ if (databaseType === 'sql') { _%>
     implementation "io.quarkus:quarkus-hibernate-orm-panache"
     implementation "io.quarkus:quarkus-hibernate-validator"
+<%_ } _%>
 <%_ if (devDatabaseType === 'mariadb' || prodDatabaseType === 'mariadb') { _%>
     implementation "io.quarkus:quarkus-jdbc-mariadb"
     liquibaseRuntime "io.quarkus:quarkus-jdbc-mariadb"
@@ -238,9 +240,11 @@ dependencies {
     implementation "org.mongodb:mongodb-driver-sync"
     implementation "org.apache.commons:commons-lang3"
 <%_ } _%>
+<%_ if (databaseType === 'sql') { _%>
     implementation "io.quarkus:quarkus-jdbc-h2"
     implementation "io.quarkus:quarkus-test-h2"
     implementation "io.quarkus:quarkus-liquibase"
+<%_ } _%>
     implementation "io.quarkus:quarkus-elytron-security"
 <%_ if (authenticationType === 'jwt') { _%>
     implementation "io.quarkus:quarkus-smallrye-jwt"
