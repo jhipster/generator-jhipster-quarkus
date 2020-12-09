@@ -24,9 +24,6 @@ import static io.restassured.RestAssured.given;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.hamcrest.Matchers.*;
 <%_ } _%>
-<%_ if(authenticationType === 'oauth2') { _%>
-import static io.restassured.RestAssured.given;
-<%_ } _%>
 import static org.assertj.core.api.Assertions.assertThat;
 
 <%_ if(!skipUserManagement) { _%>
@@ -45,7 +42,9 @@ import javax.ws.rs.core.MediaType;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
-
+<%_ if(authenticationType === 'oauth2') { _%>
+import java.util.Set;
+<%_ } _%>
 
 /**
  * Utility class for testing REST controllers.
@@ -108,18 +107,7 @@ public final class TestUtil {
 
 <%if (authenticationType === 'oauth2') { _%>
     public static String getAdminToken() {
-        String accessToken = given()
-            .param("grant_type", "password")
-            .param("username", "admin")
-            .param("password", "admin")
-            .param("client_id", "web_app")
-            .param("client_secret", "web_app")
-            .when()
-            .post("http://localhost:8180/auth/realms/jhipster-test/protocol/openid-connect/token")
-            .then()
-            .extract()
-            .jsonPath().get("access_token");
-            return accessToken;
+        return MockOidcServerTestResource.getAccessToken("admin", Set.of("ROLE_ADMIN", "ROLE_USER"));
     }
 
 <%_ } _%>

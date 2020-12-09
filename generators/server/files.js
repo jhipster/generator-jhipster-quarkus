@@ -85,11 +85,6 @@ const serverFiles = {
         {
             path: SERVER_TEST_RES_DIR,
             templates: ['application.properties']
-        },
-        {
-            condition: generator => generator.authenticationType === 'oauth2',
-            path: SERVER_TEST_RES_DIR,
-            templates: [{ file: 'jhipster-test-realm.json', method: 'copy', noEjs: true }]
         }
     ],
     serverTestSupport: [
@@ -121,8 +116,8 @@ const serverFiles = {
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
-                    file: 'package/KeycloakServerTestResource.java',
-                    renameTo: generator => `${generator.javaDir}/KeycloakServerTestResource.java`
+                    file: 'package/MockOidcServerTestResource.java',
+                    renameTo: generator => `${generator.javaDir}/MockOidcServerTestResource.java`
                 }
             ]
         }

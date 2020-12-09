@@ -266,7 +266,7 @@ dependencies {
     testImplementation "org.assertj:assertj-core"
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
 <%_ if (authenticationType === 'oauth2') { _%>
-    testImplementation "org.testcontainers:junit-jupiter:${testcontainers_version}"
+    testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremock_version}"
 <%_ } _%>
 
     //Adding the engine dependency to the surefire-plugin unfortunately does not work in the current version.
