@@ -15,7 +15,6 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.file(expectedFiles.server.jwt);
             assert.file(expectedFiles.server.userManagement);
             assert.file(expectedFiles.server.hibernate);
-            assert.file(expectedFiles.server.h2);
             assert.file(expectedFiles.maven);
             assert.noFile(expectedFiles.cache.common);
         });
@@ -81,7 +80,6 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.file(expectedFiles.server.common);
             assert.noFile(expectedFiles.server.userManagement);
             assert.noFile(expectedFiles.server.hibernate);
-            assert.noFile(expectedFiles.server.h2);
             assert.file(expectedFiles.maven);
         });
     });

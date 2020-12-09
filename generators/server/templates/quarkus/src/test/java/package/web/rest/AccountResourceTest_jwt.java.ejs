@@ -43,10 +43,6 @@ import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
-<%_ if (cacheProvider === 'redis') { _%>
-import redis.embedded.RedisServer;
-import java.io.IOException;
-<%_ } _%>
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -62,10 +58,6 @@ import org.junit.jupiter.api.*;
 
 @QuarkusTest
 public class AccountResourceTest {
-
-<%_ if (cacheProvider === 'redis') { _%>
-    static RedisServer server;
-<%_ } _%>
 
     @Inject
     LiquibaseFactory liquibaseFactory;
@@ -94,21 +86,6 @@ public class AccountResourceTest {
         RestAssured.config =
             RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
     }
-
-    <%_ if (cacheProvider === 'redis') { _%>
-    @BeforeAll
-    public static void startRedisServer() throws IOException {
-        server = new RedisServer(6379);
-        server.start();
-    }
-    <%_ } _%>
-
-    <%_ if (cacheProvider === 'redis') { _%>
-    @AfterAll
-    public static void stopRedisServer() {
-        server.stop();
-    }
-    <%_ } _%>
 
     private void registerUser(ManagedUserVM user) {
         //Registering user

@@ -37,10 +37,6 @@ import <%=packageName%>.web.rest.vm.ManagedUserVM;
 import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
-<%_ if (cacheProvider === 'redis') { _%>
-import redis.embedded.RedisServer;
-import java.io.IOException;
-<%_ } _%>
 import java.time.Instant;
 import java.util.Set;
 import javax.inject.Inject;
@@ -73,10 +69,6 @@ public class UserResourceTest {
 
     private static final String DEFAULT_LANGKEY = "en";
     private static final String UPDATED_LANGKEY = "fr";
-
-<%_ if (cacheProvider === 'redis') { _%>
-    static RedisServer server;
-<%_ } _%>
 
     String adminToken;
 
@@ -120,21 +112,6 @@ public class UserResourceTest {
         managedUserVM.langKey = DEFAULT_LANGKEY;
         managedUserVM.authorities = Set.of(AuthoritiesConstants.USER);
     }
-
-    <%_ if (cacheProvider === 'redis') { _%>
-    @BeforeAll
-    public static void startRedisServer() throws IOException {
-        server = new RedisServer(6379);
-        server.start();
-    }
-    <%_ } _%>
-
-    <%_ if (cacheProvider === 'redis') { _%>
-    @AfterAll
-    public static void stopRedisServer() {
-        server.stop();
-    }
-    <%_ } _%>
 
     @Test
     public void createUser() {

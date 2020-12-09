@@ -98,7 +98,6 @@ const serverFiles = {
             ]
         },
         {
-            condition: generator => generator.databaseType === 'sql' || generator.databaseType === 'oauth2',
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
@@ -114,6 +113,16 @@ const serverFiles = {
                 {
                     file: 'package/MockOidcServerTestResource.java',
                     renameTo: generator => `${generator.javaDir}/MockOidcServerTestResource.java`
+                }
+            ]
+        },
+        {
+            condition: generator => generator.cacheProvider === 'redis',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/RedisCacheTestResource.java',
+                    renameTo: generator => `${generator.javaDir}/RedisCacheTestResource.java`
                 }
             ]
         }
