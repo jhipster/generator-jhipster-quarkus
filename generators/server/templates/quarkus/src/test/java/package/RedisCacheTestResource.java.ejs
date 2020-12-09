@@ -16,16 +16,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-## configure your caches
-<%_ if (cacheProvider === 'caffeine') { _%>
-quarkus.cache.type=<%= cacheProvider %>
-quarkus.cache.enabled=true
-quarkus.cache.caffeine."usersByEmail".maximum-size=<%= CACHE_MAXIMUM_SIZE %>
-quarkus.cache.caffeine."usersByEmail".expire-after-write=<%= CACHE_EXPIRE_AFTER_WRITE %>
-quarkus.cache.caffeine."usersByLogin".maximum-size=<%= CACHE_MAXIMUM_SIZE %>
-quarkus.cache.caffeine."usersByLogin".expire-after-write=<%= CACHE_EXPIRE_AFTER_WRITE %>
-<%_ } else if (cacheProvider === 'redis') { _%>
-jhi.cache.redis.host=localhost
-jhi.cache.redis.port=6379
-quarkus.redis.hosts=redis://${jhi.cache.redis.host}:${jhi.cache.redis.port}
-<%_ } _%>
+package <%=packageName%>;
+
+import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import redis.embedded.RedisServer;
+
+public class RedisCacheTestResource implements QuarkusTestResourceLifecycleManager {
+  RedisServer server;
+
+  @Override
+  public Map<String, String> start() {
+    try {
+      server = new RedisServer();
+      server.start();
+
+      return Collections.emptyMap();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void stop() {
+    server.stop();
+  }
+}
