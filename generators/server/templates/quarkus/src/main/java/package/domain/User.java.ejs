@@ -30,6 +30,9 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.quarkus.mongodb.panache.MongoEntity;
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
 import org.bson.codecs.pojo.annotations.BsonId;
+<%_ if (cacheProvider === 'caffeine') { _%>
+import org.bson.codecs.pojo.annotations.BsonIgnore;
+<%_ } _%>
 <%_ } _%>
 import java.io.Serializable;
 import java.time.Instant;
@@ -69,7 +72,13 @@ import org.hibernate.annotations.Cache;
 public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } else if (databaseType === 'mongodb') { %>extends PanacheMongoEntityBase <% }%>implements Serializable {
     private static final long serialVersionUID = 1L;
 <%_ if (cacheProvider === 'caffeine') { _%>
+    <%_ if (databaseType === 'mongodb') { _%>
+    @BsonIgnore
+    <%_ } _%>
     public static final String USERS_BY_EMAIL_CACHE = "usersByEmail";
+    <%_ if (databaseType === 'mongodb') { _%>
+    @BsonIgnore
+    <%_ } _%>
     public static final String USERS_BY_LOGIN_CACHE = "usersByLogin";
 <%_ } _%>
 
