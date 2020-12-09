@@ -44,18 +44,6 @@ class RedisCacheTest {
     UserRedisCache userRedisCache;
 
     private final String FOO_PREFIX = "Foo:";
-    static RedisServer server;
-
-    @BeforeAll
-    public static void startRedisServer() throws IOException {
-        server = new RedisServer(6379);
-        server.start();
-    }
-
-    @AfterAll
-    public static void stopRedisServer() {
-        server.stop();
-    }
 
     @AfterEach
     public void clearCache() {
