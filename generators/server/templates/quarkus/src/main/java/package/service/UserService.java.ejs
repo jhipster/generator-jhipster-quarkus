@@ -389,7 +389,6 @@ public class UserService {
      */
      public UserDTO getUserFromAuthentication(JsonWebToken jwt) {
         User user = getUser(jwt);
-//        var authorities = jwt.claim()
         return new UserDTO(syncUserWithIdP(jwt, user));
     }
 

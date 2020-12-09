@@ -32,7 +32,6 @@ public class KeycloakServerTestResource implements QuarkusTestResourceLifecycleM
 
     private final Logger log = LoggerFactory.getLogger(KeycloakServerTestResource.class);
 
-
     public GenericContainer keycloak;
 
     @Override
@@ -40,7 +39,7 @@ public class KeycloakServerTestResource implements QuarkusTestResourceLifecycleM
         try {
             keycloak = new KeycloakContainer("jboss/keycloak:latest");
             keycloak.start();
-            System.out.println("[INFO] Keycloack server started in TCP server mode");
+            System.out.println("[INFO] Keycloak server started in TCP server mode");
 
         } catch (Exception e) {
             log.error("Failed to start Keycloak container: {}", e.getMessage());
