@@ -13,7 +13,11 @@
         "email": "daniel@jhipster.tech",
         "url": ""
     },
+    "bin": {
+        "qhipster": "./cli/qhipster.js"
+    },
     "files": [
+        "cli",
         "generators"
     ],
     "main": "generators/app/index.js",
@@ -27,7 +31,8 @@
         "generator-jhipster": "6.10.1",
         "glob": "7.1.4",
         "lodash": "4.17.19",
-        "mkdirp": "0.5.1"
+        "mkdirp": "0.5.1",
+        "semver": "^7.3.4"
     },
     "devDependencies": {
         "ejs-lint": "0.3.0",
@@ -69,6 +74,10 @@
     "pre-commit": [
         "lint"
     ],
+    "engines": {
+        "node": ">=10.20.1",
+        "npm": ">=6.14.4"
+    },
     "license": "Apache-2.0",
     "bugs": {
         "url": "https://github.com/jhipster/jhipster-quarkus/issues"
