@@ -14,7 +14,7 @@
         "url": ""
     },
     "bin": {
-        "qhipster": "./cli/qhipster.js"
+        "jhipster-quarkus": "./cli/jhipster-quarkus.js"
     },
     "files": [
         "cli",

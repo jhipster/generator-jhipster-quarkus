@@ -28,7 +28,7 @@ const minimumNodeVersion = packageJson.engines.node;
 if (!semver.satisfies(currentNodeVersion, minimumNodeVersion)) {
     /* eslint-disable no-console */
     logger.error(
-        `You are running Node version ${currentNodeVersion}\nQHipster requires Node version ${minimumNodeVersion}\nPlease update your version of Node.`
+        `You are running Node version ${currentNodeVersion}\njhipster-quarkus requires Node version ${minimumNodeVersion}\nPlease update your version of Node.`
     );
     /* eslint-enable  */
 }
@@ -58,7 +58,7 @@ if (!process.argv.includes('quarkus') && process.argv.includes('--blueprints')) 
             process.argv[i + 1] = `${process.argv[i + 1]},quarkus`;
         }
     }
-    // User donot pass in blueprints or blueprint flag but without quarkus :> append quarkus
+    // User do not pass in blueprints or blueprint flag but without quarkus :> append quarkus
 } else if (!process.argv.includes('quarkus') && !process.argv.includes('--blueprint') && !process.argv.includes('--blueprints')) {
     process.argv.push('--blueprints');
     process.argv.push('quarkus');
@@ -77,7 +77,7 @@ function requireCLI(preferLocal) {
             if (__dirname !== path.dirname(localCLI)) {
                 // load local version
                 /* eslint-disable import/no-dynamic-require */
-                logger.info("Using QHipster version installed locally in current project's node_modules");
+                logger.info("Using jhipster-quarkus version installed locally in current project's node_modules");
                 require(localCLI);
                 return;
             }
