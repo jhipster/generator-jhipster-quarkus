@@ -36,6 +36,7 @@ quarkus.micrometer.export.prometheus.path=/management/jhimetrics
 
 quarkus.smallrye-health.root-path=/management/health
 
+<%if (authenticationType === 'jwt') { _%>
 mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
 mp.jwt.verify.issuer=https://www.jhipster.tech
 quarkus.smallrye-jwt.enabled=true
@@ -49,6 +50,7 @@ jhipster.info.swagger.enable=true
 
 quarkus.http.auth.permission.public.paths=/api/authenticate,/api/register,/api/activate,/api/account/reset-password/init,/api/account/reset-password/finish,/management/health,/management/info,/management/prometheus
 quarkus.http.auth.permission.public.policy=permit
+<%_ } _%>
 <%_ if(!skipUserManagement) { _%>
 
 quarkus.http.auth.policy.admin-role.roles-allowed=ROLE_ADMIN
@@ -73,4 +75,23 @@ quarkus.native.additional-build-args=\
 quarkus.container-image.group=
 quarkus.container-image.name=<%= baseName %>
 quarkus.container-image.tag=latest
+<%_ } _%>
+
+<%if (authenticationType === 'oauth2') { _%>
+# OAuth 2.0 and OIDC
+quarkus.oidc.enabled=true
+quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
+%dev.quarkus.oidc.client-id=web_app
+%dev.quarkus.oidc.credentials.secret=web_app
+quarkus.oidc.application-type=hybrid
+quarkus.oidc.authentication.scopes=profile,address,email,jhipster,microprofile-jwt,offline_access,phone
+quarkus.oidc.authentication.cookie-path=/
+quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc
+quarkus.oidc.authentication.restore-path-after-redirect=false
+
+jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout
+
+%test.quarkus.oidc.client-id=dummy
+%test.quarkus.oidc.application-type=service
+%test.jhipster.oidc.logout-url=some-dummy-logoutUrl
 <%_ } _%>

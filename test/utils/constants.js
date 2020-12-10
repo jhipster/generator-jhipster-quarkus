@@ -15,7 +15,7 @@ const DEFAULT_SERVER_ANSWERS = {
     devDatabaseType: 'h2Disk',
     prodDatabaseType: 'mysql',
     cacheProvider: 'caffeine',
-    authenticationType: 'session',
+    authenticationType: 'jwt',
     enableTranslation: true,
     nativeLanguage: 'en',
     languages: ['fr', 'de'],

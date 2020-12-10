@@ -64,6 +64,10 @@ sonarqube_plugin_version=2.8
 openapi_plugin_version=4.2.3
 <%_ } _%>
 checkstyle_version=8.29
+<%_ if (databaseType === 'oauth2') { _%>
+wiremock_version=2.27.2
+<%_ } _%>
+
 
 # jhipster-needle-gradle-property - JHipster will add additional properties here
 

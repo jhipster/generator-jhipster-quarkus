@@ -19,12 +19,14 @@ jobs:
                     - imperative-react-jwt-gradle-mysql-caffeine
                     - imperative-ngx-jwt-maven-mysql-redis
                     - imperative-sql-jwt-maven-noDb
+                    - imperative-ngx-oauth2-maven-mysql-caffeine
                 include:
                     - app: imperative-ngx-jwt-maven-mysql-caffeine
                     - app: imperative-ngx-jwt-maven-psql-nocache
                     - app: imperative-react-jwt-gradle-mysql-caffeine
                     - app: imperative-ngx-jwt-maven-mysql-redis
                     - app: imperative-sql-jwt-maven-noDb
+                    - app: imperative-ngx-oauth2-maven-mysql-caffeine
         env:
             JHI_APP: ${{ matrix.app }}
         steps:

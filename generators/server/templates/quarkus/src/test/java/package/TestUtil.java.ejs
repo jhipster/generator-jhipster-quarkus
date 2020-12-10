@@ -42,7 +42,9 @@ import javax.ws.rs.core.MediaType;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
-
+<%_ if(authenticationType === 'oauth2') { _%>
+import java.util.Set;
+<%_ } _%>
 
 /**
  * Utility class for testing REST controllers.
@@ -103,6 +105,12 @@ public final class TestUtil {
     }
 <%_ } _%>
 
+<%if (authenticationType === 'oauth2') { _%>
+    public static String getAdminToken() {
+        return MockOidcServerTestResource.getAccessToken("admin", Set.of("ROLE_ADMIN", "ROLE_USER"));
+    }
+
+<%_ } _%>
     public static ObjectMapper jsonbObjectMapper() {
         final var config = new JsonbConfig().withDateFormat(DATE_TIME_FORMAT, null);
         final Jsonb jsonb = JsonbBuilder.create(config);

@@ -1,0 +1,88 @@
+<%#
+ Copyright 2013-2020 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.web.rest;
+
+import <%=packageName%>.config.JHipsterProperties;
+import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Map;
+
+import static java.util.Arrays.asList;
+
+/**
+ * REST controller for managing global OIDC logout.
+ */
+@Path("/api/logout")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@RequestScoped
+public class LogoutResource {
+
+    @Inject
+    JHipsterProperties jHipsterProperties;
+
+    @Inject
+    JsonWebToken jwt;
+
+    @Context
+    HttpServletRequest request;
+
+    @Context
+    HttpServletResponse response;
+
+    @ConfigProperty(name = "quarkus.oidc.authentication.cookie-path")
+    String cookiePath;
+
+    /**
+     * {@code POST  /api/logout} : logout the current user.
+     *
+     * @return the {@link Response} with status {@code 200 (OK)} and a body with a global logout URL and ID token.
+     */
+    @POST
+    @Authenticated
+    public Response logout() {
+        request.getSession().invalidate();
+        var cookies = request.getCookies();
+        if (cookies != null)
+            asList(cookies).forEach(cookie -> {
+                cookie.setValue("");
+                cookie.setPath(cookiePath);
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            });
+        var logoutDetails = Map.of(
+            "logoutUrl", jHipsterProperties.oidc.logoutUrl,
+            "idToken", jwt.getTokenID()
+        );
+        return Response.ok(logoutDetails).build();
+    }
+}

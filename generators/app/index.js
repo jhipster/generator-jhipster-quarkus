@@ -96,7 +96,48 @@ module.exports = class extends AppGenerator {
     }
 
     get configuring() {
-        return super._configuring();
+        const phaseFromJHipster = super._configuring();
+
+        const phaseFromQuarkus = {
+            composeServer() {
+                if (this.skipServer) return;
+                const options = this.options;
+                const configOptions = this.configOptions;
+
+                this.composeWith(require.resolve('../server'), {
+                    ...options,
+                    configOptions,
+                    'client-hook': !this.skipClient,
+                    debug: this.isDebugEnabled
+                });
+            },
+
+            composeClient() {
+                if (this.skipClient) return;
+                const options = this.options;
+                const configOptions = this.configOptions;
+
+                this.composeWith(require.resolve('../client'), {
+                    ...options,
+                    configOptions,
+                    debug: this.isDebugEnabled
+                });
+            },
+
+            composeCommon() {
+                const options = this.options;
+                const configOptions = this.configOptions;
+
+                this.composeWith(require.resolve('../common'), {
+                    ...options,
+                    'client-hook': !this.skipClient,
+                    configOptions,
+                    debug: this.isDebugEnabled
+                });
+            }
+        };
+
+        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get default() {

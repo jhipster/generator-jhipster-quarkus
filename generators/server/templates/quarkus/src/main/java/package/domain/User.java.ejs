@@ -88,6 +88,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
 <%_ } _%>
     public String login;
 
+<%_ if (authenticationType !== 'oauth2') { _%>
     @NotNull
     @Size(min = 60, max = 60)
 <%_ if (databaseType === 'sql') { _%>
@@ -96,6 +97,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
     @JsonbTransient
     public String password;
 
+<%_ } _%>
     @Size(max = 50)
 <%_ if (databaseType === 'sql') { _%>
     @Column(name = "first_name", length = 50)
@@ -133,6 +135,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
 <%_ } _%>
     public String imageUrl;
 
+<%_ if (authenticationType !== 'oauth2') { _%>
     @Size(max = 20)
 <%_ if (databaseType === 'sql') { _%>
     @Column(name = "activation_key", length = 20)
@@ -231,6 +234,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
             ", imageUrl='" +
             imageUrl +
             '\'' +
+<%_ if (authenticationType !== 'oauth2') { _%>
             ", activated='" +
             activated +
             '\'' +
@@ -240,11 +244,12 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
             ", activationKey='" +
             activationKey +
             '\'' +
+<%_ } _%>
             "}"
         );
     }
 
-<%_ if (databaseType === 'sql') { _%>
+<%_ if (databaseType === 'sql' && authenticationType !== 'oauth2') { _%>
     public static Optional<User> findOneByActivationKey(String activationKey) {
         return find("activationKey", activationKey).firstResultOptional();
     }
@@ -257,6 +262,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
         return find("resetKey", resetKey).firstResultOptional();
     }
 
+<%_ } _%>
     public static Optional<User> findOneByEmailIgnoreCase(String email) {
         return find("LOWER(email) = LOWER(?1)", email).firstResultOptional();
     }

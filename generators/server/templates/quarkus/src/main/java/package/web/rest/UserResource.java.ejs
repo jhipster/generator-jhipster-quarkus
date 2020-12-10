@@ -21,25 +21,35 @@ package <%=packageName%>.web.rest;
 import static javax.ws.rs.core.UriBuilder.fromPath;
 
 import <%=packageName%>.domain.User;
+<%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.security.AuthoritiesConstants;
 import <%=packageName%>.service.MailService;
+<%_ } _%>
 import <%=packageName%>.service.UserService;
 import <%=packageName%>.service.dto.UserDTO;
+<%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.web.rest.errors.BadRequestAlertException;
 import <%=packageName%>.web.rest.errors.EmailAlreadyUsedException;
 import <%=packageName%>.web.rest.errors.LoginAlreadyUsedException;
 import <%=packageName%>.web.util.HeaderUtil;
+<%_ } _%>
 import <%=packageName%>.web.util.ResponseUtil;
 import java.util.List;
+<%_ if (authenticationType === 'jwt') { _%>
 import java.util.Optional;
+<%_ } _%>
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+<%_ if (authenticationType === 'jwt') { _%>
 import javax.validation.Valid;
+<%_ } _%>
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+<%_ if (authenticationType === 'jwt') { _%>
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+<%_ } _%>
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,25 +84,32 @@ import org.slf4j.LoggerFactory;
 public class UserResource {
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
 
+<%_ if (authenticationType !== 'oauth2') { _%>
     private static final String ENTITY_NAME = "users";
 
     final String applicationName;
 
     final MailService mailService;
 
+<%_ } _%>
     final UserService userService;
 
     @Inject
     public UserResource(
+<%_ if (authenticationType !== 'oauth2') { _%>
         @ConfigProperty(name = "application.name") String applicationName,
         MailService mailService,
+<%_ } _%>
         UserService userService
     ) {
+<%_ if (authenticationType !== 'oauth2') { _%>
         this.applicationName = applicationName;
         this.mailService = mailService;
+<%_ } _%>
         this.userService = userService;
     }
 
+<%_ if (authenticationType !== 'oauth2') { _%>
     /**
      * {@code POST  /users}  : Creates a new user.
      * <p>
@@ -150,6 +167,24 @@ public class UserResource {
     }
 
     /**
+     * {@code DELETE /users/:login} : delete the "login" User.
+     *
+     * @param login the login of the user to delete.
+     * @return the {@link Response} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DELETE
+    @Path("/{login}")
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
+    public Response deleteUser(@PathParam("login") String login) {
+        log.debug("REST request to delete User: {}", login);
+        userService.deleteUser(login);
+        Response.ResponseBuilder response = Response.noContent();
+        HeaderUtil.createAlert(applicationName, "userManagement.deleted", login).forEach(response::header);
+        return response.build();
+    }
+
+<%_ } _%>
+    /**
      * {@code GET /users} : get all users.
      *
      * @param pagination the pagination information.
@@ -189,21 +224,4 @@ public class UserResource {
         return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(UserDTO::new));
     }
 
-    /**
-     * {@code DELETE /users/:login} : delete the "login" User.
-     *
-     * @param login the login of the user to delete.
-     * @return the {@link Response} with status {@code 204 (NO_CONTENT)}.
-     */
-    @DELETE
-    //    @Path("/{login:" + Constants.LOGIN_REGEX + "}")
-    @Path("/{login}")
-    @RolesAllowed(AuthoritiesConstants.ADMIN)
-    public Response deleteUser(@PathParam("login") String login) {
-        log.debug("REST request to delete User: {}", login);
-        userService.deleteUser(login);
-        Response.ResponseBuilder response = Response.noContent();
-        HeaderUtil.createAlert(applicationName, "userManagement.deleted", login).forEach(response::header);
-        return response.build();
-    }
 }

@@ -16,19 +16,42 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-elytron-security</artifactId>
-        </dependency>
-<%_ if (authenticationType === 'jwt') { _%>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-smallrye-jwt</artifactId>
-        </dependency>
-<%_ } _%>
-<%_ if (authenticationType === 'oauth2') { _%>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-oidc</artifactId>
-        </dependency>
-<%_ } _%>
+package <%=packageName%>.web.rest.vm;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+import java.time.Instant;
+import java.util.Set;
+
+/**
+ * View Model to represent IdP User.
+ */
+@RegisterForReflection
+public class UserVM {
+
+    public Long id;
+
+    public String login;
+
+    public String firstName;
+
+    public String lastName;
+
+    public String email;
+
+    public String imageUrl;
+
+    public boolean activated = false;
+
+    public String langKey;
+
+    public String createdBy;
+
+    public Instant createdDate;
+
+    public String lastModifiedBy;
+
+    public Instant lastModifiedDate;
+
+    public Set<String> authorities;
+}

@@ -4,7 +4,7 @@
 const chalk = require('chalk');
 
 const constants = require('generator-jhipster/generators/generator-constants');
-const { getBase64Secret, getRandomHex } = require('generator-jhipster/generators/utils');
+const { getBase64Secret } = require('generator-jhipster/generators/utils');
 
 module.exports = {
     askForServerSideOpts
@@ -40,7 +40,6 @@ function askForServerSideOpts(meta) {
             default: 'com.mycompany.myapp',
             store: true
         },
-        // {
         //     when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
         //     type: 'list',
         //     name: 'serviceDiscoveryType',
@@ -78,7 +77,6 @@ function askForServerSideOpts(meta) {
         //     ],
         //     default: false
         // },
-        /*
         {
             when: response =>
                 (applicationType === 'monolith' && response.serviceDiscoveryType !== 'eureka') ||
@@ -93,12 +91,12 @@ function askForServerSideOpts(meta) {
                         name: 'JWT authentication (stateless, with a token)'
                     }
                 ];
-                if (applicationType === 'monolith' && response.serviceDiscoveryType !== 'eureka') {
+                /* if (applicationType === 'monolith' && response.serviceDiscoveryType !== 'eureka') {
                     opts.push({
                         value: 'session',
-                        name: 'HTTP Session Authentication (stateful, default Spring Security mechanism)'
+                        name: 'HTTP Session Authentication (stateful, default Quarkus mechanism)'
                     });
-                }
+                } */
                 opts.push({
                     value: 'oauth2',
                     name: 'OAuth 2.0 / OIDC Authentication (stateful, works with Keycloak and Okta)'
@@ -115,7 +113,6 @@ function askForServerSideOpts(meta) {
             },
             default: 0
         },
-        */
         {
             type: 'list',
             name: 'databaseType',
@@ -263,8 +260,7 @@ function askForServerSideOpts(meta) {
     this.prompt(prompts).then(props => {
         this.serviceDiscoveryType = props.serviceDiscoveryType;
 
-        // force authentication type to jwt
-        this.authenticationType = 'jwt';
+        this.authenticationType = props.authenticationType;
 
         // JWT authentication is mandatory with Eureka, so the JHipster Registry
         // can control the applications
@@ -272,24 +268,15 @@ function askForServerSideOpts(meta) {
         if (this.serviceDiscoveryType === 'eureka' && this.authenticationType !== 'uaa' && this.authenticationType !== 'oauth2') {
             this.authenticationType = 'jwt';
         }
-
         */
 
-        if (this.authenticationType === 'session') {
-            this.rememberMeKey = getRandomHex();
-        }
-
-        if (this.authenticationType === 'jwt' || this.applicationType === 'microservice') {
+        if (this.authenticationType === 'jwt') {
             this.jwtSecretKey = getBase64Secret(null, 64);
         }
 
-        // user-management will be handled by UAA app, oauth expects users to be managed in IpP
-        if ((this.applicationType === 'gateway' && this.authenticationType === 'uaa') || this.authenticationType === 'oauth2') {
+        // oauth expects users to be managed in IpP
+        if (this.authenticationType === 'oauth2') {
             this.skipUserManagement = true;
-        }
-
-        if (this.applicationType === 'uaa') {
-            this.authenticationType = 'uaa';
         }
 
         this.packageName = props.packageName;

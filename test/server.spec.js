@@ -12,6 +12,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server.common);
+            assert.file(expectedFiles.server.jwt);
             assert.file(expectedFiles.server.userManagement);
             assert.file(expectedFiles.server.hibernate);
             assert.file(expectedFiles.maven);
@@ -267,6 +268,81 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                 'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)\n' +
                     '            .firstResult();'
             );
+        });
+    });
+
+    describe('With Maven OAuth2', () => {
+        before(
+            buildServerGeneratorContext({
+                authenticationType: 'oauth2'
+            })
+        );
+
+        it('should creates OAuth2 files', () => {
+            assert.file(expectedFiles.server.oauth2);
+        });
+
+        it('should not creates JWT files', () => {
+            assert.noFile(expectedFiles.server.jwt);
+        });
+
+        it('should not creates user management', () => {
+            assert.noFile(expectedFiles.server.userManagement);
+        });
+
+        it('should pom.xml contains Quarkus OIDC dependency', () => {
+            assert.fileContent(
+                'pom.xml',
+                '        <dependency>\n' +
+                    '            <groupId>io.quarkus</groupId>\n' +
+                    '            <artifactId>quarkus-oidc</artifactId>\n' +
+                    '        </dependency>'
+            );
+            assert.noFileContent(
+                'pom.xml',
+                '        <dependency>\n' +
+                    '            <groupId>io.quarkus</groupId>\n' +
+                    '            <artifactId>quarkus-jwt</artifactId>\n' +
+                    '        </dependency>'
+            );
+        });
+
+        it('should applications.properties has Quarkus OIDC is enabled', () => {
+            assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.oidc.enabled=true');
+        });
+
+        it('should JHipster properties contains OIDC logout url', () => {
+            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`, 'public String logoutUrl;');
+
+            assert.fileContent(
+                `${SERVER_MAIN_RES_DIR}application.properties`,
+                'jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout'
+            );
+        });
+
+        it('should AccountResource uses JsonWebToken to build UserDTO', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`,
+                'getUserFromAuthentication(JsonWebToken jwt)'
+            );
+        });
+    });
+
+    describe('With Gradle OAuth2', () => {
+        before(
+            buildServerGeneratorContext({
+                buildTool: 'gradle',
+                authenticationType: 'oauth2'
+            })
+        );
+
+        it('should creates OAuth2 files', () => {
+            assert.file(expectedFiles.server.oauth2);
+        });
+
+        it('should build.gradle contains Quarkus OIDC dependency', () => {
+            assert.fileContent('build.gradle', 'implementation "io.quarkus:quarkus-oidc"');
+            assert.noFileContent('build.gradle', 'implementation "io.quarkus:quarkus-smallrye-jwt"');
         });
     });
 });

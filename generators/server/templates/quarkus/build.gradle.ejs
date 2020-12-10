@@ -235,7 +235,12 @@ dependencies {
     implementation "io.quarkus:quarkus-test-h2"
     implementation "io.quarkus:quarkus-liquibase"
     implementation "io.quarkus:quarkus-elytron-security"
+<%_ if (authenticationType === 'jwt') { _%>
     implementation "io.quarkus:quarkus-smallrye-jwt"
+<%_ } _%>
+<%_ if (authenticationType === 'oauth2') { _%>
+    implementation "io.quarkus:quarkus-oidc"
+<%_ } _%>
     implementation "io.quarkus:quarkus-smallrye-openapi"
 <%_ if (cacheProvider === 'caffeine') { _%>
     implementation 'io.quarkus:quarkus-cache'
@@ -264,6 +269,9 @@ dependencies {
     testImplementation "io.rest-assured:rest-assured"
     testImplementation "org.assertj:assertj-core"
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
+<%_ if (authenticationType === 'oauth2') { _%>
+    testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremock_version}"
+<%_ } _%>
 <%_ if (cacheProvider === 'redis') { _%>
     testImplementation "com.github.kstyrc:embedded-redis:${embeddedRedisVersion}"
 <%_ } _%>
