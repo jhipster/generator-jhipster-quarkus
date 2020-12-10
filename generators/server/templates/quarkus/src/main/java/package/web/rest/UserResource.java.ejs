@@ -173,7 +173,6 @@ public class UserResource {
      * @return the {@link Response} with status {@code 204 (NO_CONTENT)}.
      */
     @DELETE
-    //    @Path("/{login:" + Constants.LOGIN_REGEX + "}")
     @Path("/{login}")
     @RolesAllowed(AuthoritiesConstants.ADMIN)
     public Response deleteUser(@PathParam("login") String login) {
