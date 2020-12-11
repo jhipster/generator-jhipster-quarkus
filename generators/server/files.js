@@ -457,6 +457,10 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}web/rest/ManagementInfoResource.java`
                 },
                 {
+                    file: 'package/web/rest/JHipsterMetricsEndpoint.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/JHipsterMetricsEndpoint.java`
+                },
+                {
                     file: 'package/web/util/HeaderUtil.java',
                     renameTo: generator => `${generator.javaDir}web/util/HeaderUtil.java`
                 },
