@@ -18,14 +18,27 @@ describe(' Subgenerator app of quarkus JHipster blueprint', () => {
                         'quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/\n' +
                         'quarkus.oidc.client-id=web_app\n' +
                         'quarkus.oidc.credentials.secret=web_app\n' +
-                        'quarkus.oidc.authentication.scopes=profile\n' +
-                        'quarkus.oidc.application-type=web-app'
+                        'quarkus.oidc.authentication.scopes=profile,address,email,address,phone,offline_access\n' +
+                        'quarkus.oidc.application-type=hybrid\n' +
+                        'quarkus.oidc.authentication.cookie-path=/\n' +
+                        'quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc\n' +
+                        'quarkus.oidc.authentication.restore-path-after-redirect=false\n' +
+                        '\n' +
+                        'jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout\n'
                 );
                 assert.fileContent(
                     'README.md',
-                    'quarkus.oidc.auth-server-url=https://{yourOktaDomain}/oauth2/default\n' +
+                    'quarkus.oidc.enabled=true\n' +
+                        'quarkus.oidc.auth-server-url=https://{yourOktaDomain}/oauth2/default\n' +
                         'quarkus.oidc.client-id={clientId}\n' +
-                        'quarkus.oidc.credentials.secret={clientSecret}'
+                        'quarkus.oidc.credentials.secret={clientSecret}\n' +
+                        'quarkus.oidc.authentication.scopes=profile,address,email,address,phone,offline_access\n' +
+                        'quarkus.oidc.application-type=hybrid\n' +
+                        'quarkus.oidc.authentication.cookie-path=/\n' +
+                        'quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc\n' +
+                        'quarkus.oidc.authentication.restore-path-after-redirect=false\n' +
+                        '\n' +
+                        'jhipster.oidc.logout-url=https://{yourOktaDomain}/oauth2/default/v1/logout\n'
                 );
             });
         });

@@ -37,6 +37,7 @@ import <%=packageName%>.web.rest.vm.ManagedUserVM;
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
 import <%=packageName%>.web.rest.vm.UserVM;
+import io.quarkus.oidc.IdToken;
 <%_ } _%>
 
 import io.quarkus.security.Authenticated;
@@ -49,19 +50,21 @@ import java.util.concurrent.CompletionStage;
 import javax.annotation.security.PermitAll;
 <%_ } _%>
 import javax.enterprise.context.RequestScoped;
-<%_ if (authenticationType === 'jwt') { _%>
 import javax.inject.Inject;
-<%_ } _%>
 <%_ if (!skipUserManagement) { _%>
 import javax.validation.Valid;
 <%_ } _%>
 import javax.ws.rs.*;
+<%_ if (authenticationType === 'jwt') { _%>
 import javax.ws.rs.core.Context;
+<%_ } _%>
 import javax.ws.rs.core.MediaType;
 <%_ if (!skipUserManagement) { _%>
 import javax.ws.rs.core.Response;
 <%_ } _%>
+<%_ if (authenticationType === 'jwt') { _%>
 import javax.ws.rs.core.SecurityContext;
+<%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
 import org.eclipse.microprofile.jwt.JsonWebToken;
 <%_ } _%>
@@ -113,6 +116,10 @@ public class AccountResource {
     }
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
+    @Inject
+    @IdToken
+    JsonWebToken jwt;
+
     /**
      * {@code GET /account} : get the current user.
      *
@@ -122,16 +129,11 @@ public class AccountResource {
     @GET
     @Path("/account")
     @Authenticated
-    public UserVM getAccount(@Context SecurityContext ctx) {
-        var principal = ctx.getUserPrincipal();
-        if (principal instanceof JsonWebToken) {
-            return getUserFromAuthentication((JsonWebToken) principal);
-        } else {
+    public UserVM getAccount() {
+        if (jwt == null) {
             throw new AccountResourceException("User could not be found");
         }
-    }
 
-    private static UserVM getUserFromAuthentication(JsonWebToken jwt) {
         UserVM user = new UserVM();
         // handle resource server JWT, where sub claim is email and uid is ID
         if (jwt.getClaim("uid") != null) {
