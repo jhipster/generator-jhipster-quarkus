@@ -25,6 +25,10 @@ const filesAngular = {
         {
             path: ANGULAR_DIR,
             templates: [{ file: 'admin/health/health.component.html', method: 'processHtml' }, 'admin/health/health.service.ts']
+        },
+        {
+            path: ANGULAR_DIR,
+            templates: [{ file: 'admin/metrics/metrics.component.html', method: 'processHtml' }, 'admin/metrics/metrics.component.ts']
         }
     ],
     clientTestFw: [
