@@ -102,7 +102,7 @@ To log in to your app, you'll need to have [Keycloak](https://keycloak.org) up a
 docker-compose -f src/main/docker/keycloak.yml up
 ```
 
-The security settings in `src/main/resources/config/application.properties` are configured for this image.
+The security settings in `src/main/resources/application.properties` are configured for this image.
 
 ```properties
 quarkus.oidc.enabled=true
@@ -122,23 +122,17 @@ jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/ope
 
 If you'd like to use Okta instead of Keycloak, you'll need to change a few things. First, you'll need to create a free developer account at <https://developer.okta.com/signup/>. After doing so, you'll get your own Okta domain, that has a name like `https://dev-123456.okta.com`.
 
-Modify `src/main/resources/config/application.properties` to use your Okta settings.
+Modify `src/main/resources/application.properties` to use your Okta settings.
 
 ```properties
-quarkus.oidc.enabled=true
 quarkus.oidc.auth-server-url=https://{yourOktaDomain}/oauth2/default
 quarkus.oidc.client-id={clientId}
 quarkus.oidc.credentials.secret={clientSecret}
-quarkus.oidc.authentication.scopes=profile,address,email,address,phone,offline_access
-quarkus.oidc.application-type=hybrid
-quarkus.oidc.authentication.cookie-path=/
-quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc
-quarkus.oidc.authentication.restore-path-after-redirect=false
 
 jhipster.oidc.logout-url=https://{yourOktaDomain}/oauth2/default/v1/logout
 ```
 
-Create an OIDC App in Okta to get a `{clientId}` and `{clientSecret}`. To do this, log in to your Okta Developer account and navigate to **Applications** > **Add Application**. Click **Web** and click the **Next** button. Give the app a name you’ll remember, specify `http://localhost:8080` as a Base URI, and `http://localhost:8080/login/oauth2/code/oidc` as a Login Redirect URI. Click **Done**, then Edit and add `http://localhost:8080` as a Logout redirect URI. Copy and paste the client ID and secret into your `application.yml` file.
+Create an OIDC App in Okta to get a `{clientId}` and `{clientSecret}`. To do this, log in to your Okta Developer account and navigate to **Applications** > **Add Application**. Click **Web** and click the **Next** button. Give the app a name you’ll remember, specify `http://localhost:8080` as a Base URI, and `http://localhost:8080/login/oauth2/code/oidc` as a Login Redirect URI. Click **Done**, then Edit and add `http://localhost:8080` as a Logout redirect URI. Copy and paste the client ID and secret into your `application.properties` file.
 
 Create a `ROLE_ADMIN` and `ROLE_USER` group and add users into them. Modify e2e tests to use this account when running integration tests. You'll need to change credentials in `src/test/javascript/e2e/account/account.spec.ts` and `src/test/javascript/e2e/admin/administration.spec.ts`.
 
