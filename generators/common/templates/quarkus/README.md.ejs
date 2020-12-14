@@ -120,7 +120,38 @@ jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/ope
 
 ### Okta
 
-If you'd like to use Okta instead of Keycloak, you'll need to change a few things. First, you'll need to create a free developer account at <https://developer.okta.com/signup/>. After doing so, you'll get your own Okta domain, that has a name like `https://dev-123456.okta.com`.
+If you'd like to use Okta instead of Keycloak, it's pretty quick using the [Okta CLI](https://cli.okta.com/). After you've installed it, run:
+
+```shell
+okta register
+```
+Then, in your JHipster app's directory, run `okta apps create` and select **JHipster**.
+This will set up an Okta app for you, create `ROLE_ADMIN` and `ROLE_USER` groups, create a `.okta.env` file with your Okta settings, and configure a `groups` claim in your ID token.
+
+Note: As for now, in a JHipster context, the generated `.okta.env` is Spring oriented.
+```shell
+cat .okta.env
+export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET="{clientSecret}"
+export SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI="{yourOktaDomain}"
+export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID="{clientId}"
+```
+
+You can use the above environment variables in your `src/main/resources/application.properties` (or copy/paste the Okta settings values).
+
+```properties
+quarkus.oidc.auth-server-url=${SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI}
+quarkus.oidc.client-id=${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID}
+quarkus.oidc.credentials.secret=${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET)
+
+jhipster.oidc.logout-url=https://{yourOktaDomain}/oauth2/default/v1/logout
+```
+
+Run `source .okta.env` and start your app with Maven or Gradle. You should be able to sign in with the credentials you registered with.
+If you're on Windows, you should install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) so the `source` command will work.
+
+If you'd like to configure things manually through the Okta developer console, see the instructions below.
+
+First, you'll need to create a free developer account at <https://developer.okta.com/signup/>. After doing so, you'll get your own Okta domain, that has a name like `https://dev-123456.okta.com`.
 
 Modify `src/main/resources/application.properties` to use your Okta settings.
 
