@@ -19,6 +19,7 @@
 package <%=packageName%>.web.rest;
 
 import <%=packageName%>.config.JHipsterProperties;
+import io.quarkus.oidc.IdToken;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -51,7 +52,8 @@ public class LogoutResource {
     JHipsterProperties jHipsterProperties;
 
     @Inject
-    JsonWebToken jwt;
+    @IdToken
+    JsonWebToken idToken;
 
     @Context
     HttpServletRequest request;
@@ -81,7 +83,7 @@ public class LogoutResource {
             });
         var logoutDetails = Map.of(
             "logoutUrl", jHipsterProperties.oidc.logoutUrl,
-            "idToken", jwt.getTokenID()
+            "idToken", idToken.getRawToken()
         );
         return Response.ok(logoutDetails).build();
     }

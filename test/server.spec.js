@@ -321,10 +321,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         });
 
         it('should AccountResource uses JsonWebToken to build UserDTO', () => {
-            assert.fileContent(
-                `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`,
-                'getUserFromAuthentication(JsonWebToken jwt)'
-            );
+            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`, 'JsonWebToken accessToken;');
         });
     });
 

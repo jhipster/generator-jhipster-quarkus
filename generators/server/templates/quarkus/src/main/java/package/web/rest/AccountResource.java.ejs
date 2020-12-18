@@ -49,19 +49,21 @@ import java.util.concurrent.CompletionStage;
 import javax.annotation.security.PermitAll;
 <%_ } _%>
 import javax.enterprise.context.RequestScoped;
-<%_ if (authenticationType === 'jwt') { _%>
 import javax.inject.Inject;
-<%_ } _%>
 <%_ if (!skipUserManagement) { _%>
 import javax.validation.Valid;
 <%_ } _%>
 import javax.ws.rs.*;
+<%_ if (authenticationType === 'jwt') { _%>
 import javax.ws.rs.core.Context;
+<%_ } _%>
 import javax.ws.rs.core.MediaType;
 <%_ if (!skipUserManagement) { _%>
 import javax.ws.rs.core.Response;
 <%_ } _%>
+<%_ if (authenticationType === 'jwt') { _%>
 import javax.ws.rs.core.SecurityContext;
+<%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
 import org.eclipse.microprofile.jwt.JsonWebToken;
 <%_ } _%>
@@ -113,6 +115,10 @@ public class AccountResource {
     }
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
+    // Since the resource can be accessed via an HTTP client (ie. service mode), use the Access Token as Bearer token
+    @Inject
+    JsonWebToken accessToken;
+
     /**
      * {@code GET /account} : get the current user.
      *
@@ -122,48 +128,43 @@ public class AccountResource {
     @GET
     @Path("/account")
     @Authenticated
-    public UserVM getAccount(@Context SecurityContext ctx) {
-        var principal = ctx.getUserPrincipal();
-        if (principal instanceof JsonWebToken) {
-            return getUserFromAuthentication((JsonWebToken) principal);
-        } else {
+    public UserVM getAccount() {
+        if (accessToken == null) {
             throw new AccountResourceException("User could not be found");
         }
-    }
 
-    private static UserVM getUserFromAuthentication(JsonWebToken jwt) {
         UserVM user = new UserVM();
         // handle resource server JWT, where sub claim is email and uid is ID
-        if (jwt.getClaim("uid") != null) {
-            user.id = 1L; // (String) jwt.getClaim("uid");
-            user.login = jwt.getClaim("sub");
+        if (accessToken.getClaim("uid") != null) {
+            user.id = accessToken.getClaim("uid");
+            user.login = accessToken.getClaim("sub");
         } else {
-            user.id = 1L; // (String) jwt.getClaim("sub");
+            user.id = accessToken.getClaim("sub");
         }
-        if (jwt.getClaim("preferred_username") != null) {
-            user.login = ((String) jwt.getClaim("preferred_username")).toLowerCase();
+        if (accessToken.getClaim("preferred_username") != null) {
+            user.login = ((String) accessToken.getClaim("preferred_username")).toLowerCase();
         } else if (user.login == null) {
-            user.login = "111"; //user.id;
+            user.login = user.id;
         }
-        if (jwt.getClaim("given_name") != null) {
-            user.firstName = jwt.getClaim("given_name");
+        if (accessToken.getClaim("given_name") != null) {
+            user.firstName = accessToken.getClaim("given_name");
         }
-        if (jwt.getClaim("family_name") != null) {
-            user.lastName = jwt.getClaim("family_name");
+        if (accessToken.getClaim("family_name") != null) {
+            user.lastName = accessToken.getClaim("family_name");
         }
-        if (jwt.getClaim("email_verified") != null) {
-            user.activated = jwt.getClaim("email_verified");
+        if (accessToken.getClaim("email_verified") != null) {
+            user.activated = accessToken.getClaim("email_verified");
         }
-        if (jwt.getClaim("email") != null) {
-            user.email = ((String) jwt.getClaim("email")).toLowerCase();
+        if (accessToken.getClaim("email") != null) {
+            user.email = ((String) accessToken.getClaim("email")).toLowerCase();
         } else {
-            user.email = jwt.getClaim("sub");
+            user.email = accessToken.getClaim("sub");
         }
-        if (jwt.getClaim("langKey") != null) {
-            user.langKey = (String) jwt.getClaim("langKey");
-        } else if (jwt.getClaim("locale") != null) {
+        if (accessToken.getClaim("langKey") != null) {
+            user.langKey = (String) accessToken.getClaim("langKey");
+        } else if (accessToken.getClaim("locale") != null) {
             // trim off country code if it exists
-            String locale = jwt.getClaim("locale");
+            String locale = accessToken.getClaim("locale");
             if (locale.contains("_")) {
                 locale = locale.substring(0, locale.indexOf('_'));
             } else if (locale.contains("-")) {
@@ -174,11 +175,11 @@ public class AccountResource {
             // set langKey to default if not specified by IdP
             user.langKey = Constants.DEFAULT_LANGUAGE;
         }
-        if (jwt.getClaim("picture") != null) {
-            user.imageUrl = jwt.getClaim("picture");
+        if (accessToken.getClaim("picture") != null) {
+            user.imageUrl = accessToken.getClaim("picture");
         }
         user.activated = true;
-        user.authorities = jwt.getClaim("groups");
+        user.authorities = accessToken.getClaim("groups");
         return user;
     }
 <%_ } _%>
