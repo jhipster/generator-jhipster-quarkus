@@ -40,5 +40,7 @@ jobs:
               run: sudo $JHI_SCRIPTS/01-install-global-jhipster.sh
             - name: 'Generate JHipster Application'
               run: $JHI_SCRIPTS/02-generate-project.sh $JHI_APP
-            - name: 'Run JHipster Application server test'
-              run: $JHI_SCRIPTS/03-run-server-test.sh $JHI_APP
+            - name: 'Run JHipster Application server tests'
+              run: $JHI_SCRIPTS/03-run-server-tests.sh $JHI_APP
+            - name: 'Run JHipster Application client tests'
+              run: $JHI_SCRIPTS/04-run-client-tests.sh $JHI_APP
