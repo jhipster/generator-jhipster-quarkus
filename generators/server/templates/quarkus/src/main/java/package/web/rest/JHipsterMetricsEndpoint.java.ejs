@@ -120,6 +120,7 @@ public class JHipsterMetricsEndpoint {
 
             resultsGarbageCollector.putIfAbsent(key, gcPauseResults);
         });
+        resultsGarbageCollector.putIfAbsent("jvm.gc.pause", new HashMap<>());
 
         Collection<Gauge> gauges = Search.in(this.meterRegistry).name(s -> s.contains("jvm.gc") && !s.contains("jvm.gc.pause")).gauges();
         gauges.forEach(gauge -> resultsGarbageCollector.put(gauge.getId().getName(), gauge.value()));
