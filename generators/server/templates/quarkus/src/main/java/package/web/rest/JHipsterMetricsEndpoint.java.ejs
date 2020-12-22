@@ -74,12 +74,8 @@ public class JHipsterMetricsEndpoint {
         results.put("jvm", this.jvmMemoryMetrics());
         // HTTP requests stats
         results.put("http.server.requests", this.httpRequestsMetrics());
-        // Cache stats
-        results.put("cache", this.cacheMetrics());
         // Service stats
         results.put("services", this.serviceMetrics());
-        // Database stats
-        results.put("databases", this.databaseMetrics());
         // Garbage collector
         results.put("garbageCollector", this.garbageCollectorMetrics());
         // Process stats
@@ -139,35 +135,6 @@ public class JHipsterMetricsEndpoint {
         return resultsGarbageCollector;
     }
 
-    private Map<String, Map<String, Number>> databaseMetrics() {
-        Map<String, Map<String, Number>> resultsDatabase = new HashMap<>();
-
-        Collection<Timer> timers = Search.in(this.meterRegistry).name(s -> s.contains("hikari")).timers();
-        timers.forEach(timer -> {
-            String key = timer.getId().getName().substring(timer.getId().getName().lastIndexOf('.') + 1);
-
-            resultsDatabase.putIfAbsent(key, new HashMap<>());
-            resultsDatabase.get(key).put("count", timer.count());
-            resultsDatabase.get(key).put("max", timer.max(TimeUnit.MILLISECONDS));
-            resultsDatabase.get(key).put("totalTime", timer.totalTime(TimeUnit.MILLISECONDS));
-            resultsDatabase.get(key).put("mean", timer.mean(TimeUnit.MILLISECONDS));
-
-            ValueAtPercentile[] percentiles = timer.takeSnapshot().percentileValues();
-            for (ValueAtPercentile percentile : percentiles) {
-                resultsDatabase.get(key).put(String.valueOf(percentile.percentile()), percentile.value(TimeUnit.MILLISECONDS));
-            }
-        });
-
-        Collection<Gauge> gauges = Search.in(this.meterRegistry).name(s -> s.contains("hikari")).gauges();
-        gauges.forEach(gauge -> {
-            String key = gauge.getId().getName().substring(gauge.getId().getName().lastIndexOf('.') + 1);
-            resultsDatabase.putIfAbsent(key, new HashMap<>());
-            resultsDatabase.get(key).put("value", gauge.value());
-        });
-
-        return resultsDatabase;
-    }
-
     private Map<String, Map> serviceMetrics() {
         Collection<String> crudOperation = Arrays.asList("GET", "POST", "PUT", "DELETE");
 
@@ -202,38 +169,6 @@ public class JHipsterMetricsEndpoint {
         });
 
         return resultsHttpPerUri;
-    }
-
-    private Map<String, Map<String, Number>> cacheMetrics() {
-        Map<String, Map<String, Number>> resultsCache = new HashMap<>();
-
-        Collection<FunctionCounter> counters = Search.in(this.meterRegistry).name(s -> s.contains("cache") && !s.contains("hibernate")).functionCounters();
-        counters.forEach(counter -> {
-            String key = counter.getId().getName();
-            String name = counter.getId().getTag("name");
-            if (name != null) {
-                resultsCache.putIfAbsent(name, new HashMap<>());
-                if (counter.getId().getTag("result") != null) {
-                    key += "." + counter.getId().getTag("result");
-                }
-                resultsCache.get(name).put(key, counter.count());
-            } else {
-                logger.warn(MISSING_NAME_TAG_MESSAGE, key);
-            }
-        });
-
-        Collection<Gauge> gauges = Search.in(this.meterRegistry).name(s -> s.contains("cache")).gauges();
-        gauges.forEach(gauge -> {
-            String key = gauge.getId().getName();
-            String name = gauge.getId().getTag("name");
-            if (name != null) {
-                resultsCache.putIfAbsent(name, new HashMap<>());
-                resultsCache.get(name).put(key, gauge.value());
-            } else {
-                logger.warn(MISSING_NAME_TAG_MESSAGE, key);
-            }
-        });
-        return resultsCache;
     }
 
     private Map<String, Map<String, Number>> jvmMemoryMetrics() {
