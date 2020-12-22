@@ -28,13 +28,17 @@ const filesAngular = {
         },
         {
             path: ANGULAR_DIR,
-            templates: [{ file: 'admin/metrics/metrics.component.html', method: 'processHtml' }, 'admin/metrics/metrics.component.ts']
+            templates: [
+                { file: 'admin/metrics/metrics.component.html', method: 'processHtml' },
+                'admin/metrics/metrics.component.ts',
+                'admin/metrics/metrics.service.ts'
+            ]
         }
     ],
     clientTestFw: [
         {
             path: CLIENT_TEST_SRC_DIR,
-            templates: ['spec/app/admin/health/health.component.spec.ts']
+            templates: ['spec/app/admin/metrics/metrics.service.spec.ts', 'spec/app/admin/health/health.component.spec.ts']
         }
     ]
 };
