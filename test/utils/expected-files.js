@@ -105,7 +105,8 @@ const expectedFiles = {
         mongoDb: [
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/dbmigrations/InitialSetupMigration.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/MongockConfiguration.java`,
-        ],
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/MongoDbTestResource.java`,
+        ]
     },
 
     cache: {

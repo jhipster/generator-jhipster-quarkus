@@ -32,4 +32,7 @@ import io.quarkus.test.h2.H2DatabaseTestResource;
 <%_ if (authenticationType === 'oauth2') { _%>
 @QuarkusTestResource(MockOidcServerTestResource.class)
 <%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+@QuarkusTestResource(MongoDbTestResource.class)
+<%_ } _%>
 public class TestResources {}

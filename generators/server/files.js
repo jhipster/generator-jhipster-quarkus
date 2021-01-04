@@ -130,6 +130,16 @@ const serverFiles = {
                 },
             ],
         },
+        {
+            condition: generator => generator.databaseType === 'mongodb',
+            path: SERVER_TEST_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/MongoDbTestResource.java',
+                    renameTo: generator => `${generator.javaDir}/MongoDbTestResource.java`,
+                },
+            ],
+        },
     ],
     serverJavaCache: [
         {

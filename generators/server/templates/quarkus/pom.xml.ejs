@@ -238,6 +238,13 @@
             <scope>test</scope>
         </dependency>
         <%_ } _%>
+        <%_ if (databaseType === 'mongodb') { _%>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <%_ } _%>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
     <build>

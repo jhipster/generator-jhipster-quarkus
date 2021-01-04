@@ -4,7 +4,7 @@ const constants = require('generator-jhipster/generators/generator-constants');
 const { buildServerGeneratorContext } = require('./utils/generator-testing-api');
 const expectedFiles = require('./utils/expected-files');
 
-const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR } = constants;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR, SERVER_TEST_SRC_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
@@ -429,6 +429,13 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                     // eslint-disable-next-line no-template-curly-in-string
                     'quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}\n' +
                     'quarkus.mongodb.database=sample'
+            );
+        });
+
+        it('TestResource contains MongoDbTestResource', () => {
+            assert.fileContent(
+                `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
+                '@QuarkusTestResource(MongoDbTestResource.class)'
             );
         });
     });

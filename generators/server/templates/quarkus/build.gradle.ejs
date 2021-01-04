@@ -98,6 +98,7 @@ defaultTasks "quarkusDev"
 
 test {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    systemProperty "jhi.mongodb.port", "37017"
     useJUnitPlatform()
     exclude "**/*IT*", "**/*IntTest*"
 
@@ -112,6 +113,7 @@ test {
 
 task integrationTest(type: Test) {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    systemProperty "jhi.mongodb.port", "37017"
     useJUnitPlatform()
     description = "Execute integration tests."
     group = "verification"
@@ -289,6 +291,9 @@ dependencies {
 <%_ } _%>
 <%_ if (cacheProvider === 'redis') { _%>
     testImplementation "com.github.kstyrc:embedded-redis:${embeddedRedisVersion}"
+<%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+    testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
 <%_ } _%>
 
     //Adding the engine dependency to the surefire-plugin unfortunately does not work in the current version.
