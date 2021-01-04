@@ -247,7 +247,7 @@ dependencies {
 <%_ } _%>
 <%_ if (cacheProvider === 'redis') { _%>
     implementation 'io.quarkus:quarkus-redis-client'
-    implementation 'org.apache.camel.quarkus:camel-quarkus-jackson'
+    implementation "org.apache.camel.quarkus:camel-quarkus-jackson:${camel_quarkus_jackson_version}"
 <%_ } _%>
     implementation "io.quarkus:quarkus-smallrye-health"
     implementation "io.quarkus:quarkus-micrometer"

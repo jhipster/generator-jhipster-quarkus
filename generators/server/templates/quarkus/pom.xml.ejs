@@ -71,6 +71,9 @@
         <openapi-generator-maven-plugin.version>3.2.3</openapi-generator-maven-plugin.version>
         <%_ } _%>
         <quarkus-plugin.version><%= quarkusVersion %></quarkus-plugin.version>
+        <%_ if (cacheProvider === 'redis') { _%>
+         <camel-quarkus-jackson.version>1.5.0</camel-quarkus-jackson.version>
+         <%_ } _%>
 
         <!-- Plugin properties -->
         <checkstyle.version>8.27</checkstyle.version>
@@ -151,6 +154,7 @@
         <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-jackson</artifactId>
+            <version>${camel-quarkus-jackson.version}</version>
         </dependency>
         <%_ } _%>
         <dependency>
