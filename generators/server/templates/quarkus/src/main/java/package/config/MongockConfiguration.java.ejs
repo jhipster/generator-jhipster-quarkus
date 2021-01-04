@@ -26,15 +26,19 @@ import com.mongodb.client.MongoClients;
 import io.quarkus.runtime.StartupEvent;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public class MongockConfiguration {
+
+  @ConfigProperty(name = "quarkus.mongodb.database")
+  String databaseName;
 
   void onStart(@Observes StartupEvent ev) {
     MongoClient mongoClient = MongoClients.create(MongoClientSettings.builder().build());
     MongockStandalone
       .builder()
-      .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, "<%= baseName %>"))
+      .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
       .addChangeLogsScanPackage("<%=packageName%>.config.dbmigrations")
       .buildRunner()
       .execute();
