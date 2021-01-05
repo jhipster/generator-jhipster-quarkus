@@ -301,7 +301,6 @@ const serverFiles = {
                     file: 'package/service/dto/ManagementInfoDTO.java',
                     renameTo: generator => `${generator.javaDir}service/dto/ManagementInfoDTO.java`
                 },
-
                 {
                     file: 'package/service/ManagementInfoService.java',
                     renameTo: generator => `${generator.javaDir}service/ManagementInfoService.java`
@@ -459,6 +458,18 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/JHipsterMetricsEndpoint.java',
                     renameTo: generator => `${generator.javaDir}web/rest/JHipsterMetricsEndpoint.java`
+                },
+                {
+                    file: 'package/web/rest/JHipsterConfigurationEndpoint.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/JHipsterConfigurationEndpoint.java`
+                },
+                {
+                    file: 'package/web/rest/vm/ConfigPropsVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/vm/ConfigPropsVM.java`
+                },
+                {
+                    file: 'package/web/rest/vm/EnvVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/vm/EnvVM.java`
                 },
                 {
                     file: 'package/web/util/HeaderUtil.java',
