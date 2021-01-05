@@ -24,7 +24,11 @@ const filesAngular = {
     angularAdminModule: [
         {
             path: ANGULAR_DIR,
-            templates: [{ file: 'admin/health/health.component.html', method: 'processHtml' }, 'admin/health/health.service.ts']
+            templates: [
+                { file: 'admin/health/health.component.html', method: 'processHtml' },
+                'admin/health/health.service.ts',
+                'admin/configuration/configuration.component.html'
+            ]
         }
     ],
     clientTestFw: [

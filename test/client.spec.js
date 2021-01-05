@@ -24,6 +24,10 @@ describe('Subgenerator client of quarkus JHipster blueprint', () => {
                     '}'
             );
         });
+
+        it('Angular configuration files contain expected content', () => {
+            assert.fileContent(`${ANGULAR_DIR}admin/configuration/configuration.component.html`, 'Quarkus configuration</h3>');
+        });
     });
 
     describe('React tests', () => {
