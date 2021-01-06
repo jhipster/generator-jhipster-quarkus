@@ -30,6 +30,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -82,6 +84,13 @@ public class JHipsterMetricsEndpoint {
         results.put("processMetrics", this.processMetrics());
 
         return results;
+    }
+
+    @GET
+    @Path("/threaddump")
+    public Map<String, List<ThreadInfo>> getThreadDump() {
+        var threads = Arrays.asList(ManagementFactory.getThreadMXBean().dumpAllThreads(true, true));
+        return Map.of("threads", threads);
     }
 
     private Map<String, Number> processMetrics() {

@@ -24,10 +24,7 @@ const filesReact = {
     adminModule: [
         {
             path: REACT_DIR,
-            templates: [
-                { file: 'modules/administration/health/health.tsx', method: 'processJsx' },
-                { file: 'modules/administration/metrics/metrics.tsx', method: 'processJsx' }
-            ]
+            templates: [{ file: 'modules/administration/health/health.tsx', method: 'processJsx' }]
         }
     ]
 };
