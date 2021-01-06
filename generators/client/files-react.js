@@ -31,6 +31,12 @@ const filesReact = {
 
 function writeFiles() {
     this.writeFilesToDisk(filesReact, this, false, 'react');
+
+    this.replaceContent(
+        `${REACT_DIR}modules/administration/configuration/configuration.tsx`,
+        '<label>Spring configuration</label>',
+        '<label>Quarkus configuration</label>'
+    );
 }
 
 module.exports = {

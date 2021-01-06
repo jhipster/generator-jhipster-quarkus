@@ -24,11 +24,7 @@ const filesAngular = {
     angularAdminModule: [
         {
             path: ANGULAR_DIR,
-            templates: [
-                { file: 'admin/health/health.component.html', method: 'processHtml' },
-                'admin/health/health.service.ts',
-                'admin/configuration/configuration.component.html'
-            ]
+            templates: [{ file: 'admin/health/health.component.html', method: 'processHtml' }, 'admin/health/health.service.ts']
         }
     ],
     clientTestFw: [
@@ -41,6 +37,12 @@ const filesAngular = {
 
 function writeFiles() {
     this.writeFilesToDisk(filesAngular, this, false, 'angular');
+
+    this.replaceContent(
+        `${ANGULAR_DIR}admin/configuration/configuration.component.html`,
+        '<h3 id="spring-configuration">Spring configuration</h3>',
+        '<h3 id="Quarkus-configuration">Quarkus configuration</h3>'
+    );
 }
 
 module.exports = {
