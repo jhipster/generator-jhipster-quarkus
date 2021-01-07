@@ -20,6 +20,7 @@ package <%=packageName%>.web.rest;
 
 import <%=packageName%>.web.rest.vm.ConfigPropsVM;
 import <%=packageName%>.web.rest.vm.EnvVM;
+import <%=packageName%>.security.AuthoritiesConstants;
 import io.quarkus.runtime.configuration.ProfileManager;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.spi.ConfigSource;
@@ -29,6 +30,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -40,12 +42,14 @@ public class JHipsterConfigurationEndpoint {
 
   @GET
   @Path("/configprops")
+  @RolesAllowed(AuthoritiesConstants.ADMIN)
   public ConfigPropsVM getConfigs() {
     return new ConfigPropsVM();
   }
 
   @GET
   @Path("/env")
+  @RolesAllowed(AuthoritiesConstants.ADMIN)
   public EnvVM getEnvs() {
     Iterable<ConfigSource> configSources = ConfigProvider.getConfig().getConfigSources();
     List<EnvVM.PropertySource> propertySources = StreamSupport
