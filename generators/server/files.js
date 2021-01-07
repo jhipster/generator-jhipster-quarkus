@@ -271,10 +271,6 @@ const serverFiles = {
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
-                    file: 'package/security/AuthoritiesConstants.java',
-                    renameTo: generator => `${generator.javaDir}security/AuthoritiesConstants.java`
-                },
-                {
                     file: 'package/security/BCryptPasswordHasher.java',
                     renameTo: generator => `${generator.javaDir}security/BCryptPasswordHasher.java`
                 },
@@ -289,6 +285,15 @@ const serverFiles = {
                 {
                     file: 'package/security/RandomUtil.java',
                     renameTo: generator => `${generator.javaDir}security/RandomUtil.java`
+                }
+            ]
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/security/AuthoritiesConstants.java',
+                    renameTo: generator => `${generator.javaDir}security/AuthoritiesConstants.java`
                 }
             ]
         }
