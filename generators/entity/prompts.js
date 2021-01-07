@@ -1,6 +1,6 @@
 module.exports = {
     askForDataAccess,
-    askForService
+    askForService,
 };
 
 function askForDataAccess() {
@@ -20,15 +20,15 @@ function askForDataAccess() {
             choices: [
                 {
                     value: 'activeRecord',
-                    name: 'No, the Entity will be used as an Active Record'
+                    name: 'No, the Entity will be used as an Active Record',
                 },
                 {
                     value: 'repository',
-                    name: 'Yes, generate a separate Repository class'
-                }
+                    name: 'Yes, generate a separate Repository class',
+                },
             ],
-            default: 0
-        }
+            default: 0,
+        },
     ];
     this.prompt(prompts).then(props => {
         context.dataAccess = props.dataAccess;
@@ -51,19 +51,19 @@ function askForService() {
             choices: [
                 {
                     value: 'no',
-                    name: 'No, the REST controller should use the active record/repository directly'
+                    name: 'No, the REST controller should use the active record/repository directly',
                 },
                 {
                     value: 'serviceClass',
-                    name: 'Yes, generate a separate service class'
+                    name: 'Yes, generate a separate service class',
                 },
                 {
                     value: 'serviceImpl',
-                    name: 'Yes, generate a separate service interface and implementation'
-                }
+                    name: 'Yes, generate a separate service interface and implementation',
+                },
             ],
-            default: 0
-        }
+            default: 0,
+        },
     ];
     this.prompt(prompts).then(props => {
         context.service = props.service;

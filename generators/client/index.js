@@ -52,7 +52,7 @@ module.exports = class extends ClientGenerator {
                 if (this.clientFramework === REACT) {
                     return writeReactFiles.call(this);
                 }
-            }
+            },
         };
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }

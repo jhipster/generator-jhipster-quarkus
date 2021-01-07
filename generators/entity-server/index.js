@@ -104,7 +104,7 @@ module.exports = class extends EntityServerGenerator {
                 this.entityToDtoMethodReference = `${this.mapper}::toDto`;
                 this.entityToDtoMethodInvocation = `${this.mapper}.toDto`;
                 this.serviceClassName = this.hasServiceImpl ? `${this.entityClass}ServiceImpl` : `${this.entityClass}Service`;
-            }
+            },
         };
         return phaseFromQuarkus;
     }

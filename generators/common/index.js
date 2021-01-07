@@ -77,7 +77,7 @@ module.exports = class extends CommonGenerator {
         const phaseFromQuarkus = {
             defineJHipsterQuarkusVersion() {
                 this.jhipsterQuarkusVersion = jhipsterQuarkusVersion;
-            }
+            },
         };
         return Object.assign(phaseFromJHipster, phaseFromQuarkus);
     }

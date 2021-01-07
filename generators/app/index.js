@@ -81,7 +81,7 @@ module.exports = class extends AppGenerator {
                         ' _______________________________________________________________________________________________________________\n'
                     )
                 );
-            }
+            },
         };
 
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
@@ -90,7 +90,7 @@ module.exports = class extends AppGenerator {
     get prompting() {
         const phaseFromJHipster = super._prompting();
         const phaseFromQuarkus = {
-            askForModuleName: phaseFromJHipster.askForModuleName
+            askForModuleName: phaseFromJHipster.askForModuleName,
         };
         return phaseFromQuarkus;
     }
@@ -108,7 +108,7 @@ module.exports = class extends AppGenerator {
                     ...options,
                     configOptions,
                     'client-hook': !this.skipClient,
-                    debug: this.isDebugEnabled
+                    debug: this.isDebugEnabled,
                 });
             },
 
@@ -120,7 +120,7 @@ module.exports = class extends AppGenerator {
                 this.composeWith(require.resolve('../client'), {
                     ...options,
                     configOptions,
-                    debug: this.isDebugEnabled
+                    debug: this.isDebugEnabled,
                 });
             },
 
@@ -132,9 +132,9 @@ module.exports = class extends AppGenerator {
                     ...options,
                     'client-hook': !this.skipClient,
                     configOptions,
-                    debug: this.isDebugEnabled
+                    debug: this.isDebugEnabled,
                 });
-            }
+            },
         };
 
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
@@ -144,7 +144,7 @@ module.exports = class extends AppGenerator {
         const phaseFromJHipster = super._default();
         const phaseFromQuarkus = {
             askForTestOpts: undefined,
-            askForMoreModules: undefined
+            askForMoreModules: undefined,
         };
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }

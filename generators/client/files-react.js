@@ -24,9 +24,9 @@ const filesReact = {
     adminModule: [
         {
             path: REACT_DIR,
-            templates: [{ file: 'modules/administration/health/health.tsx', method: 'processJsx' }]
-        }
-    ]
+            templates: [{ file: 'modules/administration/health/health.tsx', method: 'processJsx' }],
+        },
+    ],
 };
 
 function writeFiles() {
@@ -35,5 +35,5 @@ function writeFiles() {
 
 module.exports = {
     writeFiles,
-    files: filesReact
+    files: filesReact,
 };

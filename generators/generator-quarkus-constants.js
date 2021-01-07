@@ -8,7 +8,7 @@ const constants = {
     DEFAULT_DATA_ACCESS,
     QUARKUS_VERSION,
     CACHE_MAXIMUM_SIZE,
-    CACHE_EXPIRE_AFTER_WRITE
+    CACHE_EXPIRE_AFTER_WRITE,
 };
 
 module.exports = constants;

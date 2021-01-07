@@ -19,6 +19,7 @@ import java.nio.channels.*;
 import java.util.Properties;
 
 public class MavenWrapperDownloader {
+
     private static final String WRAPPER_VERSION = "0.5.5";
     /**
      * Default URL to download the maven-wrapper.jar from, if no 'downloadUrl' is provided.
@@ -96,7 +97,6 @@ public class MavenWrapperDownloader {
             char[] password = System.getenv("MVNW_PASSWORD").toCharArray();
             Authenticator.setDefault(
                 new Authenticator() {
-
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(username, password);

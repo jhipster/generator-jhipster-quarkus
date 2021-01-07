@@ -26,12 +26,8 @@ module.exports = class extends needleServerCache {
                 const rewriteFileModelWithRelationships = this.generateFileModel(
                     applicationPropertiesFileName,
                     needle,
-                    `quarkus.hibernate-orm.cache."${cacheName}.${
-                        relationship.relationshipFieldNamePlural
-                    }".expiration.max-idle=${CACHE_EXPIRE_AFTER_WRITE}\n` +
-                        `quarkus.hibernate-orm.cache."${cacheName}.${
-                            relationship.relationshipFieldNamePlural
-                        }".memory.object-count=${CACHE_MAXIMUM_SIZE}`
+                    `quarkus.hibernate-orm.cache."${cacheName}.${relationship.relationshipFieldNamePlural}".expiration.max-idle=${CACHE_EXPIRE_AFTER_WRITE}\n` +
+                        `quarkus.hibernate-orm.cache."${cacheName}.${relationship.relationshipFieldNamePlural}".memory.object-count=${CACHE_MAXIMUM_SIZE}`
                 );
                 this.addBlockContentToFile(rewriteFileModelWithRelationships, errorMessage);
             }

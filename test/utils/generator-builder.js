@@ -9,8 +9,8 @@ module.exports = class {
                 // eslint-disable-next-line import/no-dynamic-require
                 require(`../../generators/${generatorName}/index.js`), // eslint-disable-line global-require
                 `jhipster-quarkus:${generatorName}`,
-                path.join(__dirname, `../../generators/${generatorName}/index.js`)
-            ]
+                path.join(__dirname, `../../generators/${generatorName}/index.js`),
+            ],
         ]);
     }
 

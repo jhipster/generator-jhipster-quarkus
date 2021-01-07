@@ -7,7 +7,7 @@ const constants = require('generator-jhipster/generators/generator-constants');
 const { getBase64Secret } = require('generator-jhipster/generators/utils');
 
 module.exports = {
-    askForServerSideOpts
+    askForServerSideOpts,
 };
 
 function askForServerSideOpts(meta) {
@@ -27,7 +27,7 @@ function askForServerSideOpts(meta) {
             validate: input => (/^([0-9]*)$/.test(input) ? true : 'This is not a valid port number.'),
             message:
                 'As you are running in a microservice architecture, on which port would like your server to run? It should be unique to avoid port conflicts.',
-            default: defaultPort
+            default: defaultPort,
         },
         {
             type: 'input',
@@ -38,7 +38,7 @@ function askForServerSideOpts(meta) {
                     : 'The package name you have provided is not a valid Java package name.',
             message: 'What is your default Java package name?',
             default: 'com.mycompany.myapp',
-            store: true
+            store: true,
         },
         //     when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
         //     type: 'list',
@@ -88,8 +88,8 @@ function askForServerSideOpts(meta) {
                 const opts = [
                     {
                         value: 'jwt',
-                        name: 'JWT authentication (stateless, with a token)'
-                    }
+                        name: 'JWT authentication (stateless, with a token)',
+                    },
                 ];
                 /* if (applicationType === 'monolith' && response.serviceDiscoveryType !== 'eureka') {
                     opts.push({
@@ -99,19 +99,19 @@ function askForServerSideOpts(meta) {
                 } */
                 opts.push({
                     value: 'oauth2',
-                    name: 'OAuth 2.0 / OIDC Authentication (stateful, works with Keycloak and Okta)'
+                    name: 'OAuth 2.0 / OIDC Authentication (stateful, works with Keycloak and Okta)',
                 });
                 if (!reactive) {
                     if (['gateway', 'microservice'].includes(applicationType)) {
                         opts.push({
                             value: 'uaa',
-                            name: 'Authentication with JHipster UAA server (the server must be generated separately)'
+                            name: 'Authentication with JHipster UAA server (the server must be generated separately)',
                         });
                     }
                 }
                 return opts;
             },
-            default: 0
+            default: 0,
         },
         {
             type: 'list',
@@ -122,12 +122,12 @@ function askForServerSideOpts(meta) {
                 if (!reactive) {
                     opts.push({
                         value: 'sql',
-                        name: 'SQL (H2, MySQL, MariaDB, PostgreSQL, Oracle, MSSQL)'
+                        name: 'SQL (H2, MySQL, MariaDB, PostgreSQL, Oracle, MSSQL)',
                     });
                 } else {
                     opts.push({
                         value: 'sql',
-                        name: 'SQL (H2, MySQL, PostgreSQL, MSSQL)'
+                        name: 'SQL (H2, MySQL, PostgreSQL, MSSQL)',
                     });
                 }
                 /*
@@ -153,12 +153,12 @@ function askForServerSideOpts(meta) {
                 if (applicationType !== 'uaa') {
                     opts.push({
                         value: 'no',
-                        name: 'No database'
+                        name: 'No database',
                     });
                 }
                 return opts;
             },
-            default: 0
+            default: 0,
         },
         {
             when: response => response.databaseType === 'sql',
@@ -166,7 +166,7 @@ function askForServerSideOpts(meta) {
             name: 'prodDatabaseType',
             message: `Which ${chalk.yellow('*production*')} database would you like to use?`,
             choices: reactive ? constants.R2DBC_DB_OPTIONS : constants.SQL_DB_OPTIONS,
-            default: 0
+            default: 0,
         },
         {
             when: response => response.databaseType === 'sql',
@@ -177,14 +177,14 @@ function askForServerSideOpts(meta) {
                 [
                     {
                         value: 'h2Disk',
-                        name: 'H2 with disk-based persistence'
+                        name: 'H2 with disk-based persistence',
                     },
                     {
                         value: 'h2Memory',
-                        name: 'H2 with in-memory persistence'
-                    }
+                        name: 'H2 with in-memory persistence',
+                    },
                 ].concat(constants.SQL_DB_OPTIONS.find(it => it.value === response.prodDatabaseType)),
-            default: 0
+            default: 0,
         },
         {
             when: () => !reactive,
@@ -200,7 +200,7 @@ function askForServerSideOpts(meta) {
                 */
                 {
                     value: 'caffeine',
-                    name: 'Yes, with the Caffeine implementation (local cache, for a single node)'
+                    name: 'Yes, with the Caffeine implementation (local cache, for a single node)',
                 },
                 /*
                 {
@@ -220,20 +220,20 @@ function askForServerSideOpts(meta) {
                 */
                 {
                     value: 'redis',
-                    name: 'Yes, with the Redis implementation - Warning, this will disable the Hibernate 2nd level cache!'
+                    name: 'Yes, with the Redis implementation - Warning, this will disable the Hibernate 2nd level cache!',
                 },
                 {
                     value: 'no',
-                    name: 'No'
-                }
-            ]
+                    name: 'No',
+                },
+            ],
         },
         {
             when: response => response.databaseType === 'sql' && !reactive && !['redis'].includes(response.cacheProvider),
             type: 'confirm',
             name: 'enableHibernateCache',
             message: 'Do you want to use Hibernate 2nd level cache?',
-            default: true
+            default: true,
         },
         {
             type: 'list',
@@ -242,15 +242,15 @@ function askForServerSideOpts(meta) {
             choices: [
                 {
                     value: 'maven',
-                    name: 'Maven'
+                    name: 'Maven',
                 },
                 {
                     value: 'gradle',
-                    name: 'Gradle'
-                }
+                    name: 'Gradle',
+                },
             ],
-            default: 'maven'
-        }
+            default: 'maven',
+        },
     ];
 
     if (meta) return prompts; // eslint-disable-line consistent-return
