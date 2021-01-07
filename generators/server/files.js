@@ -74,6 +74,11 @@ const serverFiles = {
             ]
         },
         {
+            condition: generator => generator.devDatabaseType === 'h2Disk' || generator.devDatabaseType === 'h2Memory',
+            path: SERVER_MAIN_RES_DIR,
+            templates: ['META-INF/web.xml']
+        },
+        {
             condition: generator => !generator.skipUserManagement,
             path: SERVER_MAIN_RES_DIR,
             templates: [

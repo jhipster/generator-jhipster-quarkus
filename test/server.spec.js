@@ -15,6 +15,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.file(expectedFiles.server.jwt);
             assert.file(expectedFiles.server.userManagement);
             assert.file(expectedFiles.server.hibernate);
+            assert.file(expectedFiles.server.h2);
             assert.file(expectedFiles.maven);
             assert.noFile(expectedFiles.cache.common);
         });
@@ -45,6 +46,21 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
         it('contains hibernate second level cache needle', () => {
             assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, '# jhipster-quarkus-needle-hibernate-cache-add-entry');
+        });
+
+        it('contains h2 servlet data in web.xml', () => {
+            assert.fileContent(
+                `${SERVER_MAIN_RES_DIR}META-INF/web.xml`,
+                '    <servlet>\n' +
+                    '        <servlet-name>h2-console</servlet-name>\n' +
+                    '        <servlet-class>org.h2.server.web.WebServlet</servlet-class>\n' +
+                    '    </servlet>\n' +
+                    '\n' +
+                    '    <servlet-mapping>\n' +
+                    '        <servlet-name>h2-console</servlet-name>\n' +
+                    '        <url-pattern>/h2-console/*</url-pattern>\n' +
+                    '    </servlet-mapping>'
+            );
         });
     });
 
@@ -80,6 +96,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.file(expectedFiles.server.common);
             assert.noFile(expectedFiles.server.userManagement);
             assert.noFile(expectedFiles.server.hibernate);
+            assert.noFile(expectedFiles.server.h2);
             assert.file(expectedFiles.maven);
         });
     });
