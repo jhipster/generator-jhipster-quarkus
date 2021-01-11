@@ -44,6 +44,8 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java`
         ],
 
+        h2: [`${SERVER_MAIN_RES_DIR}META-INF/web.xml`],
+
         jwt: [
             `${SERVER_MAIN_RES_DIR}resources-config.json`,
             `${SERVER_MAIN_RES_DIR}jwt/privateKey.pem`,
