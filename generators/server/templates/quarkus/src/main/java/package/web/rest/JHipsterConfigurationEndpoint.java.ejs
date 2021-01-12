@@ -1,0 +1,62 @@
+<%#
+ Copyright 2013-2020 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.web.rest;
+
+import <%=packageName%>.web.rest.vm.ConfigPropsVM;
+import <%=packageName%>.web.rest.vm.EnvVM;
+import <%=packageName%>.security.AuthoritiesConstants;
+import io.quarkus.runtime.configuration.ProfileManager;
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.spi.ConfigSource;
+
+import javax.enterprise.context.RequestScoped;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.annotation.security.RolesAllowed;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+@Path("/management")
+@Produces(MediaType.APPLICATION_JSON)
+@RequestScoped
+public class JHipsterConfigurationEndpoint {
+
+  @GET
+  @Path("/configprops")
+  @RolesAllowed(AuthoritiesConstants.ADMIN)
+  public ConfigPropsVM getConfigs() {
+    return new ConfigPropsVM();
+  }
+
+  @GET
+  @Path("/env")
+  @RolesAllowed(AuthoritiesConstants.ADMIN)
+  public EnvVM getEnvs() {
+    Iterable<ConfigSource> configSources = ConfigProvider.getConfig().getConfigSources();
+    List<EnvVM.PropertySource> propertySources = StreamSupport
+      .stream(configSources.spliterator(), false)
+      .map(configSource -> new EnvVM.PropertySource(configSource.getName(), configSource.getProperties()))
+      .collect(Collectors.toList());
+
+    return new EnvVM(List.of(ProfileManager.getActiveProfile()), propertySources);
+  }
+}

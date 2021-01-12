@@ -3,7 +3,7 @@ const constants = require('generator-jhipster/generators/generator-constants');
 
 const { buildClientGeneratorContext } = require('./utils/generator-testing-api');
 
-const ANGULAR_DIR = constants.ANGULAR_DIR;
+const { ANGULAR_DIR, REACT_DIR } = constants;
 
 describe('Subgenerator client of quarkus JHipster blueprint', () => {
     describe('Angular tests', () => {
@@ -24,6 +24,10 @@ describe('Subgenerator client of quarkus JHipster blueprint', () => {
                     '}'
             );
         });
+
+        it('Angular configuration files contain expected content', () => {
+            assert.fileContent(`${ANGULAR_DIR}admin/configuration/configuration.component.html`, 'Quarkus configuration</h3>');
+        });
     });
 
     describe('React tests', () => {
@@ -31,6 +35,13 @@ describe('Subgenerator client of quarkus JHipster blueprint', () => {
 
         it('React health check files contain expected content', () => {
             assert.fileContent(`${ANGULAR_DIR}modules/administration/health/health.tsx`, '<td>{data[configPropKey].name}</td>');
+        });
+
+        it('React configuration files contain expected content', () => {
+            assert.fileContent(
+                `${REACT_DIR}modules/administration/configuration/configuration.tsx`,
+                '<label>Quarkus configuration</label>'
+            );
         });
     });
 });

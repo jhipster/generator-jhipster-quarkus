@@ -37,6 +37,12 @@ const filesAngular = {
 
 function writeFiles() {
     this.writeFilesToDisk(filesAngular, this, false, 'angular');
+
+    this.replaceContent(
+        `${ANGULAR_DIR}admin/configuration/configuration.component.html`,
+        '<h3 id="spring-configuration">Spring configuration</h3>',
+        '<h3 id="Quarkus-configuration">Quarkus configuration</h3>'
+    );
 }
 
 module.exports = {
