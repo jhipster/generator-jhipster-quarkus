@@ -32,6 +32,8 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/EnvVM.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/HeaderUtil.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/util/ResponseUtil.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/JHipsterLoggersEndpoint.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/LoggerVM.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`

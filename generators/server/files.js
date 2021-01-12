@@ -488,6 +488,14 @@ const serverFiles = {
                 {
                     file: 'package/web/util/ResponseUtil.java',
                     renameTo: generator => `${generator.javaDir}web/util/ResponseUtil.java`
+                },
+                {
+                    file: 'package/web/rest/JHipsterLoggersEndpoint.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/JHipsterLoggersEndpoint.java`
+                },
+                {
+                    file: 'package/web/rest/vm/LoggerVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/vm/LoggerVM.java`
                 }
             ]
         },
