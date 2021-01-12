@@ -1,0 +1,65 @@
+name: Generate sample app
+on: ['push']
+env:
+    JHI_SCRIPTS: ./test-integration/scripts
+jobs:
+    sample-app:
+        name: update-sample-app
+        runs-on: ${{ matrix.os }}
+        timeout-minutes: 20
+        strategy:
+            fail-fast: false
+            matrix:
+                node_version: [14.15.0]
+                os: [ubuntu-latest]
+        steps:
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Checkout jhipster-generator-quarkus
+              uses: actions/checkout@v2
+              with:
+                  path: generator
+            - name: Run jhipster-generator-quarkus git history
+              run: |
+                  cd generator
+                  git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
+            - name: Prepare JHipster env
+              run: |
+                  cd generator
+                  sudo $JHI_SCRIPTS/01-install-global-jhipster.sh
+            - name: Prepare Git
+              run: |
+                  git config --global user.name "JHipster Quarkus Bot"
+                  git config --global user.email "git@github.com"
+            - name: Checkout jhipster-sample-app-quarkus
+              uses: actions/checkout@v2
+              with:
+                  token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
+                  repository: avdev4j/jhipster-sample-app-quarkus
+                  path: sample-app
+            - name: Clean the sample app
+              run: |
+                  cd sample-app
+                  find . -not -name ".yo-rc.json" -not -name "Dockerfile" -type f -maxdepth 1 -delete
+                  rm .git/index
+                  rm -rf src
+                  rm -rf node_modules
+            - name: Prepare JHipster Quarkus env
+              run: |
+                  cd sample-app
+                  npm link generator-jhipster-quarkus
+            - name: Generate the new sample app
+              run: |
+                  cd sample-app
+                  jhipster --no-insight --skip-checks --skip-install --force --with-entities
+                  npm install
+                  git status
+                  git add .
+                  git commit -m "Automatic update"
+            - name: Push changes
+              uses: ad-m/github-push-action@master
+              with:
+                  repository: avdev4j/jhipster-sample-app-quarkus
+                  github_token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
+                  directory: sample-app
