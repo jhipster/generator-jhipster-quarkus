@@ -20,20 +20,20 @@
 const files = {
     global: [
         {
-            templates: ['README.md']
-        }
-    ]
+            templates: ['README.md'],
+        },
+    ],
 };
 
 function writeFiles() {
     return {
         writeDockerFiles() {
             this.writeFilesToDisk(files, this, false, 'quarkus');
-        }
+        },
     };
 }
 
 module.exports = {
     writeFiles,
-    files
+    files,
 };

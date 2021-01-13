@@ -31,7 +31,7 @@ module.exports = class extends EntityGenerator {
                 } else {
                     context.dataAccess = context.fileData.dataAccess || constants.DEFAULT_DATA_ACCESS;
                 }
-            }
+            },
         };
         return phaseFromQuarkus;
     }
@@ -53,7 +53,7 @@ module.exports = class extends EntityGenerator {
             askForDTO: phaseFromJHipster.askForDTO,
             // askForFiltering: phaseFromJHipster.askForFiltering,
             // askForReadOnly: phaseFromJHipster.askForReadOnly,
-            askForPagination: phaseFromJHipster.askForPagination
+            askForPagination: phaseFromJHipster.askForPagination,
         };
         return phaseFromQuarkus;
     }
@@ -68,7 +68,7 @@ module.exports = class extends EntityGenerator {
                 }
                 this.storageData.dataAccess = context.dataAccess;
             },
-            ...phaseFromJHipster
+            ...phaseFromJHipster,
         };
         return phaseFromQuarkus;
     }
@@ -89,7 +89,7 @@ module.exports = class extends EntityGenerator {
                     context,
                     configOptions,
                     force: context.options.force,
-                    debug: context.isDebugEnabled
+                    debug: context.isDebugEnabled,
                 });
             },
 
@@ -103,7 +103,7 @@ module.exports = class extends EntityGenerator {
                     configOptions,
                     'skip-install': context.options['skip-install'],
                     force: context.options.force,
-                    debug: context.isDebugEnabled
+                    debug: context.isDebugEnabled,
                 });
             },
 
@@ -116,9 +116,9 @@ module.exports = class extends EntityGenerator {
                     configOptions,
                     'skip-install': context.options['skip-install'],
                     force: context.options.force,
-                    debug: context.isDebugEnabled
+                    debug: context.isDebugEnabled,
                 });
-            }
+            },
         };
 
         return phaseFromQuarkus;

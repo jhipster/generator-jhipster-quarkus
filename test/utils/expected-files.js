@@ -14,7 +14,7 @@ const expectedFiles = {
         'gradle/profile_prod.gradle',
         'gradle/sonar.gradle',
         'gradle/wrapper/gradle-wrapper.jar',
-        'gradle/wrapper/gradle-wrapper.properties'
+        'gradle/wrapper/gradle-wrapper.properties',
     ],
 
     docker: [`${DOCKER_DIR}Dockerfile.jvm`, `${DOCKER_DIR}Dockerfile.native`, `${DOCKER_DIR}Dockerfile.fast-jar`],
@@ -36,17 +36,17 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/LoggerVM.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
         ],
 
         liquibase: [
             `${SERVER_MAIN_RES_DIR}config/liquibase/master.xml`,
-            `${SERVER_MAIN_RES_DIR}config/liquibase/changelog/00000000000000_initial_schema.xml`
+            `${SERVER_MAIN_RES_DIR}config/liquibase/changelog/00000000000000_initial_schema.xml`,
         ],
 
         hibernate: [
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java`,
-            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java`
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java`,
         ],
 
         h2: [`${SERVER_MAIN_RES_DIR}META-INF/web.xml`],
@@ -57,7 +57,7 @@ const expectedFiles = {
             `${SERVER_MAIN_RES_DIR}META-INF/resources/publicKey.pem`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/jwt/TokenProvider.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTController.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerTest.java`
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerTest.java`,
         ],
 
         oauth2: [
@@ -66,7 +66,7 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResource.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserOauth2Controller.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResourceTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/MockOidcServerTestResource.java`
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/MockOidcServerTestResource.java`,
         ],
 
         userManagement: [
@@ -99,8 +99,8 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserResource.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserResourceTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/MailServiceIT.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/mapper/UserMapperTest.java`
-        ]
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/mapper/UserMapperTest.java`,
+        ],
     },
 
     cache: {
@@ -111,8 +111,8 @@ const expectedFiles = {
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/Foo.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/FooRedisCache.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/RedisCacheTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/RedisCacheTestResource.java`
-        ]
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/RedisCacheTestResource.java`,
+        ],
     },
 
     entity: {
@@ -120,12 +120,12 @@ const expectedFiles = {
             '.jhipster/Foo.json',
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/Foo.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/FooResource.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/FooTest.java`
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/domain/FooTest.java`,
             // `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/FooResourceIT.java`
         ],
         fakeData: [`${SERVER_MAIN_RES_DIR}config/liquibase/fake-data/foo.csv`],
-        serverLiquibase: [`${SERVER_MAIN_RES_DIR}config/liquibase/changelog/20191106000100_added_entity_Foo.xml`]
-    }
+        serverLiquibase: [`${SERVER_MAIN_RES_DIR}config/liquibase/changelog/20191106000100_added_entity_Foo.xml`],
+    },
 };
 
 module.exports = expectedFiles;

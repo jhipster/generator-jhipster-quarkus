@@ -5,7 +5,7 @@ const {
     DEFAULT_CLIENT_ANSWERS,
     DEFAULT_QUARKUS_ENTITY_BP_OPTIONS,
     DEFAULT_QUARKUS_BP_OPTIONS,
-    DEFAULT_YORC_FILENAME
+    DEFAULT_YORC_FILENAME,
 } = require('./constants');
 
 function buildEntityGeneratorContext(
@@ -60,5 +60,5 @@ module.exports = {
     buildServerGeneratorContext,
     buildClientGeneratorContext,
     buildCommonGeneratorContext,
-    buildAppGeneratorContext
+    buildAppGeneratorContext,
 };

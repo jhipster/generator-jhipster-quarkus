@@ -68,7 +68,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         before(
             buildServerGeneratorContext({
                 buildTool: 'gradle',
-                cacheProvider: 'caffeine'
+                cacheProvider: 'caffeine',
             })
         );
 
@@ -88,7 +88,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                 databaseType: 'no',
                 devDatabaseType: 'no',
                 prodDatabaseType: 'no',
-                skipUserManagement: true
+                skipUserManagement: true,
             })
         );
 
@@ -104,7 +104,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With maven Mysql no second cache level', () => {
         before(
             buildServerGeneratorContext({
-                enableHibernateCache: false
+                enableHibernateCache: false,
             })
         );
 
@@ -122,7 +122,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With maven Mysql and caffeine cache', () => {
         before(
             buildServerGeneratorContext({
-                cacheProvider: 'caffeine'
+                cacheProvider: 'caffeine',
             })
         );
 
@@ -172,7 +172,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With maven Mysql and no cache', () => {
         before(
             buildServerGeneratorContext({
-                cacheProvider: 'no'
+                cacheProvider: 'no',
             })
         );
 
@@ -211,7 +211,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With maven Mysql and Redis cache', () => {
         before(
             buildServerGeneratorContext({
-                cacheProvider: 'redis'
+                cacheProvider: 'redis',
             })
         );
 
@@ -291,7 +291,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With Maven OAuth2', () => {
         before(
             buildServerGeneratorContext({
-                authenticationType: 'oauth2'
+                authenticationType: 'oauth2',
             })
         );
 
@@ -346,7 +346,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         before(
             buildServerGeneratorContext({
                 buildTool: 'gradle',
-                authenticationType: 'oauth2'
+                authenticationType: 'oauth2',
             })
         );
 
