@@ -16,7 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const mkdirp = require('mkdirp');
 const cleanup = require('generator-jhipster/generators/cleanup');
 const constants = require('generator-jhipster/generators/generator-constants');
 const jhipsterFiles = require('generator-jhipster/generators/server/files').serverFiles;
@@ -646,10 +645,6 @@ function writeFiles() {
         setUp() {
             this.javaDir = `${this.packageFolder}/`;
             this.testDir = `${this.packageFolder}/`;
-
-            // Create Java resource files
-            mkdirp(SERVER_MAIN_RES_DIR);
-            mkdirp(`${SERVER_TEST_SRC_DIR}/${this.testDir}`);
         },
 
         cleanupOldServerFiles() {
