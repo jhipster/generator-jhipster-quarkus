@@ -47,7 +47,7 @@ const SERVER_TEST_RES_DIR = constants.SERVER_TEST_RES_DIR;
  * https://github.com/Marak/faker.js/blob/10bfb9f467b0ac2b8912ffc15690b50ef3244f09/lib/date.js#L73-L96
  * Needed for reproducible builds
  */
-const getRecentDate = function(days, refDate) {
+const getRecentDate = function (days, refDate) {
     let date = new Date();
     if (refDate !== undefined) {
         date = new Date(Date.parse(refDate));
@@ -55,7 +55,7 @@ const getRecentDate = function(days, refDate) {
 
     const range = {
         min: 1000,
-        max: (days || 1) * 24 * 3600 * 1000
+        max: (days || 1) * 24 * 3600 * 1000,
     };
 
     let future = date.getTime();
@@ -65,7 +65,7 @@ const getRecentDate = function(days, refDate) {
     return date;
 };
 
-const getRecentForLiquibase = function(days, changelogDate) {
+const getRecentForLiquibase = function (days, changelogDate) {
     let formatedDate;
     if (changelogDate !== undefined) {
         formatedDate = `${changelogDate.substring(0, 4)}-${changelogDate.substring(4, 6)}-${changelogDate.substring(
@@ -84,14 +84,14 @@ const serverFiles = {
                 {
                     file: 'package/domain/Entity.java',
                     renameTo: generator => `${generator.packageFolder}/domain/${generator.asEntity(generator.entityClass)}.java`,
-                    useBluePrint: true
+                    useBluePrint: true,
                 },
                 {
                     file: 'package/web/rest/EntityResource.java',
                     renameTo: generator => `${generator.packageFolder}/web/rest/${generator.entityClass}Resource.java`,
-                    useBluePrint: true
-                }
-            ]
+                    useBluePrint: true,
+                },
+            ],
         },
         {
             condition: generator => generator.dataAccess === 'repository',
@@ -100,9 +100,9 @@ const serverFiles = {
                 {
                     file: 'package/repository/EntityRepository.java',
                     renameTo: generator => `${generator.packageFolder}/repository/${generator.entityClass}Repository.java`,
-                    useBluePrint: true
-                }
-            ]
+                    useBluePrint: true,
+                },
+            ],
         },
         {
             condition: generator => generator.hasPagination,
@@ -111,9 +111,9 @@ const serverFiles = {
                 {
                     file: 'package/service/Paged.java',
                     renameTo: generator => `${generator.packageFolder}/service/Paged.java`,
-                    useBluePrint: true
-                }
-            ]
+                    useBluePrint: true,
+                },
+            ],
         },
         {
             condition: generator => generator.hasPagination,
@@ -122,14 +122,14 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/vm/PageRequestVM.java',
                     renameTo: generator => `${generator.packageFolder}/web/rest/vm/PageRequestVM.java`,
-                    useBluePrint: true
+                    useBluePrint: true,
                 },
                 {
                     file: 'package/web/rest/vm/SortRequestVM.java',
                     renameTo: generator => `${generator.packageFolder}/web/rest/vm/SortRequestVM.java`,
-                    useBluePrint: true
-                }
-            ]
+                    useBluePrint: true,
+                },
+            ],
         },
         {
             condition: generator => generator.hasPagination,
@@ -138,9 +138,9 @@ const serverFiles = {
                 {
                     file: 'package/web/util/PaginationUtil.java',
                     renameTo: generator => `${generator.packageFolder}/web/util/PaginationUtil.java`,
-                    useBluePrint: true
-                }
-            ]
+                    useBluePrint: true,
+                },
+            ],
         },
         {
             path: SERVER_TEST_SRC_DIR,
@@ -148,14 +148,14 @@ const serverFiles = {
                 {
                     file: 'package/domain/EntityTest.java',
                     renameTo: generator => `${generator.packageFolder}/domain/${generator.entityClass}Test.java`,
-                    useBluePrint: true
+                    useBluePrint: true,
                 },
                 {
                     file: 'package/web/rest/EntityResourceTest.java',
                     renameTo: generator => `${generator.packageFolder}/web/rest/${generator.entityClass}ResourceTest.java`,
-                    useBluePrint: true
-                }
-            ]
+                    useBluePrint: true,
+                },
+            ],
         },
         {
             condition: generator => generator.service === 'serviceImpl' && !generator.embedded,
@@ -163,13 +163,13 @@ const serverFiles = {
             templates: [
                 {
                     file: 'package/service/EntityService.java',
-                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`
+                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`,
                 },
                 {
                     file: 'package/service/impl/EntityServiceImpl.java',
-                    renameTo: generator => `${generator.packageFolder}/service/impl/${generator.entityClass}ServiceImpl.java`
-                }
-            ]
+                    renameTo: generator => `${generator.packageFolder}/service/impl/${generator.entityClass}ServiceImpl.java`,
+                },
+            ],
         },
         {
             condition: generator => generator.service === 'serviceClass' && !generator.embedded,
@@ -177,9 +177,9 @@ const serverFiles = {
             templates: [
                 {
                     file: 'package/service/impl/EntityServiceImpl.java',
-                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`
-                }
-            ]
+                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`,
+                },
+            ],
         },
         {
             condition: generator => generator.hasDto,
@@ -187,15 +187,15 @@ const serverFiles = {
             templates: [
                 {
                     file: 'package/service/dto/EntityDTO.java',
-                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.asDto(generator.entityClass)}.java`
+                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.asDto(generator.entityClass)}.java`,
                 },
                 {
                     file: 'package/service/mapper/EntityMapper.java',
-                    renameTo: generator => `${generator.packageFolder}/service/mapper/${generator.entityClass}Mapper.java`
-                }
-            ]
-        }
-    ]
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/${generator.entityClass}Mapper.java`,
+                },
+            ],
+        },
+    ],
 };
 
 const serverFilesFromJHipster = {
@@ -207,9 +207,10 @@ const serverFilesFromJHipster = {
                 {
                     file: 'config/liquibase/changelog/added_entity.xml',
                     options: { interpolate: INTERPOLATE_REGEX },
-                    renameTo: generator => `config/liquibase/changelog/${generator.changelogDate}_added_entity_${generator.entityClass}.xml`
-                }
-            ]
+                    renameTo: generator =>
+                        `config/liquibase/changelog/${generator.changelogDate}_added_entity_${generator.entityClass}.xml`,
+                },
+            ],
         },
         {
             condition: generator =>
@@ -222,9 +223,9 @@ const serverFilesFromJHipster = {
                     file: 'config/liquibase/changelog/added_entity_constraints.xml',
                     options: { interpolate: INTERPOLATE_REGEX },
                     renameTo: generator =>
-                        `config/liquibase/changelog/${generator.changelogDate}_added_entity_constraints_${generator.entityClass}.xml`
-                }
-            ]
+                        `config/liquibase/changelog/${generator.changelogDate}_added_entity_constraints_${generator.entityClass}.xml`,
+                },
+            ],
         },
         {
             condition: generator => generator.databaseType === 'cassandra' && !generator.skipDbChangelog,
@@ -232,10 +233,10 @@ const serverFilesFromJHipster = {
             templates: [
                 {
                     file: 'config/cql/changelog/added_entity.cql',
-                    renameTo: generator => `config/cql/changelog/${generator.changelogDate}_added_entity_${generator.entityClass}.cql`
-                }
-            ]
-        }
+                    renameTo: generator => `config/cql/changelog/${generator.changelogDate}_added_entity_${generator.entityClass}.cql`,
+                },
+            ],
+        },
     ],
     fakeData: [
         {
@@ -249,12 +250,12 @@ const serverFilesFromJHipster = {
                         context: {
                             getRecentForLiquibase,
                             faker,
-                            randexp
-                        }
+                            randexp,
+                        },
                     },
-                    renameTo: generator => `config/liquibase/fake-data/${generator.entityTableName}.csv`
-                }
-            ]
+                    renameTo: generator => `config/liquibase/fake-data/${generator.entityTableName}.csv`,
+                },
+            ],
         },
         {
             condition: generator =>
@@ -263,7 +264,7 @@ const serverFilesFromJHipster = {
                 !generator.skipDbChangelog &&
                 (generator.fieldsContainImageBlob === true || generator.fieldsContainBlob === true),
             path: SERVER_MAIN_RES_DIR,
-            templates: [{ file: 'config/liquibase/fake-data/blob/hipster.png', method: 'copy', noEjs: true }]
+            templates: [{ file: 'config/liquibase/fake-data/blob/hipster.png', method: 'copy', noEjs: true }],
         },
         {
             condition: generator =>
@@ -272,8 +273,8 @@ const serverFilesFromJHipster = {
                 !generator.skipDbChangelog &&
                 generator.fieldsContainTextBlob === true,
             path: SERVER_MAIN_RES_DIR,
-            templates: [{ file: 'config/liquibase/fake-data/blob/hipster.txt', method: 'copy' }]
-        }
+            templates: [{ file: 'config/liquibase/fake-data/blob/hipster.txt', method: 'copy' }],
+        },
     ],
     dto: [
         {
@@ -282,9 +283,9 @@ const serverFilesFromJHipster = {
             templates: [
                 {
                     file: 'package/service/mapper/BaseEntityMapper.java',
-                    renameTo: generator => `${generator.packageFolder}/service/mapper/EntityMapper.java`
-                }
-            ]
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/EntityMapper.java`,
+                },
+            ],
         },
         {
             condition: generator => generator.hasDto,
@@ -292,9 +293,9 @@ const serverFilesFromJHipster = {
             templates: [
                 {
                     file: 'package/service/dto/EntityDTOTest.java',
-                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.asDto(generator.entityClass)}Test.java`
-                }
-            ]
+                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.asDto(generator.entityClass)}Test.java`,
+                },
+            ],
         },
         {
             condition: generator =>
@@ -304,11 +305,11 @@ const serverFilesFromJHipster = {
             templates: [
                 {
                     file: 'package/service/mapper/EntityMapperTest.java',
-                    renameTo: generator => `${generator.packageFolder}/service/mapper/${generator.entityClass}MapperTest.java`
-                }
-            ]
-        }
-    ]
+                    renameTo: generator => `${generator.packageFolder}/service/mapper/${generator.entityClass}MapperTest.java`,
+                },
+            ],
+        },
+    ],
 };
 
 function updateDtoTest() {
@@ -378,7 +379,7 @@ function writeFiles() {
                 const enumInfo = {
                     ...jhipsterUtils.getEnumInfo(field, this.clientRootFolder),
                     angularAppName: this.angularAppName,
-                    packageName: this.packageName
+                    packageName: this.packageName,
                 };
                 // eslint-disable-next-line no-console
                 if (!this.skipServer) {
@@ -394,11 +395,11 @@ function writeFiles() {
                     );
                 }
             });
-        }
+        },
     };
 }
 
 module.exports = {
     writeFiles,
-    serverFiles
+    serverFiles,
 };

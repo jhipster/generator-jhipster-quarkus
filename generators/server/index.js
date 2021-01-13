@@ -29,7 +29,7 @@ module.exports = class extends ServerGenerator {
                 this.quarkusVersion = QUARKUS_VERSION;
                 this.CACHE_MAXIMUM_SIZE = CACHE_MAXIMUM_SIZE;
                 this.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
-            }
+            },
         };
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
@@ -38,7 +38,7 @@ module.exports = class extends ServerGenerator {
         const phaseFromJHipster = super._prompting();
         const phaseFromQuarkus = {
             askForServerSideOpts: prompts.askForServerSideOpts,
-            askForOptionalItems: undefined
+            askForOptionalItems: undefined,
         };
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
@@ -49,7 +49,7 @@ module.exports = class extends ServerGenerator {
             configureGlobalQuarkus() {
                 // Override JHipster cacheManagerIsAvailable property to only handle Quarkus caches
                 this.cacheManagerIsAvailable = ['caffeine', 'redis'].includes(this.cacheProvider);
-            }
+            },
         };
 
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
@@ -83,7 +83,7 @@ module.exports = class extends ServerGenerator {
                     logMsgComment = ` (${chalk.yellow.bold(executable)} if using Windows Command Prompt)`;
                 }
                 this.log(chalk.green(`Run your Quarkus application:\n${chalk.yellow.bold(`./${executable}`)}${logMsgComment}`));
-            }
+            },
         };
     }
 };

@@ -4,7 +4,7 @@ const DEFAULT_ENTITY_ANSWERS = {
     dataAccess: 'activeRecord',
     dto: 'no',
     service: 'no',
-    pagination: 'no'
+    pagination: 'no',
 };
 
 const DEFAULT_SERVER_ANSWERS = {
@@ -21,7 +21,7 @@ const DEFAULT_SERVER_ANSWERS = {
     languages: ['fr', 'de'],
     buildTool: 'maven',
     enableHibernateCache: true,
-    rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5'
+    rememberMeKey: '2bb60a80889aa6e6767e9ccd8714982681152aa5',
 };
 
 const DEFAULT_CLIENT_ANSWERS = {
@@ -29,19 +29,19 @@ const DEFAULT_CLIENT_ANSWERS = {
     clientFramework: 'angularX',
     enableTranslation: true,
     nativeLanguage: 'en',
-    languages: ['fr']
+    languages: ['fr'],
 };
 
 const DEFAULT_QUARKUS_BP_OPTIONS = {
     'from-cli': true,
     skipInstall: true,
     blueprint: 'quarkus',
-    skipChecks: true
+    skipChecks: true,
 };
 
 const DEFAULT_QUARKUS_ENTITY_BP_OPTIONS = {
     ...DEFAULT_QUARKUS_BP_OPTIONS,
-    creationTimestamp: '2019-11-06'
+    creationTimestamp: '2019-11-06',
 };
 
 const DEFAULT_YORC_FILENAME = 'ngx-blueprint';
@@ -52,5 +52,5 @@ module.exports = {
     DEFAULT_CLIENT_ANSWERS,
     DEFAULT_QUARKUS_BP_OPTIONS,
     DEFAULT_QUARKUS_ENTITY_BP_OPTIONS,
-    DEFAULT_YORC_FILENAME
+    DEFAULT_YORC_FILENAME,
 };

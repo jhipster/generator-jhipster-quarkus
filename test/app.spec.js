@@ -7,7 +7,7 @@ describe(' Subgenerator app of quarkus JHipster blueprint', () => {
         describe('OAuth2 authentication', () => {
             before(
                 buildAppGeneratorContext({
-                    authenticationType: 'oauth2'
+                    authenticationType: 'oauth2',
                 })
             );
 

@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 module.exports = {
-    buildEnumInfo
+    buildEnumInfo,
 };
 
 /**
@@ -21,7 +21,7 @@ function buildEnumInfo(field, angularAppName, packageName, clientRootFolder) {
         enums: field.fieldValues.replace(/\s/g, '').split(','),
         angularAppName,
         packageName,
-        clientRootFolder: clientRootFolder ? `${clientRootFolder}-` : ''
+        clientRootFolder: clientRootFolder ? `${clientRootFolder}-` : '',
     };
     return enumInfo;
 }
