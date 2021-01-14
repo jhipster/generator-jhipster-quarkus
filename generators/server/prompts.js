@@ -132,7 +132,7 @@ function askForServerSideOpts(meta) {
                 }
                 opts.push({
                     value: 'mongodb',
-                    name: 'MongoDB'
+                    name: 'MongoDB',
                 });
                 /*
                 if (response.authenticationType !== 'oauth2') {

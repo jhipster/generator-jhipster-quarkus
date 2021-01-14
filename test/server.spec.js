@@ -370,7 +370,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                 databaseType: 'mongodb',
                 devDatabaseType: 'mongodb',
                 prodDatabaseType: 'mongodb',
-                enableHibernateCache: false
+                enableHibernateCache: false,
             })
         );
 

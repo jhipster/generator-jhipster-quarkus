@@ -233,13 +233,13 @@ const serverFiles = {
             templates: [
                 {
                     file: 'package/config/dbmigrations/InitialSetupMigration.java',
-                    renameTo: generator => `${generator.javaDir}config/dbmigrations/InitialSetupMigration.java`
+                    renameTo: generator => `${generator.javaDir}config/dbmigrations/InitialSetupMigration.java`,
                 },
                 {
                     file: 'package/config/MongockConfiguration.java',
-                    renameTo: generator => `${generator.javaDir}config/MongockConfiguration.java`
-                }
-            ]
+                    renameTo: generator => `${generator.javaDir}config/MongockConfiguration.java`,
+                },
+            ],
         },
         {
             path: SERVER_TEST_SRC_DIR,
