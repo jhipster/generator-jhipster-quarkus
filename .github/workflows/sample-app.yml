@@ -36,7 +36,7 @@ jobs:
               uses: actions/checkout@v2
               with:
                   token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
-                  repository: avdev4j/jhipster-sample-app-quarkus
+                  repository: jhipster/jhipster-sample-app-quarkus
                   path: sample-app
             - name: Clean the sample app
               run: |
@@ -60,6 +60,6 @@ jobs:
             - name: Push changes
               uses: ad-m/github-push-action@master
               with:
-                  repository: avdev4j/jhipster-sample-app-quarkus
+                  repository: jhipster/jhipster-sample-app-quarkus
                   github_token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
                   directory: sample-app
