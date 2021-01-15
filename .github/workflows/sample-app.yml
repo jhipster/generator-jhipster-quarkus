@@ -1,5 +1,8 @@
 name: Generate sample app
-on: ['push']
+on:
+    push:
+        branches:
+            - master
 env:
     JHI_SCRIPTS: ./test-integration/scripts
 jobs:
