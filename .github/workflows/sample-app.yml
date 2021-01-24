@@ -1,10 +1,8 @@
-name: Generate sample app
+name: Generate the sample app
 on:
-    workflow_run:
-        workflows: ['Imperative Smoke Tests', 'Generator CI']
-        branches: [main]
-        types:
-            - completed
+    push:
+        tags:
+            - 'v*'
 env:
     JHI_SCRIPTS: ./test-integration/scripts
 jobs:
@@ -61,7 +59,7 @@ jobs:
                   npm install
                   git status
                   git add .
-                  git commit -m "Automatic update"
+                  git commit -m "Generate the application with the ${{ github.ref }} version"
             - name: Push changes
               uses: ad-m/github-push-action@master
               with:
