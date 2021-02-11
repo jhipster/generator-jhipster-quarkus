@@ -1,5 +1,5 @@
 const DEFAULT_DATA_ACCESS = 'activeRecord';
-const QUARKUS_VERSION = '1.11.1.Final';
+const QUARKUS_VERSION = '1.11.3.Final';
 
 const CACHE_MAXIMUM_SIZE = 100;
 const CACHE_EXPIRE_AFTER_WRITE = '3600S';
