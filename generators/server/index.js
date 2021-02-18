@@ -4,7 +4,12 @@ const os = require('os');
 const ServerGenerator = require('generator-jhipster/generators/server');
 const prompts = require('./prompts');
 const writeFiles = require('./files').writeFiles;
-const { QUARKUS_VERSION, CACHE_MAXIMUM_SIZE, CACHE_EXPIRE_AFTER_WRITE } = require('../generator-quarkus-constants');
+const {
+    QUARKUS_VERSION,
+    CACHE_MAXIMUM_SIZE,
+    CACHE_EXPIRE_AFTER_WRITE,
+    AUTHENTICATION_TECHNOLOGY,
+} = require('../generator-quarkus-constants');
 
 module.exports = class extends ServerGenerator {
     constructor(args, opts) {
@@ -27,6 +32,7 @@ module.exports = class extends ServerGenerator {
         const phaseFromQuarkus = {
             defineQuarkusConstants() {
                 this.quarkusVersion = QUARKUS_VERSION;
+                this.authenticationTechnology = AUTHENTICATION_TECHNOLOGY;
                 this.CACHE_MAXIMUM_SIZE = CACHE_MAXIMUM_SIZE;
                 this.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
             },
