@@ -81,16 +81,28 @@ quarkus.container-image.tag=latest
 <%if (authenticationType === 'oauth2') { _%>
 # OAuth 2.0 and OIDC
 quarkus.oidc.enabled=true
+<%if (authenticationTechnology === 'keycloak') { _%>
+quarkus.oidc.auth-server-url=http://keycloak:9080/auth/realms/jhipster/
+<%_ } else { _%> 
 quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
+<%_ } _%>
 %dev.quarkus.oidc.client-id=web_app
 %dev.quarkus.oidc.credentials.secret=web_app
 quarkus.oidc.application-type=hybrid
+<%if (authenticationTechnology === 'keycloak') { _%>
 quarkus.oidc.authentication.scopes=profile,address,email,phone,offline_access,roles,microprofile-jwt
+<%_ } else { _%> 
+quarkus.oidc.authentication.scopes=profile,address,email,phone,offline_access
+<%_ } _%>
 quarkus.oidc.authentication.cookie-path=/
 quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc
 quarkus.oidc.authentication.restore-path-after-redirect=false
 
+<%if (authenticationTechnology === 'keycloak') { _%>
+jhipster.oidc.logout-url=http://keycloak:9080/auth/realms/jhipster/protocol/openid-connect/logout
+<%_ } else { _%> 
 jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout
+<%_ } _%>
 
 %test.quarkus.oidc.client-id=dummy
 %test.quarkus.oidc.application-type=service

@@ -340,6 +340,33 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('should AccountResource uses JsonWebToken to build UserDTO', () => {
             assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`, 'JsonWebToken accessToken;');
         });
+
+        describe('With Keycloak', () => {
+            before(
+                buildServerGeneratorContext({
+                    authenticationType: 'oauth2',
+                    authenticationTechnology: 'keycloak',
+                })
+            );
+            it('should JHipster properties contain roles and microprofile-jwt in authentication scope', () => {
+                assert.fileContent(
+                    `${SERVER_MAIN_RES_DIR}application.properties`,
+                    'quarkus.oidc.authentication.scopes=profile,address,email,phone,offline_access,roles,microprofile-jwt'
+                );
+            });
+            it('should JHipster properties contain keycloak logout url', () => {
+                assert.fileContent(
+                    `${SERVER_MAIN_RES_DIR}application.properties`,
+                    'jhipster.oidc.logout-url=http://keycloak:9080/auth/realms/jhipster/protocol/openid-connect/logout'
+                );
+            });
+            it('should JHipster properties contain keycloak auth server url', () => {
+                assert.fileContent(
+                    `${SERVER_MAIN_RES_DIR}application.properties`,
+                    'quarkus.oidc.auth-server-url=http://keycloak:9080/auth/realms/jhipster/'
+                );
+            });
+        });
     });
 
     describe('With Gradle OAuth2', () => {

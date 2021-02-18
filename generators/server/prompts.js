@@ -4,6 +4,7 @@
 const chalk = require('chalk');
 
 const constants = require('generator-jhipster/generators/generator-constants');
+
 const { getBase64Secret } = require('generator-jhipster/generators/utils');
 
 module.exports = {
@@ -109,6 +110,34 @@ function askForServerSideOpts(meta) {
                         });
                     }
                 }
+                return opts;
+            },
+            default: 0,
+        },
+        {
+            when: response =>
+                (response.authenticationType === 'oauth2' &&
+                    applicationType === 'monolith' &&
+                    response.serviceDiscoveryType !== 'eureka') ||
+                ['gateway', 'microservice'].includes(applicationType),
+            type: 'list',
+            name: 'authenticationTechnology',
+            message: `Which ${chalk.yellow('*technology*')} would you like to use?`,
+            choices: response => {
+                const opts = [
+                    {
+                        value: 'keycloak',
+                        name: 'Keycloak',
+                    },
+                    {
+                        value: 'okta',
+                        name: 'Okta',
+                    },
+                    {
+                        value: 'other',
+                        name: 'Other',
+                    },
+                ];
                 return opts;
             },
             default: 0,
@@ -262,6 +291,7 @@ function askForServerSideOpts(meta) {
 
         this.authenticationType = props.authenticationType;
 
+        this.authenticationTechnology = 'other';
         // JWT authentication is mandatory with Eureka, so the JHipster Registry
         // can control the applications
         /*
@@ -277,6 +307,9 @@ function askForServerSideOpts(meta) {
         // oauth expects users to be managed in IpP
         if (this.authenticationType === 'oauth2') {
             this.skipUserManagement = true;
+
+            // save authenticationTechnology when oauth2 is used
+            this.authenticationTechnology = props.authenticationTechnology;
         }
 
         this.packageName = props.packageName;
