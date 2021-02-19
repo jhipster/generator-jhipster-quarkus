@@ -23,6 +23,18 @@ module.exports = class extends ServerGenerator {
 
         this.configOptions = jhContext.configOptions || {};
 
+        // This adds support for a `--authTechnology` flag
+        this.option('authenticationTechnology', {
+            desc: 'Use "keycloak", "okta" or "other" as authentication Technology with oauth2 (default "other")',
+            type: String,
+            defaults: 'other',
+        });
+
+        this.authenticationTechnology =
+            this.options['authenticationTechnology'] ||
+            this.configOptions.authenticationTechnology ||
+            this.config.get('authenticationTechnology');
+
         // This sets up options for this sub generator and is being reused from JHipster
         jhContext.setupServerOptions(this, jhContext);
     }
@@ -37,6 +49,7 @@ module.exports = class extends ServerGenerator {
                 this.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
             },
         };
+
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
@@ -45,7 +58,11 @@ module.exports = class extends ServerGenerator {
         const phaseFromQuarkus = {
             askForServerSideOpts: prompts.askForServerSideOpts,
             askForOptionalItems: undefined,
+            setSharedQuarkusConfigOptions() {
+                this.configOptions.authenticationTechnology = this.authenticationTechnology;
+            },
         };
+
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
@@ -57,6 +74,15 @@ module.exports = class extends ServerGenerator {
                 this.cacheManagerIsAvailable = ['caffeine', 'redis'].includes(this.cacheProvider);
             },
         };
+        const jhipsterConfigQuarkusSteps = {
+            jhipsterQuarkusSaveConfig() {
+                const config = {
+                    authenticationTechnology: this.authenticationTechnology,
+                };
+                this.config.set(config);
+            },
+        };
+        Object.assign(phaseFromJHipster, jhipsterConfigQuarkusSteps);
 
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }

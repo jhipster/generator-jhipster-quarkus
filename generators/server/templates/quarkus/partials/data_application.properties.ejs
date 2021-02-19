@@ -32,7 +32,7 @@
 <%_ if (devDatabaseType === 'mariadb') { _%>
 %dev.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
 %dev.quarkus.datasource.db-kind=mariadb
-%dev.quarkus.datasource.username=<%= baseName %>
+%dev.quarkus.datasource.username=root
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mariadb') { _%>

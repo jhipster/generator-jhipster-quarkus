@@ -291,7 +291,9 @@ function askForServerSideOpts(meta) {
 
         this.authenticationType = props.authenticationType;
 
-        this.authenticationTechnology = 'other';
+        if (this.authenticationTechnology === undefined) {
+            this.authenticationTechnology = 'other';
+        }
         // JWT authentication is mandatory with Eureka, so the JHipster Registry
         // can control the applications
         /*
@@ -342,6 +344,7 @@ function askForServerSideOpts(meta) {
         if (['redis'].includes(this.cacheProvider)) {
             this.enableHibernateCache = false;
         }
+
         done();
     });
 }
