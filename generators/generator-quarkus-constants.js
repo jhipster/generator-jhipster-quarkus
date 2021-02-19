@@ -3,14 +3,12 @@ const QUARKUS_VERSION = '1.11.3.Final';
 
 const CACHE_MAXIMUM_SIZE = 100;
 const CACHE_EXPIRE_AFTER_WRITE = '3600S';
-const AUTHENTICATION_TECHNOLOGY = 'other';
 
 const constants = {
     DEFAULT_DATA_ACCESS,
     QUARKUS_VERSION,
     CACHE_MAXIMUM_SIZE,
     CACHE_EXPIRE_AFTER_WRITE,
-    AUTHENTICATION_TECHNOLOGY,
 };
 
 module.exports = constants;
