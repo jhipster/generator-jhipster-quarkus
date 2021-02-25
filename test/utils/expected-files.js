@@ -17,7 +17,7 @@ const expectedFiles = {
         'gradle/wrapper/gradle-wrapper.properties',
     ],
 
-    docker: [`${DOCKER_DIR}Dockerfile.jvm`, `${DOCKER_DIR}Dockerfile.native`, `${DOCKER_DIR}Dockerfile.fast-jar`],
+    docker: [`${DOCKER_DIR}Dockerfile.jvm`, `${DOCKER_DIR}Dockerfile.native`, `${DOCKER_DIR}Dockerfile.legacy-jar`],
 
     server: {
         common: [
