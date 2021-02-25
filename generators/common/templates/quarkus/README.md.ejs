@@ -274,8 +274,8 @@ This will concatenate and minify the client CSS and JavaScript files. It will al
 <%_ } _%>
 To ensure everything worked, run:
 <% if (buildTool === 'maven') { %>
-    java -jar target/*.jar<% } %><% if (buildTool === 'gradle') { %>
-    java -jar build/libs/*.jar<% } %>
+    java -jar target/quarkus-app/*.jar<% } %><% if (buildTool === 'gradle') { %>
+    java -jar build/libs/quarkus-app/*.jar<% } %>
 
 <% if (!skipClient) { %>Then navigate to [http://localhost:<%= serverPort %>](http://localhost:<%= serverPort %>) in your browser.
 <% } %>
