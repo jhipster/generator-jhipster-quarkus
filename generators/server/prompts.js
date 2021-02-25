@@ -130,11 +130,11 @@ function askForServerSideOpts(meta) {
                         name: 'SQL (H2, MySQL, PostgreSQL, MSSQL)',
                     });
                 }
-                /*
                 opts.push({
                     value: 'mongodb',
-                    name: 'MongoDB'
+                    name: 'MongoDB [WARNING: broken with Gradle]',
                 });
+                /*
                 if (response.authenticationType !== 'oauth2') {
                     opts.push({
                         value: 'cassandra',

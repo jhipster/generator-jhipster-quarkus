@@ -16,6 +16,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
+    <%_ if (databaseType === 'sql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
@@ -24,6 +25,7 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
+    <%_ } _%>
     <%_ if (devDatabaseType === 'mariadb' || prodDatabaseType === 'mariadb') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -48,6 +50,7 @@
             <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
     <%_ } _%>
+    <%_ if (databaseType === 'sql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-h2</artifactId>
@@ -60,3 +63,27 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-liquibase</artifactId>
         </dependency>
+    <%_ } _%>
+    <%_ if (databaseType === 'mongodb') { _%>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-mongodb-panache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.cloudyrock.mongock</groupId>
+            <artifactId>mongock-standalone</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.cloudyrock.mongock</groupId>
+            <artifactId>mongodb-sync-v4-driver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>${mongodb-driver-sync.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+    <%_ } _%>

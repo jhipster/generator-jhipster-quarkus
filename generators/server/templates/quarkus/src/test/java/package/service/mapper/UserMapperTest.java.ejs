@@ -19,7 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserMapperTest {
 
     private static final String DEFAULT_LOGIN = "johndoe";
+<%_ if (databaseType === 'mongodb') { _%>
+    private static final String DEFAULT_ID = "user-1";
+<%_ } else { _%>
     private static final Long DEFAULT_ID = 1L;
+<%_ } _%>
 
     private UserMapper userMapper;
     private User user;

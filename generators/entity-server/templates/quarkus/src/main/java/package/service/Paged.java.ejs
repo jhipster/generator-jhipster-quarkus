@@ -18,7 +18,11 @@
 -%>
 package <%= packageName %>.service;
 
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+<%_ } else if(databaseType === 'mongodb') { _%>
+import io.quarkus.mongodb.panache.PanacheQuery;
+<%_ } _%>
 
 import java.util.Collections;
 import java.util.List;

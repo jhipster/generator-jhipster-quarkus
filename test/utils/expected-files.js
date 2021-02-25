@@ -101,6 +101,12 @@ const expectedFiles = {
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/MailServiceIT.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/mapper/UserMapperTest.java`,
         ],
+
+        mongoDb: [
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/dbmigrations/InitialSetupMigration.java`,
+            `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/MongockConfiguration.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/MongoDbTestResource.java`,
+        ],
     },
 
     cache: {

@@ -16,6 +16,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
+<%_ if(databaseType === 'sql') { _%>
     <%_ if(!viaRepository) { _%>
     public <%= entityClass %> update() {
         return update(this);
@@ -60,3 +61,4 @@
             return update(<%= entityInstance %>);
         }
     }
+<%_ } _%>

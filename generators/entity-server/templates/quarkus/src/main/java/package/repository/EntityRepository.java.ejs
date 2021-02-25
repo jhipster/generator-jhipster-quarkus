@@ -19,7 +19,6 @@
 package <%=packageName%>.repository;
 
 import <%=packageName%>.domain.<%=asEntity(entityClass)%>;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 <%_ } _%>
@@ -47,7 +46,7 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 <%_ } _%>
 @ApplicationScoped
-public class <%=entityClass%>Repository implements <% if (databaseType === 'sql') { %>PanacheRepository<% } %><% if (databaseType === 'mongodb') { %>MongoRepository<% } %><% if (databaseType === 'cassandra') { %>CassandraRepository<% } %><% if (databaseType === 'couchbase') { %>N1qlCouchbaseRepository<% } %><<%=asEntity(entityClass)%>><% if (jpaMetamodelFiltering) { %>, JpaSpecificationExecutor<<%=asEntity(entityClass)%>><% } %> {
+public class <%=entityClass%>Repository implements <% if (databaseType === 'sql') { %>PanacheRepository<% } %><% if (databaseType === 'mongodb') { %>PanacheMongoRepository<% } %><% if (databaseType === 'cassandra') { %>CassandraRepository<% } %><% if (databaseType === 'couchbase') { %>N1qlCouchbaseRepository<% } %><<%=asEntity(entityClass)%>><% if (jpaMetamodelFiltering) { %>, JpaSpecificationExecutor<<%=asEntity(entityClass)%>><% } %> {
 <%- include('../_partials/imperative/common/persist', this) -%>
 
 <%- include('../_partials/imperative/common/finders', this) -%>

@@ -15,6 +15,8 @@ jobs:
                 os: [ubuntu-latest]
                 app:
                     - imperative-ngx-jwt-maven-mysql-caffeine
+                    - imperative-ngx-jwt-maven-mongodb-caffeine
+                    - imperative-ngx-jwt-gradle-mongodb-redis
                     - imperative-ngx-jwt-maven-psql-nocache
                     - imperative-react-jwt-gradle-mysql-caffeine
                     - imperative-ngx-jwt-maven-mysql-redis
@@ -22,11 +24,14 @@ jobs:
                     - imperative-ngx-oauth2-maven-mysql-caffeine
                 include:
                     - app: imperative-ngx-jwt-maven-mysql-caffeine
+                    - app: imperative-ngx-jwt-maven-mongodb-caffeine
                     - app: imperative-ngx-jwt-maven-psql-nocache
                     - app: imperative-react-jwt-gradle-mysql-caffeine
                     - app: imperative-ngx-jwt-maven-mysql-redis
                     - app: imperative-sql-jwt-maven-noDb
                     - app: imperative-ngx-oauth2-maven-mysql-caffeine
+                exclude:
+                    - app: imperative-ngx-jwt-gradle-mongodb-redis
         env:
             JHI_APP: ${{ matrix.app }}
         steps:

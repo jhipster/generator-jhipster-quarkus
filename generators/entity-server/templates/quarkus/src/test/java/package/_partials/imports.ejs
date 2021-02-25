@@ -29,7 +29,6 @@ import <%= packageName %>.domain.<%= entityClass %>;
 <%_ } else { _%>
 import <%= packageName %>.service.dto.<%= dtoClass %>;
 <%_ } _%>
-import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
 <%_ if (cacheProvider === 'redis') { _%>
 import redis.embedded.RedisServer;
@@ -39,12 +38,13 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 <%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
+import io.quarkus.liquibase.LiquibaseFactory;
 <%_ } _%>
 import org.junit.jupiter.api.*;
 
 import javax.inject.Inject;
 
-<%_ if (databaseType === 'sql') { _%>
+import java.util.List;
     <%_ if (fieldsContainBigDecimal) { _%>
 import java.math.BigDecimal;
     <%_ } _%>
@@ -73,11 +73,9 @@ import java.time.temporal.ChronoUnit;
     <%_ if (fieldsContainOwnerManyToMany) { _%>
 import java.util.ArrayList;
     <%_ } _%>
-import java.util.List;
     <%_ if (fieldsContainUUID === true) { _%>
 import java.util.UUID;
     <%_ } _%>
     <%_ if (fieldsContainZonedDateTime === true) { _%>
 import static <%= packageName %>.TestUtil.sameInstant;
     <%_ } _%>
-<%_ } _%>

@@ -24,13 +24,21 @@ import io.quarkus.cache.CacheResult;
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import io.quarkus.panache.common.Page;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+<%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+import io.quarkus.mongodb.panache.MongoEntity;
+import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
+import org.bson.codecs.pojo.annotations.BsonId;
+<%_ if (cacheProvider === 'caffeine') { _%>
+import org.bson.codecs.pojo.annotations.BsonIgnore;
+<%_ } _%>
 <%_ } _%>
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
-<%_ if (databaseType === 'sql') { _%>
+<%_ if (['sql', 'mongodb'].includes(databaseType)) { _%>
+import io.quarkus.panache.common.Page;
 import java.util.List;
 import java.util.Optional;
 <%_ } _%>
@@ -58,27 +66,38 @@ import org.hibernate.annotations.Cache;
 <%_ if (enableHibernateCache) { _%>
 @Cacheable
 <%_ } _%>
+<%_ } else if (databaseType === 'mongodb') { _%>
+@MongoEntity(collection="<%= jhiTablePrefix %>_user")
 <%_ } _%>
-public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } %>implements Serializable {
+public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } else if (databaseType === 'mongodb') { %>extends PanacheMongoEntityBase <% }%>implements Serializable {
     private static final long serialVersionUID = 1L;
 <%_ if (cacheProvider === 'caffeine') { _%>
+    <%_ if (databaseType === 'mongodb') { _%>
+    @BsonIgnore
+    <%_ } _%>
     public static final String USERS_BY_EMAIL_CACHE = "usersByEmail";
+    <%_ if (databaseType === 'mongodb') { _%>
+    @BsonIgnore
+    <%_ } _%>
     public static final String USERS_BY_LOGIN_CACHE = "usersByLogin";
 <%_ } _%>
 
 <%_ if (databaseType === 'sql') { _%>
     @Id
-<%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
+    <%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<%_ }  else { _%>
+    <%_ }  else { _%>
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
-<%_ } _%>
+    <%_ } _%>
 <%_ } _%>
 <%_ if (databaseType === 'couchbase') { _%>
     @GeneratedValue(strategy = UNIQUE, delimiter = ID_DELIMITER)
 <%_ } _%>
-    public Long id;
+<%_ if (databaseType === 'mongodb') { _%>
+    @BsonId
+<%_ } _%>
+    public <% if (databaseType === 'mongodb') { %>String<% } else { %>Long<% }%> id;
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -249,7 +268,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
         );
     }
 
-<%_ if (databaseType === 'sql' && authenticationType !== 'oauth2') { _%>
+<%_ if (['sql', 'mongodb'].includes(databaseType)  && authenticationType !== 'oauth2') { _%>
     public static Optional<User> findOneByActivationKey(String activationKey) {
         return find("activationKey", activationKey).firstResultOptional();
     }
@@ -264,7 +283,11 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
 
 <%_ } _%>
     public static Optional<User> findOneByEmailIgnoreCase(String email) {
+        <%_ if (databaseType === 'sql') { _%>
         return find("LOWER(email) = LOWER(?1)", email).firstResultOptional();
+        <%_ } else if (databaseType === 'mongodb') { _%>
+        return find("LOWER(email)", email).firstResultOptional();
+        <%_ } _%>
     }
 
     public static Optional<User> findOneByLogin(String login) {
@@ -279,7 +302,11 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
     @CacheResult(cacheName = USERS_BY_LOGIN_CACHE)
     <%_ } _%>
     public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByLogin(String login) {
+        <%_ if (databaseType === 'sql') { _%>
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)
+        <%_ } else if (databaseType === 'mongodb') { _%>
+        return find("login", login)
+        <%_ } _%>
             <% if (cacheProvider === 'redis') { %>.firstResult<% } else { %>.firstResultOptional<% } %>();
     }
 
