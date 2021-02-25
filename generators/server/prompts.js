@@ -132,7 +132,7 @@ function askForServerSideOpts(meta) {
                 }
                 opts.push({
                     value: 'mongodb',
-                    name: 'MongoDB',
+                    name: 'MongoDB [WARNING: broken with Gradle]',
                 });
                 /*
                 if (response.authenticationType !== 'oauth2') {
