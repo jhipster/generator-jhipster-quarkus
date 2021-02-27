@@ -67,6 +67,7 @@ public class MailService {
             .data(BASE_URL, jHipsterProperties.mail.baseUrl)
             .data(USER, user)
             .send()
+            .subscribeAsCompletionStage()
             .thenAccept(
                 it -> {
                     log.debug("Sent email to User '{}'", user.email);
