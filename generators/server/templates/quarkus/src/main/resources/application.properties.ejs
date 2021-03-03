@@ -37,7 +37,7 @@ quarkus.micrometer.export.prometheus.path=/management/prometheus
 
 quarkus.smallrye-health.root-path=/management/health
 
-<%if (authenticationType === 'jwt') { _%>
+<%_ if (authenticationType === 'jwt') { _%>
 mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
 mp.jwt.verify.issuer=https://www.jhipster.tech
 quarkus.smallrye-jwt.enabled=true
@@ -68,7 +68,9 @@ quarkus.swagger-ui.always-include=true
 quarkus.swagger-ui.path=/swagger-ui
 
 quarkus.native.additional-build-args=\
+<%_ if (authenticationType === 'oauth2') { _%>
     -H:ResourceConfigurationFiles=resources-config.json,\
+<%_ } _%>
     --initialize-at-run-time=<%= packageName %>.security.RandomUtil
 <%if (buildTool === 'gradle') { _%>
 
