@@ -68,7 +68,7 @@ quarkus.swagger-ui.always-include=true
 quarkus.swagger-ui.path=/swagger-ui
 
 quarkus.native.additional-build-args=\
-<%_ if (authenticationType === 'oauth2') { _%>
+<%_ if (authenticationType !== 'oauth2') { _%>
     -H:ResourceConfigurationFiles=resources-config.json,\
 <%_ } _%>
     --initialize-at-run-time=<%= packageName %>.security.RandomUtil
