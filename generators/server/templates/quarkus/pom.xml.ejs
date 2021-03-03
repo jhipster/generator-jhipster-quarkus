@@ -170,6 +170,12 @@
             <version>${camel-quarkus-jackson.version}</version>
         </dependency>
         <%_ } _%>
+        <%_ if (!skipUserManagement) { _%>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <%_ } _%>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -599,6 +605,15 @@
                 <!-- default Quarkus profiles -->
                 <quarkus.profile>dev</quarkus.profile>
             </properties>
+            <%_ if (devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { _%>
+            <%# This dependency is in the dev profile (and not in regular dependencies) because native builds fail if H2 is a dependency. %>
+            <dependencies>
+                <dependency>
+                    <groupId>io.quarkus</groupId>
+                    <artifactId>quarkus-jdbc-h2</artifactId>
+                </dependency>
+            </dependencies>
+            <%_ } _%>
         </profile>
         <profile>
             <id>prod</id>

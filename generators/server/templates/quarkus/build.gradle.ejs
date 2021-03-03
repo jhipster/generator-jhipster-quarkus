@@ -242,9 +242,11 @@ dependencies {
     implementation "org.mongodb:mongodb-driver-sync"
     implementation "org.apache.commons:commons-lang3"
 <%_ } _%>
+<%_ if (!skipUserManagement) { _%>
+    implementation "org.apache.commons:commons-lang3"
+<%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
-    implementation "io.quarkus:quarkus-jdbc-h2"
-    implementation "io.quarkus:quarkus-test-h2"
+    testImplementation "io.quarkus:quarkus-test-h2"
     implementation "io.quarkus:quarkus-liquibase"
 <%_ } _%>
     implementation "io.quarkus:quarkus-elytron-security"

@@ -24,8 +24,9 @@ configurations {
 }
 
 dependencies {
+    <%# This dependency is in the dev profile (and not in regular dependencies) because native builds fail if H2 is a dependency. %>
     <%_ if (devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { _%>
-    implementation "com.h2database:h2"
+    implementation "io.quarkus:quarkus-jdbc-h2"
     <%_ } _%>
 }
 
