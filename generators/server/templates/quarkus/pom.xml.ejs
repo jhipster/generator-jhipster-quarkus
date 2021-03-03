@@ -599,6 +599,13 @@
                 <!-- default Quarkus profiles -->
                 <quarkus.profile>dev</quarkus.profile>
             </properties>
+            <%_ if (databaseType === 'sql') { _%>
+            <%# This dependency is in the dev profile (and not in regular dependencies) because native builds fail if H2 is a dependency. %>
+            <dependency>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-jdbc-h2</artifactId>
+            </dependency>
+            <%_ } _%>
         </profile>
         <profile>
             <id>prod</id>
