@@ -25,7 +25,7 @@ configurations {
 
 dependencies {
     <%_ if (devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { _%>
-    implementation "com.h2database:h2"
+    implementation "io.quarkus:quarkus-jdbc-h2"
     <%_ } _%>
 }
 
