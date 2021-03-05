@@ -1,0 +1,56 @@
+name: Native image builds
+on: [push, pull_request]
+env:
+    JHI_SCRIPTS: ./test-integration/scripts
+jobs:
+    applications:
+        name: ${{ matrix.app }}
+        runs-on: ${{ matrix.os }}
+        if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+        timeout-minutes: 30
+        strategy:
+            fail-fast: false
+            matrix:
+                node_version: [12.16.2]
+                os: [ubuntu-latest]
+                app:
+                    - imperative-ngx-jwt-maven-mysql-caffeine
+                    - imperative-ngx-jwt-maven-mongodb-caffeine
+                    - imperative-ngx-jwt-gradle-mongodb-redis
+                    - imperative-ngx-jwt-maven-psql-nocache
+                    - imperative-react-jwt-gradle-mysql-caffeine
+                    - imperative-ngx-jwt-maven-mysql-redis
+                    - imperative-sql-jwt-maven-noDb
+                    - imperative-ngx-oauth2-maven-mysql-caffeine
+                include:
+                    - app: imperative-ngx-jwt-maven-mysql-caffeine
+                    - app: imperative-ngx-jwt-maven-mongodb-caffeine
+                    - app: imperative-ngx-jwt-maven-psql-nocache
+                    - app: imperative-react-jwt-gradle-mysql-caffeine
+                    - app: imperative-ngx-jwt-maven-mysql-redis
+                    - app: imperative-sql-jwt-maven-noDb
+                    - app: imperative-ngx-oauth2-maven-mysql-caffeine
+                exclude:
+                    - app: imperative-ngx-jwt-gradle-mongodb-redis
+        env:
+            JHI_APP: ${{ matrix.app }}
+        steps:
+            - uses: actions/checkout@v1
+            - uses: DeLaGuardo/setup-graalvm@master
+              with:
+                  graalvm-version: '21.0.0.2.java11'
+            - name: git history
+              run: git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
+            - name: Prepare JHipster env
+              run: sudo $JHI_SCRIPTS/01-install-global-jhipster.sh
+            - name: 'Generate JHipster Application'
+              run: $JHI_SCRIPTS/02-generate-project.sh $JHI_APP
+            - name: 'Run JHipster Quarkus Native'
+              id: native
+              run: $JHI_SCRIPTS/03-run-server-native.sh $JHI_APP
+            - name: 'Store failsafe-reports'
+              uses: actions/upload-artifact@v2
+              if: always() && steps.native.outcome == 'failure'
+              with:
+                  name: failsafe-reports-${{ matrix.app }}
+                  path: /home/runner/app/target/failsafe-reports
