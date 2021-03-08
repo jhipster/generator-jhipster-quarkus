@@ -28,6 +28,7 @@ import <%=packageName%>.security.RandomUtil;
 <%_ } _%>
 import <%=packageName%>.service.dto.UserDTO;
 <%_ if (cacheProvider === 'caffeine') { _%>
+import <%=packageName%>.config.Constants;
 import io.quarkus.cache.CacheInvalidate;
 <%_ } else if (cacheProvider === 'redis') { _%>
 import <%= packageName %>.cache.redis.UserRedisCache;
@@ -361,10 +362,10 @@ public class UserService {
     <%_ } _%>
 
     <%_ if (cacheProvider === 'caffeine') { _%>
-    @CacheInvalidate(cacheName = User.USERS_BY_EMAIL_CACHE)
+    @CacheInvalidate(cacheName = Constants.USERS_BY_EMAIL_CACHE)
     public void clearUserCachesByEmail(String email) {}
 
-    @CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)
+    @CacheInvalidate(cacheName = Constants.USERS_BY_LOGIN_CACHE)
     public void clearUserCachesByLogin(String login) {}
     <%_ } _%>
 }

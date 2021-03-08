@@ -20,6 +20,7 @@ package <%=packageName%>.domain;
 
 import <%=packageName%>.config.Constants;
 <%_ if (cacheProvider === 'caffeine') { _%>
+import <%=packageName%>.config.Constants;
 import io.quarkus.cache.CacheResult;
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
@@ -71,16 +72,6 @@ import org.hibernate.annotations.Cache;
 <%_ } _%>
 public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <% } else if (databaseType === 'mongodb') { %>extends PanacheMongoEntityBase <% }%>implements Serializable {
     private static final long serialVersionUID = 1L;
-<%_ if (cacheProvider === 'caffeine') { _%>
-    <%_ if (databaseType === 'mongodb') { _%>
-    @BsonIgnore
-    <%_ } _%>
-    public static final String USERS_BY_EMAIL_CACHE = "usersByEmail";
-    <%_ if (databaseType === 'mongodb') { _%>
-    @BsonIgnore
-    <%_ } _%>
-    public static final String USERS_BY_LOGIN_CACHE = "usersByLogin";
-<%_ } _%>
 
 <%_ if (databaseType === 'sql') { _%>
     @Id
@@ -299,7 +290,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
     }
 
     <%_ if (cacheProvider === 'caffeine') { _%>
-    @CacheResult(cacheName = USERS_BY_LOGIN_CACHE)
+    @CacheResult(cacheName = Constants.USERS_BY_LOGIN_CACHE)
     <%_ } _%>
     public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByLogin(String login) {
         <%_ if (databaseType === 'sql') { _%>
@@ -311,7 +302,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
     }
 
     <%_ if (cacheProvider === 'caffeine') { _%>
-    @CacheResult(cacheName = USERS_BY_EMAIL_CACHE)
+    @CacheResult(cacheName = Constants.USERS_BY_EMAIL_CACHE)
     <%_ } _%>
     public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)
