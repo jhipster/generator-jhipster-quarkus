@@ -12,7 +12,7 @@ fi
 #-------------------------------------------------------------------------------
 cd "$JHI_FOLDER_APP"
 if [ -f "mvnw" ]; then
-    ./mvnw verify -Pwebpack,native
+    ./mvnw verify -Pwebpack,native -DskipTests
 elif [ -f "gradlew" ]; then
     ./gradlew test integrationTest -x webpack
 fi
