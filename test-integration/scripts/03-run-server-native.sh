@@ -14,5 +14,5 @@ cd "$JHI_FOLDER_APP"
 if [ -f "mvnw" ]; then
     ./mvnw verify -Pwebpack,native -DskipTests
 elif [ -f "gradlew" ]; then
-    ./gradlew test integrationTest -x webpack
+    ./gradlew build -Dquarkus.package.type=native -x webpack
 fi
