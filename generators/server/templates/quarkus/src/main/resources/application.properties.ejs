@@ -78,8 +78,9 @@ quarkus.native.additional-build-args=\
 <%if (buildTool === 'gradle') { _%>
 
 # Docker image build properties, for more information https://quarkus.io/guides/container-image
-quarkus.container-image.group=
-quarkus.container-image.name=<%= baseName %>
+# If you want to change the default group and name value, please check the dedicated documentation here https://quarkus.io/guides/container-image#quarkus-container-image_quarkus.container-image.group
+# quarkus.container-image.group=
+# quarkus.container-image.name=<%= baseName %>
 quarkus.container-image.tag=latest
 <%_ } _%>
 
