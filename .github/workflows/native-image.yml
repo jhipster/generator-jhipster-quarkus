@@ -36,15 +36,15 @@ jobs:
             JHI_APP: ${{ matrix.app }}
         steps:
             - uses: actions/checkout@v1
-            - uses: DeLaGuardo/setup-graalvm@master
-              with:
-                  graalvm-version: '21.0.0.2.java11'
             - name: git history
               run: git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
             - name: Prepare JHipster env
               run: sudo $JHI_SCRIPTS/01-install-global-jhipster.sh
             - name: 'Generate JHipster Application'
               run: $JHI_SCRIPTS/02-generate-project.sh $JHI_APP
+            - uses: DeLaGuardo/setup-graalvm@master
+              with:
+                graalvm-version: '21.0.0.2.java11'
             - name: 'Run JHipster Quarkus Native'
               id: native
               run: $JHI_SCRIPTS/03-run-server-native.sh $JHI_APP
