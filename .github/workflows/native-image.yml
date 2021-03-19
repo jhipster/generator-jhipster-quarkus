@@ -1,5 +1,8 @@
 name: Native image builds
-on: [push, pull_request]
+# on: [push, pull_request]
+on:
+    schedule:
+        - cron: '0 2 * * *'
 env:
     JHI_SCRIPTS: ./test-integration/scripts
 jobs:
