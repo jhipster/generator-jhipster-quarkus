@@ -75,9 +75,7 @@ const serverFiles = {
         {
             condition: generator => generator.databaseType === 'mongodb',
             path: SERVER_MAIN_RES_DIR,
-            templates: [
-                'reflect-config-mongo.json.ejs',
-            ],
+            templates: ['reflect-config-mongo.json'],
         },
         {
             condition: generator => !generator.skipUserManagement,
