@@ -403,6 +403,25 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             );
         });
 
+        it('pom.xml contains native image compilation support dependencies', () => {
+            assert.fileContent(
+                'pom.xml',
+                '        <dependency>\n' +
+                    '            <groupId>org.apache.commons</groupId>\n' +
+                    '            <artifactId>commons-vfs2</artifactId>\n' +
+                    // eslint-disable-next-line no-template-curly-in-string
+                    '            <version>${commons-vfs2.version}</version>\n' +
+                    '        </dependency>\n' +
+                    '        <dependency>\n' +
+                    '            <groupId>org.graalvm.nativeimage</groupId>\n' +
+                    '            <artifactId>svm</artifactId>\n' +
+                    // eslint-disable-next-line no-template-curly-in-string
+                    '            <version>${graal.version}</version>\n' +
+                    '            <scope>provided</scope>\n' +
+                    '        </dependency>'
+            );
+        });
+
         it('application.properties contains MongoDb entries', () => {
             assert.fileContent(
                 `${SERVER_MAIN_RES_DIR}application.properties`,
