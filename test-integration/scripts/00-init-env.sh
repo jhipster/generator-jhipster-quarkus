@@ -31,3 +31,8 @@ fi
 if [[ "$JHI_FOLDER_APP" == "" ]]; then
     JHI_FOLDER_APP="$HOME"/app
 fi
+
+# JHipster version to run with the blueprint
+if [[ "$JHI_VERSION" == "" ]]; then
+    JHI_VERSION=$(node -p "require('./package.json').dependencies['generator-jhipster']" )
+fi
