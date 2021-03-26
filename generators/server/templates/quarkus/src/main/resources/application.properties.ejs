@@ -71,6 +71,9 @@ quarkus.native.additional-build-args=\
 <%_ if (authenticationType === 'jwt') { _%>
     -H:ResourceConfigurationFiles=resources-config.json,\
 <%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+    -H:ReflectionConfigurationResources=reflect-config-mongo.json,\
+<%_ } _%>
     --initialize-at-run-time=<%= packageName %>.security.RandomUtil
 <%if (buildTool === 'gradle') { _%>
 
