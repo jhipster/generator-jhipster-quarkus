@@ -241,6 +241,8 @@ dependencies {
     implementation "com.github.cloudyrock.mongock:mongodb-sync-v4-driver:${mongodb_driverSync_version}"
     implementation "org.mongodb:mongodb-driver-sync"
     implementation "org.apache.commons:commons-lang3"
+    implementation "org.apache.commons:commons-vfs2:${commons_vfs2_version}"
+    compileOnly "org.graalvm.nativeimage:svm:${graal_version}"
 <%_ } _%>
 <%_ if (!skipUserManagement) { _%>
     implementation "org.apache.commons:commons-lang3"
