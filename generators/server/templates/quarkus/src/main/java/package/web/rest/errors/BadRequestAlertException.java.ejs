@@ -18,15 +18,43 @@
 -%>
 package <%=packageName%>.web.rest.errors;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.zalando.problem.Problem;
+import org.zalando.problem.Status;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 public class BadRequestAlertException extends WebApplicationException {
+
+    private static final String APPLICATION_NAME = ConfigProvider.getConfig()
+        .getOptionalValue("application.name", String.class)
+        .orElse("jhipster");
+
     private static final long serialVersionUID = 1L;
 
-    public BadRequestAlertException(String message, String entityName, String errorKey) {
-        super(Response.status(BAD_REQUEST).entity(message).header("message", "error." + errorKey).header("params", entityName).build());
+    public BadRequestAlertException(String defaultMessage, String entityName, String errorKey) {
+        this(ErrorConstants.DEFAULT_TYPE, defaultMessage, entityName, errorKey);
     }
+
+    public BadRequestAlertException(URI type, String defaultMessage, String entityName, String errorKey) {
+        super(Response
+            .status(Response.Status.BAD_REQUEST)
+            .header("X-" + APPLICATION_NAME + "-error", "error." + errorKey)
+            .header("X-" + APPLICATION_NAME + "-params", entityName)
+            .entity(
+                Problem.builder()
+                    .withType(type)
+                    .withStatus(Status.BAD_REQUEST)
+                    .withTitle(defaultMessage)
+                    .with("entityName", entityName)
+                    .with("errorKey", errorKey)
+                    .with("message", "error." + errorKey)
+                    .with("params", entityName)
+                    .build()
+            )
+            .build());
+    }
+
 }

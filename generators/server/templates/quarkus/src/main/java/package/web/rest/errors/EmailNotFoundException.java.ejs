@@ -23,9 +23,9 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-public class EmailNotFoundException extends WebApplicationException {
+public class EmailNotFoundException extends BadRequestAlertException {
 
     public EmailNotFoundException() {
-        super(Response.status(BAD_REQUEST).entity("Email address not registered").build());
+        super("Email address not registered", "userManagement", "emailnotfound");
     }
 }
