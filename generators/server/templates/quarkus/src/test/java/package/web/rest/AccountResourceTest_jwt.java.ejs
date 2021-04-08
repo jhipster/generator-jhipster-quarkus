@@ -58,6 +58,7 @@ import javax.ws.rs.core.MediaType;
 import liquibase.Liquibase;
 <%_ } _%>
 import org.apache.commons.lang3.RandomStringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.*;
 
 @QuarkusTest
@@ -70,6 +71,9 @@ public class AccountResourceTest {
 
     @Inject
     MockMailbox mailbox;
+
+    @ConfigProperty(name = "application.name")
+    String applicationName;
 
     @BeforeEach
     void init() {
@@ -251,26 +255,30 @@ public class AccountResourceTest {
 
     @Test
     public void testRegisterInvalidEmail() {
-        var invalidUser = new ManagedUserVM();
-        invalidUser.login = "bob";
-        invalidUser.password = "password";
-        invalidUser.firstName = "Bob";
-        invalidUser.lastName = "Green";
-        invalidUser.email = "invalid"; // <-- invalid
-        invalidUser.imageUrl = "http://placehold.it/50x50";
-        invalidUser.langKey = Constants.DEFAULT_LANGUAGE;
-        invalidUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
+        var userWihInvalidEmail = new ManagedUserVM();
+        userWihInvalidEmail.login = "bob";
+        userWihInvalidEmail.password = "password";
+        userWihInvalidEmail.firstName = "Bob";
+        userWihInvalidEmail.lastName = "Green";
+        userWihInvalidEmail.email = "invalid"; // <-- invalid
+        userWihInvalidEmail.imageUrl = "http://placehold.it/50x50";
+        userWihInvalidEmail.langKey = Constants.DEFAULT_LANGUAGE;
+        userWihInvalidEmail.authorities = Collections.singleton(AuthoritiesConstants.USER);
 
         given()
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .body(invalidUser)
+            .body(userWihInvalidEmail)
             .when()
             .post("/api/register")
             .then()
-            .statusCode(BAD_REQUEST.getStatusCode());
+            .statusCode(BAD_REQUEST.getStatusCode())
+            .contentType("application/problem+json")
+            .body("violations", hasSize(1))
+            .body("violations[0].field", is("email"))
+            .body("violations[0].error", is("must be a well-formed email address"));
 
-        get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+        get("/api/users/{login}", userWihInvalidEmail.login).then().statusCode(NOT_FOUND.getStatusCode());
     }
 
     @Test
@@ -292,7 +300,20 @@ public class AccountResourceTest {
             .when()
             .post("/api/register")
             .then()
-            .statusCode(BAD_REQUEST.getStatusCode());
+            .statusCode(BAD_REQUEST.getStatusCode())
+            .contentType("application/problem+json")
+            .body("violations", hasSize(2))
+            .body("violations.field", hasItems("email", "password"))
+            .body("violations.error", hasItems("must be a well-formed email address", "size must be between 4 and 100"));
+            // Springboot version returns a bit different schema. Does frontend care/use/display fieldErrors?
+            // {
+            //   "type":"https://www.jhipster.tech/problem/constraint-violation",
+            //   "title":"Method argument not valid",
+            //   "status":400,
+            //   "path":"/api/register",
+            //   "message":"error.validation",
+            //   "fieldErrors":[{"objectName":"managedUserVM","field":"password","message":"size must be between 4 and 100"}]
+            // }
 
         get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
     }

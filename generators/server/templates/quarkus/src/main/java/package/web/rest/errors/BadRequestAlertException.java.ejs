@@ -43,6 +43,7 @@ public class BadRequestAlertException extends WebApplicationException {
             .status(Response.Status.BAD_REQUEST)
             .header("X-" + APPLICATION_NAME + "-error", "error." + errorKey)
             .header("X-" + APPLICATION_NAME + "-params", entityName)
+            .type("application/problem+json")
             .entity(
                 Problem.builder()
                     .withType(type)
