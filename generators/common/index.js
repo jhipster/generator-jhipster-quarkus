@@ -11,7 +11,7 @@ module.exports = class extends CommonGenerator {
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.configOptions = jhContext.configOptions || {};
@@ -68,6 +68,21 @@ module.exports = class extends CommonGenerator {
         return super._configuring();
     }
 
+    get composing() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._composing();
+    }
+
+    get loading() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._loading();
+    }
+
+    get preparing() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._preparing();
+    }
+
     get default() {
         const phaseFromJHipster = super._default();
         const phaseFromQuarkus = {
@@ -82,6 +97,11 @@ module.exports = class extends CommonGenerator {
         const phaseFromJHipster = super._writing();
         const phaseFromQuarkus = writeFiles();
         return Object.assign(phaseFromJHipster, phaseFromQuarkus);
+    }
+
+    get postWriting() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._postWriting();
     }
 
     get install() {

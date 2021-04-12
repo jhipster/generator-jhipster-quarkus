@@ -12,7 +12,7 @@ module.exports = class extends EntityGenerator {
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.configOptions = jhContext.configOptions || {};
@@ -83,6 +83,26 @@ module.exports = class extends EntityGenerator {
         };
     }
 
+    get composing() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._composing();
+    }
+
+    get loading() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._loading();
+    }
+
+    get preparing() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._preparing();
+    }
+
+    get preparingRelationships() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._preparingRelationships();
+    }
+
     get default() {
         // Here we are not overriding this phase and hence its being handled by JHipster
         return super._default();
@@ -130,6 +150,11 @@ module.exports = class extends EntityGenerator {
                 });
             },
         };
+    }
+
+    get postWriting() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._postWriting();
     }
 
     get install() {
