@@ -17,9 +17,6 @@ module.exports = class extends ServerGenerator {
         }
 
         this.configOptions = jhContext.configOptions || {};
-
-        // This sets up options for this sub generator and is being reused from JHipster
-        jhContext.setupServerOptions(this, jhContext);
     }
 
     get initializing() {
