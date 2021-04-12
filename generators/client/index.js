@@ -29,27 +29,22 @@ module.exports = class extends ClientGenerator {
     }
 
     get configuring() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._configuring();
     }
 
     get composing() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._composing();
     }
 
     get loading() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._loading();
     }
 
     get preparing() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._preparing();
     }
 
     get default() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._default();
     }
 
@@ -70,17 +65,14 @@ module.exports = class extends ClientGenerator {
     }
 
     get postWriting() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._postWriting();
     }
 
     get install() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._install();
     }
 
     get end() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._end();
     }
 };
