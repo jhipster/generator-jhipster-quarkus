@@ -142,17 +142,14 @@ module.exports = class extends AppGenerator {
     }
 
     get composing() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._composing();
     }
 
     get loading() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._loading();
     }
 
     get preparing() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._preparing();
     }
 
@@ -166,22 +163,18 @@ module.exports = class extends AppGenerator {
     }
 
     get writing() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._writing();
     }
 
     get postWriting() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._postWriting();
     }
 
     get install() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._install();
     }
 
     get end() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._end();
     }
 };
