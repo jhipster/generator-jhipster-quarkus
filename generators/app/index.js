@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const chalk = require('chalk');
 const AppGenerator = require('generator-jhipster/generators/app');
 const constants = require('generator-jhipster/generators/generator-constants');
@@ -10,7 +11,7 @@ module.exports = class extends AppGenerator {
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.configOptions = jhContext.configOptions || {};
@@ -139,6 +140,21 @@ module.exports = class extends AppGenerator {
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
+    get composing() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._composing();
+    }
+
+    get loading() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._loading();
+    }
+
+    get preparing() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._preparing();
+    }
+
     get default() {
         const phaseFromJHipster = super._default();
         const phaseFromQuarkus = {
@@ -149,7 +165,18 @@ module.exports = class extends AppGenerator {
     }
 
     get writing() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._writing();
+    }
+
+    get postWriting() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._postWriting();
+    }
+
+    get install() {
+        // Here we are not overriding this phase and hence its being handled by JHipster
+        return super._install();
     }
 
     get end() {
