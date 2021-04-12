@@ -48,13 +48,13 @@ module.exports = class extends CommonGenerator {
                 this.jhipsterQuarkusVersion = jhipsterQuarkusVersion;
             },
         };
-        return Object.assign(phaseFromJHipster, phaseFromQuarkus);
+        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get writing() {
         const phaseFromJHipster = super._writing();
         const phaseFromQuarkus = writeFiles();
-        return Object.assign(phaseFromJHipster, phaseFromQuarkus);
+        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get postWriting() {
