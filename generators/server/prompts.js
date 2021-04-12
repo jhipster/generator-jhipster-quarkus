@@ -15,13 +15,11 @@ function askForServerSideOpts(meta) {
 
     const applicationType = this.applicationType;
     const reactive = this.reactive;
-    let defaultPort = applicationType === 'gateway' ? '8080' : '8081';
-    if (applicationType === 'uaa') {
-        defaultPort = '9999';
-    }
+    const defaultPort = applicationType === 'gateway' ? '8080' : '8081';
+
     const prompts = [
         {
-            when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
+            when: response => applicationType === 'gateway' || applicationType === 'microservice',
             type: 'input',
             name: 'serverPort',
             validate: input => (/^([0-9]*)$/.test(input) ? true : 'This is not a valid port number.'),
@@ -40,7 +38,7 @@ function askForServerSideOpts(meta) {
             default: 'com.mycompany.myapp',
             store: true,
         },
-        //     when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
+        //     when: response => applicationType === 'gateway' || applicationType === 'microservice',
         //     type: 'list',
         //     name: 'serviceDiscoveryType',
         //     message: 'Which service discovery server do you want to use?',
@@ -101,14 +99,6 @@ function askForServerSideOpts(meta) {
                     value: 'oauth2',
                     name: 'OAuth 2.0 / OIDC Authentication (stateful, works with Keycloak and Okta)',
                 });
-                if (!reactive) {
-                    if (['gateway', 'microservice'].includes(applicationType)) {
-                        opts.push({
-                            value: 'uaa',
-                            name: 'Authentication with JHipster UAA server (the server must be generated separately)',
-                        });
-                    }
-                }
                 return opts;
             },
             default: 0,
@@ -150,12 +140,10 @@ function askForServerSideOpts(meta) {
                     name: '[BETA] Neo4j'
                 });
                 */
-                if (applicationType !== 'uaa') {
-                    opts.push({
-                        value: 'no',
-                        name: 'No database',
-                    });
-                }
+                opts.push({
+                    value: 'no',
+                    name: 'No database',
+                });
                 return opts;
             },
             default: 0,
@@ -265,7 +253,7 @@ function askForServerSideOpts(meta) {
         // JWT authentication is mandatory with Eureka, so the JHipster Registry
         // can control the applications
         /*
-        if (this.serviceDiscoveryType === 'eureka' && this.authenticationType !== 'uaa' && this.authenticationType !== 'oauth2') {
+        if (this.serviceDiscoveryType === 'eureka' && this.authenticationType !== 'oauth2') {
             this.authenticationType = 'jwt';
         }
         */
@@ -291,15 +279,11 @@ function askForServerSideOpts(meta) {
         this.prodDatabaseType = props.prodDatabaseType;
         this.searchEngine = props.searchEngine;
         this.buildTool = props.buildTool;
-        this.uaaBaseName = this.getUaaAppName(props.uaaBaseName).baseName;
 
         if (this.databaseType === 'no') {
             this.devDatabaseType = 'no';
             this.prodDatabaseType = 'no';
             this.enableHibernateCache = false;
-            if (this.authenticationType !== 'uaa') {
-                this.skipUserManagement = true;
-            }
         } else if (['mongodb', 'neo4j', 'couchbase', 'cassandra'].includes(this.databaseType)) {
             this.devDatabaseType = this.databaseType;
             this.prodDatabaseType = this.databaseType;
