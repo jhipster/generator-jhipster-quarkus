@@ -131,12 +131,12 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '@CacheInvalidate(cacheName = User.USERS_BY_EMAIL_CACHE)'
+                '@CacheInvalidate(cacheName = Constants.USERS_BY_EMAIL_CACHE)'
             );
 
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '@CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)'
+                '@CacheInvalidate(cacheName = Constants.USERS_BY_LOGIN_CACHE)'
             );
         });
 
@@ -185,12 +185,12 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
             assert.noFileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '@CacheInvalidate(cacheName = User.USERS_BY_EMAIL_CACHE)'
+                '@CacheInvalidate(cacheName = Constants.USERS_BY_EMAIL_CACHE)'
             );
 
             assert.noFileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '@CacheInvalidate(cacheName = User.USERS_BY_LOGIN_CACHE)'
+                '@CacheInvalidate(cacheName = Constants.USERS_BY_LOGIN_CACHE)'
             );
         });
     });

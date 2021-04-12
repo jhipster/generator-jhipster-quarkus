@@ -96,6 +96,7 @@ eclipse {
 
 defaultTasks "quarkusDev"
 
+test.onlyIf { !project.hasProperty('skipTests') }
 test {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
     systemProperty "jhi.mongodb.port", "37017"
@@ -130,6 +131,7 @@ task integrationTest(type: Test) {
     // ignoreFailures true
     reports.html.enabled = false
 }
+integrationTest.onlyIf { !project.hasProperty('skipTests') }
 <%_ if (cucumberTests) { _%>
 
 task cucumberTest(type: Test) {
