@@ -15,10 +15,6 @@ module.exports = class extends CommonGenerator {
         }
 
         this.configOptions = jhContext.configOptions || {};
-
-        // This sets up options for this sub generator and is being reused from JHipster
-        jhContext.setupServerOptions(this, jhContext);
-        jhContext.setupClientOptions(this, jhContext);
     }
 
     get initializing() {
