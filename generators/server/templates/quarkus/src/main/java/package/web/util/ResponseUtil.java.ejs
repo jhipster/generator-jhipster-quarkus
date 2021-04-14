@@ -18,6 +18,7 @@
 -%>
 package <%=packageName%>.web.util;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.NotFoundException;
@@ -25,9 +26,7 @@ import javax.ws.rs.core.Response;
 
 public interface ResponseUtil {
     static Response wrapOrNotFound(Optional<?> maybeResponse) {
-        return maybeResponse
-            .map(value -> Response.ok(value).build())
-            .orElseThrow(NotFoundException::new);
+        return wrapOrNotFound(maybeResponse, Collections.emptyMap());
     }
 
     static Response wrapOrNotFound(Optional<?> maybeResponse, Map<String, String> headersIfPresent) {

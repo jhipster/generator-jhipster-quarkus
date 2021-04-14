@@ -274,9 +274,10 @@ public class AccountResourceTest {
             .then()
             .statusCode(BAD_REQUEST.getStatusCode())
             .contentType("application/problem+json")
-            .body("violations", hasSize(1))
-            .body("violations[0].field", is("email"))
-            .body("violations[0].error", is("must be a well-formed email address"));
+            .body("fieldErrors", hasSize(1))
+            .body("fieldErrors[0].objectName", is("managedUserVM"))
+            .body("fieldErrors[0].field", is("email"))
+            .body("fieldErrors[0].message", is("must be a well-formed email address"));
 
         get("/api/users/{login}", userWihInvalidEmail.login).then().statusCode(NOT_FOUND.getStatusCode());
     }
@@ -302,18 +303,10 @@ public class AccountResourceTest {
             .then()
             .statusCode(BAD_REQUEST.getStatusCode())
             .contentType("application/problem+json")
-            .body("violations", hasSize(2))
-            .body("violations.field", hasItems("email", "password"))
-            .body("violations.error", hasItems("must be a well-formed email address", "size must be between 4 and 100"));
-            // Springboot version returns a bit different schema. Does frontend care/use/display fieldErrors?
-            // {
-            //   "type":"https://www.jhipster.tech/problem/constraint-violation",
-            //   "title":"Method argument not valid",
-            //   "status":400,
-            //   "path":"/api/register",
-            //   "message":"error.validation",
-            //   "fieldErrors":[{"objectName":"managedUserVM","field":"password","message":"size must be between 4 and 100"}]
-            // }
+            .body("fieldErrors", hasSize(2))
+            .body("fieldErrors.objectName", hasItems("managedUserVM", "managedUserVM"))
+            .body("fieldErrors.field", hasItems("email", "password"))
+            .body("fieldErrors.message", hasItems("must be a well-formed email address", "size must be between 4 and 100"));
 
         get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
     }

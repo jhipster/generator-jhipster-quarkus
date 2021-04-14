@@ -427,6 +427,14 @@ const serverFiles = {
                     file: 'package/web/rest/errors/ErrorConstants.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/ErrorConstants.java`,
                 },
+                {
+                    file: 'package/web/rest/errors/ConstraintViolationExceptionMapper.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/ConstraintViolationExceptionMapper.java`,
+                },
+                {
+                    file: 'package/web/rest/errors/FieldErrorVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/FieldErrorVM.java`,
+                },
             ],
         },
         {

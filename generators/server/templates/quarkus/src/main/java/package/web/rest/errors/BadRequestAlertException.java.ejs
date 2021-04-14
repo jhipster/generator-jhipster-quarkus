@@ -19,14 +19,13 @@
 package <%=packageName%>.web.rest.errors;
 
 import org.eclipse.microprofile.config.ConfigProvider;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
+import com.tietoevry.quarkus.resteasy.problem.HttpProblem;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-public class BadRequestAlertException extends WebApplicationException {
+public class BadRequestAlertException extends HttpProblem {
 
     private static final String APPLICATION_NAME = ConfigProvider.getConfig()
         .getOptionalValue("application.name", String.class)
@@ -39,23 +38,16 @@ public class BadRequestAlertException extends WebApplicationException {
     }
 
     public BadRequestAlertException(URI type, String defaultMessage, String entityName, String errorKey) {
-        super(Response
-            .status(Response.Status.BAD_REQUEST)
-            .header("X-" + APPLICATION_NAME + "-error", "error." + errorKey)
-            .header("X-" + APPLICATION_NAME + "-params", entityName)
-            .type("application/problem+json")
-            .entity(
-                Problem.builder()
-                    .withType(type)
-                    .withStatus(Status.BAD_REQUEST)
-                    .withTitle(defaultMessage)
-                    .with("entityName", entityName)
-                    .with("errorKey", errorKey)
-                    .with("message", "error." + errorKey)
-                    .with("params", entityName)
-                    .build()
-            )
-            .build());
+        super(builder()
+            .withType(type)
+            .withStatus(Response.Status.BAD_REQUEST)
+            .withTitle(defaultMessage)
+            .withHeader("X-" + APPLICATION_NAME + "-error", "error." + errorKey)
+            .withHeader("X-" + APPLICATION_NAME + "-params", entityName)
+            .with("entityName", entityName)
+            .with("errorKey", errorKey)
+            .with("message", "error." + errorKey)
+            .with("params", entityName));
     }
 
 }
