@@ -272,6 +272,7 @@ dependencies {
     implementation "io.quarkus:quarkus-micrometer"
     implementation "io.micrometer:micrometer-registry-prometheus"
     implementation "org.mapstruct:mapstruct:${mapstruct_version}"
+    implementation "com.tietoevry.quarkus:quarkus-resteasy-problem:${resteasy_problem_version}"
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 <%_ if (databaseType === 'mongodb') { _%>
     implementation enforcedPlatform("com.github.cloudyrock.mongock:mongock-bom:${mongockBom_version}")

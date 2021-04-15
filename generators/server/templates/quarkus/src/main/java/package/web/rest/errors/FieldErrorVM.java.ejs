@@ -18,13 +18,15 @@
 -%>
 package <%=packageName%>.web.rest.errors;
 
-import java.net.URI;
+final class FieldErrorVM {
 
-public class EmailAlreadyUsedException extends BadRequestAlertException {
+    public final String objectName;
+    public final String field;
+    public final String message;
 
-    private static final URI TYPE = URI.create(ErrorConstants.PROBLEM_BASE_URL + "/email-already-used");
-
-    public EmailAlreadyUsedException() {
-        super(TYPE, "Email is already in use!", "userManagement", "emailexists");
+    public FieldErrorVM(String objectName, String message, String field) {
+        this.objectName = objectName;
+        this.field = field;
+        this.message = message;
     }
 }

@@ -423,6 +423,18 @@ const serverFiles = {
                     file: 'package/web/rest/errors/BadRequestAlertException.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/BadRequestAlertException.java`,
                 },
+                {
+                    file: 'package/web/rest/errors/ErrorConstants.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/ErrorConstants.java`,
+                },
+                {
+                    file: 'package/web/rest/errors/ConstraintViolationExceptionMapper.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/ConstraintViolationExceptionMapper.java`,
+                },
+                {
+                    file: 'package/web/rest/errors/FieldErrorVM.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/FieldErrorVM.java`,
+                },
             ],
         },
         {
@@ -442,8 +454,8 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}web/rest/errors/LoginAlreadyUsedException.java`,
                 },
                 {
-                    file: 'package/web/rest/errors/UserNotAuthenticatedException.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/errors/UserNotAuthenticatedException.java`,
+                    file: 'package/web/rest/errors/InvalidPasswordWebException.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/errors/InvalidPasswordWebException.java`,
                 },
             ],
         },

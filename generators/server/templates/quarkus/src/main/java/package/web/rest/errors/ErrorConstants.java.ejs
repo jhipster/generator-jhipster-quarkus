@@ -20,11 +20,10 @@ package <%=packageName%>.web.rest.errors;
 
 import java.net.URI;
 
-public class EmailAlreadyUsedException extends BadRequestAlertException {
+public final class ErrorConstants {
 
-    private static final URI TYPE = URI.create(ErrorConstants.PROBLEM_BASE_URL + "/email-already-used");
+    public static final String PROBLEM_BASE_URL = "https://www.jhipster.tech/problem";
+    public static final URI DEFAULT_TYPE = URI.create(PROBLEM_BASE_URL + "/problem-with-message");
 
-    public EmailAlreadyUsedException() {
-        super(TYPE, "Email is already in use!", "userManagement", "emailexists");
-    }
+    private ErrorConstants() {}
 }
