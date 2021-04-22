@@ -56,7 +56,7 @@ task webpack(type: <%= _.upperFirst(clientPackageManager) %>Task) {
 
     dependsOn <%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>
 
-    args = ["run", "webpack:build"]
+    args = ["run", "webapp:build"]
     environment = [APP_VERSION: project.version]
 }
 <%_ } _%>
