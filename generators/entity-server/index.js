@@ -60,7 +60,7 @@ module.exports = class extends EntityServerGenerator {
 
     get configuring() {
         // const phaseFromJHipster = super._configuring();
-        const phaseFromQuarkus = {
+        return {
             disableFluentMethods() {
                 this.fluentMethods = false;
             },
@@ -105,7 +105,6 @@ module.exports = class extends EntityServerGenerator {
                 this.serviceClassName = this.hasServiceImpl ? `${this.entityClass}ServiceImpl` : `${this.entityClass}Service`;
             },
         };
-        return phaseFromQuarkus;
     }
 
     get default() {

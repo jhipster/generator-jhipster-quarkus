@@ -89,10 +89,9 @@ module.exports = class extends AppGenerator {
 
     get prompting() {
         const phaseFromJHipster = super._prompting();
-        const phaseFromQuarkus = {
+        return {
             askForModuleName: phaseFromJHipster.askForModuleName,
         };
-        return phaseFromQuarkus;
     }
 
     get configuring() {

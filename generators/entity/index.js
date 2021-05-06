@@ -22,7 +22,7 @@ module.exports = class extends EntityGenerator {
 
     get initializing() {
         const phaseFromJHipster = super._initializing();
-        const phaseFromQuarkus = {
+        return {
             ...phaseFromJHipster,
             setupConfigQuarkus() {
                 const context = this.context;
@@ -33,13 +33,12 @@ module.exports = class extends EntityGenerator {
                 }
             },
         };
-        return phaseFromQuarkus;
     }
 
     get prompting() {
         const generator = this;
         const phaseFromJHipster = super._prompting();
-        const phaseFromQuarkus = {
+        return {
             /* pre entity hook needs to be written here */
             // askForMicroserviceJson: prompts.askForMicroserviceJson,
             /* ask question to user if s/he wants to update entity */
@@ -66,12 +65,11 @@ module.exports = class extends EntityGenerator {
             // askForReadOnly: phaseFromJHipster.askForReadOnly,
             askForPagination: phaseFromJHipster.askForPagination,
         };
-        return phaseFromQuarkus;
     }
 
     get configuring() {
         const phaseFromJHipster = super._configuring();
-        const phaseFromQuarkus = {
+        return {
             configureEntityQuarkus() {
                 const context = this.context;
                 if (!this.storageData) {
@@ -81,7 +79,6 @@ module.exports = class extends EntityGenerator {
             },
             ...phaseFromJHipster,
         };
-        return phaseFromQuarkus;
     }
 
     get default() {
@@ -90,7 +87,7 @@ module.exports = class extends EntityGenerator {
     }
 
     get writing() {
-        const phaseFromQuarkus = {
+        return {
             composeServer() {
                 const context = this.context;
                 if (context.skipServer) return;
@@ -131,8 +128,6 @@ module.exports = class extends EntityGenerator {
                 });
             },
         };
-
-        return phaseFromQuarkus;
     }
 
     get install() {
