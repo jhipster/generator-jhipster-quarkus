@@ -67,9 +67,9 @@ module.exports = class extends EntityServerGenerator {
             fixRelationshipsPk() {
                 // TODO remove after JHipster 6.8.0
                 // https://github.com/jhipster/generator-jhipster/blob/master/generators/entity/index.js#L894
-                for (let idx = 0; idx < this.relationships.length; idx++) {
-                    this.relationships[idx].otherEntityPrimaryKeyType =
-                        this.relationships[idx].otherEntityName === 'user' && this.authenticationType === 'oauth2'
+                for (const relationship of this.relationships) {
+                    relationship.otherEntityPrimaryKeyType =
+                        relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2'
                             ? 'String'
                             : this.getPkType(this.databaseType);
                 }
@@ -83,12 +83,11 @@ module.exports = class extends EntityServerGenerator {
 
                 this.mapsIdAssoc = undefined;
                 this.primaryKeyType = this.pkType;
-                for (let idx = 0; idx < this.relationships.length; idx++) {
-                    const relationship = this.relationships[idx];
+                for (const relationship of this.relationships) {
                     if (relationship.useJPADerivedIdentifier) {
                         this.mapsIdAssoc = relationship;
                         this.primaryKeyType =
-                            this.relationships[idx].otherEntityName === 'user' && this.authenticationType === 'oauth2'
+                            relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2'
                                 ? 'String'
                                 : this.pkType;
                         break;
