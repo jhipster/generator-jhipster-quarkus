@@ -30,7 +30,7 @@
         "faker": "5.1.0",
         "generator-jhipster": "6.10.5",
         "glob": "7.1.6",
-        "lodash": "4.17.20",
+        "lodash": "4.17.21",
         "semver": "7.3.4"
     },
     "devDependencies": {
