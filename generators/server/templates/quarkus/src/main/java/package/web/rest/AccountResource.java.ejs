@@ -38,6 +38,8 @@ import <%=packageName%>.web.rest.vm.ManagedUserVM;
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
 import <%=packageName%>.web.rest.vm.UserVM;
+import javax.json.JsonArray;
+import javax.json.JsonString;
 <%_ } _%>
 
 import io.quarkus.security.Authenticated;
@@ -180,7 +182,8 @@ public class AccountResource {
             user.imageUrl = accessToken.getClaim("picture");
         }
         user.activated = true;
-        user.authorities = accessToken.getClaim("groups");
+        final JsonArray roles = accessToken.getClaim("roles");
+        user.authorities = roles.stream().map(v->((JsonString)v).getString()).collect(Collectors.toSet()) ;
         return user;
     }
 <%_ } _%>
