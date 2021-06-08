@@ -64,7 +64,6 @@
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
         <%_ } _%>
         <git-commit-id-plugin.version>4.0.0</git-commit-id-plugin.version>
-        <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
@@ -84,10 +83,6 @@
 
         <!-- Plugin properties -->
         <checkstyle.version>8.27</checkstyle.version>
-        <jacoco.utReportFolder>${project.build.directory}/jacoco/test</jacoco.utReportFolder>
-        <jacoco.utReportFile>${jacoco.utReportFolder}/test.exec</jacoco.utReportFile>
-        <!-- <jacoco.itReportFolder>${project.build.directory}/jacoco/integrationTest</jacoco.itReportFolder> -->
-        <!-- <jacoco.itReportFile>${jacoco.itReportFolder}/integrationTest.exec</jacoco.itReportFile> -->
         <junit.utReportFolder>${project.testresult.directory}/test</junit.utReportFolder>
         <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
         <quarkus.logManager>org.jboss.logmanager.LogManager</quarkus.logManager>
@@ -243,10 +238,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <version>${jacoco-maven-plugin.version}</version>
-            <classifier>runtime</classifier>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jacoco</artifactId>
             <scope>test</scope>
         </dependency>
         <%_ if(authenticationType === 'oauth2') {_%>
@@ -341,35 +334,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco-maven-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>instrument-ut</id>
-                            <goals>
-                                <goal>instrument</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>restore-ut</id>
-                            <goals>
-                                <goal>restore-instrumented-classes</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>report-ut</id>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                            <configuration>
-                                <dataFile>${jacoco.utReportFile}</dataFile>
-                                <outputDirectory>${jacoco.utReportFolder}</outputDirectory>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
@@ -446,12 +410,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
-                    <configuration>
-                        <systemProperties>
-                            <jacoco-agent.destfile>${jacoco.utReportFile}</jacoco-agent.destfile>
-                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                        </systemProperties>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -541,10 +499,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
