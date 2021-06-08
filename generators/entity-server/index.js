@@ -67,7 +67,7 @@ module.exports = class extends EntityServerGenerator {
             fixRelationshipsPk() {
                 // TODO remove after JHipster 6.8.0
                 // https://github.com/jhipster/generator-jhipster/blob/master/generators/entity/index.js#L894
-                this.relationships.each(relationship => {
+                this.relationships.forEach(relationship => {
                     relationship.otherEntityPrimaryKeyType =
                         relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2'
                             ? 'String'
