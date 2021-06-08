@@ -31,7 +31,7 @@ module.exports = class extends EntityGenerator {
                 if (!context.useConfigurationFile) {
                     context.dataAccess = constants.DEFAULT_DATA_ACCESS;
                 } else {
-                    context.dataAccess = context.fileData.dataAccess || constants.DEFAULT_DATA_ACCESS;
+                    context.dataAccess = context.fileData ? context.fileData.dataAccess : constants.DEFAULT_DATA_ACCESS;
                 }
             },
         };
