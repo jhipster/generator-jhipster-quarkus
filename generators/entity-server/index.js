@@ -83,13 +83,15 @@ module.exports = class extends EntityServerGenerator {
 
                 this.mapsIdAssoc = undefined;
                 this.primaryKeyType = this.pkType;
-                this.relationships.forEach(relationship => {
+                // eslint-disable-next-line no-restricted-syntax
+                for (const relationship of this.relationships) {
                     if (relationship.useJPADerivedIdentifier) {
                         this.mapsIdAssoc = relationship;
                         this.primaryKeyType =
                             relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2' ? 'String' : this.pkType;
+                        break;
                     }
-                });
+                }
                 this.isUsingMapsId = this.mapsIdAssoc !== undefined;
                 this.dtoClass = this.asDto(this.entityClass);
                 this.dtoInstance = this.asDto(this.entityInstance);
