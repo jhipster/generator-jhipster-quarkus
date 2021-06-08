@@ -67,12 +67,12 @@ module.exports = class extends EntityServerGenerator {
             fixRelationshipsPk() {
                 // TODO remove after JHipster 6.8.0
                 // https://github.com/jhipster/generator-jhipster/blob/master/generators/entity/index.js#L894
-                for (const relationship of this.relationships) {
+                this.relationships.each(relationship => {
                     relationship.otherEntityPrimaryKeyType =
                         relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2'
                             ? 'String'
                             : this.getPkType(this.databaseType);
-                }
+                });
             },
             prepareQuarkusRendering() {
                 this.viaService = this.service !== 'no';
@@ -83,16 +83,13 @@ module.exports = class extends EntityServerGenerator {
 
                 this.mapsIdAssoc = undefined;
                 this.primaryKeyType = this.pkType;
-                for (const relationship of this.relationships) {
+                this.relationships.forEach(relationship => {
                     if (relationship.useJPADerivedIdentifier) {
                         this.mapsIdAssoc = relationship;
                         this.primaryKeyType =
-                            relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2'
-                                ? 'String'
-                                : this.pkType;
-                        break;
+                            relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2' ? 'String' : this.pkType;
                     }
-                }
+                });
                 this.isUsingMapsId = this.mapsIdAssoc !== undefined;
                 this.dtoClass = this.asDto(this.entityClass);
                 this.dtoInstance = this.asDto(this.entityInstance);
