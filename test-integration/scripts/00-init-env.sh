@@ -34,5 +34,5 @@ fi
 
 # JHipster version to run with the blueprint
 if [[ "$JHI_VERSION" == "" ]]; then
-    JHI_VERSION=$(node -p "require('./package.json').dependencies['generator-jhipster']" )
+    JHI_VERSION=$(node -p "require('../package.json').dependencies['generator-jhipster']" )
 fi

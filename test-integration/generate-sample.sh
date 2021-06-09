@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 set -e
@@ -15,13 +14,14 @@ function usage() {
     echo "Usage: $me generate <destination> <sample_name> | list-sample"
     echo
     echo "Examples:"
+    echo "$me generate list-sample"
     echo "$me generate /tmp/sample-app/ sample-app"
     echo
     exit 2
 }
 
 function generateProject() {
-    cd "$mydir"
+    cd "$CURRENT_DIR"
 
     echo "JHI_FOLDER_APP=$JHI_FOLDER_APP"
     echo "JHI_APP=$JHI_APP"
@@ -39,13 +39,13 @@ function generateProject() {
     fi
 
     pushd scripts/
-    echo "*********************** Generating project"
-    source ./02-generate-project.sh
+    echo "*********************** Generating project  $JHI_APP"
+    source $CURRENT_DIR/scripts/02-generate-project.sh
     popd
 }
 
-mydir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-JHI_SAMPLES="$mydir/samples"
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+JHI_SAMPLES="$CURRENT_DIR/samples"
 
 if [ "$1" = "list-sample" ]; then
     for jdl_file in $(ls -1 "$JHI_SAMPLES"); do

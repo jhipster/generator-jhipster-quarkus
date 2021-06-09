@@ -19,4 +19,5 @@ ls -al .
 
 runOptions="--blueprints quarkus --skip-checks --force --no-insight --skip-install"
 
+echo "*** Executing import-jdl project.jh $runOptions"
 jhipster import-jdl project.jh $runOptions
