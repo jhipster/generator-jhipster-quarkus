@@ -102,3 +102,18 @@ jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/ope
 %test.quarkus.oidc.application-type=service
 %test.jhipster.oidc.logout-url=some-dummy-logoutUrl
 <%_ } _%>
+
+<%_ if (kubernetes.createKubernetesConfiguration) { _%>
+    <%_ if (kubernetes.kubernetesEnvironmentVariables) { _%>
+        <%_ Object.keys(kubernetes.kubernetesEnvironmentVariables).forEach(function(key) { _%>
+quarkus.kubernetes.env.vars.<%= key %>=<%= kubernetes.kubernetesEnvironmentVariables[key] %>
+        <%_ }); _%>
+    <%_ } _%>
+
+    <%_ if (kubernetes.kubernetesEnvironmentVariables) { _%>
+        <%_ kubernetes.kubernetesSecretsMapping.forEach(function(secret) { _%>
+quarkus.kubernetes.env.mapping.<%= secret.variableName %>.from-secret=<%= secret.secretName %>
+quarkus.kubernetes.env.mapping.<%= secret.variableName %>.with-key=<%= secret.secretFieldName %>
+        <%_ }); _%>
+    <%_ } _%>
+<%_ } _%>
