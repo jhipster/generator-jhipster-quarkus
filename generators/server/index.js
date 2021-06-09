@@ -24,6 +24,13 @@ module.exports = class extends ServerGenerator {
 
     get initializing() {
         const phaseFromJHipster = super._initializing();
+        const readCustomConfiguration = {
+            readCustomConfiguration() {
+                const configuration = this.getAllJhipsterConfig(this, true);
+                this.liquibase = configuration.liquibase || {};
+                this.kubernetes = configuration.kubernetes || {};
+            },
+        };
         const phaseFromQuarkus = {
             defineQuarkusConstants() {
                 this.quarkusVersion = QUARKUS_VERSION;
@@ -31,7 +38,7 @@ module.exports = class extends ServerGenerator {
                 this.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
             },
         };
-        return { ...phaseFromJHipster, ...phaseFromQuarkus };
+        return { ...phaseFromJHipster, ...readCustomConfiguration, ...phaseFromQuarkus };
     }
 
     get prompting() {

@@ -173,6 +173,12 @@
             <version>${camel-quarkus-jackson.version}</version>
         </dependency>
         <%_ } _%>
+        <%_ if (kubernetes.createKubernetesConfiguration) { _%>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-kubernetes</artifactId>
+        </dependency>
+        <%_ } _%>
         <%_ if (!skipUserManagement) { _%>
         <dependency>
             <groupId>org.apache.commons</groupId>

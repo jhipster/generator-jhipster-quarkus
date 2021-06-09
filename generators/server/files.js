@@ -86,6 +86,16 @@ const serverFiles = {
                 'templates/mail/passwordResetEmail.html',
             ],
         },
+        {
+            condition: generator => generator.databaseType === 'sql',
+            path: SERVER_MAIN_RES_DIR,
+            templates: ['config/liquibase/master.xml'],
+        },
+        {
+            condition: generator => generator.databaseType === 'sql' && generator.liquibase.createDbTablesInSeparateScheme,
+            path: SERVER_MAIN_RES_DIR,
+            templates: [{ file: 'config/liquibase/changelog/create_scheme.xml' }],
+        },
     ],
     serverTestSupport: [
         {
@@ -654,7 +664,6 @@ const serverFilesFromJHipster = {
                     renameTo: () => 'config/liquibase/changelog/00000000000000_initial_schema.xml',
                     options: { interpolate: INTERPOLATE_REGEX },
                 },
-                'config/liquibase/master.xml',
             ],
         },
     ],
