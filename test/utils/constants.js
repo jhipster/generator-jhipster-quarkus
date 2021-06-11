@@ -16,6 +16,7 @@ const DEFAULT_SERVER_ANSWERS = {
     prodDatabaseType: 'mysql',
     cacheProvider: 'caffeine',
     authenticationType: 'jwt',
+    authenticationTechnology: 'other',
     enableTranslation: true,
     nativeLanguage: 'en',
     languages: ['fr', 'de'],
