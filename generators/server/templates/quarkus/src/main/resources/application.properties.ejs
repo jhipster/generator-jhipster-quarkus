@@ -104,13 +104,30 @@ jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/ope
 <%_ } _%>
 
 <%_ if (kubernetes.createKubernetesConfiguration) { _%>
+    <%_ if (kubernetes.namespace) { _%>
+quarkus.kubernetes.namespace=<%= kubernetes.namespace %>
+    <%_ } _%>
+    <%_ if (kubernetes.imagePullSecrets) { _%>
+quarkus.kubernetes.image-pull-secrets=<%= kubernetes.imagePullSecrets %>
+    <%_ } _%>
+    <%_ if (kubernetes.imageRegistry) { _%>
+quarkus.container-image.registry=<%= kubernetes.imageRegistry %>
+    <%_ } _%>
+    <%_ if (kubernetes.imageGroup) { _%>
+quarkus.container-image.group=<%= kubernetes.imageGroup %>
+    <%_ } _%>
+    <%_ if (kubernetes.imageName) { _%>
+quarkus.container-image.name=<%= kubernetes.imageName %>
+    <%_ } _%>
+quarkus.container-image.additional-tags=latest
+
     <%_ if (kubernetes.kubernetesEnvironmentVariables) { _%>
         <%_ Object.keys(kubernetes.kubernetesEnvironmentVariables).forEach(function(key) { _%>
 quarkus.kubernetes.env.vars.<%= key %>=<%= kubernetes.kubernetesEnvironmentVariables[key] %>
         <%_ }); _%>
     <%_ } _%>
 
-    <%_ if (kubernetes.kubernetesEnvironmentVariables) { _%>
+    <%_ if (kubernetes.kubernetesSecretsMapping) { _%>
         <%_ kubernetes.kubernetesSecretsMapping.forEach(function(secret) { _%>
 quarkus.kubernetes.env.mapping.<%= secret.variableName %>.from-secret=<%= secret.secretName %>
 quarkus.kubernetes.env.mapping.<%= secret.variableName %>.with-key=<%= secret.secretFieldName %>

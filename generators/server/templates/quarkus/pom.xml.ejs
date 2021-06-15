@@ -176,6 +176,10 @@
         <%_ if (kubernetes.createKubernetesConfiguration) { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-container-image-jib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-kubernetes</artifactId>
         </dependency>
         <%_ } _%>
