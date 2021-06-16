@@ -259,8 +259,27 @@ function askForServerSideOpts(meta) {
         this.searchEngine = this.jhipsterConfig.searchEngine = answers.searchEngine;
         this.buildTool = this.jhipsterConfig.buildTool = answers.buildTool;
 
+        if (this.databaseType === 'no') {
+            this.devDatabaseType = this.jhipsterConfig.devDatabaseType = 'no';
+            this.prodDatabaseType = this.jhipsterConfig.prodDatabaseType = 'no';
+            this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache = false;
+        } else if (['mongodb', 'neo4j', 'couchbase', 'cassandra'].includes(this.databaseType)) {
+            this.devDatabaseType = this.jhipsterConfig.devDatabaseType = this.databaseType;
+            this.prodDatabaseType = this.jhipsterConfig.prodDatabaseType = this.databaseType;
+            this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache = false;
+        }
+
         if (['redis'].includes(this.cacheProvider)) {
             this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache = false;
+        }
+
+        if (this.authenticationType === 'jwt') {
+            this.jwtSecretKey = getBase64Secret(null, 64);
+        }
+
+        // oauth expects users to be managed in IpP
+        if (this.authenticationType === 'oauth2') {
+            this.skipUserManagement = true;
         }
     });
     /*
