@@ -8,53 +8,15 @@ module.exports = class extends EntityServerGenerator {
         super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
 
         if (!this.jhipsterContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
     }
 
     get initializing() {
-        /**
-         * Any method beginning with _ can be reused from the superclass `EntityServerGenerator`
-         *
-         * There are multiple ways to customize a phase from JHipster.
-         *
-         * 1. Let JHipster handle a phase, blueprint doesnt override anything.
-         * ```
-         *      return super._initializing();
-         * ```
-         *
-         * 2. Override the entire phase, this is when the blueprint takes control of a phase
-         * ```
-         *      return {
-         *          myCustomInitPhaseStep() {
-         *              // Do all your stuff here
-         *          },
-         *          myAnotherCustomInitPhaseStep(){
-         *              // Do all your stuff here
-         *          }
-         *      };
-         * ```
-         *
-         * 3. Partially override a phase, this is when the blueprint gets the phase from JHipster and customizes it.
-         * ```
-         *      const phaseFromJHipster = super._initializing();
-         *      const myCustomPhaseSteps = {
-         *          displayLogo() {
-         *              // override the displayLogo method from the _initializing phase of JHipster
-         *          },
-         *          myCustomInitPhaseStep() {
-         *              // Do all your stuff here
-         *          },
-         *      }
-         *      return Object.assign(phaseFromJHipster, myCustomPhaseSteps);
-         * ```
-         */
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._initializing();
     }
 
     get prompting() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._prompting();
     }
 
@@ -63,16 +25,6 @@ module.exports = class extends EntityServerGenerator {
         return {
             disableFluentMethods() {
                 this.fluentMethods = false;
-            },
-            fixRelationshipsPk() {
-                // TODO remove after JHipster 6.8.0
-                // https://github.com/jhipster/generator-jhipster/blob/master/generators/entity/index.js#L894
-                this.relationships.forEach(relationship => {
-                    relationship.otherEntityPrimaryKeyType =
-                        relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2'
-                            ? 'String'
-                            : this.getPkType(this.databaseType);
-                });
             },
             prepareQuarkusRendering() {
                 this.viaService = this.service !== 'no';
@@ -106,8 +58,19 @@ module.exports = class extends EntityServerGenerator {
         };
     }
 
+    get composing() {
+        return super._composing();
+    }
+
+    get loading() {
+        return super._loading();
+    }
+
+    get preparing() {
+        return super._preparing();
+    }
+
     get default() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._default();
     }
 
@@ -115,13 +78,15 @@ module.exports = class extends EntityServerGenerator {
         return writeFiles();
     }
 
+    get postWriting() {
+        return super._postWriting();
+    }
+
     get install() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._install();
     }
 
     get end() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._end();
     }
 };

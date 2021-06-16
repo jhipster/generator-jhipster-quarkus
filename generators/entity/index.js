@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const EntityGenerator = require('generator-jhipster/generators/entity');
+const _ = require('lodash');
 const prompts = require('./prompts');
 const constants = require('../generator-quarkus-constants');
 
@@ -11,13 +12,14 @@ module.exports = class extends EntityGenerator {
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.configOptions = jhContext.configOptions || {};
 
         // This sets up options for this sub generator and is being reused from JHipster
-        jhContext.setupEntityOptions(this, jhContext, this);
+        const name = _.upperFirst(this.options.name).replace('.json', '');
+        this.entityStorage = jhContext.getEntityConfig(name);
     }
 
     get initializing() {
@@ -29,7 +31,7 @@ module.exports = class extends EntityGenerator {
                 if (!context.useConfigurationFile) {
                     context.dataAccess = constants.DEFAULT_DATA_ACCESS;
                 } else {
-                    context.dataAccess = context.fileData.dataAccess || constants.DEFAULT_DATA_ACCESS;
+                    context.dataAccess = context.fileData ? context.fileData.dataAccess : constants.DEFAULT_DATA_ACCESS;
                 }
             },
         };
@@ -81,8 +83,23 @@ module.exports = class extends EntityGenerator {
         };
     }
 
+    get composing() {
+        return super._composing();
+    }
+
+    get loading() {
+        return super._loading();
+    }
+
+    get preparing() {
+        return super._preparing();
+    }
+
+    get preparingRelationships() {
+        return super._preparingRelationships();
+    }
+
     get default() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._default();
     }
 
@@ -130,13 +147,15 @@ module.exports = class extends EntityGenerator {
         };
     }
 
+    get postWriting() {
+        return super._postWriting();
+    }
+
     get install() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._install();
     }
 
     get end() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._end();
     }
 };

@@ -13,13 +13,10 @@ module.exports = class extends ServerGenerator {
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.configOptions = jhContext.configOptions || {};
-
-        // This sets up options for this sub generator and is being reused from JHipster
-        jhContext.setupServerOptions(this, jhContext);
     }
 
     get initializing() {
@@ -30,6 +27,22 @@ module.exports = class extends ServerGenerator {
                 this.CACHE_MAXIMUM_SIZE = CACHE_MAXIMUM_SIZE;
                 this.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
             },
+            setupServerConsts() {
+                this.serviceDiscoveryType = this.jhipsterConfig.serviceDiscoveryType;
+                this.authenticationType = this.jhipsterConfig.authenticationType;
+                this.jwtSecretKey = this.jhipsterConfig.jwtSecretKey;
+                this.skipUserManagement = this.jhipsterConfig.skipUserManagement;
+                this.packageName = this.jhipsterConfig.packageName;
+                this.serverPort = this.jhipsterConfig.serverPort;
+                this.cacheProvider = this.jhipsterConfig.cacheProvider;
+                this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache;
+                this.databaseType = this.jhipsterConfig.databaseType;
+                this.devDatabaseType = this.jhipsterConfig.devDatabaseType;
+                this.prodDatabaseType = this.jhipsterConfig.prodDatabaseType;
+                this.searchEngine = this.jhipsterConfig.searchEngine;
+                this.buildTool = this.jhipsterConfig.buildTool;
+                this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache;
+            },
         };
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
@@ -39,6 +52,21 @@ module.exports = class extends ServerGenerator {
         const phaseFromQuarkus = {
             askForServerSideOpts: prompts.askForServerSideOpts,
             askForOptionalItems: undefined,
+            setSharedQuarkusConfigOptions() {
+                this.jhipsterConfig.serviceDiscoveryType = this.serviceDiscoveryType;
+                this.jhipsterConfig.authenticationType = this.authenticationType;
+                this.jhipsterConfig.jwtSecretKey = this.jwtSecretKey;
+                this.jhipsterConfig.skipUserManagement = this.skipUserManagement;
+                this.jhipsterConfig.packageName = this.packageName;
+                this.jhipsterConfig.serverPort = this.serverPort;
+                this.jhipsterConfig.cacheProvider = this.cacheProvider;
+                this.jhipsterConfig.enableHibernateCache = this.enableHibernateCache;
+                this.jhipsterConfig.databaseType = this.databaseType;
+                this.jhipsterConfig.devDatabaseType = this.devDatabaseType;
+                this.jhipsterConfig.prodDatabaseType = this.prodDatabaseType;
+                this.jhipsterConfig.searchEngine = this.searchEngine;
+                this.jhipsterConfig.buildTool = this.buildTool;
+            },
         };
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
@@ -55,8 +83,19 @@ module.exports = class extends ServerGenerator {
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
+    get composing() {
+        return super._composing();
+    }
+
+    get loading() {
+        return super._loading();
+    }
+
+    get preparing() {
+        return super._preparing();
+    }
+
     get default() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._default();
     }
 
@@ -64,8 +103,11 @@ module.exports = class extends ServerGenerator {
         return writeFiles(this.buildTool);
     }
 
+    get postWriting() {
+        return super._postWriting();
+    }
+
     get install() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._install();
     }
 

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const chalk = require('chalk');
 const AppGenerator = require('generator-jhipster/generators/app');
 const constants = require('generator-jhipster/generators/generator-constants');
@@ -10,7 +11,7 @@ module.exports = class extends AppGenerator {
         const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
 
         if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.configOptions = jhContext.configOptions || {};
@@ -95,48 +96,60 @@ module.exports = class extends AppGenerator {
     }
 
     get configuring() {
-        const phaseFromJHipster = super._configuring();
+        return super._configuring();
+    }
 
-        const phaseFromQuarkus = {
-            composeServer() {
-                if (this.skipServer) return;
-                const options = this.options;
-                const configOptions = this.configOptions;
+    get composing() {
+        return super._composing();
+        // this.composeWithJHipster(GENERATOR_COMMON, true);
+        // const phaseFromJHipster = super._composing();
+        // const phaseFromQuarkus = {
+        //     composeServer() {
+        //         if (this.skipServer) return;
+        //         const options = this.options;
+        //         const configOptions = this.configOptions;
+        //
+        //         this.composeWith(require.resolve('../server'), {
+        //             ...options,
+        //             configOptions,
+        //             'client-hook': !this.skipClient,
+        //             debug: this.isDebugEnabled,
+        //         });
+        //     },
+        //
+        //     composeClient() {
+        //         if (this.skipClient) return;
+        //         const options = this.options;
+        //         const configOptions = this.configOptions;
+        //
+        //         this.composeWith(require.resolve('../client'), {
+        //             ...options,
+        //             configOptions,
+        //             debug: this.isDebugEnabled,
+        //         });
+        //     },
+        //
+        //     composeCommon() {
+        //         const options = this.options;
+        //         const configOptions = this.configOptions;
+        //
+        //         this.composeWith(require.resolve('../common'), {
+        //             ...options,
+        //             'client-hook': !this.skipClient,
+        //             configOptions,
+        //             debug: this.isDebugEnabled,
+        //         });
+        //     },
+        // };
+        // return { ...phaseFromJHipster, ...phaseFromQuarkus };
+    }
 
-                this.composeWith(require.resolve('../server'), {
-                    ...options,
-                    configOptions,
-                    'client-hook': !this.skipClient,
-                    debug: this.isDebugEnabled,
-                });
-            },
+    get loading() {
+        return super._loading();
+    }
 
-            composeClient() {
-                if (this.skipClient) return;
-                const options = this.options;
-                const configOptions = this.configOptions;
-
-                this.composeWith(require.resolve('../client'), {
-                    ...options,
-                    configOptions,
-                    debug: this.isDebugEnabled,
-                });
-            },
-
-            composeCommon() {
-                const options = this.options;
-                const configOptions = this.configOptions;
-
-                this.composeWith(require.resolve('../common'), {
-                    ...options,
-                    'client-hook': !this.skipClient,
-                    configOptions,
-                    debug: this.isDebugEnabled,
-                });
-            },
-        };
-
-        return { ...phaseFromJHipster, ...phaseFromQuarkus };
+    get preparing() {
+        return super._preparing();
     }
 
     get default() {
@@ -152,8 +165,15 @@ module.exports = class extends AppGenerator {
         return super._writing();
     }
 
+    get postWriting() {
+        return super._postWriting();
+    }
+
+    get install() {
+        return super._install();
+    }
+
     get end() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._end();
     }
 };
