@@ -108,7 +108,7 @@ quarkus.mongodb.database=<%= baseName %>
 
 <%_ if (databaseType === 'sql') { _%>
 quarkus.liquibase.change-log=config/liquibase/master.xml
-%dev.quarkus.liquibase.migrate-at-start=true
+quarkus.liquibase.migrate-at-start=true
 
 %test.quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:test
 %test.quarkus.datasource.db-kind=h2
