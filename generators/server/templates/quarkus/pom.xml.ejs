@@ -81,6 +81,15 @@
         <commons-vfs2.version>2.0</commons-vfs2.version>
         <graal.version>21.0.0.2</graal.version>
         <%_ } _%>
+        <%_ if (liquibase && liquibase.addLiquibaseMavenPluginConfig) { _%>
+        <liquibase-maven-plugin.version>4.3.2</liquibase-maven-plugin.version>
+        <liquibase-maven-plugin-quarkus-liquibase.version>1.13.1.Final</liquibase-maven-plugin-quarkus-liquibase.version>
+        <liquibase-maven-plugin-quarkus-hibernate-orm-panache.version>1.13.1.Final</liquibase-maven-plugin-quarkus-hibernate-orm-panache.version>
+        <liquibase-maven-plugin-liquibase-core.version>4.3.2</liquibase-maven-plugin-liquibase-core.version>
+        <liquibase-maven-plugin-validation-api.version>2.0.1.Final</liquibase-maven-plugin-validation-api.version>
+        <liquibase-maven-plugin-liquibase-hibernate5.version>4.1.1</liquibase-maven-plugin-liquibase-hibernate5.version>
+        <liquibase-maven-plugin-spring-data-jpa.version>2.3.4.RELEASE</liquibase-maven-plugin-spring-data-jpa.version>
+        <%_ } _%>
 
         <!-- Plugin properties -->
         <checkstyle.version>8.27</checkstyle.version>
@@ -569,6 +578,50 @@
                 <artifactId>quarkus-maven-plugin</artifactId>
                 <version>${quarkus-plugin.version}</version>
             </plugin>
+            <%_ if (liquibase && liquibase.addLiquibaseMavenPluginConfig) { _%>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase-maven-plugin.version}</version>
+                <configuration>
+                    <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
+                    <referenceUrl>hibernate:spring:<%=packageName%>.domain?dialect=io.quarkus.hibernate.orm.runtime.dialect.QuarkusPostgreSQL10Dialect&amp;hibernate.physical_naming_strategy=<%=packageName%>.config.hibernate.JHipsterCompatiblePhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=<%=packageName%>.config.hibernate.JHipsterCompatibleImplicitNamingStrategy</referenceUrl>
+                    <referenceDriver>liquibase.ext.hibernate.database.connection.HibernateDriver</referenceDriver>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.quarkus</groupId>
+                        <artifactId>quarkus-liquibase</artifactId>
+                        <version>${liquibase-maven-plugin-quarkus-liquibase.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.quarkus</groupId>
+                        <artifactId>quarkus-hibernate-orm-panache</artifactId>
+                        <version>${liquibase-maven-plugin-quarkus-hibernate-orm-panache.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-core</artifactId>
+                        <version>${liquibase-maven-plugin-liquibase-core.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.validation</groupId>
+                        <artifactId>validation-api</artifactId>
+                        <version>${liquibase-maven-plugin-validation-api.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.liquibase.ext</groupId>
+                        <artifactId>liquibase-hibernate5</artifactId>
+                        <version>${liquibase-maven-plugin-liquibase-hibernate5.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.springframework.data</groupId>
+                        <artifactId>spring-data-jpa</artifactId>
+                        <version>${liquibase-maven-plugin-spring-data-jpa.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <%_ } _%>
             <!-- jhipster-needle-maven-add-plugin -->
         </plugins>
     </build>
