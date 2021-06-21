@@ -127,6 +127,13 @@ quarkus.kubernetes.env.vars.<%= key %>=<%= kubernetes.kubernetesEnvironmentVaria
         <%_ }); _%>
     <%_ } _%>
 
+    <%_ if (kubernetes.kubernetesConfigMapping) { _%>
+        <%_ kubernetes.kubernetesConfigMapping.forEach(function(config) { _%>
+quarkus.kubernetes.env.mapping.<%= config.variableName %>.from-configmap=<%= config.configName %>
+quarkus.kubernetes.env.mapping.<%= config.variableName %>.with-key=<%= config.configFieldName %>
+        <%_ }); _%>
+    <%_ } _%>
+
     <%_ if (kubernetes.kubernetesSecretsMapping) { _%>
         <%_ kubernetes.kubernetesSecretsMapping.forEach(function(secret) { _%>
 quarkus.kubernetes.env.mapping.<%= secret.variableName %>.from-secret=<%= secret.secretName %>
