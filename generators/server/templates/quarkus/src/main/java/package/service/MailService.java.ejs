@@ -21,7 +21,7 @@ package <%=packageName%>.service;
 import <%=packageName%>.config.JHipsterProperties;
 import <%=packageName%>.domain.User;
 import io.quarkus.mailer.MailTemplate;
-import io.quarkus.qute.api.ResourcePath;
+import io.quarkus.qute.Location;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -50,9 +50,9 @@ public class MailService {
     @Inject
     public MailService(
         JHipsterProperties jHipsterProperties,
-        @ResourcePath("mail/activationEmail") MailTemplate activationEmail,
-        @ResourcePath("mail/creationEmail") MailTemplate creationEmail,
-        @ResourcePath("mail/passwordResetEmail") MailTemplate passwordResetEmail
+        @Location("mail/activationEmail") MailTemplate activationEmail,
+        @Location("mail/creationEmail") MailTemplate creationEmail,
+        @Location("mail/passwordResetEmail") MailTemplate passwordResetEmail
     ) {
         this.jHipsterProperties = jHipsterProperties;
         this.activationEmail = activationEmail;
