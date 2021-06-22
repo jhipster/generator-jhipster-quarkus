@@ -54,10 +54,8 @@
 %prod.quarkus.datasource.password=yourStrong(!)Password
 <%_ } _%>
 <%_ if (devDatabaseType === 'mysql') { _%>
-%dev.quarkus.datasource.jdbc.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
-%dev.quarkus.datasource.db-kind=mysql
-%dev.quarkus.datasource.username=root
-%dev.quarkus.datasource.password=
+%dev.quarkus.datasource.devservices.image-name=<%= DOCKER_MYSQL %>
+%dev.quarkus.datasource.devservices.port=3306
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mysql') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
