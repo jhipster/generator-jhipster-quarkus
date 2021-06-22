@@ -64,10 +64,8 @@
 %prod.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (devDatabaseType === 'postgresql') { _%>
-%dev.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/<%= baseName %>
-%dev.quarkus.datasource.db-kind=postgresql
-%dev.quarkus.datasource.username=<%= baseName %>
-%dev.quarkus.datasource.password=
+%dev.quarkus.datasource.devservices.image-name=<%= DOCKER_POSTGRESQL %>
+%dev.quarkus.datasource.devservices.port=5432
 <%_ } _%>
 <%_ if (prodDatabaseType === 'postgresql') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/<%= baseName %>
