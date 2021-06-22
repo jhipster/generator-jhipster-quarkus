@@ -63,9 +63,19 @@ quarkus.http.auth.permission.user.paths=/api/**
 quarkus.http.auth.permission.user.policy=user-role
 <%_ } _%>
 
+
+<%_ if(httpRootPath) { _%>
+quarkus.http.root-path=/<%= httpRootPath %>
+<%_ } _%>
+
+<%_ if(httpRootPath) { _%>
+quarkus.smallrye-openapi.path=/<%= httpRootPath %>v2/api-docs
+quarkus.swagger-ui.path=/<%= httpRootPath %>swagger-ui
+<%_ } else { _%>
 quarkus.smallrye-openapi.path=/v2/api-docs
-quarkus.swagger-ui.always-include=true
 quarkus.swagger-ui.path=/swagger-ui
+<%_ } _%>
+quarkus.swagger-ui.always-include=true
 
 quarkus.native.additional-build-args=\
 <%_ if (authenticationType === 'jwt') { _%>
