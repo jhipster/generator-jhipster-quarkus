@@ -30,10 +30,8 @@
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (devDatabaseType === 'mariadb') { _%>
-%dev.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
-%dev.quarkus.datasource.db-kind=mariadb
-%dev.quarkus.datasource.username=<%= baseName %>
-%dev.quarkus.datasource.password=
+%dev.quarkus.datasource.devservices.image-name=<%= DOCKER_MARIADB %>
+%dev.quarkus.datasource.devservices.port=3306
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mariadb') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
