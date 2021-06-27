@@ -637,7 +637,7 @@ const serverFiles = {
     docker: [
         {
             path: DOCKER_DIR,
-            templates: ['Dockerfile.jvm', 'Dockerfile.native', 'Dockerfile.legacy-jar'],
+            templates: ['Dockerfile.jvm', 'Dockerfile.native', 'Dockerfile.native-distroless', 'Dockerfile.legacy-jar'],
         },
     ],
 };
