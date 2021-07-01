@@ -93,6 +93,12 @@ quarkus.native.additional-build-args=\
 # quarkus.container-image.name=<%= baseName %>
 quarkus.container-image.tag=latest
 <%_ } _%>
+<%_ if (jvmArguments) { _%>
+quarkus.jib.jvm-arguments=<%= jvmArguments %>
+<%_ } _%>
+<%_ if (nativeArguments) { _%>
+quarkus.jib.native-arguments=<%= nativeArguments %>
+<%_ } _%>
 
 <%if (authenticationType === 'oauth2') { _%>
 # OAuth 2.0 and OIDC
