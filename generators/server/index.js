@@ -29,7 +29,9 @@ module.exports = class extends ServerGenerator {
                 const configuration = this.getAllJhipsterConfig(this, true);
                 this.liquibase = configuration.liquibase || {};
                 this.kubernetes = configuration.kubernetes || {};
-                this.httpRootPath = configuration.httpRootPath || undefined;
+                this.httpRootPath = configuration.httpRootPath;
+                this.jvmArguments = configuration.jvmArguments;
+                this.nativeArguments = configuration.nativeArguments;
             },
         };
         const phaseFromQuarkus = {
