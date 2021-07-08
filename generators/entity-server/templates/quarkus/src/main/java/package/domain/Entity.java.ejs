@@ -435,7 +435,7 @@ public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql')
                 const isNumeric = ['integer', 'long', 'float', 'double', 'bigdecimal'].includes(fieldType.toLowerCase()); _%>
             ", <%= fieldName %>=<% if (! isNumeric) {%>'<% } %>" + <%= fieldName %> <% if (! isNumeric) { %>+ "'" <% } %>+
                 <%_ if ((fieldType === 'byte[]' || fieldType === 'ByteBuffer') && fieldTypeBlobContent !== 'text') { _%>
-            ", <%= fieldName %>ContentType='" + <%= fieldName %>ContentType() + "'" +
+            ", <%= fieldName %>ContentType='" + <%= fieldName %>ContentType + "'" +
                 <%_ } _%>
             <%_ } _%>
             "}";
