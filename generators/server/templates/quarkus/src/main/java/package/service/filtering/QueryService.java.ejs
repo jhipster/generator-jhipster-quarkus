@@ -1,0 +1,151 @@
+package <%= packageName %>.service.filtering;
+
+import <%= packageName %>.service.filtering.filter.Filter;
+import <%= packageName %>.service.filtering.filter.RangeFilter;
+import <%= packageName %>.service.filtering.filter.StringFilter;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+public class QueryService<E> {
+
+    @Inject
+    protected EntityManager entityManager;
+
+    protected <X> Predicate buildCriteria(Filter<X> filter, Expression<X> expression) {
+        if (filter.getEquals() != null) {
+            return equalsPredicate(expression, filter.getEquals());
+        } else if (filter.getIn() != null) {
+            return valueIn(expression, filter.getIn());
+        } else if (filter.getNotIn() != null) {
+            return valueNotIn(expression, filter.getNotIn());
+        } else if (filter.getNotEquals() != null) {
+            return notEqualsPredicate(expression, filter.getNotEquals());
+        } else if (filter.getSpecified() != null) {
+            return byFieldSpecified(expression, filter.getSpecified());
+        }
+        return null;
+    }
+
+    protected <X> Predicate buildStringCriteria(StringFilter filter, Expression<String> expression) {
+        if (filter.getEquals() != null) {
+            return equalsPredicate(expression, filter.getEquals());
+        } else if (filter.getIn() != null) {
+            return valueIn(expression, filter.getIn());
+        } else if (filter.getNotIn() != null) {
+            return valueNotIn(expression, filter.getNotIn());
+        } else if (filter.getContains() != null) {
+            return likeUpperPredicate(expression, filter.getContains());
+        } else if (filter.getDoesNotContain() != null) {
+            return doesNotContainPredicate(expression, filter.getDoesNotContain());
+        } else if (filter.getNotEquals() != null) {
+            return notEqualsPredicate(expression, filter.getNotEquals());
+        } else if (filter.getSpecified() != null) {
+            return byFieldSpecified(expression, filter.getSpecified());
+        }
+        return null;
+    }
+
+    protected <X extends Comparable<? super X>> Predicate buildRangeCriteria(RangeFilter<X> filter, Expression<X> expression) {
+        return buildCriteria(filter, expression);
+    }
+
+    protected <X extends Comparable<? super X>> Predicate buildCriteria(RangeFilter<X> filter, Expression<X> expression) {
+        if (filter.getEquals() != null) {
+            return equalsPredicate(expression, filter.getEquals());
+        } else if (filter.getIn() != null) {
+            return valueIn(expression, filter.getIn());
+        }
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (filter.getSpecified() != null) {
+            predicates.add(byFieldSpecified(expression, filter.getSpecified()));
+        }
+        if (filter.getNotEquals() != null) {
+            predicates.add(notEqualsPredicate(expression, filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            predicates.add(valueNotIn(expression, filter.getNotIn()));
+        }
+        if (filter.getGreaterThan() != null) {
+            predicates.add(greaterThan(expression, filter.getGreaterThan()));
+        }
+        if (filter.getGreaterThanOrEqual() != null) {
+            predicates.add(greaterThanOrEqualTo(expression, filter.getGreaterThanOrEqual()));
+        }
+        if (filter.getLessThan() != null) {
+            predicates.add(lessThan(expression, filter.getLessThan()));
+        }
+        if (filter.getLessThanOrEqual() != null) {
+            predicates.add(lessThanOrEqualTo(expression, filter.getLessThanOrEqual()));
+        }
+
+        return entityManager.getCriteriaBuilder().and(predicates.toArray(new Predicate[0]));
+    }
+
+    protected <X> Predicate equalsPredicate(Expression<X> expression, final X value) {
+        return entityManager.getCriteriaBuilder().equal(expression, value);
+    }
+
+    protected <X> Predicate notEqualsPredicate(Expression<X> expression, final X value) {
+        return entityManager.getCriteriaBuilder().notEqual(expression, value);
+    }
+
+    protected Predicate likeUpperPredicate(Expression<String> expression, final String value) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        return cb.like(cb.upper(expression), wrapLikeQuery(value));
+    }
+
+    protected Predicate doesNotContainPredicate(Expression<String> expression, final String value) {
+        return likeUpperPredicate(expression, value).not();
+    }
+
+    protected <X> Predicate valueIn(Expression<X> expression, final Collection<X> value) {
+        CriteriaBuilder.In<X> in = entityManager.getCriteriaBuilder().in(expression);
+        value.forEach(in::value);
+        return in;
+    }
+
+    protected <X> Predicate valueNotIn(Expression<X> expression, final Collection<X> values) {
+        return this.valueIn(expression, values).not();
+    }
+
+    protected <X> Predicate byFieldSpecified(Expression<X> expression, final boolean specified) {
+        return specified ?
+            entityManager.getCriteriaBuilder().isNotNull(expression) :
+            entityManager.getCriteriaBuilder().isNull(expression);
+    }
+
+    protected <X> Predicate byFieldEmptiness(Expression<Set<X>> expression, final boolean specified) {
+        return specified ?
+            entityManager.getCriteriaBuilder().isNotEmpty(expression) :
+            entityManager.getCriteriaBuilder().isEmpty(expression);
+    }
+
+    protected <X extends Comparable<? super X>> Predicate greaterThanOrEqualTo(Expression<X> expression, final X value) {
+        return entityManager.getCriteriaBuilder().greaterThanOrEqualTo(expression, value);
+    }
+
+    protected <X extends Comparable<? super X>> Predicate greaterThan(Expression<X> expression, final X value) {
+        return entityManager.getCriteriaBuilder().greaterThan(expression, value);
+    }
+
+    protected <X extends Comparable<? super X>> Predicate lessThanOrEqualTo(Expression<X> expression, final X value) {
+        return entityManager.getCriteriaBuilder().lessThanOrEqualTo(expression, value);
+    }
+
+    protected <X extends Comparable<? super X>> Predicate lessThan(Expression<X> expression, final X value) {
+        return entityManager.getCriteriaBuilder().lessThan(expression, value);
+    }
+
+    protected String wrapLikeQuery(String txt) {
+        return "%" + txt.toUpperCase() + '%';
+    }
+}

@@ -47,10 +47,9 @@ public class <%= entityClass %>Resource {
 <%- include('../../_partials/imperative/web/delete', this); -%>
 
 <%_ } _%>
+<%- include('../../_partials/imperative/web/get_all', this); -%>
 <%_ if (jpaMetamodelFiltering) {  %>
 <%- include('../../_partials/imperative/web/get_all_filtered', this); -%>
-<%_ } else { _%>
-<%- include('../../_partials/imperative/web/get_all', this); -%>
 <%_ } _%>
 
 

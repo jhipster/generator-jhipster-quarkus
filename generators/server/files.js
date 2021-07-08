@@ -644,6 +644,86 @@ const serverFiles = {
             ],
         },
     ],
+    jpaMetamodelFiltering: [
+        {
+            condition: generator => true,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/filtering/Criteria.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/Criteria.java`,
+                },
+                {
+                    file: 'package/service/filtering/Criteria.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/Criteria.java`,
+                },
+                {
+                    file: 'package/service/filtering/QueryService.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/QueryService.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/BigDecimalFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/BigDecimalFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/BooleanFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/BooleanFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/DoubleFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/DoubleFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/DurationFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/DurationFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/Filter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/Filter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/FloatFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/FloatFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/InstantFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/InstantFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/IntegerFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/IntegerFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/LocalDateFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/LocalDateFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/LongFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/LongFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/RangeFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/RangeFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/ShortFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/ShortFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/StringFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/StringFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/UUIDFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/UUIDFilter.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/ZonedDateTimeFilter.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/ZonedDateTimeFilter.java`,
+                },
+            ],
+        },
+    ],
     docker: [
         {
             path: DOCKER_DIR,

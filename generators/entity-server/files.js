@@ -158,7 +158,7 @@ const serverFiles = {
             ],
         },
         {
-            condition: generator => generator.service === 'serviceImpl' && !generator.embedded,
+            condition: generator => generator.service === 'serviceImpl' && !generator.jpaMetamodelFiltering && !generator.embedded,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
@@ -172,12 +172,46 @@ const serverFiles = {
             ],
         },
         {
-            condition: generator => generator.service === 'serviceClass' && !generator.embedded,
+            condition: generator => generator.service === 'serviceClass' && !generator.jpaMetamodelFiltering && !generator.embedded,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
                     file: 'package/service/impl/EntityServiceImpl.java',
                     renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}Service.java`,
+                },
+            ],
+        },
+        {
+            condition: generator => generator.service === 'serviceImpl' && generator.jpaMetamodelFiltering && !generator.embedded,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/EntityQueryService.java',
+                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}QueryService.java`,
+                },
+                {
+                    file: 'package/service/impl/EntityQueryServiceImpl.java',
+                    renameTo: generator => `${generator.packageFolder}/service/impl/${generator.entityClass}QueryServiceImpl.java`,
+                },
+            ],
+        },
+        {
+            condition: generator => generator.service === 'serviceClass' && generator.jpaMetamodelFiltering && !generator.embedded,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/impl/EntityQueryServiceImpl.java',
+                    renameTo: generator => `${generator.packageFolder}/service/${generator.entityClass}QueryService.java`,
+                },
+            ],
+        },
+        {
+            condition: generator => generator.jpaMetamodelFiltering,
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/dto/EntityCriteria.java',
+                    renameTo: generator => `${generator.packageFolder}/service/dto/${generator.entityClass}Criteria.java`,
                 },
             ],
         },

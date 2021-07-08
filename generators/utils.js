@@ -2,6 +2,7 @@ const _ = require('lodash');
 
 module.exports = {
     buildEnumInfo,
+    getCriteriaBuilder,
 };
 
 /**
@@ -24,4 +25,13 @@ function buildEnumInfo(field, angularAppName, packageName, clientRootFolder) {
         clientRootFolder: clientRootFolder ? `${clientRootFolder}-` : '',
     };
     return enumInfo;
+}
+function getCriteriaBuilder(fieldType) {
+    if (['Integer', 'Long', 'Float', 'Double', 'BigDecimal', 'LocalDate', 'ZonedDateTime', 'Instant', 'Duration'].includes(fieldType)) {
+        return 'buildRangeCriteria';
+    }
+    if (fieldType === 'String') {
+        return 'buildStringCriteria';
+    }
+    return 'buildCriteria';
 }
