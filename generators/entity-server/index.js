@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const EntityServerGenerator = require('generator-jhipster/generators/entity-server');
+const { getCriteriaBuilder } = require('../utils');
 const writeFiles = require('./files').writeFiles;
 
 module.exports = class extends EntityServerGenerator {
@@ -104,6 +105,7 @@ module.exports = class extends EntityServerGenerator {
                 this.entityToDtoMethodReference = `${this.mapper}::toDto`;
                 this.entityToDtoMethodInvocation = `${this.mapper}.toDto`;
                 this.serviceClassName = this.hasServiceImpl ? `${this.entityClass}ServiceImpl` : `${this.entityClass}Service`;
+                this.getCriteriaBuilder = getCriteriaBuilder;
             },
         };
         return phaseFromQuarkus;

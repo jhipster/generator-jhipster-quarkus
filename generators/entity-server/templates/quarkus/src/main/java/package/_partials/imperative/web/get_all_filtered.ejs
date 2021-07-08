@@ -17,26 +17,30 @@
  limitations under the License.
 -%>
     /**
-     * {@code GET  /<%= entityApiUrl %>} : get all the <%= entityInstancePlural %>.
+     * {@code POST  /<%= entityApiUrl %>/filter} : get all the <%= entityInstancePlural %>.
+     * @param criteria the criteria which the requested entities should match.
      *<%_ if (hasPagination) { %>
      * @param pageRequest the pagination information.
     <%_ } _%>
-     * @param criteria the criteria which the requested entities should match.
      * @return the {@link Response} with status {@code 200 (OK)} and the list of <%= entityInstancePlural %> in body.
      */
-    @GET
+    @POST
     <%_ if (databaseType === 'sql' && fieldsContainOwnerManyToMany && !viaService) { _%>
     @Transactional
     <%_ } _%>
-    public Response<List<<%= entityOrDtoClass %>>> getAll<%= entityClassPlural %>(<%= entityClass %>Criteria criteria<% if (hasPagination) { %>, Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %><% } %>) {
+    @Path("/filter")
+    public Response getAllFiltered<%= entityClassPlural %>(<%= entityClass %>Criteria criteria<% if (hasPagination) { %>, @BeanParam PageRequestVM pageRequest<% if (reactive) { %>, ServerHttpRequest request<% } %><% } %>, @BeanParam SortRequestVM sortRequest, @Context UriInfo uriInfo) {
         log.debug("REST request to get <%= entityClassPlural %> by criteria: {}", criteria);
     <%_ if (pagination === 'no') { _%>
         List<<%= entityOrDtoClass %>> entityList = <%= entityInstance %>QueryService.findByCriteria(criteria);
         return Response.ok().entity(entityList).build();
     <%_ } else { _%>
-        Page<<%= entityOrDtoClass %>> page = <%= entityInstance %>QueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(<% if (!reactive) { %>ServletUriComponentsBuilder.fromCurrentRequest()<% } else { %>UriComponentsBuilder.fromHttpRequest(request)<% } %>, page);
-        return ResponseEntity.ok().headers(headers).entity(page.getContent());
+        var page = pageRequest.toPage();
+        var sort = sortRequest.toSort();
+        Paged<<%= entityOrDtoClass%>> result = <%= entityInstance %>QueryService.findAllByCriteria(criteria, page);
+        var response = Response.ok().entity(result.content);
+        response = PaginationUtil.withPaginationInfo(response, uriInfo, result);
+        return response.build();
     <%_ } _%>
     }
 
@@ -44,10 +48,10 @@
      * {@code GET  /<%= entityApiUrl %>/count} : count all the <%= entityInstancePlural %>.
      *
      * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     * @return the {@link Response} with status {@code 200 (OK)} and the count in body.
     */
-    @GET
-    @Path("/count")
+    @POST
+    @Path("/filter/count")
     public Response count<%= entityClassPlural %>(<%= entityClass %>Criteria criteria) {
         log.debug("REST request to count <%= entityClassPlural %> by criteria: {}", criteria);
         return Response.ok().entity(<%= entityInstance %>QueryService.countByCriteria(criteria)).build();

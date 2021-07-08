@@ -1,0 +1,100 @@
+<%#
+ Copyright 2020-2021 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%= packageName %>.service<% if (hasServiceImpl) { %>.impl<% } %>;
+
+<% if (hasServiceImpl) { %>
+import <%= packageName %>.service.<%= entityClass %>QueryService;
+<% } %>
+import <%= packageName %>.service.dto.<%= entityClass %>Criteria;
+import <%= packageName %>.service.filtering.QueryService;
+<%- include('../../_partials/imperative/service/imports', this); -%>
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.JoinType;
+import java.util.ArrayList;
+import <%= packageName %>.domain.<%= entityClass%>_;
+<%_ relationships.forEach((relationship) => { _%>
+import <%= packageName %>.domain.<%= relationship.otherEntityNameCapitalized %>_;
+<%_ }); _%>
+@ApplicationScoped
+<%_ if (databaseType === 'sql') { _%>
+@Transactional
+<%_ } _%>
+public class <%= entityClass %>QueryService<% if (hasServiceImpl) { %>Impl<% } %> extends QueryService<<%= entityClass %>><% if (hasServiceImpl) { %> implements <%= entityClass %>QueryService<% } %> {
+
+    private final Logger log = LoggerFactory.getLogger(<%= serviceClassName %>.class);
+<%- include('../../_partials/imperative/common/inject', { ...this, viaService: false, constructorName: serviceClassName, queryService: false, isController: false}); -%>
+
+    @Inject
+    EntityManager entityManager;
+
+<%- include('../../_partials/imperative/service/find_all_filtered', this); -%>
+<%- include('../../_partials/imperative/service/count_filtered', this); -%>
+
+
+    protected CriteriaQuery<<%= entityClass %>> createSelectCriteriaQuery(<%= entityClass %>Criteria criteria) {
+        CriteriaQuery<<%= entityClass %>> query = entityManager.getCriteriaBuilder().createQuery(<%= entityClass %>.class);
+        Root<<%= entityClass %>> from = query.from(<%= entityClass %>.class);
+
+        List<Predicate> predicates = createPredicateList(criteria, from);
+
+        return query.select(from).where(predicates.toArray(new Predicate[0]));
+    }
+
+    protected CriteriaQuery<Long> createCountCriteriaQuery(<%= entityClass %>Criteria criteria) {
+        CriteriaQuery<Long> query = entityManager.getCriteriaBuilder().createQuery(Long.class);
+        Root<<%= entityClass %>> from = query.from(<%= entityClass %>.class);
+
+        List<Predicate> predicates = createPredicateList(criteria, from);
+
+        return query.select(entityManager.getCriteriaBuilder().count(from)).where(predicates.toArray(new Predicate[0]));
+    }
+
+    protected List<Predicate> createPredicateList(<%= entityClass %>Criteria criteria, Root<<%= entityClass %>> from) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (criteria != null) {
+            if (criteria.getId() != null) {
+                predicates.add(<%= getCriteriaBuilder(primaryKeyType) %>(criteria.getId(), from.get(<%= entityClass %>_.id)));
+            }
+            <%_
+            fields.forEach((field) => {
+                if (isFilterableType(field.fieldType)) { _%>
+            if (criteria.get<%= field.fieldInJavaBeanMethod %>() != null) {
+                predicates.add(<%= getCriteriaBuilder(field.fieldType) %>(criteria.get<%= field.fieldInJavaBeanMethod %>(), from.get(<%= entityClass %>_.<%= field.fieldName %>)));
+            }
+            <%_ }
+            });
+
+            relationships.forEach((relationship) => {
+                const metamodelFieldName = (relationship.relationshipType === 'many-to-many' || relationship.relationshipType === 'one-to-many') ? relationship.relationshipFieldNamePlural : relationship.relationshipFieldName; _%>
+            if (criteria.get<%= relationship.relationshipNameCapitalized %>Id() != null) {
+                predicates.add(buildCriteria(criteria.get<%= relationship.relationshipNameCapitalized %>Id(),
+                    from.join(<%= entityClass %>_.<%= metamodelFieldName %>, JoinType.LEFT).get(<%= relationship.otherEntityNameCapitalized %>_.id)));
+            }
+            <%_ }); // forEach
+        _%>
+        }
+
+        return predicates;
+    }
+}
+
