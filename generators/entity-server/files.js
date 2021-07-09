@@ -158,7 +158,7 @@ const serverFiles = {
             ],
         },
         {
-            condition: generator => generator.service === 'serviceImpl' && !generator.jpaMetamodelFiltering && !generator.embedded,
+            condition: generator => generator.service === 'serviceImpl' && !generator.embedded,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
@@ -172,7 +172,7 @@ const serverFiles = {
             ],
         },
         {
-            condition: generator => generator.service === 'serviceClass' && !generator.jpaMetamodelFiltering && !generator.embedded,
+            condition: generator => generator.service === 'serviceClass' && !generator.embedded,
             path: SERVER_MAIN_SRC_DIR,
             templates: [
                 {
