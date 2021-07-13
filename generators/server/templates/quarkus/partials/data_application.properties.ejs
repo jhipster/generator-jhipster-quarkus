@@ -78,10 +78,10 @@
 %prod.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (liquibase.createDbTablesInSeparateScheme) { _%>
-%prod.quarkus.liquibase.default-schema-name=<%= baseName.toLowerCase() %>
+%prod.quarkus.liquibase.default-schema-name=<%= liquibase.prodSchemaName %>
 %prod.quarkus.liquibase.liquibase-schema-name=public
-%prod.quarkus.liquibase.database-change-log-lock-table-name=databasechangeloglock_<%= baseName.toLowerCase() %>
-%prod.quarkus.liquibase.database-change-log-table-name=databasechangelog_<%= baseName.toLowerCase() %>
+%prod.quarkus.liquibase.database-change-log-lock-table-name=databasechangeloglock_<%= liquibase.prodSchemaName %>
+%prod.quarkus.liquibase.database-change-log-table-name=databasechangelog_<%= liquibase.prodSchemaName %>
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
 quarkus.datasource.jdbc.max-size=8

@@ -8,7 +8,7 @@
     <changeSet id="create_schema" author="jhipster">
         <%_ if (prodDatabaseType === 'postgresql') { _%>
         <sql dbms="postgresql">
-            CREATE SCHEMA <%= baseName.toLowerCase() %>;
+            CREATE SCHEMA <%= liquibase.prodSchemaName %>;
         </sql>
         <%_ } _%>
     </changeSet>
