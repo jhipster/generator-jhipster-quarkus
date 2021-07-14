@@ -32,3 +32,17 @@
         log.debug("Request to get <%= entityClass %> : {}", id);
 <%- include('../common/get', {...this, viaService: false, returnDirectly:true}); -%>
     }
+
+
+<%_ for (idx in relationships) { _%>
+    <%_ if (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide !== true) { _%>
+    /**
+    * Get all the <%= entityOrDtoClass %> where <%= relationships[idx].relationshipNameCapitalized %> is {@code null}.
+    *
+    * @return the list of entities.
+    */
+    public List<<%= entityOrDtoClass %>> findAllWhere<%= relationships[idx].relationshipNameCapitalized %>IsNull() {
+        throw new java.lang.UnsupportedOperationException();
+    }
+    <%_ } _%>
+<%_ } _%>

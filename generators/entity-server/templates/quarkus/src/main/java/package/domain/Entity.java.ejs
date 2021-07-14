@@ -385,7 +385,7 @@ public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql')
             <%_ } _%>
         <%_ } else { _%>
     @OneToOne(mappedBy = "<%= otherEntityRelationshipName %>")
-    @JsonIgnore
+    @JsonbTransient
         <%_ }
         } else if (databaseType === 'mongodb' || databaseType === 'couchbase') {
             if (databaseType === 'mongodb') { _%>
