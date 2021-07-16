@@ -33,9 +33,14 @@ quarkus.mailer.username=
 quarkus.mailer.password=
 
 quarkus.micrometer.export.prometheus.enabled=true
-quarkus.micrometer.export.prometheus.path=/management/prometheus
 
+<%_ if(httpRootPath) { _%>
+quarkus.smallrye-health.root-path=/<%= httpRootPath %>/management/health
+quarkus.micrometer.export.prometheus.path=/<%= httpRootPath %>/management/prometheus
+<%_ } else { _%>
 quarkus.smallrye-health.root-path=/management/health
+quarkus.micrometer.export.prometheus.path=/management/prometheus
+<%_ } _%>
 
 <%_ if (authenticationType === 'jwt') { _%>
 mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
