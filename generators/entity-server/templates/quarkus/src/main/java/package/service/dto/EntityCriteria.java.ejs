@@ -14,7 +14,7 @@ import <%= packageName %>.service.filtering.filter.IntegerFilter;
 import <%= packageName %>.service.filtering.filter.LongFilter;
 import <%= packageName %>.service.filtering.filter.StringFilter;
 <%_ if (fieldsContainBigDecimal === true) { _%>
-import packageName %>.service.filtering.filter.BigDecimalFilter;
+import <%= packageName %>.service.filtering.filter.BigDecimalFilter;
 <%_ } _%>
 <%_ if (fieldsContainDuration === true) { _%>
 import <%= packageName %>.service.filtering.filter.DurationFilter;
@@ -29,7 +29,7 @@ import <%= packageName %>.service.filtering.filter.LocalDateFilter;
 import <%= packageName %>.service.filtering.filter.UUIDFilter;
 <%_ } _%>
 <%_ if (fieldsContainZonedDateTime === true) { _%>
-import <%= packageName %>.service.filtering.filter.filter.ZonedDateTimeFilter;
+import <%= packageName %>.service.filtering.filter.ZonedDateTimeFilter;
 <%_ } _%>
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
