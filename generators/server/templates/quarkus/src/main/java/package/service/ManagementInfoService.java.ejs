@@ -19,7 +19,7 @@
 package <%=packageName%>.service;
 
 import io.quarkus.runtime.configuration.ProfileManager;
-import <%=packageName%>.config.JHipsterInfo;
+import <%=packageName%>.config.JHipsterProperties;
 import <%=packageName%>.service.dto.ManagementInfoDTO;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,16 +31,16 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class ManagementInfoService {
 
-    private final JHipsterInfo JHipsterInfo;
+    private final JHipsterProperties jHipsterProperties;
 
     @Inject
-    public ManagementInfoService(JHipsterInfo JHipsterInfo) {
-        this.JHipsterInfo = JHipsterInfo;
+    public ManagementInfoService(JHipsterProperties jHipsterProperties) {
+        this.jHipsterProperties = jHipsterProperties;
     }
 
     public ManagementInfoDTO getManagementInfo(){
         var info = new ManagementInfoDTO();
-        if(JHipsterInfo.isEnable()){
+        if(jHipsterProperties.info().swagger().enable()){
             info.activeProfiles.add("swagger");
         }
         info.activeProfiles.add(ProfileManager.getActiveProfile());
