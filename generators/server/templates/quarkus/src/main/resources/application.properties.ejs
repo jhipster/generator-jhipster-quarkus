@@ -142,6 +142,11 @@ quarkus.container-image.name=<%= kubernetes.imageName %>
     <%_ } _%>
 quarkus.container-image.additional-tags=latest
 
+<%_ if (kubernetes.kubernetesProperties) { _%>
+    <%_ Object.keys(kubernetes.kubernetesProperties).forEach(function(key) { _%>
+<%= key %>=<%= kubernetes.kubernetesProperties[key] %>
+    <%_ }); _%>
+<%_ } _%>
     <%_ if (kubernetes.kubernetesEnvironmentVariables) { _%>
         <%_ Object.keys(kubernetes.kubernetesEnvironmentVariables).forEach(function(key) { _%>
 quarkus.kubernetes.env.vars.<%= key %>=<%= kubernetes.kubernetesEnvironmentVariables[key] %>
