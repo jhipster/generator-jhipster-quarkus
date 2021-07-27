@@ -15,8 +15,6 @@ module.exports = class extends ServerGenerator {
         if (!jhContext) {
             this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
-
-        this.configOptions = jhContext.configOptions || {};
     }
 
     get initializing() {

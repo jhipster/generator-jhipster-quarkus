@@ -15,8 +15,6 @@ module.exports = class extends EntityGenerator {
             this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
-        this.configOptions = jhContext.configOptions || {};
-
         // This sets up options for this sub generator and is being reused from JHipster
         const name = _.upperFirst(this.options.name).replace('.json', '');
         this.entityStorage = jhContext.getEntityConfig(name);
