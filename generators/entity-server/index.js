@@ -36,7 +36,7 @@ module.exports = class extends EntityServerGenerator {
                 this.mapsIdAssoc = undefined;
                 this.primaryKeyType = this.pkType;
                 // eslint-disable-next-line no-restricted-syntax
-                for (const relationship of this.relationships) {
+                for (const relationship of this.entity.relationships) {
                     if (relationship.useJPADerivedIdentifier) {
                         this.mapsIdAssoc = relationship;
                         this.primaryKeyType =
@@ -64,6 +64,10 @@ module.exports = class extends EntityServerGenerator {
 
     get loading() {
         return super._loading();
+    }
+
+    get preparingFields() {
+        return super._preparingFields();
     }
 
     get preparing() {
