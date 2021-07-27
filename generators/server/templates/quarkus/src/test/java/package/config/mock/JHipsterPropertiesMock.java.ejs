@@ -1,0 +1,70 @@
+<%#
+ Copyright 2020-2021 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.config.mock;
+
+import <%=packageName%>.config.JHipsterProperties;
+import io.quarkus.test.Mock;
+import io.smallrye.config.SmallRyeConfig;
+import org.eclipse.microprofile.config.Config;
+import org.mockito.Mockito;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
+@ApplicationScoped
+public class JHipsterPropertiesMock {
+
+    @Inject
+    Config config;
+
+    @Produces
+    @ApplicationScoped
+    @Mock
+    JHipsterProperties properties() {
+        JHipsterProperties jHipsterProperties = config.unwrap(SmallRyeConfig.class).getConfigMapping(JHipsterProperties.class);
+        JHipsterProperties spyJHipsterProperties = Mockito.spy(jHipsterProperties);
+
+        JHipsterProperties.Info spyInfo = Mockito.spy(jHipsterProperties.info());
+        JHipsterProperties.Info.Swagger spySwagger = Mockito.spy(jHipsterProperties.info().swagger());
+        Mockito.when(spyJHipsterProperties.info()).thenReturn(spyInfo);
+        Mockito.when(spyJHipsterProperties.info().swagger()).thenReturn(spySwagger);
+
+<%_ if (authenticationType === 'jwt') { _%>
+        JHipsterProperties.Security spySecurity = Mockito.spy(jHipsterProperties.security());
+        JHipsterProperties.Security.Authentication spyAuthentication = Mockito.spy(jHipsterProperties.security().authentication());
+        JHipsterProperties.Security.Authentication.Jwt spyJwt = Mockito.spy(jHipsterProperties.security().authentication().jwt());
+        JHipsterProperties.Security.Authentication.Jwt.PrivateKey spyPrivateKey = Mockito.spy(jHipsterProperties.security().authentication().jwt().privateKey());
+        Mockito.when(spyJHipsterProperties.security()).thenReturn(spySecurity);
+        Mockito.when(spyJHipsterProperties.security().authentication()).thenReturn(spyAuthentication);
+        Mockito.when(spyJHipsterProperties.security().authentication().jwt()).thenReturn(spyJwt);
+        Mockito.when(spyJHipsterProperties.security().authentication().jwt().privateKey()).thenReturn(spyPrivateKey);
+
+        JHipsterProperties.Mail spyMail = Mockito.spy(jHipsterProperties.mail());
+        Mockito.when(spyJHipsterProperties.mail()).thenReturn(spyMail);
+<%_ } _%>
+
+<%_ if (authenticationType === 'oauth2') { _%>
+        JHipsterProperties.Oidc spyOidc = Mockito.spy(jHipsterProperties.oidc());
+        Mockito.when(spyJHipsterProperties.oidc()).thenReturn(spyOidc);
+
+<%_ } _%>
+        return spyJHipsterProperties;
+    }
+}

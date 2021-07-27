@@ -30,10 +30,8 @@
 %dev.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (devDatabaseType === 'mariadb') { _%>
-%dev.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
-%dev.quarkus.datasource.db-kind=mariadb
-%dev.quarkus.datasource.username=<%= baseName %>
-%dev.quarkus.datasource.password=
+%dev.quarkus.datasource.devservices.image-name=<%= DOCKER_MARIADB %>
+%dev.quarkus.datasource.devservices.port=3306
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mariadb') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
@@ -54,10 +52,8 @@
 %prod.quarkus.datasource.password=yourStrong(!)Password
 <%_ } _%>
 <%_ if (devDatabaseType === 'mysql') { _%>
-%dev.quarkus.datasource.jdbc.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
-%dev.quarkus.datasource.db-kind=mysql
-%dev.quarkus.datasource.username=root
-%dev.quarkus.datasource.password=
+%dev.quarkus.datasource.devservices.image-name=<%= DOCKER_MYSQL %>
+%dev.quarkus.datasource.devservices.port=3306
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mysql') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
@@ -66,10 +62,8 @@
 %prod.quarkus.datasource.password=
 <%_ } _%>
 <%_ if (devDatabaseType === 'postgresql') { _%>
-%dev.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/<%= baseName %>
-%dev.quarkus.datasource.db-kind=postgresql
-%dev.quarkus.datasource.username=<%= baseName %>
-%dev.quarkus.datasource.password=
+%dev.quarkus.datasource.devservices.image-name=<%= DOCKER_POSTGRESQL %>
+%dev.quarkus.datasource.devservices.port=5432
 <%_ } _%>
 <%_ if (prodDatabaseType === 'postgresql') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/<%= baseName %>
@@ -104,6 +98,6 @@ quarkus.mongodb.database=<%= baseName %>
 quarkus.liquibase.change-log=config/liquibase/master.xml
 quarkus.liquibase.migrate-at-start=true
 
-%test.quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:test
+%test.quarkus.datasource.jdbc.url=jdbc:h2:mem:test
 %test.quarkus.datasource.db-kind=h2
 <%_ } _%>

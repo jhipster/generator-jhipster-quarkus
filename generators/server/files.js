@@ -202,10 +202,6 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`,
                 },
                 {
-                    file: 'package/config/JHipsterInfo.java',
-                    renameTo: generator => `${generator.javaDir}config/JHipsterInfo.java`,
-                },
-                {
                     file: 'package/config/LocalDateProvider.java',
                     renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`,
                 },
@@ -245,8 +241,8 @@ const serverFiles = {
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
-                    file: 'package/config/mock/JHipsterInfoMock.java',
-                    renameTo: generator => `${generator.javaDir}/config/mock/JHipsterInfoMock.java`,
+                    file: 'package/config/mock/JHipsterPropertiesMock.java',
+                    renameTo: generator => `${generator.javaDir}/config/mock/JHipsterPropertiesMock.java`,
                 },
                 {
                     file: 'package/config/LocalDateProviderTest.java',
@@ -637,7 +633,7 @@ const serverFiles = {
     docker: [
         {
             path: DOCKER_DIR,
-            templates: ['Dockerfile.jvm', 'Dockerfile.native', 'Dockerfile.legacy-jar'],
+            templates: ['Dockerfile.jvm', 'Dockerfile.native', 'Dockerfile.native-distroless', 'Dockerfile.legacy-jar'],
         },
     ],
 };
