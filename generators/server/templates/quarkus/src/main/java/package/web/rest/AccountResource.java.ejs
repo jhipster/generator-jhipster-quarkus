@@ -183,7 +183,7 @@ public class AccountResource {
         }
         user.activated = true;
         final JsonArray roles = accessToken.getClaim("roles");
-        user.authorities = roles.stream().map(v->((JsonString)v).getString()).collect(Collectors.toSet()) ;
+        user.authorities = roles.stream().map(v -> ((JsonString) v).getString()).collect(Collectors.toSet());
         return user;
     }
 <%_ } _%>
