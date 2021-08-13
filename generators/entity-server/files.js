@@ -337,12 +337,12 @@ function updateDtoTest() {
 
 function writeFiles() {
     return {
-        writeServerFiles() {
+        async writeServerFiles() {
             if (this.skipServer) return;
 
             // write server side files
-            this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
-            this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('entity-server/templates'));
+            await this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
+            await this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('entity-server/templates'));
             if (this.hasDto) {
                 updateDtoTest.call(this);
             }
@@ -367,10 +367,10 @@ function writeFiles() {
             }
         },
 
-        writeEnumFiles() {
+        async writeEnumFiles() {
             // TODO replace this with proper function.
             // const fetchFromInstalledKHipster = subpath => path.join(__dirname, subpath);
-            this.fields.forEach(field => {
+            for (const field of this.fields) {
                 if (!field.fieldIsEnum) {
                     return;
                 }
@@ -386,7 +386,7 @@ function writeFiles() {
                     const pathToTemplateFile = `${this.fetchFromInstalledJHipster(
                         'entity-server/templates'
                     )}/${SERVER_MAIN_SRC_DIR}package/domain/enumeration/Enum.java.ejs`;
-                    this.template(
+                    await this.template(
                         pathToTemplateFile,
                         `${SERVER_MAIN_SRC_DIR}${this.packageFolder}/domain/enumeration/${fieldType}.java`,
                         this,
@@ -394,7 +394,7 @@ function writeFiles() {
                         enumInfo
                     );
                 }
-            });
+            }
         },
     };
 }
