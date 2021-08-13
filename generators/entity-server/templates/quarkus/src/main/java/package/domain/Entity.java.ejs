@@ -37,7 +37,7 @@ const uniqueEnums = {};
 <%_ for (idx in relationships) {
         isUsingMapsId = relationships[idx].useJPADerivedIdentifier;
         if ( isUsingMapsId === true) {
-            primaryKeyType = (relationships[idx].otherEntityName === 'user'  && authenticationType === 'oauth2') ? 'String' : pkType;
+            primaryKeyType = (relationships[idx].otherEntityName === 'user'  && authenticationType === 'oauth2') ? 'String' : primaryKey.type;
             break;
         }
         isUsingMapsId = false;
@@ -190,7 +190,7 @@ public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql')
 <%_ if (databaseType === 'mongodb') { _%>
     @BsonId
 <%_ } _%>
-    public <%= pkType %> id;
+    public <%= primaryKey.type %> id;
 
 <%_ for (idx in fields) {
     if (typeof fields[idx].javadoc !== 'undefined') { _%>

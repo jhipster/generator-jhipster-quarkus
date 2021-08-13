@@ -31,6 +31,6 @@
         log.debug("REST request to delete <%= entityClass %> : {}", id);
 <%- include('../common/delete', this); -%>
         var response = Response.noContent();
-        HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (primaryKey.type !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();
     }

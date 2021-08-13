@@ -35,6 +35,6 @@
         }
 <%- include('../common/save', {...this, returnDirectly: false}); -%>
         var response = Response.ok().entity(<% if (databaseType === 'sql') { %>result<% } else { %><%= entityOrDtoInstance %><% } %>);
-        HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= entityOrDtoInstance %>.id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= entityOrDtoInstance %>.id<% if (primaryKey.type !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();
     }
