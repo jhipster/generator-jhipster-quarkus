@@ -2,16 +2,13 @@ const helpers = require('yeoman-test');
 const fse = require('fs-extra');
 const path = require('path');
 
+const packagePath = path.join(__dirname, '../..');
+
 module.exports = class {
     constructor(generatorName) {
-        this.runContext = helpers.run(`generator-jhipster/generators/${generatorName}`).withGenerators([
-            [
-                // eslint-disable-next-line import/no-dynamic-require
-                require(`../../generators/${generatorName}/index.js`), // eslint-disable-line global-require
-                `jhipster-quarkus:${generatorName}`,
-                path.join(__dirname, `../../generators/${generatorName}/index.js`),
-            ],
-        ]);
+        this.runContext = helpers.run(`generator-jhipster/generators/${generatorName}`).withEnvironment(env => {
+            env.lookup({ packagePaths: [packagePath] });
+        });
     }
 
     withPrompts(answers) {
