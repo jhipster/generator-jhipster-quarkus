@@ -16,12 +16,12 @@ describe('Subgenerator client of quarkus JHipster blueprint', () => {
             );
             assert.fileContent(
                 `${ANGULAR_DIR}admin/health/health.service.ts`,
-                'export interface Health {\n' +
-                    '    status: HealthStatus;\n' +
-                    '    checks: {\n' +
-                    '        [key in HealthKey]?: HealthDetails;\n' +
-                    '    };\n' +
-                    '}'
+                `
+export interface HealthDetails {
+  status: HealthStatus;
+  details: any;
+}
+`
             );
         });
 
