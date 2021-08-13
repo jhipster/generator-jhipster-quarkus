@@ -218,14 +218,16 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('should contains redis code in UserService', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '        List <Object> keys = new ArrayList<>();\n' +
-                    '        keys.add(user.login);\n' +
-                    '\n' +
-                    '        if (user.email != null) {\n' +
-                    '            keys.add(user.email);\n' +
-                    '        }\n' +
-                    '\n' +
-                    '        userRedisCache.evict(keys);'
+                `
+        List<Object> keys = new ArrayList<>();
+        keys.add(user.login);
+
+        if (user.email != null) {
+            keys.add(user.email);
+        }
+
+        userRedisCache.evict(keys);
+`
             );
 
             assert.fileContent(
@@ -252,26 +254,31 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
-                '            return userRedisCache.get(login, () -> User.findOneWithAuthoritiesByEmailIgnoreCase(login))\n' +
-                    '                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));'
+                `
+            return userRedisCache
+                .get(login, () -> User.findOneWithAuthoritiesByEmailIgnoreCase(login))
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
+`
             );
 
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
-                '        return userRedisCache.get(lowercaseLogin, () -> User.findOneWithAuthoritiesByLogin(lowercaseLogin))\n' +
-                    '            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));'
+                `
+        return userRedisCache
+            .get(lowercaseLogin, () -> User.findOneWithAuthoritiesByLogin(lowercaseLogin))
+            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
+`
             );
         });
 
         it('should contains redis code in User', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
-                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)\n            .firstResult();'
+                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login).firstResult();'
             );
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
-                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)\n' +
-                    '            .firstResult();'
+                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email).firstResult();'
             );
         });
     });
@@ -317,7 +324,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         });
 
         it('should JHipster properties contains OIDC logout url', () => {
-            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`, 'public String logoutUrl;');
+            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`, 'String logoutUrl()');
 
             assert.fileContent(
                 `${SERVER_MAIN_RES_DIR}application.properties`,
