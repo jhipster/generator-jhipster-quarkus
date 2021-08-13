@@ -117,7 +117,12 @@ describe('Subgenerator entity of quarkus JHipster blueprint', () => {
         it('update Web finder signature', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/FooResource.java`,
-                'public Response getAllFoos(@BeanParam PageRequestVM pageRequest, @BeanParam SortRequestVM sortRequest, @Context UriInfo uriInfo)'
+                `
+  public Response getAllFoos(
+    @BeanParam PageRequestVM pageRequest,
+    @BeanParam SortRequestVM sortRequest,
+    @Context UriInfo uriInfo
+  )`
             );
         });
         it('contains READ_ONLY Hibernate cache annotation', () => {
