@@ -3,14 +3,13 @@ module.exports = {
     askForService,
 };
 
-function askForDataAccess() {
+async function askForDataAccess() {
     const context = this.context;
     // don't prompt if data are imported from a file
     if (context.useConfigurationFile) {
         return;
     }
-    const databaseType = context.databaseType;
-    const done = this.async();
+    const databaseType = context.databaseType || this.jhipsterConfig.databaseType;
     const prompts = [
         {
             when: () => databaseType !== 'no',
@@ -30,19 +29,16 @@ function askForDataAccess() {
             default: 0,
         },
     ];
-    this.prompt(prompts).then(props => {
-        context.dataAccess = props.dataAccess;
-        done();
-    });
+    const answers = await this.prompt(prompts);
+    this.entityConfig.dataAccess = answers.dataAccess;
 }
 
-function askForService() {
+async function askForService() {
     const context = this.context;
     // don't prompt if data is imported from a file or server is skipped
     if (context.useConfigurationFile || context.skipServer) {
         return;
     }
-    const done = this.async();
     const prompts = [
         {
             type: 'list',
@@ -65,8 +61,6 @@ function askForService() {
             default: 0,
         },
     ];
-    this.prompt(prompts).then(props => {
-        context.service = props.service;
-        done();
-    });
+    const answers = await this.prompt(prompts);
+    this.entityConfig.service = answers.service;
 }

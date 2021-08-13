@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 const chalk = require('chalk');
 const EntityGenerator = require('generator-jhipster/generators/entity');
-const _ = require('lodash');
 const prompts = require('./prompts');
 const constants = require('../generator-quarkus-constants');
 
@@ -15,23 +14,14 @@ module.exports = class extends EntityGenerator {
             this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
-        // This sets up options for this sub generator and is being reused from JHipster
-        const name = _.upperFirst(this.options.name).replace('.json', '');
-        this.entityStorage = jhContext.getEntityConfig(name);
+        this.entity = this.entity || this.context;
+        // this.entity.prodDatabaseType = this.entity.prodDatabaseType || this.jhipsterConfig.prodDatabaseType;
     }
 
     get initializing() {
         const phaseFromJHipster = super._initializing();
         return {
             ...phaseFromJHipster,
-            setupConfigQuarkus() {
-                const context = this.context;
-                if (!context.useConfigurationFile) {
-                    context.dataAccess = constants.DEFAULT_DATA_ACCESS;
-                } else {
-                    context.dataAccess = context.fileData ? context.fileData.dataAccess : constants.DEFAULT_DATA_ACCESS;
-                }
-            },
         };
     }
 
@@ -71,11 +61,9 @@ module.exports = class extends EntityGenerator {
         const phaseFromJHipster = super._configuring();
         return {
             configureEntityQuarkus() {
-                const context = this.context;
-                if (!this.storageData) {
-                    this.storageData = {};
-                }
-                this.storageData.dataAccess = context.dataAccess;
+                this.entityStorage.defaults({
+                    dataAccess: constants.DEFAULT_DATA_ACCESS,
+                });
             },
             ...phaseFromJHipster,
         };
@@ -86,11 +74,20 @@ module.exports = class extends EntityGenerator {
     }
 
     get loading() {
-        return super._loading();
+        return {
+            ...super._loading(),
+            loadQuarkusConfig() {
+                this.entity.dataAccess = this.entityConfig.dataAccess;
+            },
+        };
     }
 
     get preparing() {
         return super._preparing();
+    }
+
+    get preparingFields() {
+        return super._preparingFields();
     }
 
     get preparingRelationships() {
@@ -102,47 +99,7 @@ module.exports = class extends EntityGenerator {
     }
 
     get writing() {
-        return {
-            composeServer() {
-                const context = this.context;
-                if (context.skipServer) return;
-                const configOptions = this.configOptions;
-
-                this.composeWith(require.resolve('../entity-server'), {
-                    context,
-                    configOptions,
-                    force: context.options.force,
-                    debug: context.isDebugEnabled,
-                });
-            },
-
-            composeClient() {
-                const context = this.context;
-                if (context.skipClient) return;
-                const configOptions = this.configOptions;
-
-                this.composeWith(require.resolve('generator-jhipster/generators/entity-client'), {
-                    context,
-                    configOptions,
-                    'skip-install': context.options['skip-install'],
-                    force: context.options.force,
-                    debug: context.isDebugEnabled,
-                });
-            },
-
-            composeI18n() {
-                const context = this.context;
-                if (context.skipClient) return;
-                const configOptions = this.configOptions;
-                this.composeWith(require.resolve('generator-jhipster/generators/entity-i18n'), {
-                    context,
-                    configOptions,
-                    'skip-install': context.options['skip-install'],
-                    force: context.options.force,
-                    debug: context.isDebugEnabled,
-                });
-            },
-        };
+        return super._writing();
     }
 
     get postWriting() {

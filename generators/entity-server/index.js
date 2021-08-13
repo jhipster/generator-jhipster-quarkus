@@ -7,9 +7,14 @@ module.exports = class extends EntityServerGenerator {
     constructor(args, opts) {
         super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
 
+        if (this.options.help) return;
+
         if (!this.jhipsterContext) {
             this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
+
+        this.entity = this.options.context;
+        this.entity.packageFolder = this.entity.packageFolder || this.entity.packageName.replace(/\./g, '/');
     }
 
     get initializing() {
@@ -21,41 +26,7 @@ module.exports = class extends EntityServerGenerator {
     }
 
     get configuring() {
-        // const phaseFromJHipster = super._configuring();
-        return {
-            disableFluentMethods() {
-                this.fluentMethods = false;
-            },
-            prepareQuarkusRendering() {
-                this.viaService = this.service !== 'no';
-                this.hasServiceImpl = this.service === 'serviceImpl';
-                this.viaRepository = this.dataAccess === 'repository';
-                this.hasDto = this.dto === 'mapstruct';
-                this.hasPagination = this.pagination !== 'no';
-
-                this.mapsIdAssoc = undefined;
-                this.primaryKeyType = this.pkType;
-                // eslint-disable-next-line no-restricted-syntax
-                for (const relationship of this.entity.relationships) {
-                    if (relationship.useJPADerivedIdentifier) {
-                        this.mapsIdAssoc = relationship;
-                        this.primaryKeyType =
-                            relationship.otherEntityName === 'user' && this.authenticationType === 'oauth2' ? 'String' : this.pkType;
-                        break;
-                    }
-                }
-                this.isUsingMapsId = this.mapsIdAssoc !== undefined;
-                this.dtoClass = this.asDto(this.entityClass);
-                this.dtoInstance = this.asDto(this.entityInstance);
-                this.entityOrDtoClass = this.hasDto ? this.dtoClass : this.asEntity(this.entityClass);
-                this.entityOrDtoInstance = this.hasDto ? this.dtoInstance : this.asEntity(this.entityInstance);
-                this.dataAccessObject = this.viaRepository ? `${this.entityInstance}Repository` : this.entityClass;
-                this.mapper = `${this.entityInstance}Mapper`;
-                this.entityToDtoMethodReference = `${this.mapper}::toDto`;
-                this.entityToDtoMethodInvocation = `${this.mapper}.toDto`;
-                this.serviceClassName = this.hasServiceImpl ? `${this.entityClass}ServiceImpl` : `${this.entityClass}Service`;
-            },
-        };
+        return super._configuring();
     }
 
     get composing() {
@@ -66,16 +37,57 @@ module.exports = class extends EntityServerGenerator {
         return super._loading();
     }
 
-    get preparingFields() {
-        return super._preparingFields();
-    }
-
     get preparing() {
         return super._preparing();
     }
 
+    get preparingFields() {
+        return super._preparingFields();
+    }
+
+    get preparingRelationships() {
+        return super._preparingRelationships();
+    }
+
     get default() {
-        return super._default();
+        return {
+            disableFluentMethods() {
+                this.entity.fluentMethods = false;
+            },
+            prepareQuarkusRendering() {
+                const entity = this.entity;
+                entity.viaService = entity.service !== 'no';
+                entity.hasServiceImpl = entity.service === 'serviceImpl';
+                entity.viaRepository = entity.dataAccess === 'repository';
+                entity.hasDto = entity.dto === 'mapstruct';
+                entity.hasPagination = entity.pagination !== 'no';
+
+                entity.mapsIdAssoc = undefined;
+                entity.primaryKeyType = entity.primaryKey.type;
+                // eslint-disable-next-line no-restricted-syntax
+                for (const relationship of entity.relationships) {
+                    if (relationship.useJPADerivedIdentifier) {
+                        entity.mapsIdAssoc = relationship;
+                        entity.primaryKeyType =
+                            relationship.otherEntityName === 'user' && entity.authenticationType === 'oauth2'
+                                ? 'String'
+                                : entity.primaryKey.type;
+                        break;
+                    }
+                }
+                entity.isUsingMapsId = entity.mapsIdAssoc !== undefined;
+                entity.dtoClass = this.asDto(entity.entityClass);
+                entity.dtoInstance = this.asDto(entity.entityInstance);
+                entity.entityOrDtoClass = entity.hasDto ? entity.dtoClass : this.asEntity(entity.entityClass);
+                entity.entityOrDtoInstance = entity.hasDto ? entity.dtoInstance : this.asEntity(entity.entityInstance);
+                entity.dataAccessObject = entity.viaRepository ? `${entity.entityInstance}Repository` : entity.entityClass;
+                entity.mapper = `${entity.entityInstance}Mapper`;
+                entity.entityToDtoMethodReference = `${entity.mapper}::toDto`;
+                entity.entityToDtoMethodInvocation = `${entity.mapper}.toDto`;
+                entity.serviceClassName = entity.hasServiceImpl ? `${entity.entityClass}ServiceImpl` : `${entity.entityClass}Service`;
+            },
+            ...super._default(),
+        };
     }
 
     get writing() {
