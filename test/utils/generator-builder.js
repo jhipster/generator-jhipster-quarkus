@@ -17,7 +17,7 @@ module.exports = class {
     }
 
     withYoRc(fileName) {
-        this.runContext.inTmpDir(dir => {
+        this.runContext.doInDir(dir => {
             fse.copySync(path.join(__dirname, `../templates/${fileName}`), dir);
         });
         return this;
@@ -31,9 +31,5 @@ module.exports = class {
     withArguments(args) {
         this.runContext.withArguments(args);
         return this;
-    }
-
-    build(callBack) {
-        return this.runContext.on('end', callBack);
     }
 };
