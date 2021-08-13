@@ -45,7 +45,7 @@ const DEFAULT_QUARKUS_ENTITY_BP_OPTIONS = {
     ...DEFAULT_QUARKUS_BP_OPTIONS,
     creationTimestamp: '2019-11-06',
     defaultLocalConfig: {
-      ...defaultConfig,
+        ...defaultConfig,
     },
 };
 
