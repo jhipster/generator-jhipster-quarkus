@@ -25,60 +25,20 @@ module.exports = class extends ServerGenerator {
                 this.CACHE_MAXIMUM_SIZE = CACHE_MAXIMUM_SIZE;
                 this.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
             },
-            setupServerConsts() {
-                this.serviceDiscoveryType = this.jhipsterConfig.serviceDiscoveryType;
-                this.authenticationType = this.jhipsterConfig.authenticationType;
-                this.jwtSecretKey = this.jhipsterConfig.jwtSecretKey;
-                this.skipUserManagement = this.jhipsterConfig.skipUserManagement;
-                this.packageName = this.jhipsterConfig.packageName;
-                this.serverPort = this.jhipsterConfig.serverPort;
-                this.cacheProvider = this.jhipsterConfig.cacheProvider;
-                this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache;
-                this.databaseType = this.jhipsterConfig.databaseType;
-                this.devDatabaseType = this.jhipsterConfig.devDatabaseType;
-                this.prodDatabaseType = this.jhipsterConfig.prodDatabaseType;
-                this.searchEngine = this.jhipsterConfig.searchEngine;
-                this.buildTool = this.jhipsterConfig.buildTool;
-                this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache;
-            },
         };
         return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get prompting() {
-        const phaseFromJHipster = super._prompting();
-        const phaseFromQuarkus = {
+        return {
+            ...super._prompting(),
             askForServerSideOpts: prompts.askForServerSideOpts,
             askForOptionalItems: undefined,
-            setSharedQuarkusConfigOptions() {
-                this.jhipsterConfig.serviceDiscoveryType = this.serviceDiscoveryType;
-                this.jhipsterConfig.authenticationType = this.authenticationType;
-                this.jhipsterConfig.jwtSecretKey = this.jwtSecretKey;
-                this.jhipsterConfig.skipUserManagement = this.skipUserManagement;
-                this.jhipsterConfig.packageName = this.packageName;
-                this.jhipsterConfig.serverPort = this.serverPort;
-                this.jhipsterConfig.cacheProvider = this.cacheProvider;
-                this.jhipsterConfig.enableHibernateCache = this.enableHibernateCache;
-                this.jhipsterConfig.databaseType = this.databaseType;
-                this.jhipsterConfig.devDatabaseType = this.devDatabaseType;
-                this.jhipsterConfig.prodDatabaseType = this.prodDatabaseType;
-                this.jhipsterConfig.searchEngine = this.searchEngine;
-                this.jhipsterConfig.buildTool = this.buildTool;
-            },
         };
-        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get configuring() {
-        const phaseFromJHipster = super._configuring();
-        const phaseFromQuarkus = {
-            configureGlobalQuarkus() {
-                // Override JHipster cacheManagerIsAvailable property to only handle Quarkus caches
-                this.cacheManagerIsAvailable = ['caffeine', 'redis'].includes(this.cacheProvider);
-            },
-        };
-
-        return { ...phaseFromJHipster, ...phaseFromQuarkus };
+        return super._configuring();
     }
 
     get composing() {
@@ -90,7 +50,13 @@ module.exports = class extends ServerGenerator {
     }
 
     get preparing() {
-        return super._preparing();
+        return {
+            ...super._preparing(),
+            configureGlobalQuarkus() {
+                // Override JHipster cacheManagerIsAvailable property to only handle Quarkus caches
+                this.cacheManagerIsAvailable = ['caffeine', 'redis'].includes(this.cacheProvider);
+            },
+        };
     }
 
     get default() {
@@ -98,7 +64,7 @@ module.exports = class extends ServerGenerator {
     }
 
     get writing() {
-        return writeFiles(this.buildTool);
+        return writeFiles();
     }
 
     get postWriting() {

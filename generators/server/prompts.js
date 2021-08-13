@@ -4,17 +4,16 @@
 const chalk = require('chalk');
 
 const constants = require('generator-jhipster/generators/generator-constants');
-const { getBase64Secret } = require('generator-jhipster/generators/utils');
 
 module.exports = {
     askForServerSideOpts,
 };
 
-function askForServerSideOpts(meta) {
-    if (!meta && this.existingProject) return;
+async function askForServerSideOpts() {
+    if (this.existingProject) return;
 
-    const applicationType = this.applicationType;
-    const reactive = this.reactive;
+    const applicationType = this.jhipsterConfig.applicationType;
+    const reactive = this.jhipsterConfig.reactive;
     const defaultPort = applicationType === 'gateway' ? '8080' : '8081';
 
     const prompts = [
@@ -241,93 +240,39 @@ function askForServerSideOpts(meta) {
         },
     ];
 
-    if (meta) return prompts; // eslint-disable-line consistent-return
-
     // eslint-disable-next-line consistent-return
     return this.prompt(prompts).then(answers => {
-        this.serviceDiscoveryType = this.jhipsterConfig.serviceDiscoveryType = answers.serviceDiscoveryType;
+        this.jhipsterConfig.serviceDiscoveryType = answers.serviceDiscoveryType;
 
-        this.authenticationType = this.jhipsterConfig.authenticationType = answers.authenticationType;
+        this.jhipsterConfig.authenticationType = answers.authenticationType;
 
-        this.packageName = this.jhipsterConfig.packageName = answers.packageName;
-        this.serverPort = this.jhipsterConfig.serverPort = answers.serverPort || '8080';
-        this.cacheProvider = this.jhipsterConfig.cacheProvider = !answers.reactive ? answers.cacheProvider : 'no';
-        this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache = !!answers.enableHibernateCache;
-        this.databaseType = this.jhipsterConfig.databaseType = answers.databaseType;
-        this.devDatabaseType = this.jhipsterConfig.devDatabaseType = answers.devDatabaseType;
-        this.prodDatabaseType = this.jhipsterConfig.prodDatabaseType = answers.prodDatabaseType;
-        this.searchEngine = this.jhipsterConfig.searchEngine = answers.searchEngine;
-        this.buildTool = this.jhipsterConfig.buildTool = answers.buildTool;
+        this.jhipsterConfig.packageName = answers.packageName;
+        this.jhipsterConfig.serverPort = answers.serverPort || '8080';
+        this.jhipsterConfig.cacheProvider = !answers.reactive ? answers.cacheProvider : 'no';
+        this.jhipsterConfig.enableHibernateCache = !!answers.enableHibernateCache;
+        this.jhipsterConfig.databaseType = answers.databaseType;
+        this.jhipsterConfig.devDatabaseType = answers.devDatabaseType;
+        this.jhipsterConfig.prodDatabaseType = answers.prodDatabaseType;
+        this.jhipsterConfig.searchEngine = answers.searchEngine;
+        this.jhipsterConfig.buildTool = answers.buildTool;
 
-        if (this.databaseType === 'no') {
-            this.devDatabaseType = this.jhipsterConfig.devDatabaseType = 'no';
-            this.prodDatabaseType = this.jhipsterConfig.prodDatabaseType = 'no';
-            this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache = false;
-        } else if (['mongodb', 'neo4j', 'couchbase', 'cassandra'].includes(this.databaseType)) {
-            this.devDatabaseType = this.jhipsterConfig.devDatabaseType = this.databaseType;
-            this.prodDatabaseType = this.jhipsterConfig.prodDatabaseType = this.databaseType;
-            this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache = false;
+        if (this.jhipsterConfig.databaseType === 'no') {
+            this.jhipsterConfig.devDatabaseType = 'no';
+            this.jhipsterConfig.prodDatabaseType = 'no';
+            this.jhipsterConfig.enableHibernateCache = false;
+        } else if (['mongodb', 'neo4j', 'couchbase', 'cassandra'].includes(this.jhipsterConfig.databaseType)) {
+            this.jhipsterConfig.devDatabaseType = this.databaseType;
+            this.jhipsterConfig.prodDatabaseType = this.databaseType;
+            this.jhipsterConfig.enableHibernateCache = false;
         }
 
-        if (['redis'].includes(this.cacheProvider)) {
-            this.enableHibernateCache = this.jhipsterConfig.enableHibernateCache = false;
-        }
-
-        if (this.authenticationType === 'jwt') {
-            this.jwtSecretKey = getBase64Secret(null, 64);
+        if (['redis'].includes(this.jhipsterConfig.cacheProvider)) {
+            this.jhipsterConfig.enableHibernateCache = false;
         }
 
         // oauth expects users to be managed in IpP
-        if (this.authenticationType === 'oauth2') {
-            this.skipUserManagement = true;
+        if (answers.authenticationType === 'oauth2') {
+            this.jhipsterConfig.skipUserManagement = true;
         }
     });
-    /*
-    this.prompt(prompts).then(props => {
-        this.serviceDiscoveryType = props.serviceDiscoveryType;
-
-        this.authenticationType = props.authenticationType;
-
-        // JWT authentication is mandatory with Eureka, so the JHipster Registry
-        // can control the applications
-
-        // if (this.serviceDiscoveryType === 'eureka' && this.authenticationType !== 'oauth2') {
-        //    this.authenticationType = 'jwt';
-        // }
-
-
-        if (this.authenticationType === 'jwt') {
-            this.jwtSecretKey = getBase64Secret(null, 64);
-        }
-
-        // oauth expects users to be managed in IpP
-        if (this.authenticationType === 'oauth2') {
-            this.skipUserManagement = true;
-        }
-
-        this.packageName = this.jhipsterConfig.packageName = props.packageName;
-        this.serverPort = this.jhipsterConfig.serverPort = props.serverPort || '8080';
-        this.cacheProvider = !reactive ? props.cacheProvider : 'no';
-        this.enableHibernateCache = props.enableHibernateCache;
-        this.databaseType = props.databaseType;
-        this.devDatabaseType = props.devDatabaseType;
-        this.prodDatabaseType = props.prodDatabaseType;
-        this.searchEngine = props.searchEngine;
-        this.buildTool = props.buildTool;
-
-        if (this.databaseType === 'no') {
-            this.devDatabaseType = 'no';
-            this.prodDatabaseType = 'no';
-            this.enableHibernateCache = false;
-        } else if (['mongodb', 'neo4j', 'couchbase', 'cassandra'].includes(this.databaseType)) {
-            this.devDatabaseType = this.databaseType;
-            this.prodDatabaseType = this.databaseType;
-            this.enableHibernateCache = false;
-        }
-
-        if (['redis'].includes(this.cacheProvider)) {
-            this.enableHibernateCache = false;
-        }
-        done();
-    }); */
 }
