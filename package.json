@@ -51,7 +51,7 @@
     ],
     "dependencies": {
         "chalk": "4.1.0",
-        "generator-jhipster": "7.0.1",
+        "generator-jhipster": "7.1.0",
         "glob": "7.1.6",
         "lodash": "4.17.21",
         "semver": "7.3.4"
