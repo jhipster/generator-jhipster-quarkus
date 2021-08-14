@@ -519,7 +519,7 @@
     <profiles>
         <%_ if (!skipClient) { _%>
         <profile>
-            <id>webpack</id>
+            <id>webapp</id>
             <activation>
                 <file>
                     <missing>${basedir}/target/classes/META-INF/resources/app/main.bundle.js</missing>
@@ -548,7 +548,7 @@
                                 </goals>
                             </execution>
                             <execution>
-                                <id>webpack build dev</id>
+                                <id>webapp build dev</id>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
@@ -646,7 +646,7 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>webpack build test</id>
+                                <id>webapp build test</id>
                                 <phase>test</phase>
                                 <goals>
                                     <goal>npm</goal>
@@ -657,7 +657,7 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>webpack build prod</id>
+                                <id>webapp build prod</id>
                                 <phase>generate-resources</phase>
                                 <goals>
                                     <goal>npm</goal>
