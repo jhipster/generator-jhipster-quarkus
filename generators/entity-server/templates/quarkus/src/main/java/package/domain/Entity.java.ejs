@@ -193,6 +193,7 @@ public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql')
     public <%= primaryKey.type %> id;
 
 <%_ for (idx in fields) {
+      const field = fields[idx];
     if (typeof fields[idx].javadoc !== 'undefined') { _%>
 <%- formatAsFieldJavadoc(fields[idx].javadoc) %>
     <%_ }
@@ -213,9 +214,8 @@ public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql')
         if (fieldValidateRules.includes('unique')) {
             unique = true;
         } _%>
-    <%- include(fetchFromInstalledJHipster('entity-server/templates') + '/src/main/java/package/common/field_validators', {
-        idx: idx,
-        fields: fields
+    <%- include('/../src/main/java/package/common/field_validators', {
+        field,
     }) -%>
     <%_ } _%>
     <%_ if (!hasDto && typeof fields[idx].javadoc != 'undefined') { _%>
