@@ -2,10 +2,9 @@
 const chalk = require('chalk');
 const ClientGenerator = require('generator-jhipster/generators/client');
 const constants = require('generator-jhipster/generators/generator-constants');
-const writeAngularFiles = require('./files-angular').writeFiles;
-const writeReactFiles = require('./files-react').writeFiles;
 
 const { ANGULAR, REACT } = constants.SUPPORTED_CLIENT_FRAMEWORKS;
+const { ANGULAR_DIR, REACT_DIR } = constants;
 
 module.exports = class extends ClientGenerator {
     constructor(args, opts) {
@@ -47,23 +46,30 @@ module.exports = class extends ClientGenerator {
     }
 
     get writing() {
-        const phaseFromJHipster = super._writing();
-        const phaseFromQuarkus = {
-            writeQuarkusFiles() {
-                if (this.skipClient) return;
-                if (this.clientFramework === ANGULAR) {
-                    return writeAngularFiles.call(this);
-                }
-                if (this.clientFramework === REACT) {
-                    return writeReactFiles.call(this);
-                }
-            },
-        };
-        return { ...phaseFromJHipster, ...phaseFromQuarkus };
+        return super._writing();
     }
 
     get postWriting() {
-        return super._postWriting();
+        return {
+            ...super._postWriting(),
+            customize() {
+                if (this.skipClient) return;
+                if (this.clientFramework === ANGULAR) {
+                    this.replaceContent(
+                        `${ANGULAR_DIR}admin/configuration/configuration.component.html`,
+                        '<h3 id="spring-configuration">Spring configuration</h3>',
+                        '<h3 id="Quarkus-configuration">Quarkus configuration</h3>'
+                    );
+                }
+                if (this.clientFramework === REACT) {
+                    this.replaceContent(
+                        `${REACT_DIR}modules/administration/configuration/configuration.tsx`,
+                        '<label>Spring configuration</label>',
+                        '<label>Quarkus configuration</label>'
+                    );
+                }
+            },
+        };
     }
 
     get install() {
