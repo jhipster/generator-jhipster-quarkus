@@ -640,6 +640,15 @@ const serverFiles = {
 
 const serverFilesFromJHipster = {
     docker: jhipsterFiles.docker,
+    npmWrapper: [
+        {
+            condition: generator => generator.buildTool === 'maven',
+            templates: [
+                { file: 'npmw', method: 'copy', noEjs: true },
+                { file: 'npmw.cmd', method: 'copy', noEjs: true },
+            ],
+        },
+    ],
     serverResource: [
         {
             condition: generator => generator.databaseType === 'sql',
