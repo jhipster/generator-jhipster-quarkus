@@ -7,61 +7,33 @@ const { ANGULAR, REACT } = constants.SUPPORTED_CLIENT_FRAMEWORKS;
 const { ANGULAR_DIR, REACT_DIR } = constants;
 
 module.exports = class extends ClientGenerator {
-    constructor(args, opts) {
-        super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
+    constructor(args, options, features) {
+        super(args, options, features);
 
-        const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
+        if (this.options.help) return;
 
-        if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
+        if (!this.options.jhipsterContext) {
+            throw new Error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
-    }
 
-    get initializing() {
-        return super._initializing();
-    }
-
-    get prompting() {
-        return super._prompting();
-    }
-
-    get configuring() {
-        return super._configuring();
-    }
-
-    get composing() {
-        return super._composing();
-    }
-
-    get loading() {
-        return super._loading();
-    }
-
-    get preparing() {
-        return super._preparing();
-    }
-
-    get default() {
-        return super._default();
-    }
-
-    get writing() {
-        return super._writing();
+        // Side-by-side blueprint doesn't override the main generator.
+        // We are just customizing some files and providing alternative files.
+        this.sbsBlueprint = true;
     }
 
     get postWriting() {
         return {
             ...super._postWriting(),
             customize() {
-                if (this.skipClient) return;
-                if (this.clientFramework === ANGULAR) {
+                if (this.jhipsterConfig.skipClient) return;
+                if (this.jhipsterConfig.clientFramework === ANGULAR) {
                     this.replaceContent(
                         `${ANGULAR_DIR}admin/configuration/configuration.component.html`,
                         '<h3 id="spring-configuration">Spring configuration</h3>',
                         '<h3 id="Quarkus-configuration">Quarkus configuration</h3>'
                     );
                 }
-                if (this.clientFramework === REACT) {
+                if (this.jhipsterConfig.clientFramework === REACT) {
                     this.replaceContent(
                         `${REACT_DIR}modules/administration/configuration/configuration.tsx`,
                         '<label>Spring configuration</label>',
@@ -70,13 +42,5 @@ module.exports = class extends ClientGenerator {
                 }
             },
         };
-    }
-
-    get install() {
-        return super._install();
-    }
-
-    get end() {
-        return super._end();
     }
 };
