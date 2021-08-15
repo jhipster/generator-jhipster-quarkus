@@ -5,13 +5,13 @@ const constants = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
 
 module.exports = class extends AppGenerator {
-    constructor(args, opts) {
-        super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
+    constructor(args, options, features) {
+        super(args, options, features);
 
-        const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
+        if (this.options.help) return;
 
-        if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
+        if (!this.options.jhipsterContext) {
+            throw new Error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
     }
 

@@ -11,7 +11,7 @@ module.exports = class extends EntityServerGenerator {
         if (this.options.help) return;
 
         if (!this.jhipsterContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
+            throw new Error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.entity = this.options.context;

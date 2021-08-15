@@ -12,7 +12,7 @@ module.exports = class extends CommonGenerator {
         if (help) return;
 
         if (!jhipsterContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
+            throw new Error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.sbsBlueprint = true;
