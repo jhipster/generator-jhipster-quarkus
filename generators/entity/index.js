@@ -44,7 +44,7 @@ module.exports = class extends EntityGenerator {
             },
             askForTableName: phaseFromJHipster.askForTableName,
             askForDataAccess: prompts.askForDataAccess,
-            askForService: prompts.askForService,
+            askForService: phaseFromJHipster.askForService,
             askForDTO: phaseFromJHipster.askForDTO,
             // askForFiltering: phaseFromJHipster.askForFiltering,
             // askForReadOnly: phaseFromJHipster.askForReadOnly,
