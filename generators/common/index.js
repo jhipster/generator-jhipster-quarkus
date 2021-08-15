@@ -4,62 +4,22 @@ const CommonGenerator = require('generator-jhipster/generators/common');
 const jhipsterQuarkusVersion = require('../../package.json').version;
 
 module.exports = class extends CommonGenerator {
-    constructor(args, opts) {
-        super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
+    constructor(args, options, features) {
+        super(args, options, features);
 
-        const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
+        const { help, jhipsterContext } = this.options;
 
-        if (!jhContext) {
+        if (help) return;
+
+        if (!jhipsterContext) {
             this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
+
+        this.sbsBlueprint = true;
+
+        // Export into original generator
+        jhipsterContext.jhipsterQuarkusVersion = jhipsterQuarkusVersion;
     }
 
-    get initializing() {
-        return super._initializing();
-    }
-
-    get prompting() {
-        return super._prompting();
-    }
-
-    get configuring() {
-        return super._configuring();
-    }
-
-    get composing() {
-        return super._composing();
-    }
-
-    get loading() {
-        return super._loading();
-    }
-
-    get preparing() {
-        return super._preparing();
-    }
-
-    get default() {
-        return {
-            ...super._default(),
-            defineJHipsterQuarkusVersion() {
-                this.jhipsterQuarkusVersion = jhipsterQuarkusVersion;
-            },
-        };
-    }
-
-    get writing() {
-        return super._writing();
-    }
-
-    get postWriting() {
-        return super._postWriting();
-    }
-
-    get install() {
-        return super._install();
-    }
-
-    get end() {
-        return super._end();
-    }
+    notEmpty() {}
 };
