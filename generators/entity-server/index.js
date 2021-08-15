@@ -2,10 +2,11 @@
 const chalk = require('chalk');
 const EntityServerGenerator = require('generator-jhipster/generators/entity-server');
 const writeFiles = require('./files').writeFiles;
+const { DEFAULT_DATA_ACCESS } = require('../generator-quarkus-constants');
 
 module.exports = class extends EntityServerGenerator {
-    constructor(args, opts) {
-        super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
+    constructor(args, options, features) {
+        super(args, options, features);
 
         if (this.options.help) return;
 
@@ -15,6 +16,10 @@ module.exports = class extends EntityServerGenerator {
 
         this.entity = this.options.context;
         this.entity.packageFolder = this.entity.packageFolder || this.entity.packageName.replace(/\./g, '/');
+
+        // Drop when jhipster provides by default.
+        this.entityStorage = this.getEntityConfig(this.entity.name, true);
+        this.entityConfig = this.entityStorage.createProxy();
     }
 
     get initializing() {
@@ -26,7 +31,15 @@ module.exports = class extends EntityServerGenerator {
     }
 
     get configuring() {
-        return super._configuring();
+        const phaseFromJHipster = super._configuring();
+        return {
+            configureEntityQuarkus() {
+                this.entityStorage.defaults({
+                    dataAccess: DEFAULT_DATA_ACCESS,
+                });
+            },
+            ...phaseFromJHipster,
+        };
     }
 
     get composing() {
@@ -34,7 +47,12 @@ module.exports = class extends EntityServerGenerator {
     }
 
     get loading() {
-        return super._loading();
+        return {
+            ...super._loading(),
+            loadQuarkusConfig() {
+                this.entity.dataAccess = this.entityConfig.dataAccess;
+            },
+        };
     }
 
     get preparing() {

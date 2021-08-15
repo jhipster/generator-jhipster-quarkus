@@ -2,27 +2,22 @@
 const chalk = require('chalk');
 const EntityGenerator = require('generator-jhipster/generators/entity');
 const prompts = require('./prompts');
-const constants = require('../generator-quarkus-constants');
 
 module.exports = class extends EntityGenerator {
     constructor(args, opts) {
         super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
 
-        const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
+        if (this.options.help) return;
 
-        if (!jhContext) {
+        if (!this.options.jhipsterContext) {
             this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
         this.entity = this.entity || this.context;
-        // this.entity.prodDatabaseType = this.entity.prodDatabaseType || this.jhipsterConfig.prodDatabaseType;
     }
 
     get initializing() {
-        const phaseFromJHipster = super._initializing();
-        return {
-            ...phaseFromJHipster,
-        };
+        return super._initializing();
     }
 
     get prompting() {
@@ -58,15 +53,7 @@ module.exports = class extends EntityGenerator {
     }
 
     get configuring() {
-        const phaseFromJHipster = super._configuring();
-        return {
-            configureEntityQuarkus() {
-                this.entityStorage.defaults({
-                    dataAccess: constants.DEFAULT_DATA_ACCESS,
-                });
-            },
-            ...phaseFromJHipster,
-        };
+        return super._configuring();
     }
 
     get composing() {
@@ -74,12 +61,7 @@ module.exports = class extends EntityGenerator {
     }
 
     get loading() {
-        return {
-            ...super._loading(),
-            loadQuarkusConfig() {
-                this.entity.dataAccess = this.entityConfig.dataAccess;
-            },
-        };
+        return super._loading();
     }
 
     get preparing() {
