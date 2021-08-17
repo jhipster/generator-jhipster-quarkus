@@ -84,7 +84,7 @@ module.exports = class extends EntityServerGenerator {
                 entity.primaryKeyType = entity.primaryKey.type;
                 // eslint-disable-next-line no-restricted-syntax
                 for (const relationship of entity.relationships) {
-                    if (relationship.useJPADerivedIdentifier) {
+                    if (relationship.id) {
                         entity.mapsIdAssoc = relationship;
                         entity.primaryKeyType =
                             relationship.otherEntityName === 'user' && entity.authenticationType === 'oauth2'
