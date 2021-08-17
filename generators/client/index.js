@@ -47,6 +47,11 @@ module.exports = class extends ClientGenerator {
                         '<label>Spring configuration</label>',
                         '<label>Quarkus configuration</label>'
                     );
+
+                    // Workaround jhipster 7.1.0 bug
+                    this.packageJson.merge({
+                        'workbox-webpack-plugin': '6.2.4',
+                    });
                 }
             },
         };
