@@ -37,7 +37,7 @@ task webapp_test(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn:
 }
 
 task webapp(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
-    args = ["run", "webapp:prod"]
+    args = ["run", "webapp:build:prod"]
     environment = [APP_VERSION: project.version]
 }
 <%_ } _%>
