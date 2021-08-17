@@ -25,7 +25,7 @@ describe('Subgenerator client of quarkus JHipster blueprint', () => {
         before(buildClientGeneratorContext({ clientFramework: 'react' }));
 
         it('React health check files contain expected content', () => {
-            assert.fileContent(`${ANGULAR_DIR}modules/administration/health/health.tsx`, '<td>{data[configPropKey].name}</td>');
+            assert.fileContent(`${ANGULAR_DIR}modules/administration/health/health.tsx`, 'health?.checks');
         });
 
         it('React configuration files contain expected content', () => {
