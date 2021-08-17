@@ -55,6 +55,7 @@ module.exports = class extends ServerGenerator {
             configureGlobalQuarkus() {
                 // Override JHipster cacheManagerIsAvailable property to only handle Quarkus caches
                 this.cacheManagerIsAvailable = ['caffeine', 'redis'].includes(this.cacheProvider);
+                this.GRADLE_VERSION = '6.5';
             },
         };
     }
