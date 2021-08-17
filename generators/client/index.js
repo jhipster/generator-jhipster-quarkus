@@ -41,9 +41,7 @@ module.exports = class extends ClientGenerator {
                         '<label>Quarkus configuration</label>'
                     );
 
-                    this.deleteDestination(
-                        `${REACT_DIR}modules/administration/health/health-modal.tsx`,
-                    );
+                    this.deleteDestination(`${REACT_DIR}modules/administration/health/health-modal.tsx`);
 
                     // Workaround jhipster 7.1.0 bug
                     this.packageJson.merge({

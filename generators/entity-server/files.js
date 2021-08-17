@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 const constants = require('generator-jhipster/generators/generator-constants');
-const jhipsterUtils = require('generator-jhipster/generators/utils');
 
 const NeedleApi = require('../needle-api');
 
