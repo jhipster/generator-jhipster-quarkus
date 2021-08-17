@@ -266,36 +266,6 @@ function writeFiles() {
                 );
             }
         },
-
-        async writeEnumFiles() {
-            // TODO replace this with proper function.
-            // const fetchFromInstalledKHipster = subpath => path.join(__dirname, subpath);
-            for (const field of this.fields) {
-                if (!field.fieldIsEnum) {
-                    return;
-                }
-
-                const fieldType = field.fieldType;
-                const enumInfo = {
-                    ...jhipsterUtils.getEnumInfo(field, this.clientRootFolder),
-                    angularAppName: this.angularAppName,
-                    packageName: this.packageName,
-                };
-                // eslint-disable-next-line no-console
-                if (!this.skipServer) {
-                    const pathToTemplateFile = this.fetchFromInstalledJHipster(
-                        `entity-server/templates/${SERVER_MAIN_SRC_DIR}package/domain/enumeration/Enum.java.ejs`
-                    );
-                    await this.template(
-                        pathToTemplateFile,
-                        `${SERVER_MAIN_SRC_DIR}${this.packageFolder}/domain/enumeration/${fieldType}.java`,
-                        this,
-                        {},
-                        enumInfo
-                    );
-                }
-            }
-        },
     };
 }
 

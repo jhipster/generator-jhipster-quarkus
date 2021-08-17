@@ -109,11 +109,13 @@ module.exports = class extends EntityServerGenerator {
     }
 
     get writing() {
+        const { writeEnumFiles } = super._writing();
         return {
             removeIds() {
                 this.fields = this.fields.filter(field => !field.id);
             },
             ...writeFiles(),
+            writeEnumFiles,
         };
     }
 
