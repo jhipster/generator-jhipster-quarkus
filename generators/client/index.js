@@ -48,6 +48,13 @@ module.exports = class extends ClientGenerator {
                         '<label>Quarkus configuration</label>'
                     );
 
+                    this.replaceContent(`${REACT_DIR}modules/administration/health/health.tsx`, /components/g, 'checks', true);
+                    this.replaceContent(
+                        `${REACT_DIR}modules/administration/health/health.tsx`,
+                        '{configPropKey}',
+                        '{data[configPropKey].name}'
+                    );
+
                     // Workaround jhipster 7.1.0 bug
                     this.packageJson.merge({
                         devDependencies: {
