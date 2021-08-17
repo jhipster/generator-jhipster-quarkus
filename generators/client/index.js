@@ -32,14 +32,7 @@ module.exports = class extends ClientGenerator {
                         '<h3 id="spring-configuration">Spring configuration</h3>',
                         '<h3 id="Quarkus-configuration">Quarkus configuration</h3>'
                     );
-                    for (const healthFile of [
-                        `${ANGULAR_DIR}admin/health/health.component.html`,
-                        `${ANGULAR_DIR}admin/health/health.model.ts`,
-                        `${ANGULAR_DIR}admin/health/health.service.ts`,
-                        `${ANGULAR_DIR}admin/health/health.component.spec.ts`,
-                    ]) {
-                        this.replaceContent(healthFile, /components/g, 'checks', true);
-                    }
+                    this.deleteDestination(`${ANGULAR_DIR}admin/health/modal/`);
                 }
                 if (this.jhipsterConfig.clientFramework === REACT) {
                     this.replaceContent(
