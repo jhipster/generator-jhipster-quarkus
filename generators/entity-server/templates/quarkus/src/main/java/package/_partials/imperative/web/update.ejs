@@ -25,10 +25,11 @@
      * or with status {@code 500 (Internal Server Error)} if the <%= entityOrDtoInstance %> couldn't be updated.
      */
     @PUT
+    @Path("/{id}")
     <%_ if (databaseType === 'sql' && !viaService) { _%>
     @Transactional
     <%_ } _%>
-    public Response update<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= entityOrDtoClass %> <%= entityOrDtoInstance %>) {
+    public Response update<%= entityClass %>(<% if (validation) { %>@Valid <% } %><%= entityOrDtoClass %> <%= entityOrDtoInstance %>, @PathParam("id") <%= primaryKeyType %> id) {
         log.debug("REST request to update <%= entityClass %> : {}", <%= entityOrDtoInstance %>);
         if (<%= entityOrDtoInstance %>.id == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
