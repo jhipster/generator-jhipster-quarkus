@@ -6,6 +6,7 @@ const packagejs = require('../../package.json');
 
 module.exports = class extends AppGenerator {
     constructor(args, options, features) {
+        delete options.applicationWithEntities;
         super(args, options, features);
 
         if (this.options.help) return;
