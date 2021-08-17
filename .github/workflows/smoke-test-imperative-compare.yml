@@ -1,0 +1,125 @@
+name: Imperative Smoke Tests Compare
+concurrency:
+  # Group PRs by head_ref, push to main branch by commit id, and others branch by ref.
+  group: ${{ github.workflow }}-${{ github.head_ref || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
+  cancel-in-progress: true
+on: [push, pull_request]
+env:
+  JHI_SAMPLES: ${{ github.workspace }}/generator-jhipster-quarkus/test-integration/samples/
+jobs:
+  applications:
+    name: ${{ matrix.app }}
+    runs-on: ${{ matrix.os }}
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [14.16.0]
+        os: [ubuntu-latest]
+        app:
+          - imperative-ngx-jwt-maven-mysql-caffeine
+          - imperative-ngx-jwt-maven-mongodb-caffeine
+          - imperative-ngx-jwt-gradle-mongodb-redis
+          - imperative-ngx-jwt-maven-psql-nocache
+          - imperative-react-jwt-gradle-mysql-caffeine
+          - imperative-ngx-jwt-maven-mysql-redis
+          - imperative-sql-jwt-maven-no-db
+          - imperative-ngx-oauth2-maven-mysql-caffeine
+        include:
+          - app: imperative-ngx-jwt-maven-mysql-caffeine
+          - app: imperative-ngx-jwt-maven-mongodb-caffeine
+          - app: imperative-ngx-jwt-maven-psql-nocache
+          - app: imperative-react-jwt-gradle-mysql-caffeine
+          - app: imperative-ngx-jwt-maven-mysql-redis
+          - app: imperative-sql-jwt-maven-no-db
+          - app: imperative-ngx-oauth2-maven-mysql-caffeine
+        exclude:
+          - app: imperative-ngx-jwt-gradle-mongodb-redis
+    steps:
+      - name: 'SETUP: Checkout quarkus blueprint'
+        uses: actions/checkout@v2
+        with:
+          path: generator-jhipster-quarkus
+          fetch-depth: 5
+      - name: git history
+        run: git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
+        working-directory: ./generator-jhipster-quarkus
+      - name: 'SETUP: Checkout generator-jhipster'
+        uses: actions/checkout@v2
+        with:
+          repository: 'mshima/generator-jhipster'
+          path: generator-jhipster
+          ref: feature-blueprint-action
+      - name: 'SETUP: environment'
+        id: setup
+        uses: ./generator-jhipster/.github/actions/setup
+        with:
+          jdl-sample: ${{ github.workspace }}/generator-jhipster-quarkus/test-integration/samples/${{ matrix.app }}.jdl
+          generator-jhipster-branch: local
+          jhipster-bom-branch: ignore
+          package-with-executable: generator-jhipster-quarkus
+          executable: jhipster-quarkus
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.setup.outputs.node-version }}
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: ${{ steps.setup.outputs.java-version }}
+      - name: 'Generate: Project'
+        uses: ./generator-jhipster/.github/actions/generate
+      #----------------------------------------------------------------------
+      # Generate project
+      #----------------------------------------------------------------------
+      #----------------------------------------------------------------------
+      # Detect changes against base commit
+      #----------------------------------------------------------------------
+      - name: 'MERGE: generate base'
+        continue-on-error: true
+        id: base-app
+        if: github.event.pull_request
+        uses: ./generator-jhipster/.github/actions/compare-base
+      - name: 'MERGE: compare changes'
+        continue-on-error: true
+        id: compare
+        if: steps.base-app.outcome == 'success'
+        uses: ./generator-jhipster/.github/actions/compare
+      - name: 'Backend diff with updated prettier'
+        if: steps.base-app.outcome == 'success'
+        run: |
+          git reset package.json .prettierrc
+          git checkout package.json .prettierrc
+          cat .prettierrc
+          npm install --legacy-peer-deps
+          npx prettier . --write || true
+          git add .
+          git -c color.ui=always diff -R --cached -- 'src/main/java/**' 'src/test/java/**' 'src/main/resources/**' 'src/test/resources/**' 'pom.xml' 'gradle/**' '*.gradle' 'gradle.properties'
+        working-directory: ${{ github.workspace }}/base/app
+      #----------------------------------------------------------------------
+      # Run tests
+      #----------------------------------------------------------------------
+      - name: 'Run JHipster Application server tests'
+        run: npm run ci:backend:test
+        working-directory: ${{ steps.setup.outputs.application-path }}
+      - name: 'Run JHipster Application client tests'
+        run: npm run ci:frontend:test
+        working-directory: ${{ steps.setup.outputs.application-path }}
+      - name: 'Packaging'
+        run: npm run ci:e2e:package
+        working-directory: ${{ steps.setup.outputs.application-path }}
+      - name: 'E2E: Start docker-compose containers for e2e tests'
+        if: steps.compare.outputs.equals != 'true'
+        run: npm run ci:e2e:prepare
+        working-directory: ${{ steps.setup.outputs.application-path }}
+      - name: 'E2E: Run'
+        if: steps.compare.outputs.equals != 'true'
+        id: e2e
+        run: npm run ci:e2e:run --if-present
+        working-directory: ${{ steps.setup.outputs.application-path }}
+      - name: 'E2E: Store failure screenshots'
+        uses: actions/upload-artifact@v2
+        if: always() && steps.e2e.outcome == 'failure'
+        with:
+          name: screenshots-${{ matrix.app }}
+          path: ${{ steps.setup.outputs.application-path }}/*/cypress/screenshots
