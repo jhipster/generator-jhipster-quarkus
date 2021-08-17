@@ -50,7 +50,9 @@ module.exports = class extends ClientGenerator {
 
                     // Workaround jhipster 7.1.0 bug
                     this.packageJson.merge({
-                        'workbox-webpack-plugin': '6.2.4',
+                        devDependencies: {
+                            'workbox-webpack-plugin': '6.2.4',
+                        },
                     });
                 }
             },
