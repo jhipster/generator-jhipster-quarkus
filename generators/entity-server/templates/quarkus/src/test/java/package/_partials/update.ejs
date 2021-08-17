@@ -71,7 +71,7 @@
             .accept(APPLICATION_JSON)
             .body(updated<%= entityOrDtoClass %>)
             .when()
-            .put("/api/<%= entityApiUrl %>")
+            .put("/api/<%= entityApiUrl %>/" + <%= entityOrDtoInstance %>.id)
             .then()
             .statusCode(OK.getStatusCode());
 
@@ -117,7 +117,7 @@
             .accept(APPLICATION_JSON)
             .body(<%= entityOrDtoInstance %>)
             .when()
-            .put("/api/<%= entityApiUrl %>")
+            .put("/api/<%= entityApiUrl %>/" + Long.MAX_VALUE)
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
 
