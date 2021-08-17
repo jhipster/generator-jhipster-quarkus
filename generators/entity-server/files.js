@@ -283,9 +283,9 @@ function writeFiles() {
                 };
                 // eslint-disable-next-line no-console
                 if (!this.skipServer) {
-                    const pathToTemplateFile = `${this.fetchFromInstalledJHipster(
-                        'entity-server/templates'
-                    )}/${SERVER_MAIN_SRC_DIR}package/domain/enumeration/Enum.java.ejs`;
+                    const pathToTemplateFile = this.fetchFromInstalledJHipster(
+                        `entity-server/templates/${SERVER_MAIN_SRC_DIR}package/domain/enumeration/Enum.java.ejs`
+                    );
                     await this.template(
                         pathToTemplateFile,
                         `${SERVER_MAIN_SRC_DIR}${this.packageFolder}/domain/enumeration/${fieldType}.java`,
