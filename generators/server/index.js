@@ -69,7 +69,16 @@ module.exports = class extends ServerGenerator {
     }
 
     get postWriting() {
-        return super._postWriting();
+        return {
+            ...super._postWriting(),
+            updatePackageJsonScripts() {
+                this.packageJson.merge({
+                    scripts: {
+                        'ci:backend:test': 'npm run backend:info && npm run backend:doc:test && npm run backend:unit:test',
+                    },
+                });
+            },
+        };
     }
 
     get install() {
