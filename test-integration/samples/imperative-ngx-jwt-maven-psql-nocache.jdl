@@ -9,6 +9,7 @@ application {
     prodDatabaseType postgresql
     enableHibernateCache false
     cacheProvider no
+    testFrameworks [cypress]
   }
 
   entities *

@@ -9,6 +9,7 @@ application {
       devDatabaseType no
       prodDatabaseType no
       skipUserManagement true
+      testFrameworks [cypress]
     }
 
 }

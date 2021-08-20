@@ -9,6 +9,7 @@ application {
     prodDatabaseType mysql
     enableHibernateCache true
     cacheProvider caffeine
+    testFrameworks [cypress]
   }
 
   entities *
