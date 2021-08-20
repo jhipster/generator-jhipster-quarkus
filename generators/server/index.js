@@ -7,19 +7,14 @@ const writeFiles = require('./files').writeFiles;
 const { QUARKUS_VERSION, CACHE_MAXIMUM_SIZE, CACHE_EXPIRE_AFTER_WRITE } = require('../generator-quarkus-constants');
 
 module.exports = class extends ServerGenerator {
-    constructor(args, opts) {
-        super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
+    constructor(args, options, features) {
+        super(args, options, features);
 
-        const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
+        if (this.options.help) return;
 
-        if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+        if (!this.options.jhipsterContext) {
+            throw new Error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
-
-        this.configOptions = jhContext.configOptions || {};
-
-        // This sets up options for this sub generator and is being reused from JHipster
-        jhContext.setupServerOptions(this, jhContext);
     }
 
     get initializing() {
@@ -35,37 +30,58 @@ module.exports = class extends ServerGenerator {
     }
 
     get prompting() {
-        const phaseFromJHipster = super._prompting();
-        const phaseFromQuarkus = {
+        return {
+            ...super._prompting(),
             askForServerSideOpts: prompts.askForServerSideOpts,
             askForOptionalItems: undefined,
         };
-        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get configuring() {
-        const phaseFromJHipster = super._configuring();
-        const phaseFromQuarkus = {
+        return super._configuring();
+    }
+
+    get composing() {
+        return super._composing();
+    }
+
+    get loading() {
+        return super._loading();
+    }
+
+    get preparing() {
+        return {
+            ...super._preparing(),
             configureGlobalQuarkus() {
                 // Override JHipster cacheManagerIsAvailable property to only handle Quarkus caches
                 this.cacheManagerIsAvailable = ['caffeine', 'redis'].includes(this.cacheProvider);
+                this.GRADLE_VERSION = '6.5';
             },
         };
-
-        return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get default() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._default();
     }
 
     get writing() {
-        return writeFiles(this.buildTool);
+        return writeFiles();
+    }
+
+    get postWriting() {
+        return {
+            ...super._postWriting(),
+            updatePackageJsonScripts() {
+                this.packageJson.merge({
+                    scripts: {
+                        'ci:backend:test': 'npm run backend:info && npm run backend:doc:test && npm run backend:unit:test',
+                    },
+                });
+            },
+        };
     }
 
     get install() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._install();
     }
 

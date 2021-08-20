@@ -4,24 +4,21 @@
 const chalk = require('chalk');
 
 const constants = require('generator-jhipster/generators/generator-constants');
-const { getBase64Secret } = require('generator-jhipster/generators/utils');
 
 module.exports = {
     askForServerSideOpts,
 };
 
-function askForServerSideOpts(meta) {
-    if (!meta && this.existingProject) return;
+async function askForServerSideOpts() {
+    if (this.existingProject) return;
 
-    const applicationType = this.applicationType;
-    const reactive = this.reactive;
-    let defaultPort = applicationType === 'gateway' ? '8080' : '8081';
-    if (applicationType === 'uaa') {
-        defaultPort = '9999';
-    }
+    const applicationType = this.jhipsterConfig.applicationType;
+    const reactive = this.jhipsterConfig.reactive;
+    const defaultPort = applicationType === 'gateway' ? '8080' : '8081';
+
     const prompts = [
         {
-            when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
+            when: response => applicationType === 'gateway' || applicationType === 'microservice',
             type: 'input',
             name: 'serverPort',
             validate: input => (/^([0-9]*)$/.test(input) ? true : 'This is not a valid port number.'),
@@ -40,7 +37,7 @@ function askForServerSideOpts(meta) {
             default: 'com.mycompany.myapp',
             store: true,
         },
-        //     when: response => applicationType === 'gateway' || applicationType === 'microservice' || applicationType === 'uaa',
+        //     when: response => applicationType === 'gateway' || applicationType === 'microservice',
         //     type: 'list',
         //     name: 'serviceDiscoveryType',
         //     message: 'Which service discovery server do you want to use?',
@@ -101,14 +98,6 @@ function askForServerSideOpts(meta) {
                     value: 'oauth2',
                     name: 'OAuth 2.0 / OIDC Authentication (stateful, works with Keycloak and Okta)',
                 });
-                if (!reactive) {
-                    if (['gateway', 'microservice'].includes(applicationType)) {
-                        opts.push({
-                            value: 'uaa',
-                            name: 'Authentication with JHipster UAA server (the server must be generated separately)',
-                        });
-                    }
-                }
                 return opts;
             },
             default: 0,
@@ -150,12 +139,10 @@ function askForServerSideOpts(meta) {
                     name: '[BETA] Neo4j'
                 });
                 */
-                if (applicationType !== 'uaa') {
-                    opts.push({
-                        value: 'no',
-                        name: 'No database',
-                    });
-                }
+                opts.push({
+                    value: 'no',
+                    name: 'No database',
+                });
                 return opts;
             },
             default: 0,
@@ -253,62 +240,39 @@ function askForServerSideOpts(meta) {
         },
     ];
 
-    if (meta) return prompts; // eslint-disable-line consistent-return
+    // eslint-disable-next-line consistent-return
+    return this.prompt(prompts).then(answers => {
+        this.jhipsterConfig.serviceDiscoveryType = answers.serviceDiscoveryType;
 
-    const done = this.async();
+        this.jhipsterConfig.authenticationType = answers.authenticationType;
 
-    this.prompt(prompts).then(props => {
-        this.serviceDiscoveryType = props.serviceDiscoveryType;
+        this.jhipsterConfig.packageName = answers.packageName;
+        this.jhipsterConfig.serverPort = answers.serverPort || '8080';
+        this.jhipsterConfig.cacheProvider = !answers.reactive ? answers.cacheProvider : 'no';
+        this.jhipsterConfig.enableHibernateCache = !!answers.enableHibernateCache;
+        this.jhipsterConfig.databaseType = answers.databaseType;
+        this.jhipsterConfig.devDatabaseType = answers.devDatabaseType;
+        this.jhipsterConfig.prodDatabaseType = answers.prodDatabaseType;
+        this.jhipsterConfig.searchEngine = answers.searchEngine;
+        this.jhipsterConfig.buildTool = answers.buildTool;
 
-        this.authenticationType = props.authenticationType;
-
-        // JWT authentication is mandatory with Eureka, so the JHipster Registry
-        // can control the applications
-        /*
-        if (this.serviceDiscoveryType === 'eureka' && this.authenticationType !== 'uaa' && this.authenticationType !== 'oauth2') {
-            this.authenticationType = 'jwt';
+        if (this.jhipsterConfig.databaseType === 'no') {
+            this.jhipsterConfig.devDatabaseType = 'no';
+            this.jhipsterConfig.prodDatabaseType = 'no';
+            this.jhipsterConfig.enableHibernateCache = false;
+        } else if (['mongodb', 'neo4j', 'couchbase', 'cassandra'].includes(this.jhipsterConfig.databaseType)) {
+            this.jhipsterConfig.devDatabaseType = this.databaseType;
+            this.jhipsterConfig.prodDatabaseType = this.databaseType;
+            this.jhipsterConfig.enableHibernateCache = false;
         }
-        */
 
-        if (this.authenticationType === 'jwt') {
-            this.jwtSecretKey = getBase64Secret(null, 64);
+        if (['redis'].includes(this.jhipsterConfig.cacheProvider)) {
+            this.jhipsterConfig.enableHibernateCache = false;
         }
 
         // oauth expects users to be managed in IpP
-        if (this.authenticationType === 'oauth2') {
-            this.skipUserManagement = true;
+        if (answers.authenticationType === 'oauth2') {
+            this.jhipsterConfig.skipUserManagement = true;
         }
-
-        this.packageName = props.packageName;
-        this.serverPort = props.serverPort;
-        if (this.serverPort === undefined) {
-            this.serverPort = '8080';
-        }
-        this.cacheProvider = !reactive ? props.cacheProvider : 'no';
-        this.enableHibernateCache = props.enableHibernateCache;
-        this.databaseType = props.databaseType;
-        this.devDatabaseType = props.devDatabaseType;
-        this.prodDatabaseType = props.prodDatabaseType;
-        this.searchEngine = props.searchEngine;
-        this.buildTool = props.buildTool;
-        this.uaaBaseName = this.getUaaAppName(props.uaaBaseName).baseName;
-
-        if (this.databaseType === 'no') {
-            this.devDatabaseType = 'no';
-            this.prodDatabaseType = 'no';
-            this.enableHibernateCache = false;
-            if (this.authenticationType !== 'uaa') {
-                this.skipUserManagement = true;
-            }
-        } else if (['mongodb', 'neo4j', 'couchbase', 'cassandra'].includes(this.databaseType)) {
-            this.devDatabaseType = this.databaseType;
-            this.prodDatabaseType = this.databaseType;
-            this.enableHibernateCache = false;
-        }
-
-        if (['redis'].includes(this.cacheProvider)) {
-            this.enableHibernateCache = false;
-        }
-        done();
     });
 }

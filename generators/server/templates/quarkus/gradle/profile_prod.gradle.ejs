@@ -32,12 +32,12 @@ if (project.hasProperty("swagger")) {
 }
 
 <%_ if (!skipClient) { _%>
-task webpack_test(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
-    args = ["run", "webpack:test"]
+task webapp_test(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
+    args = ["run", "webapp:test"]
 }
 
-task webpack(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
-    args = ["run", "webpack:prod"]
+task webapp(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
+    args = ["run", "webapp:build:prod"]
     environment = [APP_VERSION: project.version]
 }
 <%_ } _%>
@@ -48,5 +48,5 @@ processResources {
 
 <%_ if (!skipClient) { _%>
 
-processResources.dependsOn webpack
+processResources.dependsOn webapp
 <%_ } _%>

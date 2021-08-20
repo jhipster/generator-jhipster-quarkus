@@ -5,7 +5,7 @@
     "keywords": [
         "yeoman-generator",
         "jhipster-blueprint",
-        "jhipster-6"
+        "jhipster-7"
     ],
     "homepage": "https://github.com/jhipster/generator-jhipster-quarkus",
     "bugs": {
@@ -51,8 +51,7 @@
     ],
     "dependencies": {
         "chalk": "4.1.0",
-        "faker": "5.1.0",
-        "generator-jhipster": "6.10.5",
+        "generator-jhipster": "7.1.0",
         "glob": "7.1.6",
         "lodash": "4.17.21",
         "semver": "7.3.4"
@@ -72,13 +71,15 @@
         "pre-commit": "1.2.2",
         "prettier": "2.2.1",
         "prettier-plugin-java": "1.0.1",
+        "rimraf": "^3.0.2",
         "sinon": "9.2.3",
         "sonarqube-scanner": "2.8.0",
         "yeoman-assert": "3.1.1",
-        "yeoman-test": "4.0.0"
+        "yeoman-environment": "3.5.1",
+        "yeoman-test": "6.2.0"
     },
     "engines": {
-        "node": ">=10.20.1",
+        "node": ">=12.20.0",
         "npm": ">=6.14.4"
     }
 }

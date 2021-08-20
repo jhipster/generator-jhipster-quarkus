@@ -14,13 +14,6 @@ echo "*** generator-jhipster: use the $JHI_VERSION version"
 npm install -g generator-jhipster@"$JHI_VERSION"
 
 #-------------------------------------------------------------------------------
-# Install yeoman
-#-------------------------------------------------------------------------------
-echo "*** yeoman: use last version"
-npm install -g yo
-
-
-#-------------------------------------------------------------------------------
 # Install JHipster Quarkus
 #-------------------------------------------------------------------------------
 echo "*** generator-jhipster-quarkus: use current branch version"

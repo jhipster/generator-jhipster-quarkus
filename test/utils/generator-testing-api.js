@@ -13,46 +13,36 @@ function buildEntityGeneratorContext(
     options = DEFAULT_QUARKUS_ENTITY_BP_OPTIONS,
     yoRcFileName = DEFAULT_YORC_FILENAME
 ) {
-    return done => {
+    return () =>
         new GeneratorTestBuilder('entity')
             .withPrompts({ ...DEFAULT_ENTITY_ANSWERS, ...answers })
             .withYoRc(yoRcFileName)
             .withOptions({ ...DEFAULT_QUARKUS_ENTITY_BP_OPTIONS, ...options })
-            .withArguments(['foo'])
-            .build(done);
-    };
+            .withArguments(['foo']).runContext;
 }
 
 function buildServerGeneratorContext(answers = DEFAULT_SERVER_ANSWERS, options = DEFAULT_QUARKUS_BP_OPTIONS) {
-    return done => {
+    return () =>
         new GeneratorTestBuilder('server')
             .withPrompts({ ...DEFAULT_SERVER_ANSWERS, ...answers })
-            .withOptions({ ...DEFAULT_QUARKUS_ENTITY_BP_OPTIONS, ...options })
-            .build(done);
-    };
+            .withOptions({ ...DEFAULT_QUARKUS_BP_OPTIONS, ...options }).runContext;
 }
 
 function buildClientGeneratorContext(answers = DEFAULT_CLIENT_ANSWERS, options = DEFAULT_QUARKUS_BP_OPTIONS) {
-    return done => {
+    return () =>
         new GeneratorTestBuilder('client')
             .withPrompts({ ...DEFAULT_CLIENT_ANSWERS, ...answers })
-            .withOptions({ ...DEFAULT_QUARKUS_ENTITY_BP_OPTIONS, ...options })
-            .build(done);
-    };
+            .withOptions({ ...DEFAULT_QUARKUS_BP_OPTIONS, ...options }).runContext;
 }
 
 function buildCommonGeneratorContext(options = DEFAULT_QUARKUS_BP_OPTIONS) {
-    return done => {
-        new GeneratorTestBuilder('common').withOptions({ ...DEFAULT_QUARKUS_ENTITY_BP_OPTIONS, ...options }).build(done);
-    };
+    return () => new GeneratorTestBuilder('common').withOptions({ ...DEFAULT_QUARKUS_ENTITY_BP_OPTIONS, ...options }).runContext;
 }
 function buildAppGeneratorContext(answers = DEFAULT_SERVER_ANSWERS, options = DEFAULT_QUARKUS_BP_OPTIONS) {
-    return done => {
+    return () =>
         new GeneratorTestBuilder('app')
             .withPrompts({ ...DEFAULT_SERVER_ANSWERS, ...answers })
-            .withOptions({ ...DEFAULT_QUARKUS_ENTITY_BP_OPTIONS, ...options })
-            .build(done);
-    };
+            .withOptions({ ...DEFAULT_QUARKUS_BP_OPTIONS, ...options }).runContext;
 }
 
 module.exports = {

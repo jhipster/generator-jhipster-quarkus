@@ -640,6 +640,15 @@ const serverFiles = {
 
 const serverFilesFromJHipster = {
     docker: jhipsterFiles.docker,
+    npmWrapper: [
+        {
+            condition: generator => generator.buildTool === 'maven',
+            templates: [
+                { file: 'npmw', method: 'copy', noEjs: true },
+                { file: 'npmw.cmd', method: 'copy', noEjs: true },
+            ],
+        },
+    ],
     serverResource: [
         {
             condition: generator => generator.databaseType === 'sql',
@@ -691,9 +700,9 @@ function writeFiles() {
             );
         },
 
-        writeFiles() {
-            this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
-            this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('server/templates'));
+        async writeFiles() {
+            await this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
+            await this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('server/templates'));
         },
     };
 }
