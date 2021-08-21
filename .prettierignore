@@ -1,2 +1,4 @@
 node_modules
 **/templates/**/
+.nyc_output
+coverage/
