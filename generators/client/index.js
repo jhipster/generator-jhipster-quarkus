@@ -23,7 +23,6 @@ module.exports = class extends ClientGenerator {
 
     get postWriting() {
         return {
-            ...super._postWriting(),
             customize() {
                 if (this.jhipsterConfig.skipClient) return;
                 if (this.jhipsterConfig.clientFramework === ANGULAR) {
