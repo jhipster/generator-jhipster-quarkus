@@ -77,6 +77,23 @@ module.exports = class extends ServerGenerator {
                         'ci:backend:test': 'npm run backend:info && npm run backend:doc:test && npm run backend:unit:test',
                     },
                 });
+                if (this.buildToolGradle) {
+                    this.packageJson.merge({
+                        scripts: {
+                            'ci:e2e:dev': 'concurrently -k -s first "./gradlew" "npm run e2e:headless"',
+                            'ci:e2e:server:start':
+                                'java -jar build/libs/quarkus-app/quarkus-run.$npm_package_config_packaging --spring.profiles.active=$npm_package_config_default_environment',
+                        },
+                    });
+                } else {
+                    this.packageJson.merge({
+                        scripts: {
+                            'ci:e2e:dev': 'concurrently -k -s first "./mvnw" "npm run e2e:headless"',
+                            'ci:e2e:server:start':
+                                'java -jar target/quarkus-app/quarkus-run.$npm_package_config_packaging --spring.profiles.active=$npm_package_config_default_environment',
+                        },
+                    });
+                }
             },
         };
     }

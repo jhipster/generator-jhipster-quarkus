@@ -1,53 +1,57 @@
 name: Imperative Smoke Tests
+concurrency:
+  # Group PRs by head_ref, push to main branch by commit id, and others branch by ref.
+  group: ${{ github.workflow }}-${{ github.head_ref || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
+  cancel-in-progress: true
 on: [push, pull_request]
 env:
-    JHI_SCRIPTS: ./test-integration/scripts
+  JHI_SCRIPTS: ./test-integration/scripts
 jobs:
-    applications:
-        name: ${{ matrix.app }}
-        runs-on: ${{ matrix.os }}
-        if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
-        timeout-minutes: 20
-        strategy:
-            fail-fast: false
-            matrix:
-                node_version: [14.16.0]
-                os: [ubuntu-latest]
-                app:
-                    - imperative-ngx-jwt-maven-mysql-caffeine
-                    - imperative-ngx-jwt-maven-mongodb-caffeine
-                    - imperative-ngx-jwt-gradle-mongodb-redis
-                    - imperative-ngx-jwt-maven-psql-nocache
-                    - imperative-react-jwt-gradle-mysql-caffeine
-                    - imperative-ngx-jwt-maven-mysql-redis
-                    - imperative-sql-jwt-maven-noDb
-                    - imperative-ngx-oauth2-maven-mysql-caffeine
-                include:
-                    - app: imperative-ngx-jwt-maven-mysql-caffeine
-                    - app: imperative-ngx-jwt-maven-mongodb-caffeine
-                    - app: imperative-ngx-jwt-maven-psql-nocache
-                    - app: imperative-react-jwt-gradle-mysql-caffeine
-                    - app: imperative-ngx-jwt-maven-mysql-redis
-                    - app: imperative-sql-jwt-maven-noDb
-                    - app: imperative-ngx-oauth2-maven-mysql-caffeine
-                exclude:
-                    - app: imperative-ngx-jwt-gradle-mongodb-redis
-        env:
-            JHI_APP: ${{ matrix.app }}
-        steps:
-            - uses: actions/checkout@v1
-            - uses: actions/setup-java@v1
-              with:
-                  java-version: '11.x'
-            - name: git history
-              run: git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
-            - name: Prepare JHipster env
-              run: sudo $JHI_SCRIPTS/01-install-global-jhipster.sh
-            - name: 'Generate JHipster Application'
-              run: $JHI_SCRIPTS/02-generate-project.sh $JHI_APP
-            - name: 'Run JHipster Application server tests'
-              run: $JHI_SCRIPTS/03-run-server-tests.sh $JHI_APP
-            - name: 'Run npm clean install'
-              run: $JHI_SCRIPTS/04-run-npm-install.sh $JHI_APP
-            - name: 'Run JHipster Application client tests'
-              run: $JHI_SCRIPTS/05-run-client-tests.sh $JHI_APP
+  applications:
+    name: ${{ matrix.app }}
+    runs-on: ${{ matrix.os }}
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [14.16.0]
+        os: [ubuntu-latest]
+        app:
+          - imperative-ngx-jwt-maven-mysql-caffeine
+          - imperative-ngx-jwt-maven-mongodb-caffeine
+          - imperative-ngx-jwt-gradle-mongodb-redis
+          - imperative-ngx-jwt-maven-psql-nocache
+          - imperative-react-jwt-gradle-mysql-caffeine
+          - imperative-ngx-jwt-maven-mysql-redis
+          - imperative-sql-jwt-maven-no-db
+          - imperative-ngx-oauth2-maven-mysql-caffeine
+        include:
+          - app: imperative-ngx-jwt-maven-mysql-caffeine
+          - app: imperative-ngx-jwt-maven-mongodb-caffeine
+          - app: imperative-ngx-jwt-maven-psql-nocache
+          - app: imperative-react-jwt-gradle-mysql-caffeine
+          - app: imperative-ngx-jwt-maven-mysql-redis
+          - app: imperative-sql-jwt-maven-no-db
+          - app: imperative-ngx-oauth2-maven-mysql-caffeine
+        exclude:
+          - app: imperative-ngx-jwt-gradle-mongodb-redis
+    env:
+      JHI_APP: ${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11.x'
+      - name: git history
+        run: git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
+      - name: Prepare JHipster env
+        run: sudo $JHI_SCRIPTS/01-install-global-jhipster.sh
+      - name: 'Generate JHipster Application'
+        run: $JHI_SCRIPTS/02-generate-project.sh $JHI_APP
+      - name: 'Run JHipster Application server tests'
+        run: $JHI_SCRIPTS/03-run-server-tests.sh $JHI_APP
+      - name: 'Run npm clean install'
+        run: $JHI_SCRIPTS/04-run-npm-install.sh $JHI_APP
+      - name: 'Run JHipster Application client tests'
+        run: $JHI_SCRIPTS/05-run-client-tests.sh $JHI_APP

@@ -3,5 +3,11 @@
   "singleQuote": true,
   "tabWidth": 4,
   "useTabs": false,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "overrides": [{
+    "files": ".github/**/*.yml",
+    "options": {
+      "tabWidth": 2
+    }
+  }]
 }
