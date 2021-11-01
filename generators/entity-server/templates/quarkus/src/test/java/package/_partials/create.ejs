@@ -18,8 +18,7 @@
 -%>
     @Test
     public void create<%= entityClass %>() {
-    
-        // Create a new <%= entityClass %>
+        // POST a new <%= entityClass %>
         var tableSizeBeforeCreate = <%= entityClass %>.count();
         <%= entityOrDtoInstance %> = given()
             .auth()

@@ -33,7 +33,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 <%_
 let hasOauthUser = false;
@@ -53,7 +55,6 @@ public class <%= entityClass %>Test {
     
     @Test
     public void equalsVerifier() throws Exception {
-    
         // Two instances of <%= entityClass %> should be equal to each other
         TestUtil.equalsVerifier(<%= asEntity(entityClass) %>.class);
     <%_if (!embedded) { _%>
@@ -71,7 +72,6 @@ public class <%= entityClass %>Test {
     
     @Test
     public void entityAnnotations() throws Exception {
-    
         // Entity <%= entityClass %> should be annotated with @Entity, @Table, @RegisterForReflection, @ApiModel
         AssertAnnotations.assertType(<%= entityClass %>.class, 
             Entity.class, Table.class, RegisterForReflection.class, ApiModel.class);
@@ -79,7 +79,6 @@ public class <%= entityClass %>Test {
     
     @Test
     public void idFieldAnnotation() throws Exception {
-        
         // ID field should be annotated with @Id, @GeneratedValue, @SequenceGenerator
         AssertAnnotations.assertField(<%= entityClass %>.class, "id", 
             Id.class, GeneratedValue.class, SequenceGenerator.class);
@@ -87,8 +86,7 @@ public class <%= entityClass %>Test {
     
     @Test
     public void notNullAnnotations() throws Exception {
-    
-        // Assert that the required fields are annotated with @NotNull
+        // Assert that required fields are annotated with @NotNull
 <%_ for (let idx = 0; idx < fields.length; idx++) { 
     const required = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('required') && fields[idx].fieldType !== 'byte[]';
     if (required) {
@@ -100,13 +98,39 @@ _%>
     
     @Test
     public void uniqueAnnotations() throws Exception {
-        
-        // Assert that the Unique fields are be annotated with @Column(unique = true)
+        // Assert that unique fields are annotated with @Column(unique = true)
 <%_ for (let idx = 0; idx < fields.length; idx++) { 
     const unique = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('unique') && fields[idx].fieldType !== 'byte[]';
     if (unique) {
 _%>
 		assertThat(ReflectTool.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Column.class).unique()).isTrue();
+<%_ } }
+_%>
+    }
+    
+    @Test
+    public void patternAnnotations() throws Exception {
+        // Assert that fields with a validation pattern are annotated with @Pattern
+<%_ for (let idx = 0; idx < fields.length; idx++) { 
+    const pattern = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('pattern') && fields[idx].fieldType !== 'byte[]';
+    if (pattern) {
+_%>
+		assertThat(ReflectTool.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Pattern.class));
+<%_ } }
+_%>
+    }
+    
+    @Test
+    public void sizeAnnotations() throws Exception {
+        // Assert that fields with a specified size are annotated with @Size
+<%_ for (let idx = 0; idx < fields.length; idx++) { 
+    const size = fields[idx].fieldValidate === true && 
+       (fields[idx].fieldValidateRules.includes('max') || fields[idx].fieldValidateRules.includes('min') ||
+          fields[idx].fieldValidateRules.includes('maxlength') || fields[idx].fieldValidateRules.includes('minlength')) && 
+          fields[idx].fieldType !== 'byte[]';
+    if (size) {
+_%>
+		assertThat(ReflectTool.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Size.class));
 <%_ } }
 _%>
     }

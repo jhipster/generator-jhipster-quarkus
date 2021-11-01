@@ -18,7 +18,6 @@
 -%>
     @Test
     public void get<%= entityClass %>() {
-
         // Initialize the test by posting a new <%= entityOrDtoInstance %> 
         <%= entityOrDtoInstance %> = given()
             .auth()
@@ -80,9 +79,7 @@
 
     @Test
     public void getNonExisting<%= entityClass %>() {
-
         // GET the <%= entityOrDtoInstance %> with a non-existent ID, should return NOT_FOUND")
-        
         given()
             .auth()
             .preemptive()

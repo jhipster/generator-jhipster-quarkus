@@ -18,7 +18,6 @@
 -%>
     @Test
     public void getAll<%= entityClassPlural %>() {
-
         // Initialize the test by posting a new <%= entityClass %> 
     <%_ if (hasPagination) { _%>
         var databaseSizeBeforeCreate = (int) <%= entityClass %>.count();
@@ -49,7 +48,7 @@
 				.getHeader("X-Total-Count"))).isEqualTo(databaseSizeBeforeCreate + 1);
     <%_ } else { _%>        
 
-        // Get all instances of <%= entityClass %> and search for the newly posted entity
+        // GET all instances of <%= entityClass %> and search for the newly posted entity
         given()
             .auth()
             .preemptive()

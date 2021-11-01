@@ -18,7 +18,6 @@
 -%>
     @Test
     public void update<%= entityClass %>() {
-
         // Initialize the test by posting a new <%= entityClass %> 
         <%= entityOrDtoInstance %> = given()
             .auth()
@@ -57,14 +56,12 @@
 
         // Retrieve the updated <%= entityClass %> from the database for validation
         <%= entityClass %> test<%= entityOrDtoClass %> = <%= entityClass %>.findById(<%= entityOrDtoInstance %>.id);
-
         assertThat(<%= entityClass %>.count()).isEqualTo(tableSizeBeforeUpdate);
 <%- include('./object_verification', {...this, prefix: 'UPDATED_'}); -%>
     }
 
     @Test
     public void updateNonExisting<%= entityClass %>() {
-
         // PUT should return BAD_REQUEST and not update the database if <%= entityOrDtoInstance %> has a non-existing ID
         var tableSizeBeforeUpdate = <%= entityClass %>.count();
         given()

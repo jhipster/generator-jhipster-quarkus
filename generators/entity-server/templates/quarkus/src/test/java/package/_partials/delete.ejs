@@ -18,7 +18,6 @@
 -%>
     @Test
     public void delete<%= entityClass %>() {
-
         // Initialize the test by posting a new <%= entityClass %> 
         <%= entityOrDtoInstance %> = given()
             .auth()
@@ -35,7 +34,7 @@
 
         var tableSizeBeforeDelete = <%= entityClass %>.count();
 
-        // Delete the <%= entityClass %>
+        // DELETE the <%= entityClass %>
         given()
             .auth()
             .preemptive()
