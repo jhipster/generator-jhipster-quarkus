@@ -18,7 +18,11 @@
 -%>
     @Test
     public void getAll<%= entityClassPlural %>() {
-        // Initialize the database
+
+        // Initialize the test by posting a new <%= entityClass %> 
+    <%_ if (hasPagination) { _%>
+        var databaseSizeBeforeCreate = (int) <%= entityClass %>.count();
+    <%_ } _%>        
         <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
@@ -31,8 +35,21 @@
             .then()
             .statusCode(CREATED.getStatusCode())
             .extract().as(ENTITY_TYPE);
+    <%_ if (hasPagination) { _%>
 
-        // Get all the <%= entityInstance %>List
+        // Compare the number of records returned with the number at the start of the test
+        assertThat(Integer.parseInt(
+            given()
+                .auth()
+                .preemptive()
+                .oauth2(adminToken)
+                .accept(APPLICATION_JSON)
+                .when()
+				.get("/api/<%= entityApiUrl %>?sort=id,desc")
+				.getHeader("X-Total-Count"))).isEqualTo(databaseSizeBeforeCreate + 1);
+    <%_ } else { _%>        
+
+        // Get all instances of <%= entityClass %> and search for the newly posted entity
         given()
             .auth()
             .preemptive()
@@ -51,7 +68,7 @@
                     idValueTransformer = '.toString()';
                 }
             _%>
-            .body("id", hasItem(<%= entityOrDtoInstance %>.id<%= idValueTransformer %>))
+            .body("id", hasItem(<%= entityOrDtoInstance %>.id<%= idValueTransformer %>))            
             <%_ for (let idx = 0; idx < fields.length; idx++) {
                 const fieldName = fields[idx].fieldName;
                 const fieldType = fields[idx].fieldType;
@@ -69,7 +86,10 @@
                     expected = `TestUtil.formatDateTime(${expected})`;
                 } else if (fieldType !== 'String') {
                     expected = `${expected}.toString()`;
-                }
+                } 
             _%>
-            .body("<%= fields[idx].fieldName %>", hasItem(<%= expected %>))<%_ } _%>;
+            .body("<%= fields[idx].fieldName %>", hasItem(<%= expected %>))
+            <%_ } _%>
+            ;
+    <%_ } _%>            
     }

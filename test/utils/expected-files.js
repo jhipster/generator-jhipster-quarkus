@@ -37,6 +37,8 @@ const expectedFiles = {
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/AssertAnnotations.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ReflectTool.java`,
         ],
 
         liquibase: [

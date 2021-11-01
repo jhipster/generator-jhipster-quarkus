@@ -23,6 +23,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import <%= packageName %>.TestUtil;
 import org.junit.jupiter.api.Test;
 
+import <%= packageName %>.AssertAnnotations;
+import <%= packageName %>.ReflectTool;
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import io.swagger.annotations.ApiModel;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 <%_
 let hasOauthUser = false;
 for (idx in relationships) {
@@ -38,9 +50,11 @@ import java.util.UUID;
 <%_ } _%>
 
 public class <%= entityClass %>Test {
-
+    
     @Test
     public void equalsVerifier() throws Exception {
+    
+        // Two instances of <%= entityClass %> should be equal to each other
         TestUtil.equalsVerifier(<%= asEntity(entityClass) %>.class);
     <%_if (!embedded) { _%>
         <%= asEntity(entityClass) %> <%= asEntity(entityInstance) %>1 = new <%= asEntity(entityClass) %>();
@@ -53,5 +67,47 @@ public class <%= entityClass %>Test {
         <%= asEntity(entityInstance) %>1.id = null;
         assertThat(<%= asEntity(entityInstance) %>1).isNotEqualTo(<%= asEntity(entityInstance) %>2);
     <%_} _%>
+    }
+    
+    @Test
+    public void entityAnnotations() throws Exception {
+    
+        // Entity <%= entityClass %> should be annotated with @Entity, @Table, @RegisterForReflection, @ApiModel
+        AssertAnnotations.assertType(<%= entityClass %>.class, 
+            Entity.class, Table.class, RegisterForReflection.class, ApiModel.class);
+    }    
+    
+    @Test
+    public void idFieldAnnotation() throws Exception {
+        
+        // ID field should be annotated with @Id, @GeneratedValue, @SequenceGenerator
+        AssertAnnotations.assertField(<%= entityClass %>.class, "id", 
+            Id.class, GeneratedValue.class, SequenceGenerator.class);
+    }
+    
+    @Test
+    public void notNullAnnotations() throws Exception {
+    
+        // Assert that the required fields are annotated with @NotNull
+<%_ for (let idx = 0; idx < fields.length; idx++) { 
+    const required = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('required') && fields[idx].fieldType !== 'byte[]';
+    if (required) {
+_%>
+		AssertAnnotations.assertField(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", NotNull.class, Column.class);
+<%_ } }
+_%>
+    }
+    
+    @Test
+    public void uniqueAnnotations() throws Exception {
+        
+        // Assert that the Unique fields are be annotated with @Column(unique = true)
+<%_ for (let idx = 0; idx < fields.length; idx++) { 
+    const unique = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('unique') && fields[idx].fieldType !== 'byte[]';
+    if (unique) {
+_%>
+		assertThat(ReflectTool.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Column.class).unique()).isTrue();
+<%_ } }
+_%>
     }
 }

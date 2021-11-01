@@ -22,19 +22,12 @@ package <%=packageName%>.web.rest;
 
 @QuarkusTest
 public class <%= entityClass%>ResourceTest {
-
-    private static final TypeRef<<%= entityOrDtoClass%>> ENTITY_TYPE = new TypeRef<>() {
-    };
-
-    private static final TypeRef<List<<%= entityOrDtoClass%>>> LIST_OF_ENTITY_TYPE = new TypeRef<>() {
-    };
+    private static final TypeRef<<%= entityOrDtoClass%>> ENTITY_TYPE = new TypeRef<>() { };
 
 <%- include('../../_partials/defaults', this); -%>
-
 <%_ if (cacheProvider === 'redis') { _%>
     static RedisServer server;
 <%_ } _%>
-
     String adminToken;
 
     <%= entityOrDtoClass %> <%= entityOrDtoInstance %>;
@@ -82,12 +75,8 @@ public class <%= entityClass%>ResourceTest {
         server.stop();
     }
     <%_ } _%>
-
     /**
      * Create an entity for this test.
-     * <p>
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
      */
     public static <%= entityOrDtoClass %> createEntity() {
         var <%= entityOrDtoInstance %> = new <%= entityOrDtoClass %>();
@@ -102,17 +91,16 @@ public class <%= entityClass%>ResourceTest {
         <%= entityOrDtoInstance %> = createEntity();
     }
 
-    <%_ if (!readOnly) { _%>
-<%- include('../../_partials/create', this); -%>
+<%- include('../../_partials/get_all', this); -%>
 
-<%- include('../../_partials/create_with_field_required', this); -%>
+<%- include('../../_partials/get', this); -%>
+    <%_ if (!readOnly) { _%>
+    
+<%- include('../../_partials/create', this); -%>
 
 <%- include('../../_partials/update', this); -%>
 
 <%- include('../../_partials/delete', this); -%>
 
     <%_ } _%>
-<%- include('../../_partials/get_all', this); -%>
-
-<%- include('../../_partials/get', this); -%>
 }

@@ -14,3 +14,7 @@ yarn.lock
 .DS_Store
 .jhipster
 .nyc_output
+/bin/
+.classpath
+.settings/
+*.tgz

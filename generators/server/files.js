@@ -94,6 +94,14 @@ const serverFiles = {
                     file: 'package/TestUtil.java',
                     renameTo: generator => `${generator.javaDir}/TestUtil.java`,
                 },
+                {
+                    file: 'package/AssertAnnotations.java',
+                    renameTo: generator => `${generator.javaDir}/AssertAnnotations.java`,
+                },
+                {
+                    file: 'package/ReflectTool.java',
+                    renameTo: generator => `${generator.javaDir}/ReflectTool.java`,
+                },
             ],
         },
         {

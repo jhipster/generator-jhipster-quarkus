@@ -18,20 +18,9 @@
 -%>
     @Test
     public void create<%= entityClass %>() {
-        var databaseSizeBeforeCreate = given()
-            .auth()
-            .preemptive()
-            .oauth2(adminToken)
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/<%= entityApiUrl %>")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .contentType(APPLICATION_JSON)
-            .extract().as(LIST_OF_ENTITY_TYPE)
-            .size();
-
-        // Create the <%= entityClass %>
+    
+        // Create a new <%= entityClass %>
+        var tableSizeBeforeCreate = <%= entityClass %>.count();
         <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
@@ -45,67 +34,7 @@
             .statusCode(CREATED.getStatusCode())
             .extract().as(ENTITY_TYPE);
 
-        // Validate the <%= entityClass %> in the database
-        var <%= entityOrDtoInstance %>List = given()
-            .auth()
-            .preemptive()
-            .oauth2(adminToken)
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/<%= entityApiUrl %>")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .contentType(APPLICATION_JSON)
-            .extract().as(LIST_OF_ENTITY_TYPE);
-
-        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate + 1);
-        var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().filter(it -> <%= entityOrDtoInstance %>.id.equals(it.id)).findFirst().get();
-<%- include('./object_verification', {...this, prefix: 'DEFAULT_'}); -%>
+        // Assert that the size of the database table has increased by one
+        assertThat(<%= entityClass %>.count()).isEqualTo(tableSizeBeforeCreate + 1);
     }
-
-    @Test
-    public void create<%= entityClass %>WithExistingId() {
-        var databaseSizeBeforeCreate = given()
-            .auth()
-            .preemptive()
-            .oauth2(adminToken)
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/<%= entityApiUrl %>")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .contentType(APPLICATION_JSON)
-            .extract().as(LIST_OF_ENTITY_TYPE)
-            .size();
-
-        // Create the <%= entityClass %> with an existing ID
-        <%= entityOrDtoInstance %>.id = <% if (databaseType === 'mongodb') { %>"1"<% } else { %>1L<% }%>;
-
-        // An entity with an existing ID cannot be created, so this API call must fail
-        given()
-            .auth()
-            .preemptive()
-            .oauth2(adminToken)
-            .contentType(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .body(<%= entityOrDtoInstance %>)
-            .when()
-            .post("/api/<%= entityApiUrl %>")
-            .then()
-            .statusCode(BAD_REQUEST.getStatusCode());
-
-        // Validate the <%= entityClass %> in the database
-        var <%= entityOrDtoInstance %>List = given()
-            .auth()
-            .preemptive()
-            .oauth2(adminToken)
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/<%= entityApiUrl %>")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .contentType(APPLICATION_JSON)
-            .extract().as(LIST_OF_ENTITY_TYPE);
-
-        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate);
-    }
+    
