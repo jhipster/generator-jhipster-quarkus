@@ -18,7 +18,7 @@
 -%>
     @Test
     public void get<%= entityClass %>() {
-        // Initialize the test by posting a new <%= entityOrDtoInstance %> 
+        // Initialize the test by posting a new <%= entityClass %>
         <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
@@ -32,7 +32,7 @@
             .statusCode(CREATED.getStatusCode())
             .extract().as(ENTITY_TYPE);
 
-        // GET the newly posted <%= entityOrDtoInstance %> with the given ID, should return OK
+        // GET the newly posted <%= entityClass %> with the given ID, should return OK
         given()
             .auth()
             .preemptive()
@@ -79,7 +79,7 @@
 
     @Test
     public void getNonExisting<%= entityClass %>() {
-        // GET the <%= entityOrDtoInstance %> with a non-existent ID, should return NOT_FOUND")
+        // GET the <%= entityClass %> with a non-existent ID, should return NOT_FOUND")
         given()
             .auth()
             .preemptive()

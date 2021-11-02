@@ -18,7 +18,7 @@
 -%>
     @Test
     public void update<%= entityClass %>() {
-        // Initialize the test by posting a new <%= entityClass %> 
+        // Initialize the test by posting a new <%= entityClass %>
         <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
@@ -41,7 +41,7 @@
         updated<%= entityOrDtoClass %>.<%= fields[idx].fieldName %> = UPDATED_<%= fields[idx].fieldNameUnderscored.toUpperCase() %>;
         <%_ } _%>
 
-        // PUT should correctly update a given <%= entityOrDtoInstance %> and return OK
+        // PUT should correctly update a given <%= entityClass %> and return OK
         given()
             .auth()
             .preemptive()
@@ -62,7 +62,7 @@
 
     @Test
     public void updateNonExisting<%= entityClass %>() {
-        // PUT should return BAD_REQUEST and not update the database if <%= entityOrDtoInstance %> has a non-existing ID
+        // PUT should return BAD_REQUEST and not update the database if <%= entityClass %> has a non-existing ID
         var tableSizeBeforeUpdate = <%= entityClass %>.count();
         given()
             .auth()

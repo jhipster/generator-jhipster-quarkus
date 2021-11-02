@@ -122,7 +122,7 @@ _%>
     
     @Test
     public void sizeAnnotations() throws Exception {
-        // Assert that fields with a specified size are annotated with @Size
+        // Assert that fields with a specific minimum or maximum size are annotated with @Size
 <%_ for (let idx = 0; idx < fields.length; idx++) { 
     const size = fields[idx].fieldValidate === true && 
        (fields[idx].fieldValidateRules.includes('max') || fields[idx].fieldValidateRules.includes('min') ||

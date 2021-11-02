@@ -7,15 +7,8 @@ import java.util.List;
 @SuppressWarnings("rawtypes")
 public class AssertAnnotations {
 	
+	// Assert that the annotations exist
 	private static void assertAnnotations(List<Class> annotationClasses, List<Annotation> annotations) {
-		// Assert the expected number of annotations, neither more nor less
-		if (annotationClasses.size() != annotations.size()) {
-			throw new AssertionError(String.format("Expected %d annotations, but found %d", 
-			    annotationClasses.size(),
-				annotations.size()));
-		}
-
-		// Assert that the annotation exists
 		annotationClasses.forEach(annotationClass -> {
 			long icount = annotations.stream().filter(a -> a.annotationType().isAssignableFrom(annotationClass)).count();
 			if (icount == 0) {

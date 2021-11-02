@@ -18,7 +18,7 @@
 -%>
     @Test
     public void getAll<%= entityClassPlural %>() {
-        // Initialize the test by posting a new <%= entityClass %> 
+        // Initialize the test by posting a new <%= entityClass %>
     <%_ if (hasPagination) { _%>
         var databaseSizeBeforeCreate = (int) <%= entityClass %>.count();
     <%_ } _%>        
