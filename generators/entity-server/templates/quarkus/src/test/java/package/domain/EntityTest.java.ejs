@@ -24,7 +24,7 @@ import <%= packageName %>.TestUtil;
 import org.junit.jupiter.api.Test;
 
 import <%= packageName %>.AssertAnnotations;
-import <%= packageName %>.ReflectTool;
+import <%= packageName %>.ReflectAnnotations;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.swagger.annotations.ApiModel;
 import javax.persistence.Column;
@@ -103,7 +103,7 @@ _%>
     const unique = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('unique') && fields[idx].fieldType !== 'byte[]';
     if (unique) {
 _%>
-		assertThat(ReflectTool.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Column.class).unique()).isTrue();
+		assertThat(ReflectAnnotations.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Column.class).unique()).isTrue();
 <%_ } }
 _%>
     }
@@ -115,7 +115,7 @@ _%>
     const pattern = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('pattern') && fields[idx].fieldType !== 'byte[]';
     if (pattern) {
 _%>
-		assertThat(ReflectTool.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Pattern.class));
+		assertThat(ReflectAnnotations.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Pattern.class));
 <%_ } }
 _%>
     }
@@ -130,7 +130,7 @@ _%>
           fields[idx].fieldType !== 'byte[]';
     if (size) {
 _%>
-		assertThat(ReflectTool.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Size.class));
+		assertThat(ReflectAnnotations.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Size.class));
 <%_ } }
 _%>
     }
