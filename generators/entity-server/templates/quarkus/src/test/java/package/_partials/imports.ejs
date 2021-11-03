@@ -41,10 +41,7 @@ import liquibase.Liquibase;
 import io.quarkus.liquibase.LiquibaseFactory;
 <%_ } _%>
 import org.junit.jupiter.api.*;
-
 import javax.inject.Inject;
-
-import java.util.List;
     <%_ if (fieldsContainBigDecimal) { _%>
 import java.math.BigDecimal;
     <%_ } _%>
@@ -58,6 +55,7 @@ import java.time.Duration;
 import java.time.LocalDate;
     <%_ } _%>
     <%_ if (fieldsContainInstant|| fieldsContainZonedDateTime) { _%>
+    
 import java.time.Instant;
     <%_ } _%>
     <%_ if (fieldsContainZonedDateTime) { _%>

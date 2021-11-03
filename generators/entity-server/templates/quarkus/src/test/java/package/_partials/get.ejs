@@ -18,7 +18,7 @@
 -%>
     @Test
     public void get<%= entityClass %>() {
-        // Initialize the database
+        // Initialize the test by posting a new <%= entityClass %>
         <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
@@ -32,20 +32,7 @@
             .statusCode(CREATED.getStatusCode())
             .extract().as(ENTITY_TYPE);
 
-        var response = // Get the <%= entityInstance %>
-            given()
-                .auth()
-                .preemptive()
-                .oauth2(adminToken)
-                .accept(APPLICATION_JSON)
-                .when()
-                .get("/api/<%= entityApiUrl %>/{id}", <%= entityOrDtoInstance %>.id)
-                .then()
-                .statusCode(OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract().as(ENTITY_TYPE);
-
-        // Get the <%= entityInstance %>
+        // GET the newly posted <%= entityClass %> with the given ID, should return OK
         given()
             .auth()
             .preemptive()
@@ -65,7 +52,7 @@
                 }
             _%>
             .body("id", is(<%= entityOrDtoInstance %>.id<%= idValueTransformer %>))
-            <% for (let idx = 0; idx < fields.length; idx++) {
+            <%_ for (let idx = 0; idx < fields.length; idx++) {
                 const fieldName = fields[idx].fieldName;
                 const fieldType = fields[idx].fieldType;
                 let expected = 'DEFAULT_' + fields[idx].fieldNameUnderscored.toUpperCase();
@@ -83,14 +70,16 @@
                     expected = `TestUtil.formatDateTime(${expected})`;
                 } else if (fieldType !== 'String') {
                     expected = `${expected}.toString()`;
-                }
-                %>
-                .body("<%= fields[idx].fieldName %>", <%= assertionMethod %>(<%= expected %>))<% } %>;
+                } 
+             _%>
+            .body("<%= fields[idx].fieldName %>", <%= assertionMethod %>(<%= expected %>))
+            <%_ } _%>
+            ;
     }
 
     @Test
     public void getNonExisting<%= entityClass %>() {
-        // Get the <%= entityInstance %>
+        // GET the <%= entityClass %> with a non-existent ID, should return NOT_FOUND")
         given()
             .auth()
             .preemptive()

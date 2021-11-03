@@ -1,0 +1,47 @@
+package <%=packageName%>;
+
+import java.util.Arrays;
+
+@SuppressWarnings("rawtypes")
+public class AssertAnnotations {
+	// Assert the Entity annotations
+	@SuppressWarnings("unchecked")
+	public static void assertEntityAnnotations(Class clazz, Class... annotations) {
+		Arrays.asList(annotations).forEach(annotation -> {
+			if (!clazz.isAnnotationPresent(annotation)) {
+				throw new AssertionError(String.format("No annotation of type %s was found on %s", annotation.getName(),
+						clazz.getSimpleName()));
+			}
+		});
+	}
+
+	// Assert the Field annotations
+	@SuppressWarnings("unchecked")
+	public static void assertFieldAnnotations(Class clazz, String fieldName, Class... annotations) {
+		Arrays.asList(annotations).forEach(annotation -> {
+			try {
+				if (!clazz.getDeclaredField(fieldName).isAnnotationPresent(annotation)) {
+					throw new AssertionError(String.format("No annotation of type %s was found on field %s of %s",
+							annotation.getName(), fieldName, clazz.getSimpleName()));
+				}
+			} catch (NoSuchFieldException nsfe) {
+				throw new AssertionError(nsfe);
+			}
+		});
+	}
+
+	// Assert the Method annotations
+	@SuppressWarnings("unchecked")
+	public static void assertMethodAnnotations(Class clazz, String methodName, Class... annotations) {
+		Arrays.asList(annotations).forEach(annotation -> {
+			try {
+				if (!clazz.getDeclaredMethod(methodName).isAnnotationPresent(annotation)) {
+					throw new AssertionError(String.format("No annotation of type %s was found on method %s of %s",
+							annotation.getName(), methodName, clazz.getSimpleName()));
+				}
+			} catch (NoSuchMethodException nsfe) {
+				throw new AssertionError(nsfe);
+			}
+		});
+	}
+}

@@ -18,7 +18,7 @@
 -%>
     @Test
     public void delete<%= entityClass %>() {
-        // Initialize the database
+        // Initialize the test by posting a new <%= entityClass %>
         <%= entityOrDtoInstance %> = given()
             .auth()
             .preemptive()
@@ -32,20 +32,9 @@
             .statusCode(CREATED.getStatusCode())
             .extract().as(ENTITY_TYPE);
 
-        var databaseSizeBeforeDelete = given()
-            .auth()
-            .preemptive()
-            .oauth2(adminToken)
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/<%= entityApiUrl %>")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .contentType(APPLICATION_JSON)
-            .extract().as(LIST_OF_ENTITY_TYPE)
-            .size();
+        var tableSizeBeforeDelete = <%= entityClass %>.count();
 
-        // Delete the <%= entityInstance %>
+        // DELETE the <%= entityClass %>
         given()
             .auth()
             .preemptive()
@@ -56,18 +45,6 @@
             .then()
             .statusCode(NO_CONTENT.getStatusCode());
 
-        // Validate the database contains one less item
-        var <%= entityOrDtoInstance %>List = given()
-            .auth()
-            .preemptive()
-            .oauth2(adminToken)
-            .accept(APPLICATION_JSON)
-            .when()
-            .get("/api/<%= entityApiUrl %>")
-            .then()
-            .statusCode(OK.getStatusCode())
-            .contentType(APPLICATION_JSON)
-            .extract().as(LIST_OF_ENTITY_TYPE);
-
-        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeDelete - 1);
+        // Assert that the size of the database table has decreased by one
+        assertThat(<%= entityClass %>.count()).isEqualTo(tableSizeBeforeDelete - 1);
     }
