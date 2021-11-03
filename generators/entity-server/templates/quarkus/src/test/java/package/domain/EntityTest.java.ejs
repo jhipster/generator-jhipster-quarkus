@@ -70,7 +70,7 @@ public class <%= entityClass %>Test {
     
     @Test
     public void entityAnnotations() throws Exception {
-        // Entity <%= entityClass %> should be annotated with @Entity, @Table, @RegisterForReflection, @ApiModel
+        // <%= entityClass %> entity should be annotated with @Entity, @Table, @RegisterForReflection, @ApiModel
         AssertAnnotations.assertEntityAnnotations(<%= entityClass %>.class, 
             Entity.class, Table.class, RegisterForReflection.class, ApiModel.class);
     }    
