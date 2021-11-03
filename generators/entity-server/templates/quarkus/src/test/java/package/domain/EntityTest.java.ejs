@@ -23,19 +23,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import <%= packageName %>.TestUtil;
 import org.junit.jupiter.api.Test;
 
-import <%= packageName %>.AssertAnnotations;
-import <%= packageName %>.ReflectAnnotations;
-import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.swagger.annotations.ApiModel;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import io.swagger.annotations.ApiModel;
+import <%= packageName %>.AssertAnnotations;
+import <%= packageName %>.ExtractAnnotation;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
 <%_
 let hasOauthUser = false;
@@ -73,25 +71,26 @@ public class <%= entityClass %>Test {
     @Test
     public void entityAnnotations() throws Exception {
         // Entity <%= entityClass %> should be annotated with @Entity, @Table, @RegisterForReflection, @ApiModel
-        AssertAnnotations.assertType(<%= entityClass %>.class, 
+        AssertAnnotations.assertEntityAnnotations(<%= entityClass %>.class, 
             Entity.class, Table.class, RegisterForReflection.class, ApiModel.class);
     }    
     
     @Test
-    public void idFieldAnnotation() throws Exception {
+    public void idFieldAnnotations() throws Exception {
         // ID field should be annotated with @Id, @GeneratedValue, @SequenceGenerator
-        AssertAnnotations.assertField(<%= entityClass %>.class, "id", 
+        AssertAnnotations.assertFieldAnnotations(<%= entityClass %>.class, "id", 
             Id.class, GeneratedValue.class, SequenceGenerator.class);
     }
     
     @Test
-    public void notNullAnnotations() throws Exception {
-        // Assert that required fields are annotated with @NotNull
+    public void requiredAnnotations() throws Exception {
+        // Assert that required fields are annotated with @NotNull and that @Column(nullable = false) 
 <%_ for (let idx = 0; idx < fields.length; idx++) { 
     const required = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('required') && fields[idx].fieldType !== 'byte[]';
     if (required) {
 _%>
-		AssertAnnotations.assertField(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", NotNull.class, Column.class);
+		AssertAnnotations.assertFieldAnnotations(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", NotNull.class, Column.class);
+		assertThat(ExtractAnnotation.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Column.class).nullable()).isFalse();
 <%_ } }
 _%>
     }
@@ -103,34 +102,7 @@ _%>
     const unique = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('unique') && fields[idx].fieldType !== 'byte[]';
     if (unique) {
 _%>
-		assertThat(ReflectAnnotations.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Column.class).unique()).isTrue();
-<%_ } }
-_%>
-    }
-    
-    @Test
-    public void patternAnnotations() throws Exception {
-        // Assert that fields with a validation pattern are annotated with @Pattern
-<%_ for (let idx = 0; idx < fields.length; idx++) { 
-    const pattern = fields[idx].fieldValidate === true && fields[idx].fieldValidateRules.includes('pattern') && fields[idx].fieldType !== 'byte[]';
-    if (pattern) {
-_%>
-		assertThat(ReflectAnnotations.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Pattern.class));
-<%_ } }
-_%>
-    }
-    
-    @Test
-    public void sizeAnnotations() throws Exception {
-        // Assert that fields with a specific minimum or maximum size are annotated with @Size
-<%_ for (let idx = 0; idx < fields.length; idx++) { 
-    const size = fields[idx].fieldValidate === true && 
-       (fields[idx].fieldValidateRules.includes('max') || fields[idx].fieldValidateRules.includes('min') ||
-          fields[idx].fieldValidateRules.includes('maxlength') || fields[idx].fieldValidateRules.includes('minlength')) && 
-          fields[idx].fieldType !== 'byte[]';
-    if (size) {
-_%>
-		assertThat(ReflectAnnotations.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Size.class));
+		assertThat(ExtractAnnotation.getFieldAnnotation(<%= entityClass %>.class, "<%= fields[idx].fieldName %>", Column.class).unique()).isTrue();
 <%_ } }
 _%>
     }

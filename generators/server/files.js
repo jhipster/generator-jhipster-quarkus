@@ -99,8 +99,8 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}/AssertAnnotations.java`,
                 },
                 {
-                    file: 'package/ReflectAnnotations.java',
-                    renameTo: generator => `${generator.javaDir}/ReflectAnnotations.java`,
+                    file: 'package/ExtractAnnotation.java',
+                    renameTo: generator => `${generator.javaDir}/ExtractAnnotation.java`,
                 },
             ],
         },

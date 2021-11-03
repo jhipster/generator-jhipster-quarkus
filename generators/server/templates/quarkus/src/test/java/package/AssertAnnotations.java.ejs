@@ -1,45 +1,47 @@
 package <%=packageName%>;
 
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class AssertAnnotations {
-	
-	// Assert that the annotations exist
-	private static void assertAnnotations(List<Class> annotationClasses, List<Annotation> annotations) {
-		annotationClasses.forEach(annotationClass -> {
-			long icount = annotations.stream().filter(a -> a.annotationType().isAssignableFrom(annotationClass)).count();
-			if (icount == 0) {
-				throw new AssertionError(String.format("No annotation of type %s was found", annotationClass.getName()));
+	// Assert the Entity annotations
+	@SuppressWarnings("unchecked")
+	public static void assertEntityAnnotations(Class clazz, Class... annotations) {
+		Arrays.asList(annotations).forEach(annotation -> {
+			if (!clazz.isAnnotationPresent(annotation)) {
+				throw new AssertionError(String.format("No annotation of type %s was found on %s", annotation.getName(),
+						clazz.getSimpleName()));
 			}
 		});
 	}
 
-	// Assert the Class annotation
-	public static void assertType(Class c, Class... annotationClasses) {
-		assertAnnotations(Arrays.asList(annotationClasses), Arrays.asList(c.getAnnotations()));
-	}
-
-	// Assert the Field annotation
-	public static void assertField(Class c, String fieldName, Class... annotationClasses) {
-		try {
-			assertAnnotations(Arrays.asList(annotationClasses),
-					Arrays.asList(c.getDeclaredField(fieldName).getAnnotations()));
-		} catch (NoSuchFieldException nsfe) {
-			throw new AssertionError(nsfe);
-		}
-	}
-
-	// Assert the Method annotation
+	// Assert the Field annotations
 	@SuppressWarnings("unchecked")
-	public static void assertMethod(Class c, String getterName, Class... annotationClasses) {
-		try {
-			assertAnnotations(Arrays.asList(annotationClasses),
-					Arrays.asList(c.getDeclaredMethod(getterName).getAnnotations()));
-		} catch (NoSuchMethodException nsfe) {
-			throw new AssertionError(nsfe);
-		}
+	public static void assertFieldAnnotations(Class clazz, String fieldName, Class... annotations) {
+		Arrays.asList(annotations).forEach(annotation -> {
+			try {
+				if (!clazz.getDeclaredField(fieldName).isAnnotationPresent(annotation)) {
+					throw new AssertionError(String.format("No annotation of type %s was found on field %s of %s",
+							annotation.getName(), fieldName, clazz.getSimpleName()));
+				}
+			} catch (NoSuchFieldException nsfe) {
+				throw new AssertionError(nsfe);
+			}
+		});
+	}
+
+	// Assert the Method annotations
+	@SuppressWarnings("unchecked")
+	public static void assertMethodAnnotations(Class clazz, String methodName, Class... annotations) {
+		Arrays.asList(annotations).forEach(annotation -> {
+			try {
+				if (!clazz.getDeclaredMethod(methodName).isAnnotationPresent(annotation)) {
+					throw new AssertionError(String.format("No annotation of type %s was found on method %s of %s",
+							annotation.getName(), methodName, clazz.getSimpleName()));
+				}
+			} catch (NoSuchMethodException nsfe) {
+				throw new AssertionError(nsfe);
+			}
+		});
 	}
 }

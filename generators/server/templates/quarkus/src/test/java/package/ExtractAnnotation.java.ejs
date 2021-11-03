@@ -1,0 +1,32 @@
+package <%=packageName%>;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class ExtractAnnotation {
+    // Extract Class annotation
+	public static <T extends Annotation> T getClassAnnotation(Class<?> clazz, Class<T> annotation) {
+		return (T) clazz.getAnnotation(annotation);
+	}
+
+    // Extract Field annotation
+	public static <T extends Annotation> T getFieldAnnotation(Class<?> clazz, String fieldName, Class<T> annotation) {
+		try {
+			Field field = clazz.getDeclaredField(fieldName);
+			return (T) field.getAnnotation(annotation);
+		} catch (NoSuchFieldException nsme) {
+			throw new RuntimeException(nsme);
+		}
+	}
+
+    // Extract Method annotation
+	public static <T extends Annotation> T getMethodAnnotation(Class<?> clazz, String methodName, Class<T> annotation) {
+		try {
+			Method method = clazz.getDeclaredMethod(methodName);
+			return (T) method.getAnnotation(annotation);
+		} catch (NoSuchMethodException nsme) {
+			throw new RuntimeException(nsme);
+		}
+	}
+}
