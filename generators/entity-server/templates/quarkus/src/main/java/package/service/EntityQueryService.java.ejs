@@ -27,6 +27,7 @@ import <%= packageName %>.domain.<%= entityOrDtoClass %>;
 <%_ if (hasPagination) { _%>
 import io.quarkus.panache.common.Page;
 <%_ } _%>
+import io.quarkus.panache.common.Sort;
 
 <%_ if (!hasPagination || fieldsContainNoOwnerOneToOne === true) { _%>
 import java.util.List;
@@ -48,7 +49,7 @@ public interface <%= entityClass %>QueryService {
     <%_ } _%>
      * @return the list of entities.
      */
-    <% if(hasPagination) { %>Paged<<%= entityOrDtoClass %>><% } else { %> List<<%= entityOrDtoClass %>><% } %> findAllByCriteria(<%= entityClass %>Criteria <%= entityInstance %>Criteria<% if(hasPagination) { %>, Page page<% } %>);
+    <% if(hasPagination) { %>Paged<<%= entityOrDtoClass %>><% } else { %> List<<%= entityOrDtoClass %>><% } %> findAllByCriteria(<%= entityClass %>Criteria <%= entityInstance %>Criteria<% if(hasPagination) { %>, Page page<% } %>, Sort sort);
 
     /**
     * Count all the <%= entityInstancePlural %>.

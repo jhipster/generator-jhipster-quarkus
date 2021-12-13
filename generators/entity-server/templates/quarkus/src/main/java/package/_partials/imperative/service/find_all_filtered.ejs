@@ -29,12 +29,17 @@
     <%_ if (databaseType === 'sql' && isUsingMapsId === true) { _%>
     @Transactional(readOnly = true)
     <%_ } _%>
-    public <% if(hasPagination) { %>Paged<<%= entityOrDtoClass %>><% } else { %> List<<%= entityOrDtoClass %>><% } %> findAllByCriteria(<%= entityClass %>Criteria <%= entityInstance %>Criteria<% if(hasPagination) { %>, Page page<% } %>) {
+    public <% if(hasPagination) { %>Paged<<%= entityOrDtoClass %>><% } else { %> List<<%= entityOrDtoClass %>><% } %> findAllByCriteria(<%= entityClass %>Criteria <%= entityInstance %>Criteria<% if(hasPagination) { %>, Page page<% } %>, Sort sort) {
         log.debug("Request to get all <%= entityClassPlural %>");
-        CriteriaQuery<<%= entityClass %>> criteriaQuery = createSelectCriteriaQuery(<%= entityInstance %>Criteria);
-        List<<%= entityOrDtoClass %>> resultList = <% if (hasDto) { %><%= mapper %>.toDto(<% } %>entityManager.createQuery(criteriaQuery).getResultList()<% if (hasDto) { %>)<% } %>;
+        CriteriaQuery<<%= entityClass %>> criteriaQuery = createSelectCriteriaQuery(<%= entityInstance %>Criteria, sort);
+        <% if(hasPagination) { %>
+        CriteriaQuery<Long> countQuery = createCountCriteriaQuery(<%= entityInstance %>Criteria);
+        Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+        <% } %>
+        final TypedQuery<<%= entityClass %>> query = entityManager.createQuery(criteriaQuery)<% if(hasPagination) { %>.setFirstResult(page.index * page.size).setMaxResults(page.size)<% } %>;
+        List<<%= entityOrDtoClass %>> resultList = <% if (hasDto) { %><%= mapper %>.toDto(<% } %>query.getResultList()<% if (hasDto) { %>)<% } %>;
         <%_ if(hasPagination) { _%>
-        return new Paged<>(page.index, page.size, 0, 0, resultList);
+        return new Paged<>(page.index, page.size, totalCount, (long) Math.ceil(((double) totalCount) / page.size), resultList);
         <%_ } else { _%>
         return resultList;
         <%_ } _%>

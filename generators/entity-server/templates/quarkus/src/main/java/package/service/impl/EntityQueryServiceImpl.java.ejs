@@ -34,6 +34,7 @@ import <%= packageName %>.domain.<%= entityClass%>_;
 <%_ relationships.forEach((relationship) => { _%>
 import <%= packageName %>.domain.<%= relationship.otherEntityNameCapitalized %>_;
 <%_ }); _%>
+
 @ApplicationScoped
 <%_ if (databaseType === 'sql') { _%>
 @Transactional
@@ -50,13 +51,13 @@ public class <%= entityClass %>QueryService<% if (hasServiceImpl) { %>Impl<% } %
 <%- include('../../_partials/imperative/service/count_filtered', this); -%>
 
 
-    protected CriteriaQuery<<%= entityClass %>> createSelectCriteriaQuery(<%= entityClass %>Criteria criteria) {
+    protected CriteriaQuery<<%= entityClass %>> createSelectCriteriaQuery(<%= entityClass %>Criteria criteria, Sort sort) {
         CriteriaQuery<<%= entityClass %>> query = entityManager.getCriteriaBuilder().createQuery(<%= entityClass %>.class);
         Root<<%= entityClass %>> from = query.from(<%= entityClass %>.class);
 
         List<Predicate> predicates = createPredicateList(criteria, from);
 
-        return query.select(from).where(predicates.toArray(new Predicate[0]));
+        return query.select(from).where(predicates.toArray(new Predicate[0])).orderBy(createOrderBy(sort, from));
     }
 
     protected CriteriaQuery<Long> createCountCriteriaQuery(<%= entityClass %>Criteria criteria) {

@@ -37,7 +37,7 @@
     <%_ } else { _%>
         var page = pageRequest.toPage();
         var sort = sortRequest.toSort();
-        Paged<<%= entityOrDtoClass%>> result = <%= entityInstance %>QueryService.findAllByCriteria(criteria, page);
+        Paged<<%= entityOrDtoClass%>> result = <%= entityInstance %>QueryService.findAllByCriteria(criteria, page, sort);
         var response = Response.ok().entity(result.content);
         response = PaginationUtil.withPaginationInfo(response, uriInfo, result);
         return response.build();
