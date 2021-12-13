@@ -150,6 +150,9 @@ public class QueryService<E> {
     }
 
     protected <T>List<Order> createOrderBy(Sort sort, Root<T> root) {
+        if (sort == null) {
+            return new ArrayList<>();
+        }
         return sort.getColumns().stream().map(column -> {
             if (Sort.Direction.Descending.equals(column.getDirection())) {
                 return entityManager.getCriteriaBuilder().desc(root.get(column.getName()));
