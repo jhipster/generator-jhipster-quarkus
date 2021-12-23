@@ -34,6 +34,12 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
  * fieldName.notIn='something','other'
  * fieldName.contains='thing'
  * fieldName.doesNotContain='thing'
+ * fieldName.startsWith='some'
+ * fieldName.doesNotStartWith='some'
+ * fieldName.endsWith='thing'
+ * fieldName.doesNotEndWith='thing'
+ * fieldName.like='%thing%'
+ * fieldName.notLike='%thing%'
  * </code>
  */
 @RegisterForReflection
@@ -43,6 +49,12 @@ public class StringFilter extends Filter<String> {
 
     private String contains;
     private String doesNotContain;
+    private String startsWith;
+    private String doesNotStartWith;
+    private String endsWith;
+    private String doesNotEndWith;
+    private String like;
+    private String notLike;
 
     /**
      * <p>Constructor for StringFilter.</p>
@@ -59,6 +71,12 @@ public class StringFilter extends Filter<String> {
         super(filter);
         this.contains = filter.contains;
         this.doesNotContain = filter.doesNotContain;
+        this.startsWith = filter.startsWith;
+        this.doesNotStartWith = filter.doesNotStartWith;
+        this.endsWith = filter.endsWith;
+        this.doesNotEndWith = filter.doesNotEndWith;
+        this.like = filter.like;
+        this.notLike = filter.notLike;
     }
 
     /**
@@ -111,6 +129,127 @@ public class StringFilter extends Filter<String> {
         return this;
     }
 
+    /**
+     * <p>Getter for the field <code>startsWith</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getStartsWith() {
+        return startsWith;
+    }
+
+    /**
+     * <p>Setter for the field <code>startsWith</code>.</p>
+     *
+     * @param startsWith a {@link java.lang.String} object.
+     * @return a {@link .StringFilter} object.
+     */
+    public StringFilter setStartsWith(String startsWith) {
+        this.startsWith = startsWith;
+        return this;
+    }
+
+    /**
+     * <p>Getter for the field <code>doesNotStartWith</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getDoesNotStartWith() {
+        return doesNotStartWith;
+    }
+
+    /**
+     * <p>Setter for the field <code>startsWith</code>.</p>
+     *
+     * @param doesNotStartWith a {@link java.lang.String} object.
+     * @return a {@link .StringFilter} object.
+     */
+    public StringFilter setDoesNotStartWith(String doesNotStartWith) {
+        this.doesNotStartWith = doesNotStartWith;
+        return this;
+    }
+    
+    /**
+     * <p>Getter for the field <code>endsWith</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getEndsWith() {
+        return endsWith;
+    }
+
+    /**
+     * <p>Setter for the field <code>endsWith</code>.</p>
+     *
+     * @param endsWith a {@link java.lang.String} object.
+     * @return a {@link .StringFilter} object.
+     */
+    public StringFilter setEndsWith(String endsWith) {
+        this.endsWith = endsWith;
+        return this;
+    }
+
+    /**
+     * <p>Getter for the field <code>doesNotEndWith</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getDoesNotEndWith() {
+        return doesNotEndWith;
+    }
+
+    /**
+     * <p>Setter for the field <code>doesNotEndWith</code>.</p>
+     *
+     * @param doesNotEndWith a {@link java.lang.String} object.
+     * @return a {@link .StringFilter} object.
+     */
+    public StringFilter setDoesNotEndWith(String doesNotEndWith) {
+        this.doesNotEndWith = doesNotEndWith;
+        return this;
+    }
+
+
+    /**
+     * <p>Getter for the field <code>like</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getLike() {
+        return like;
+    }
+
+    /**
+     * <p>Setter for the field <code>like</code>.</p>
+     *
+     * @param like a {@link java.lang.String} object.
+     * @return a {@link .StringFilter} object.
+     */
+    public StringFilter setLike(String like) {
+        this.like = like;
+        return this;
+    }
+
+    /**
+     * <p>Getter for the field <code>notLike</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getNotLike() {
+        return notLike;
+    }
+
+    /**
+     * <p>Setter for the field <code>notLike</code>.</p>
+     *
+     * @param notLike a {@link java.lang.String} object.
+     * @return a {@link .StringFilter} object.
+     */
+    public StringFilter setNotLike(String notLike) {
+        this.notLike = notLike;
+        return this;
+    }
+
     /** {@inheritDoc} */
     @Override
     public boolean equals(final Object o) {
@@ -125,7 +264,13 @@ public class StringFilter extends Filter<String> {
         }
         final StringFilter that = (StringFilter) o;
         return Objects.equals(contains, that.contains) &&
-            Objects.equals(doesNotContain, that.doesNotContain);
+            Objects.equals(doesNotContain, that.doesNotContain) &&
+            Objects.equals(startsWith, that.startsWith) &&
+            Objects.equals(doesNotStartWith, that.doesNotStartWith) &&
+            Objects.equals(endsWith, that.endsWith) &&
+            Objects.equals(doesNotEndWith, that.doesNotEndWith) &&
+            Objects.equals(like, that.like) &&
+            Objects.equals(notLike, that.notLike);
     }
 
     /** {@inheritDoc} */
@@ -144,7 +289,13 @@ public class StringFilter extends Filter<String> {
             + (getIn() != null ? "in=" + getIn() + ", " : "")
             + (getNotIn() != null ? "notIn=" + getNotIn() + ", " : "")
             + (getContains() != null ? "contains=" + getContains() + ", " : "")
-            + (getDoesNotContain() != null ? "doesNotContain=" + getDoesNotContain() : "")
+            + (getDoesNotContain() != null ? "doesNotContain=" + getDoesNotContain() + ", " : "")
+            + (getStartsWith() != null ? "startsWith=" + getStartsWith() + ", " : "")
+            + (getDoesNotStartWith() != null ? "doesNotStartWith=" + getDoesNotStartWith() + ", " : "")
+            + (getEndsWith() != null ? "endsWith=" + getEndsWith() + ", " : "")
+            + (getDoesNotEndWith() != null ? "doesNotEndWith=" + getDoesNotEndWith() + ", " : "")
+            + (getLike() != null ? "like=" + getLike() + ", " : "")
+            + (getNotLike() != null ? "notLike=" + getNotLike() : "")
             + "]";
     }
 

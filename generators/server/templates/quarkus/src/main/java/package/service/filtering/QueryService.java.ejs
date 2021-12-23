@@ -42,9 +42,21 @@ public class QueryService<E> {
         } else if (filter.getNotIn() != null) {
             return valueNotIn(expression, filter.getNotIn());
         } else if (filter.getContains() != null) {
-            return likeUpperPredicate(expression, filter.getContains());
+            return containsPredicate(expression, filter.getContains());
         } else if (filter.getDoesNotContain() != null) {
             return doesNotContainPredicate(expression, filter.getDoesNotContain());
+        } else if (filter.getStartsWith() != null) {
+            return startsWithPredicate(expression, filter.getStartsWith());
+        } else if (filter.getDoesNotStartWith() != null) {
+            return doesNotStartWithPredicate(expression, filter.getDoesNotStartWith());
+        } else if (filter.getEndsWith() != null) {
+            return endsWithPredicate(expression, filter.getEndsWith());
+        } else if (filter.getDoesNotEndWith() != null) {
+            return doesNotEndWithPredicate(expression, filter.getDoesNotEndWith());
+        } else if (filter.getLike() != null) {
+            return likePredicate(expression, filter.getLike());
+        } else if (filter.getNotLike() != null) {
+            return notLikePredicate(expression, filter.getNotLike());
         } else if (filter.getNotEquals() != null) {
             return notEqualsPredicate(expression, filter.getNotEquals());
         } else if (filter.getSpecified() != null) {
@@ -100,11 +112,39 @@ public class QueryService<E> {
 
     protected Predicate likeUpperPredicate(Expression<String> expression, final String value) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        return cb.like(cb.upper(expression), wrapLikeQuery(value));
+        return cb.like(cb.upper(expression), value);
+    }
+
+    protected Predicate containsPredicate(Expression<String> expression, final String value) {
+        return likeUpperPredicate(expression, wrapLikeQuery(value));
     }
 
     protected Predicate doesNotContainPredicate(Expression<String> expression, final String value) {
-        return likeUpperPredicate(expression, value).not();
+        return likeUpperPredicate(expression, wrapLikeQuery(value)).not();
+    }
+
+    protected Predicate startsWithPredicate(Expression<String> expression, final String value) {
+        return likeUpperPredicate(expression, beginMatchesLikeQuery(value));
+    }
+
+    protected Predicate doesNotStartWithPredicate(Expression<String> expression, final String value) {
+        return likeUpperPredicate(expression, beginMatchesLikeQuery(value)).not();
+    }
+
+    protected Predicate endsWithPredicate(Expression<String> expression, final String value) {
+        return likeUpperPredicate(expression, endMatchesLikeQuery(value));
+    }
+
+    protected Predicate doesNotEndWithPredicate(Expression<String> expression, final String value) {
+        return likeUpperPredicate(expression, endMatchesLikeQuery(value)).not();
+    }
+
+    protected Predicate likePredicate(Expression<String> expression, final String value) {
+        return likeUpperPredicate(expression, value.toUpperCase());
+    }
+
+    protected Predicate notLikePredicate(Expression<String> expression, final String value) {
+        return likeUpperPredicate(expression, value.toUpperCase()).not();
     }
 
     protected <X> Predicate valueIn(Expression<X> expression, final Collection<X> value) {
@@ -147,6 +187,14 @@ public class QueryService<E> {
 
     protected String wrapLikeQuery(String txt) {
         return "%" + txt.toUpperCase() + '%';
+    }
+
+    protected String endMatchesLikeQuery(String txt) {
+        return "%" + txt.toUpperCase();
+    }
+
+    protected String beginMatchesLikeQuery(String txt) {
+        return txt.toUpperCase() + '%';
     }
 
     protected <T>List<Order> createOrderBy(Sort sort, Root<T> root) {
