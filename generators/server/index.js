@@ -19,14 +19,15 @@ module.exports = class extends ServerGenerator {
 
     get initializing() {
         const phaseFromJHipster = super._initializing();
+
         const readCustomConfiguration = {
             readCustomConfiguration() {
-                const configuration = this.getAllJhipsterConfig(this, true);
-                this.liquibase = configuration.liquibase || {};
-                this.kubernetes = configuration.kubernetes || {};
-                this.httpRootPath = configuration.httpRootPath;
-                this.jvmArguments = configuration.jvmArguments;
-                this.nativeArguments = configuration.nativeArguments;
+                const configuration = this.config;
+                this.liquibase = configuration.get('liquibase') || {};
+                this.kubernetes = configuration.get('kubernetes') || {};
+                this.httpRootPath = configuration.get('httpRootPath');
+                this.jvmArguments = configuration.get('jvmArguments');
+                this.nativeArguments = configuration.get('nativeArguments');
             },
         };
         const phaseFromQuarkus = {
@@ -37,6 +38,7 @@ module.exports = class extends ServerGenerator {
             },
         };
         return { ...phaseFromJHipster, ...readCustomConfiguration, ...phaseFromQuarkus };
+        //return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get prompting() {
