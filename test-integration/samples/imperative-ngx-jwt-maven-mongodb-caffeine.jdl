@@ -4,11 +4,13 @@ application {
     authenticationType jwt
     baseName jhipsterSampleApplication
     buildTool maven
-    databaseType sql
+    databaseType mongodb
     packageName io.github.jhipster.sample
-    prodDatabaseType mysql
+    devDatabaseType mongodb
+    prodDatabaseType mongodb
     enableHibernateCache false
-    cacheProvider redis
+    cacheProvider caffeine
+    testFrameworks [cypress]
   }
 
   entities *
@@ -25,15 +27,6 @@ entity Operation {
   date Instant required,
   description String,
   amount BigDecimal required unique
-}
-relationship OneToMany {
-  BankAccount{operation} to Operation{bankAccount(name)}
-}
-relationship ManyToOne {
-  BankAccount{user(login)} to User
-}
-relationship ManyToMany {
-  Operation{label(label)} to Label{operation}
 }
 
 paginate Operation with infinite-scroll

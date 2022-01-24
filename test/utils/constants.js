@@ -1,3 +1,5 @@
+const { defaultConfig } = require('generator-jhipster/generators/generator-defaults');
+
 const DEFAULT_ENTITY_ANSWERS = {
     fieldAdd: false,
     relationshipAdd: false,
@@ -33,15 +35,18 @@ const DEFAULT_CLIENT_ANSWERS = {
 };
 
 const DEFAULT_QUARKUS_BP_OPTIONS = {
-    'from-cli': true,
+    fromCli: true,
     skipInstall: true,
     blueprint: 'quarkus',
     skipChecks: true,
+    creationTimestamp: '2019-11-06',
 };
 
 const DEFAULT_QUARKUS_ENTITY_BP_OPTIONS = {
     ...DEFAULT_QUARKUS_BP_OPTIONS,
-    creationTimestamp: '2019-11-06',
+    defaultLocalConfig: {
+        ...defaultConfig,
+    },
 };
 
 const DEFAULT_YORC_FILENAME = 'ngx-blueprint';

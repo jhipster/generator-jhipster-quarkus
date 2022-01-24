@@ -38,7 +38,7 @@
         if (searchEngine === 'elasticsearch') {
             beans.push({class: `${entityClass}SearchRepository`, instance: `${entityInstance}SearchRepository`});
         }
-        if (reactiveRepositories) {
+        if (reactive) {
             beans.push({class: `${entityClass}ReactiveRepository`, instance: `${entityInstance}ReactiveRepository`});
         }
         if (isUsingMapsId === true && viaRepository ==true ) {

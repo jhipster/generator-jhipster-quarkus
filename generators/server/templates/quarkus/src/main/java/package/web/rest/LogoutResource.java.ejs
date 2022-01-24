@@ -82,7 +82,7 @@ public class LogoutResource {
                 response.addCookie(cookie);
             });
         var logoutDetails = Map.of(
-            "logoutUrl", jHipsterProperties.oidc.logoutUrl,
+            "logoutUrl", jHipsterProperties.oidc().logoutUrl(),
             "idToken", idToken.getRawToken()
         );
         return Response.ok(logoutDetails).build();

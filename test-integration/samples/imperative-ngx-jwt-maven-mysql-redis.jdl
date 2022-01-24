@@ -7,8 +7,9 @@ application {
     databaseType sql
     packageName io.github.jhipster.sample
     prodDatabaseType mysql
-    enableHibernateCache true
-    cacheProvider caffeine
+    enableHibernateCache false
+    cacheProvider redis
+    testFrameworks [cypress]
   }
 
   entities *

@@ -77,7 +77,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Another option would be to have a specific JPA entity graph to handle this case.
  */
-@Path("/api/users")
+@Path("/api/admin/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
@@ -136,7 +136,7 @@ public class UserResource {
         } else {
             var newUser = userService.createUser(userDTO);
             mailService.sendCreationEmail(newUser);
-            Response.ResponseBuilder response = Response.created(fromPath("/api/users").path(newUser.login).build()).entity(newUser);
+            Response.ResponseBuilder response = Response.created(fromPath("/api/admin/users").path(newUser.login).build()).entity(newUser);
             HeaderUtil.createAlert(applicationName, "userManagement.created", newUser.login).forEach(response::header);
             return response.build();
         }

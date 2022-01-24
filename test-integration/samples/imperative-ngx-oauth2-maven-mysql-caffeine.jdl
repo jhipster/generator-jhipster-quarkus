@@ -1,14 +1,15 @@
 application {
   config {
     applicationType monolith
-    authenticationType jwt
+    authenticationType oauth2
     baseName jhipsterSampleApplication
     buildTool maven
     databaseType sql
     packageName io.github.jhipster.sample
-    prodDatabaseType postgresql
-    enableHibernateCache false
-    cacheProvider no
+    prodDatabaseType mysql
+    enableHibernateCache true
+    cacheProvider caffeine
+    testFrameworks [cypress]
   }
 
   entities *
@@ -29,13 +30,9 @@ entity Operation {
 relationship OneToMany {
   BankAccount{operation} to Operation{bankAccount(name)}
 }
-relationship ManyToOne {
-  BankAccount{user(login)} to User
-}
+
 relationship ManyToMany {
   Operation{label(label)} to Label{operation}
 }
 
-dto BankAccount, Label, Operation with mapstruct
-paginate Operation with pagination
-service Operation with serviceImpl
+paginate Operation with infinite-scroll

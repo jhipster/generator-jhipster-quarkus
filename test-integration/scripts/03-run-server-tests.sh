@@ -12,7 +12,7 @@ fi
 #-------------------------------------------------------------------------------
 cd "$JHI_FOLDER_APP"
 if [ -f "mvnw" ]; then
-    ./mvnw -ntp -P-webpack verify --batch-mode
+    ./mvnw -ntp -P-webapp verify --batch-mode
         # -Dlogging.level.ROOT=OFF \
         # -Dlogging.level.org.zalando=OFF \
         # -Dlogging.level.io.github.jhipster=OFF \
@@ -21,7 +21,7 @@ if [ -f "mvnw" ]; then
         # -Dlogging.level.org.springframework.web=OFF \
         # -Dlogging.level.org.springframework.security=OFF
 elif [ -f "gradlew" ]; then
-    ./gradlew test integrationTest -x webpack
+    ./gradlew test integrationTest -x webapp
         # -Dlogging.level.ROOT=OFF \
         # -Dlogging.level.org.zalando=OFF \
         # -Dlogging.level.io.github.jhipster=OFF \

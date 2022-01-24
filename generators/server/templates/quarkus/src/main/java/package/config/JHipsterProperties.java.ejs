@@ -18,42 +18,58 @@
 -%>
 package <%=packageName%>.config;
 
-import io.quarkus.arc.config.ConfigProperties;
+import io.smallrye.config.ConfigMapping;
 
-@ConfigProperties(prefix = "jhipster")
-public class JHipsterProperties {
+@ConfigMapping(prefix = "jhipster")
+public interface JHipsterProperties {
+
+    Info info();
+
+    interface Info {
+
+        Swagger swagger();
+
+        interface Swagger {
+            Boolean enable();
+        }
+    }
+
 <%_ if (authenticationType === 'jwt') { _%>
-    public Security security;
-    public Mail mail;
+    Security security();
 
-    public static class Security {
-        public Authentication authentication;
+    interface Security {
 
-        public static class Authentication {
-            public Jwt jwt;
+        Authentication authentication();
 
-            public static class Jwt {
-                public String issuer;
-                public long tokenValidityInSeconds;
-                public long tokenValidityInSecondsForRememberMe;
-                public PrivateKey privateKey;
+        interface Authentication {
 
-                public static class PrivateKey {
-                    public String location;
+            Jwt jwt();
+
+            interface Jwt {
+
+               String issuer();
+               long tokenValidityInSeconds();
+               long tokenValidityInSecondsForRememberMe();
+               PrivateKey privateKey();
+
+               interface PrivateKey {
+                   String location();
                 }
             }
         }
     }
 
-    public static class Mail {
-        public String baseUrl;
+    Mail mail();
+
+    interface Mail {
+        String baseUrl();
     }
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
-    public Oidc oidc;
+    Oidc oidc();
 
-    public static class Oidc {
-        public String logoutUrl;
+    interface Oidc {
+        String logoutUrl();
     }
 <%_ } _%>
 }

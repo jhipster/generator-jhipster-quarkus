@@ -39,7 +39,7 @@ if (project.hasProperty("tls")) {
 }
 
 <%_ if (!skipClient) { _%>
-task webpack(type: <%= _.upperFirst(clientPackageManager) %>Task) {
+task webapp(type: <%= _.upperFirst(clientPackageManager) %>Task) {
     <%_ if (clientPackageManager==='npm') { _%>
     inputs.files("package-lock.json")
     <%_ } else { _%>
@@ -48,15 +48,15 @@ task webpack(type: <%= _.upperFirst(clientPackageManager) %>Task) {
     inputs.files("build.gradle")
     inputs.dir("<%= CLIENT_MAIN_SRC_DIR %>")
 
-    def webpackDevFiles = fileTree("<%= CLIENT_WEBPACK_DIR %>/")
-    webpackDevFiles.exclude("webpack.prod.js")
-    inputs.files(webpackDevFiles)
+    def webappDevFiles = fileTree("<%= CLIENT_WEBPACK_DIR %>/")
+    webappDevFiles.exclude("webapp.prod.js")
+    inputs.files(webappDevFiles)
 
     outputs.dir("<%= CLIENT_DIST_DIR %>")
 
     dependsOn <%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>
 
-    args = ["run", "webpack:build"]
+    args = ["run", "webapp:build:dev"]
     environment = [APP_VERSION: project.version]
 }
 <%_ } _%>
@@ -67,7 +67,7 @@ processResources {
 
 <%_ if (!skipClient) { _%>
 
-processResources.dependsOn webpack
+processResources.dependsOn webapp
 <%_ } _%>
 
 
