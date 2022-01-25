@@ -38,7 +38,6 @@ module.exports = class extends ServerGenerator {
             },
         };
         return { ...phaseFromJHipster, ...readCustomConfiguration, ...phaseFromQuarkus };
-        //return { ...phaseFromJHipster, ...phaseFromQuarkus };
     }
 
     get prompting() {
