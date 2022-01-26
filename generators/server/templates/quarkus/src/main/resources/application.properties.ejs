@@ -125,6 +125,7 @@ jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/ope
 <%_ } _%>
 
 <%_ if (kubernetes.createKubernetesConfiguration) { _%>
+quarkus.kubernetes.ports.http.host-port=8080
     <%_ if (kubernetes.namespace) { _%>
 quarkus.kubernetes.namespace=<%= kubernetes.namespace %>
     <%_ } _%>
