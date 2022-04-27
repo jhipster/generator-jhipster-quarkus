@@ -717,6 +717,14 @@ const serverFiles = {
                     file: 'package/service/filtering/filter/ZonedDateTimeFilter.java',
                     renameTo: generator => `${generator.javaDir}service/filtering/filter/ZonedDateTimeFilter.java`,
                 },
+                {
+                    file: 'package/service/filtering/filter/DateNoTimeDeserializer.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/DateNoTimeDeserializer.java`,
+                },
+                {
+                    file: 'package/service/filtering/filter/DateNoTimeListDeserializer.java',
+                    renameTo: generator => `${generator.javaDir}service/filtering/filter/DateNoTimeListDeserializer.java`,
+                },
             ],
         },
     ],
