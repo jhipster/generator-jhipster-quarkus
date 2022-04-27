@@ -22,6 +22,9 @@ package <%= packageName %>.service.filtering.filter;
 import java.time.LocalDate;
 import java.util.List;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import <%= packageName %>.config.Constants;
+import javax.json.bind.annotation.JsonbDateFormat;
+import javax.json.bind.annotation.JsonbTypeDeserializer;
 
 /**
  * Filter class for {@link java.time.LocalDate} type attributes.
@@ -60,6 +63,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
 
     /** {@inheritDoc} */
     @Override
+    @JsonbDateFormat(value = Constants.LOCAL_DATE_FORMAT)
     public LocalDateFilter setEquals(LocalDate equals) {
         super.setEquals(equals);
         return this;
@@ -67,6 +71,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
 
     /** {@inheritDoc} */
     @Override
+    @JsonbDateFormat(value = Constants.LOCAL_DATE_FORMAT) 
     public LocalDateFilter setNotEquals(LocalDate equals) {
         super.setNotEquals(equals);
         return this;
@@ -74,6 +79,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
 
     /** {@inheritDoc} */
     @Override
+    @JsonbTypeDeserializer(DateNoTimeListDeserializer.class)
     public LocalDateFilter setIn(List<LocalDate> in) {
         super.setIn(in);
         return this;
@@ -81,6 +87,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
 
     /** {@inheritDoc} */
     @Override
+    @JsonbTypeDeserializer(DateNoTimeListDeserializer.class)
     public LocalDateFilter setNotIn(List<LocalDate> notIn) {
         super.setNotIn(notIn);
         return this;
@@ -88,6 +95,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
 
     /** {@inheritDoc} */
     @Override
+    @JsonbTypeDeserializer(DateNoTimeDeserializer.class)
     public LocalDateFilter setGreaterThan(LocalDate equals) {
         super.setGreaterThan(equals);
         return this;
@@ -95,6 +103,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
 
     /** {@inheritDoc} */
     @Override
+    @JsonbTypeDeserializer(DateNoTimeDeserializer.class)
     public LocalDateFilter setLessThan(LocalDate equals) {
         super.setLessThan(equals);
         return this;
@@ -102,6 +111,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
 
     /** {@inheritDoc} */
     @Override
+    @JsonbTypeDeserializer(DateNoTimeDeserializer.class)
     public LocalDateFilter setGreaterThanOrEqual(LocalDate equals) {
         super.setGreaterThanOrEqual(equals);
         return this;
@@ -117,6 +127,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
 
     /** {@inheritDoc} */
     @Override
+    @JsonbTypeDeserializer(DateNoTimeDeserializer.class)
     public LocalDateFilter setLessThanOrEqual(LocalDate equals) {
         super.setLessThanOrEqual(equals);
         return this;

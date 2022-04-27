@@ -1,0 +1,39 @@
+﻿package <%= packageName %>.service.filtering.filter;
+
+import <%= packageName %>.config.Constants;
+
+import javax.json.bind.serializer.JsonbDeserializer;
+import javax.json.stream.JsonParser;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+/*
+ * Десериализатор для списка LocalDate - списка дат без указания времени
+ */
+
+public class DateNoTimeListDeserializer implements JsonbDeserializer<List<LocalDate>> {
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(Constants.LOCAL_DATE_FORMAT);
+
+    /**
+     * Deserialize JSON stream into object.
+     *
+     * @param parser Json parser.
+     * @param ctx    Deserialization context.
+     * @param rtType Type of returned object.
+     * @return Deserialized instance.
+     */
+    @Override
+    public List<LocalDate> deserialize(javax.json.stream.JsonParser parser, javax.json.bind.serializer.DeserializationContext ctx, Type rtType) {
+        List<LocalDate> result = new ArrayList<>();
+        while (parser.hasNext()) {
+            JsonParser.Event event = parser.next();
+            if (event == JsonParser.Event.VALUE_STRING) {
+                result.add(LocalDate.parse(parser.getString(), dateTimeFormatter));
+            }
+        }
+        return result;
+    }
+}
