@@ -1,0 +1,81 @@
+package <%=packageName%>.service;
+
+import <%=packageName%>.provider.BatchExecutionServicesProvider;
+import <%=packageName%>.service.dto.*;
+import <%=packageName%>.service.mapper.BatchExecutionMapper;
+import <%=packageName%>.service.mapper.PrimitiveListMapper;
+import <%=packageName%>.web.util.ClassUtil;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.json.bind.Jsonb;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Сервис для пакетной модификации объектов
+ */
+@ApplicationScoped
+public class BatchExecutionService {
+
+    @Inject
+    BatchExecutionServicesProvider servicesProvider;
+
+    @Inject
+    Jsonb jsonb;
+
+    @Inject
+    BatchExecutionMapper batchExecutionMapper;
+
+    @Inject
+    CriteriaFactory criteriaFactory;
+
+    /**
+     * Выполнение пакетной модификации объектов
+     * @param batchExecutionRequests список запросов для модификации объектов
+     * @return список модифицированных объектов
+     */
+    @Transactional
+    public List<BatchExecutionResponseDTO> batchExecution(List<BatchExecutionRequestDTO> batchExecutionRequests) {
+        List<BatchExecutionResponseDTO> responseDTOList = new ArrayList<>();
+        for (BatchExecutionRequestDTO request : batchExecutionRequests) {
+            BatchExecutionServiceInterface requestObjectService = servicesProvider.getService(request.objectName);
+            BatchExecutionDecorator batchExecutionDecorator = new BatchExecutionDecorator(requestObjectService, request.objectName, servicesProvider, criteriaFactory);
+            BaseDTO data = (BaseDTO) jsonb.fromJson(request.data, ClassUtil.getClass(ClassUtil.DTO_CLASS_PATH, request.objectName + "DTO"));
+            Object responseData = null;
+            if (ActionType.CREATE.equals(request.actionType) || ActionType.UPDATE.equals(request.actionType)) {
+                responseData = batchExecutionDecorator.persistOrUpdate(data);
+            } else if (ActionType.PARTIAL_UPDATE.equals(request.actionType)) {
+                responseData = batchExecutionDecorator.partialUpdate(data);
+            } else if (ActionType.DELETE.equals(request.actionType)) {
+                batchExecutionDecorator.delete(data.getId());
+            } else if (ActionType.READ_ENUM.equals(request.actionType)) {
+                EnumDTO enumDTO = jsonb.fromJson(request.data, EnumDTO.class);
+                responseData = batchExecutionDecorator.readEnum(enumDTO);
+            } else if (ActionType.CREATE_PRIMITIVE_LIST.equals(request.actionType)) {
+                PrimitiveListRequestDTO primitiveListRequestDTO = jsonb.fromJson(request.data, PrimitiveListRequestDTO.class);
+                responseData = createPrimitiveList(primitiveListRequestDTO, request.objectName, batchExecutionDecorator);
+            } else if (ActionType.UPDATE_PRIMITIVE_LIST.equals(request.actionType)) {
+                PrimitiveListRequestDTO primitiveListRequestDTO = jsonb.fromJson(request.data, PrimitiveListRequestDTO.class);
+                batchExecutionDecorator.deletePrimitiveList(primitiveListRequestDTO);
+                responseData = createPrimitiveList(primitiveListRequestDTO, request.objectName, batchExecutionDecorator);
+            }
+            BatchExecutionResponseDTO response = batchExecutionMapper.toBatchExecutionResponseDTO(request, responseData);
+            responseDTOList.add(response);
+        }
+        return responseDTOList;
+    }
+
+    private List<Object> createPrimitiveList(PrimitiveListRequestDTO primitiveListRequestDTO, String objectName, BatchExecutionDecorator batchExecutionDecorator) {
+        PrimitiveListMapper primitiveListMapper = (PrimitiveListMapper) servicesProvider.getMapper(objectName);
+        List<Object> primitiveResponse = new ArrayList<>();
+        for (Object value: primitiveListRequestDTO.values) {
+            Object objectDTO = primitiveListMapper.toPrimitiveRecordDto(primitiveListRequestDTO, value);
+            Object response = batchExecutionDecorator.persistOrUpdate(objectDTO);
+            primitiveResponse.add(response);
+        }
+        return primitiveResponse;
+    }
+}
+

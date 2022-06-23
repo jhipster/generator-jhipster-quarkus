@@ -1,0 +1,87 @@
+package <%=packageName%>.provider;
+
+import <%=packageName%>.service.BatchExecutionQueryServiceInterface;
+import <%=packageName%>.service.BatchExecutionServiceInterface;
+import <%=packageName%>.service.mapper.EntityMapper;
+import <%=packageName%>.web.util.ClassUtil;
+import org.jboss.logging.Logger;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+* Провайдер по получения сервисов для пакетной модификации объектов
+*/
+@ApplicationScoped
+public class BatchExecutionServicesProvider {
+
+    private final static Logger log = Logger.getLogger(BatchExecutionServicesProvider.class);
+
+    @Inject
+    BeanManager beanManager;
+
+    private final ConcurrentHashMap<String, BatchExecutionServiceInterface> services = new ConcurrentHashMap<>();
+
+    private final ConcurrentHashMap<String, BatchExecutionQueryServiceInterface> queryServices = new ConcurrentHashMap<>();
+
+    private final ConcurrentHashMap<String, EntityMapper> mappers = new ConcurrentHashMap<>();
+
+    /**
+    * Получение сервиса, соответствующего переданному наименованию объекта
+    * @param objectName наименование объекта для модификации
+    * @return сервис, соответствующий переданному наименованию объекта
+    */
+    public BatchExecutionServiceInterface getService(String objectName) {
+        log.debug("Get service for object with name " + objectName);
+        if (services.containsKey(objectName)) {
+            return services.get(objectName);
+        }
+        Class requestServiceClass = ClassUtil.getClass(ClassUtil.SERVICE_CLASS_PATH, objectName + "Service");
+        BatchExecutionServiceInterface objectService = (BatchExecutionServiceInterface) getBeanReference(requestServiceClass);
+        services.put(objectName, objectService);
+        return objectService;
+    }
+
+    /**
+    * Получение сервиса для фильтрации, соответствующего переданному наименованию объекта
+    * @param objectName наименование объекта для модификации
+    * @return сервис для фильтрации, соответствующий переданному наименованию объекта
+    */
+    public BatchExecutionQueryServiceInterface getQueryService(String objectName) {
+        log.debug("Get query-service for object with name " + objectName);
+        if (queryServices.containsKey(objectName)) {
+            return queryServices.get(objectName);
+        }
+        Class requestQueryServiceClass = ClassUtil.getClass(ClassUtil.SERVICE_CLASS_PATH, objectName + "QueryService");
+        BatchExecutionQueryServiceInterface objectQueryService = (BatchExecutionQueryServiceInterface) getBeanReference(requestQueryServiceClass);
+        queryServices.put(objectName, objectQueryService);
+        return objectQueryService;
+    }
+
+    /**
+    * Получение мапера, соответствующего переданному наименованию объекта
+    * @param objectName наименование объекта для модификации
+    * @return EntityMapper, соответствующий переданному наименованию объекта
+    */
+    public EntityMapper getMapper(String objectName) {
+        log.debug("Get mapper for object with name " + objectName);
+        if (mappers.containsKey(objectName)) {
+            return mappers.get(objectName);
+        }
+        Class mapperClass = ClassUtil.getClass(ClassUtil.MAPPER_CLASS_PATH, objectName + "Mapper");
+        EntityMapper entityMapper = (EntityMapper) getBeanReference(mapperClass);
+        mappers.put(objectName, entityMapper);
+        return entityMapper;
+    }
+
+    private Object getBeanReference(Class objectClass) {
+        Bean<?> objectBean = beanManager.resolve(beanManager.getBeans(objectClass));
+        CreationalContext<?> context = beanManager.createCreationalContext(objectBean);
+        return beanManager.getReference(objectBean, objectBean.getBeanClass(), context);
+    }
+}
+

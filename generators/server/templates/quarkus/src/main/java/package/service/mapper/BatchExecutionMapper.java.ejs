@@ -1,0 +1,16 @@
+package <%=packageName%>.service.mapper;
+
+import <%=packageName%>.service.dto.BatchExecutionRequestDTO;
+import <%=packageName%>.service.dto.BatchExecutionResponseDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+/**
+* Mапер для пакетной модификации объектов
+*/
+@Mapper(componentModel = "cdi")
+public interface BatchExecutionMapper {
+
+    @Mapping(target = "data", source = "responseData")
+    BatchExecutionResponseDTO toBatchExecutionResponseDTO(BatchExecutionRequestDTO batchExecutionRequestDTO, Object responseData);
+}

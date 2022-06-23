@@ -1,0 +1,25 @@
+package <%=packageName%>.web.util;
+
+import <%=packageName%>.web.rest.exception.BatchExecutionException;
+
+public final class ClassUtil {
+
+    public static final String SERVICE_CLASS_PATH = "<%=packageName%>.service.";
+
+    public static final String MAPPER_CLASS_PATH = "<%=packageName%>.service.mapper.";
+
+    public static final String DTO_CLASS_PATH = "<%=packageName%>.service.dto.";
+
+    public static final String CRITERIA_CLASS_PATH = "<%=packageName%>.service.dto.";
+
+    /**
+    * Получение класса по path и наименованию
+    */
+    public static Class getClass(String path, String className) {
+        try {
+            return Class.forName(path + className);
+        } catch (ClassNotFoundException e) {
+            throw new BatchExecutionException(String.format("Class with name %s not found", path + className));
+        }
+    }
+}
