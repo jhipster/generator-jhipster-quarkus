@@ -37,6 +37,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 const referenceFilterType = '' + primaryKeyType + 'Filter';
 var filterVariables = [{name:'id', type: primaryKeyType, filterType:referenceFilterType,fieldInJavaBeanMethod:'Id' } ];
 var extraFilters = {};
+var enumCriteria = false;
 fields.forEach((field) => {
 const fieldType = field.fieldType;
 if (isFilterableType(fieldType)) {
@@ -54,6 +55,7 @@ if (isFilterableType(fieldType)) {
         type: fieldType,
         fieldInJavaBeanMethod: field.fieldInJavaBeanMethod });
 }
+enumCriteria = field.fieldName === 'code';
 });
 relationships.forEach((relationship) => {
 const relationshipType = relationship.relationshipType;
@@ -78,7 +80,7 @@ _%>
  * fix type specific filters.
  */
 @RegisterForReflection
-public class <%= entityClass %>Criteria implements Serializable, Criteria {
+public class <%= entityClass %>Criteria implements Serializable, Criteria<%_ if (enumCriteria) { _%>, EnumCriteria<%_ } _%> {
 <%_ Object.keys(extraFilters).forEach((key) => {
         extraFilter = extraFilters[key]; _%>
     /**

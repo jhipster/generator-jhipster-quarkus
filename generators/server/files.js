@@ -754,8 +754,16 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/BatchExecutionQueryServiceInterface.java`,
                 },
                 {
-                    file: 'package/service/BatchExecutionServiceInterface.java',
-                    renameTo: generator => `${generator.javaDir}service/BatchExecutionServiceInterface.java`,
+                    file: 'package/service/BatchExecutionDecorator.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionDecorator.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionDecorator.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionDecorator.java`,
+                },
+                {
+                    file: 'package/service/dto/EnumCriteria.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/EnumCriteria.java`,
                 },
             ],
         },
