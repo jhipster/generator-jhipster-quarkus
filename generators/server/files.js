@@ -765,6 +765,18 @@ const serverFiles = {
                     file: 'package/service/dto/EnumCriteria.java',
                     renameTo: generator => `${generator.javaDir}service/dto/EnumCriteria.java`,
                 },
+                {
+                    file: 'package/service/mapper/PrimitiveListMapper.java',
+                    renameTo: generator => `${generator.javaDir}service/mapper/PrimitiveListMapper.java`,
+                },
+                {
+                    file: 'package/service/dto/PrimitiveListCriteria.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/PrimitiveListCriteria.java`,
+                },
+                {
+                    file: 'package/service/dto/PrimitiveListRequestDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/PrimitiveListRequestDTO.java`,
+                },
             ],
         },
     ],

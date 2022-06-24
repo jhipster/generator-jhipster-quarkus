@@ -1,13 +1,19 @@
 package <%=packageName%>.service.dto;
 
-import <%=packageName%>.service.filtering.Criteria;
-import <%=packageName%>.service.filtering.filter.StringFilter;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
-public interface PrimitiveListCriteria extends Criteria {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-    void setEntityName(StringFilter entityName);
+@RegisterForReflection
+public class PrimitiveListRequestDTO implements Serializable {
 
-    void setEntityId(StringFilter entityId);
+    public List<Object> values = new ArrayList<>();
 
-    void setFieldName(StringFilter fieldName);
+    public String entityName;
+
+    public String entityId;
+
+    public String fieldName;
 }

@@ -1,16 +1,8 @@
 package <%=packageName%>.service.mapper;
 
-import <%=packageName%>.service.dto.BatchExecutionRequestDTO;
-import <%=packageName%>.service.dto.BatchExecutionResponseDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import <%=packageName%>.service.dto.PrimitiveListRequestDTO;
 
-/**
-* Mапер для пакетной модификации объектов
-*/
-@Mapper(componentModel = "cdi")
-public interface BatchExecutionMapper {
+public interface PrimitiveListMapper<T> {
 
-    @Mapping(target = "data", source = "responseData")
-    BatchExecutionResponseDTO toBatchExecutionResponseDTO(BatchExecutionRequestDTO batchExecutionRequestDTO, Object responseData);
+    T toPrimitiveRecordDto(PrimitiveListRequestDTO primitiveListRequestDTO, Object value);
 }
