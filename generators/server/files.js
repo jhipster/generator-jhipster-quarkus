@@ -725,6 +725,38 @@ const serverFiles = {
                     file: 'package/service/filtering/filter/DateNoTimeListDeserializer.java',
                     renameTo: generator => `${generator.javaDir}service/filtering/filter/DateNoTimeListDeserializer.java`,
                 },
+                {
+                    file: 'package/web/rest/BatchExecutionResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/QueryService.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionService.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionService.java`,
+                },
+                {
+                    file: 'package/service/dto/BatchExecutionResponseDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/BatchExecutionResponseDTO.java`,
+                },
+                {
+                    file: 'package/provider/BatchExecutionServicesProvider.java',
+                    renameTo: generator => `${generator.javaDir}provider/BatchExecutionServicesProvider.java`,
+                },
+                {
+                    file: 'package/service/mapper/BatchExecutionMapper.java',
+                    renameTo: generator => `${generator.javaDir}service/mapper/BatchExecutionMapper.java`,
+                },
+                {
+                    file: 'package/web/util/ClassUtil.java',
+                    renameTo: generator => `${generator.javaDir}web/util/ClassUtil.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionQueryServiceInterface.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionQueryServiceInterface.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionServiceInterface.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionServiceInterface.java`,
+                },
             ],
         },
     ],
