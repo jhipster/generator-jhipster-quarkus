@@ -38,7 +38,7 @@ import java.util.UUID;
 /**
  * Service Interface for managing {@link <%= packageName %>.domain.<%= entityClass %>}.
  */
-public interface <%= entityClass %>Service {
+public interface <%= entityClass %>Service extends BatchExecutionServiceInterface<<%= asDto(entityClass) %>> {
 
     /**
      * Save a <%= entityInstance %>.

@@ -42,10 +42,19 @@ for (idx in relationships) {
         }
     }
 }
+var primitive = entityClass === 'StringRecord' || entityClass === 'LocalDateRecord' || entityClass === 'InstantRecord' || entityClass === 'ZonedDateTimeRecord'
+        || entityClass === 'IntegerRecord' || entityClass === 'LongRecord' || entityClass === 'FloatRecord' || entityClass === 'DoubleRecord'
+        || entityClass === 'BigDecimalRecord' || entityClass === 'BooleanRecord' || entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord'
+        || entityClass === 'ImageBlobRecord' || entityClass === 'TextBlobRecord' || entityClass === 'DurationRecord' || entityClass === 'UUIDRecord';
+var primitiveType = entityClass.substr(0, entityClass.lastIndexOf("Record"));
 _%>
 
 import <%= packageName %>.domain.*;
+import <%= packageName %>.service.dto.PrimitiveListRequestDTO;
 import <%= packageName %>.service.dto.<%= asDto(entityClass) %>;
+<%_ if (primitiveType === 'AnyBlob') { _%>
+import org.apache.commons.lang3.ArrayUtils;
+<%_ } _%>
 
 import org.mapstruct.*;
 <%_ if (uuidMapMethod) { _%>
@@ -58,7 +67,14 @@ import java.util.UUID;
  * Mapper for the entity {@link <%= asEntity(entityClass) %>} and its DTO {@link <%= asDto(entityClass) %>}.
  */
 @Mapper(componentModel = "cdi", uses = {<%= existingMappings.map(otherEntityNameCapitalized => otherEntityNameCapitalized + 'Mapper.class').join(', ') %>})
-public interface <%= entityClass %>Mapper extends EntityMapper<<%= asDto(entityClass) %>, <%= asEntity(entityClass) %>> {
+public interface <%= entityClass %>Mapper extends EntityMapper<<%= asDto(entityClass) %>, <%= asEntity(entityClass) %>>
+<%_ if (primitive) { _%>, PrimitiveListMapper<<%= asDto(entityClass) %>><%_ } _%> {
+
+<%_ if (primitive) { _%>
+
+    @Mapping(target = "value", source = "value", qualifiedByName = "toValue")
+    <%= asDto(entityClass) %> toPrimitiveRecordDto(PrimitiveListRequestDTO primitiveListRequestDTO, Object value);
+<%_ } _%>
 
 <%_
 // entity -> DTO mapping
@@ -133,4 +149,19 @@ _%>
         return new String(value);
     }
     <%_ } _%>
+
+    <%_ if (primitive) { _%>
+        @Named("toValue")
+        default <%= primitiveType %> toValue(Object value) {
+            <%_ if (primitiveType === 'Integer' || primitiveType === 'Long' || primitiveType === 'Float' || primitiveType === 'Double') { _%>
+                return ((BigDecimal) value).intValue();
+            <%_ } else if (primitiveType === 'AnyBlob') { _%>
+                Byte[] bytes = JsonbBuilder.create().fromJson(value.toString(), Byte[].class);
+                return ArrayUtils.toPrimitive(bytes);
+            <%_ } else { _%>
+                return <%= primitiveType %>.valueOf(value);
+            <%_ } _%>
+        }
+    <%_ } _%>
 }
+
