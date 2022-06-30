@@ -348,7 +348,7 @@ public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql')
     }) -%>
         <%_ } _%>
     @JoinTable(name = "<%= joinTableName %>",
-               joinColumns = @JoinColumn(name = "<%= getColumnName(name) %>_id", referencedColumnName = "id"),
+               joinColumns = @JoinColumn(name = "<%= entityTableName %>_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "<%= getColumnName(relationships[idx].relationshipName) %>_id", referencedColumnName = "id"))
         <%_ }
         } else if (databaseType === 'mongodb' || databaseType === 'couchbase') {
