@@ -1,0 +1,27 @@
+package <%=packageName%>.service;
+
+import <%=packageName%>.service.filtering.Criteria;
+import <%=packageName%>.web.rest.exception.BatchExecutionException;
+import <%=packageName%>.web.util.ClassUtil;
+
+import javax.enterprise.context.ApplicationScoped;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+/**
+* Фабрика по созданию Criteria для перечислений
+*/
+@ApplicationScoped
+public class CriteriaFactory {
+
+    public Criteria createCriteria(String objectName) {
+        try {
+            Class criteriaClass = ClassUtil.getClass(ClassUtil.CRITERIA_CLASS_PATH, objectName + "Criteria");
+            Constructor objectCriteriaClassConstructor = criteriaClass.getConstructor();
+            return (Criteria) objectCriteriaClassConstructor.newInstance();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new BatchExecutionException(String.format("Criteria for enum with name %s not found", objectName));
+        }
+    }
+}
+

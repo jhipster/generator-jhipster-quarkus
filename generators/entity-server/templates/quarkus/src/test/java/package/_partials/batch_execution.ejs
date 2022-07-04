@@ -1,3 +1,204 @@
+<%_
+var primitive = ['StringRecord', 'LocalDateRecord', 'InstantRecord', 'ZonedDateTimeRecord', 'IntegerRecord', 'LongRecord',
+    'FloatRecord', 'DoubleRecord', 'BigDecimalRecord', 'BooleanRecord', 'BlobRecord', 'AnyBlobRecord', 'BlobRecord',
+    'ImageBlobRecord', 'TextBlobRecord', 'DurationRecord', 'UUIDRecord'].includes(entityClass);
+_%>
+<%_
+var enumeration = false;
+for (let idx = 0; idx < fields.length; idx++) {
+    if (fields[idx].fieldName === 'code') {
+        enumeration = true;
+        break;
+    }
+}
+_%>
+<%_
+var firstFieldName;
+var fieldNameUnderscored;
+if (fields.length > 0) {
+    firstFieldName = fields[0].fieldName;
+    firstFieldNameUnderscored = fields[0].fieldNameUnderscored.toUpperCase();
+}
+_%>
+<%_ if (primitive) { _%>
+    @Test
+    public void createPrimitiveListBatchExecution() {
+        var databaseSizeBeforeCreate = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE)
+            .size();
+
+        List<BatchExecutionRequestDTO> prepareRequestDTOList = new ArrayList<>();
+        prepareRequestDTOList.add(modifyPrimitiveList(ActionType.CREATE_PRIMITIVE_LIST));
+
+        List<BatchExecutionResponseDTO> batchExecutionResponseDTOList =
+            given()
+                .auth()
+                .preemptive()
+                .oauth2(adminToken)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(prepareRequestDTOList)
+                .when()
+                .post("/api/batch-execution")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract()
+                .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var <%= entityOrDtoInstance %>List = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE);
+
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate + 2);
+        var testFirstRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+        assertThat(testFirstRecordsDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
+        assertThat(testFirstRecordsDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
+        assertThat(testFirstRecordsDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
+
+        var testSecondRecordsDTO = stringRecordsDTOList.stream().filter(it -> it.value.equals(UPDATED_VALUE)).findFirst().get();
+        assertThat(testSecondRecordsDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
+        assertThat(testSecondRecordsDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
+        assertThat(testSecondRecordsDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
+
+        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        assertThat(response.uuid).isNotEmpty();
+
+        ArrayList<<%= entityOrDtoClass %>> <%= entityOrDtoInstance %>List = jsonb.fromJson(jsonb.toJson(response.data),
+        new ArrayList<<%= entityOrDtoClass %>>(){}.getClass().getGenericSuperclass());
+        <%= entityOrDtoClass %> firstRecordDTO = <%= entityOrDtoClass %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+        assertThat(firstRecordDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
+        assertThat(firstRecordDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
+        assertThat(firstRecordDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
+        <%= entityOrDtoClass %> secondRecordDTO = stringRecordDTOList.stream().filter(it -> it.value.equals(UPDATED_VALUE)).findFirst().get();
+        assertThat(secondRecordDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
+        assertThat(secondRecordDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
+        assertThat(secondRecordDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
+    }
+
+    @Test
+    public void updatePrimitiveListBatchExecution() {
+        List<BatchExecutionRequestDTO> prepareRequestDTOList = new ArrayList<>();
+        prepareRequestDTOList.add(modifyPrimitiveList(ActionType.CREATE_PRIMITIVE_LIST));
+
+        List<BatchExecutionResponseDTO> prepareResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(prepareRequestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var databaseSizeBeforeCreate = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE)
+            .size();
+
+        <%= entityOrDtoInstance %>PrimitiveListRequestDTO.values = Collections.singletonList(DEFAULT_VALUE);
+
+        List<BatchExecutionRequestDTO> requestDTOList = new ArrayList<>();
+        requestDTOList.add(modifyPrimitiveList(ActionType.UPDATE_PRIMITIVE_LIST));
+
+        List<BatchExecutionResponseDTO> batchExecutionResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(requestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var <%= entityOrDtoInstance %>List = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE);
+
+            assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeCreate - 1);
+            var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+            assertThat(testRecordsDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
+            assertThat(testRecordsDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
+            assertThat(testRecordsDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
+
+            assertThat(batchExecutionResponseDTOList).hasSize(1);
+            BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+            assertThat(response.uuid).isNotEmpty();
+
+            ArrayList<%= entityOrDtoClass %>> <%= entityOrDtoInstance %>List = jsonb.fromJson(jsonb.toJson(response.data),
+                new ArrayList<%= entityOrDtoClass %>>() {}.getClass().getGenericSuperclass());
+            <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+            assertThat(<%= entityOrDtoInstance %>.entityId).isEqualTo(DEFAULT_ENTITY_ID);
+            assertThat(<%= entityOrDtoInstance %>.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
+            assertThat(<%= entityOrDtoInstance %>.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
+        }
+
+        private BatchExecutionRequestDTO modifyPrimitiveList(ActionType actionType) {
+            BatchExecutionRequestDTO documentRequest = new BatchExecutionRequestDTO();
+            documentRequest.uuid = UUID.randomUUID().toString();
+            documentRequest.actionType = actionType;
+            documentRequest.objectName = "<%= entityClass %>";
+            documentRequest.data = jsonb.toJson(<%= entityOrDtoInstance %>PrimitiveListRequestDTO);
+            return documentRequest;
+        }
+
+        private static PrimitiveListRequestDTO createPrimitiveListRequest() {
+            var primitiveListDTO = new PrimitiveListRequestDTO();
+            primitiveListDTO.values.add(DEFAULT_VALUE);
+            primitiveListDTO.values.add(UPDATED_VALUE);
+            primitiveListDTO.entityName = DEFAULT_ENTITY_NAME;
+            primitiveListDTO.entityId = DEFAULT_ENTITY_ID;
+            primitiveListDTO.fieldName = DEFAULT_FIELD_NAME;
+            return primitiveListDTO;
+        }
+<%_ } else { _%>
     @Test
     public void createBatchExecution<%= entityClass %>() {
         var databaseSizeBeforeCreate = given()
@@ -14,7 +215,7 @@
             .size();
 
         List<BatchExecutionRequestDTO> requestDTOList = new ArrayList<>();
-        requestDTOList.add(modifyPerson(ActionType.CREATE));
+        requestDTOList.add(modifyEntity(ActionType.CREATE));
 
         List<BatchExecutionResponseDTO> batchExecutionResponseDTOList =
             given()
@@ -44,11 +245,11 @@
             .extract().as(LIST_OF_ENTITY_TYPE);
 
         assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate + 1);
-        var <%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().filter(it -> <%= entityOrDtoInstance %>.id.equals(it.id)).findFirst().get();
+        var <%= entityOrDtoInstance %>  = <%= entityOrDtoInstance %>List.stream().filter(it -> <%= entityOrDtoInstance %>.id.equals(it.id)).findFirst().get();
         <%- include('./object_verification', {...this, prefix: 'DEFAULT_'}); -%>
 
         assertThat(batchExecutionResponseDTOList).hasSize(2);
-        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("Person")).findFirst().get();
+        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
         assertThat(response.uuid).isNotEmpty();
         <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(response.data), <%= entityOrDtoClass %>.class);
         <%- include('./object_verification', {...this, prefix: 'DEFAULT_'}); -%>
@@ -68,3 +269,344 @@
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
     }
+
+    @Test
+    public void updateBatchExecution() {
+        List<BatchExecutionRequestDTO> prepareRequestDTOList = new ArrayList<>();
+        prepareRequestDTOList.add(modifyEntity(ActionType.CREATE));
+
+        List<BatchExecutionResponseDTO> prepareResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(prepareRequestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var databaseSizeBeforeCreate = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE)
+            .size();
+
+        BatchExecutionResponseDTO prepareResponse = prepareResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityOrDtoInstance %>")).findFirst().get();
+        <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(prepareResponse.data), <%= entityOrDtoClass %>.class);
+
+        <%- include('./object_verification', {...this, prefix: 'UPDATED_'}); -%>
+
+        List<BatchExecutionRequestDTO> requestDTOList = new ArrayList<>();
+        requestDTOList.add(modifyEntity(ActionType.UPDATE));
+
+        List<BatchExecutionResponseDTO> batchExecutionResponseDTOList =
+            given()
+                .auth()
+                .preemptive()
+                .oauth2(adminToken)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .body(requestDTOList)
+                .when()
+                .post("/api/batch-execution")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract()
+                .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var <%= entityOrDtoInstance %>DTOList = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE);
+
+        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeCreate);
+        var <%= entityOrDtoInstance %> = <%= entityOrDtoInstance %>DTOList.stream().findFirst().get();
+        <%- include('./object_verification', {...this, prefix: 'UPDATED_'}); -%>
+
+        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        assertThat(response.uuid).isNotEmpty();
+        <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(response.data), <%= entityOrDtoClass %>.class);
+        <%- include('./object_verification', {...this, prefix: 'UPDATED_'}); -%>
+    }
+
+    @Test
+    public void partialUpdateBatchExecution() {
+    List<BatchExecutionRequestDTO> prepareRequestDTOList = new ArrayList<>();
+        prepareRequestDTOList.add(modifyEntity(ActionType.CREATE));
+
+        List<BatchExecutionResponseDTO> prepareResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(prepareRequestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var databaseSizeBeforeCreate = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE)
+            .size();
+
+        BatchExecutionResponseDTO prepareResponse = prepareResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(prepareResponse.data), <%= entityOrDtoClass %>.class);
+
+        if (firstFieldName) {
+        <%= entityOrDtoInstance %>.firstFieldName = UPDATED_<%= firstFieldNameUnderscored %>;
+        }
+
+        List<BatchExecutionRequestDTO> requestDTOList = new ArrayList<>();
+        requestDTOList.add(modifyEntity(ActionType.UPDATE));
+
+        List<BatchExecutionResponseDTO> batchExecutionResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(requestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var <%= entityOrDtoInstance %>DTOList = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE);
+
+        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeCreate);
+        var <%= entityOrDtoInstance %> = <%= entityOrDtoInstance %>DTOList.stream().findFirst().get();
+        <%- include('./part_update_verification', this); -%>
+
+
+        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        assertThat(response.uuid).isNotEmpty();
+        <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(response.data), <%= entityOrDtoClass %>.class);
+        <%- include('./part_update_verification', this); -%>
+    }
+
+    @Test
+    public void deleteBatchExecution() {
+        List<BatchExecutionRequestDTO> prepareRequestDTOList = new ArrayList<>();
+        prepareRequestDTOList.add(modifyEntity(ActionType.CREATE));
+
+        List<BatchExecutionResponseDTO> prepareResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(prepareRequestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var databaseSizeBeforeCreate = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE)
+            .size();
+
+        BatchExecutionResponseDTO prepareResponse = prepareResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(prepareResponse.data), <%= entityOrDtoClass %>.class);
+
+        List<BatchExecutionRequestDTO> requestDTOList = new ArrayList<>();
+        requestDTOList.add(modifyEntity(ActionType.DELETE));
+
+        List<BatchExecutionResponseDTO> batchExecutionResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(requestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var <%= entityOrDtoInstance %>DTOList = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE);
+
+        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeCreate - 1);
+
+        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        assertThat(response.uuid).isNotEmpty();
+        assertThat(response.data).isNull();
+    }
+
+    <%_ if (enumeration) { _%>
+    @Test
+    public void readEnumBatchExecution() {
+        List<BatchExecutionRequestDTO> prepareRequestDTOList = new ArrayList<>();
+        prepareRequestDTOList.add(modifyEntity(ActionType.CREATE));
+
+        List<BatchExecutionResponseDTO> prepareResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(prepareRequestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var databaseSizeBeforeCreate = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE)
+            .size();
+
+        BatchExecutionResponseDTO prepareResponse = prepareResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(prepareResponse.data), <%= entityOrDtoClass %>.class);
+
+        List<BatchExecutionRequestDTO> requestDTOList = new ArrayList<>();
+        requestDTOList.add(modifyEntity(ActionType.READ_ENUM));
+
+        List<BatchExecutionResponseDTO> batchExecutionResponseDTOList =
+            given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body(requestDTOList)
+            .when()
+            .post("/api/batch-execution")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
+
+        var <%= entityOrDtoInstance %>List = given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .accept(APPLICATION_JSON)
+            .when()
+            .get("/api/<%= entityApiUrl %>")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .extract()
+            .as(LIST_OF_ENTITY_TYPE);
+
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate);
+
+        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        assertThat(response.uuid).isNotEmpty();
+        var <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(response.data), <%= entityOrDtoClass %>.class);
+        assertThat(<%= entityOrDtoInstance %>.code).isEqualTo(DEFAULT_CODE);
+        assertThat(<%= entityOrDtoInstance %>.id).isNotNull();
+    }
+    <%_ } _%>
+
+    private BatchExecutionRequestDTO modifyEntity(ActionType actionType) {
+        BatchExecutionRequestDTO request = new BatchExecutionRequestDTO();
+        request.uuid = UUID.randomUUID().toString();
+        request.actionType = actionType;
+        request.objectName = "<%= entityClass %>";
+        request.data = jsonb.toJson(<%= entityOrDtoInstance %>);
+        return request;
+    }
+
+    private List<BatchExecutionRequestDTO> modifyUnknownObject(ActionType actionType) {
+        List<BatchExecutionRequestDTO> requestDTOList = new ArrayList<>();
+        BatchExecutionRequestDTO unknownObjectRequest = new BatchExecutionRequestDTO();
+        unknownObjectRequest.uuid = UUID.randomUUID().toString();
+        unknownObjectRequest.actionType = actionType;
+        unknownObjectRequest.objectName = "UnknownObject";
+        requestDTOList.add(unknownObjectRequest);
+        return requestDTOList;
+    }
+<%_ } _%>

@@ -42,10 +42,9 @@ for (idx in relationships) {
         }
     }
 }
-var primitive = entityClass === 'StringRecord' || entityClass === 'LocalDateRecord' || entityClass === 'InstantRecord' || entityClass === 'ZonedDateTimeRecord'
-        || entityClass === 'IntegerRecord' || entityClass === 'LongRecord' || entityClass === 'FloatRecord' || entityClass === 'DoubleRecord'
-        || entityClass === 'BigDecimalRecord' || entityClass === 'BooleanRecord' || entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord'
-        || entityClass === 'ImageBlobRecord' || entityClass === 'TextBlobRecord' || entityClass === 'DurationRecord' || entityClass === 'UUIDRecord';
+var primitive = ['StringRecord', 'LocalDateRecord', 'InstantRecord', 'ZonedDateTimeRecord', 'IntegerRecord', 'LongRecord',
+    'FloatRecord', 'DoubleRecord', 'BigDecimalRecord', 'BooleanRecord', 'BlobRecord', 'AnyBlobRecord', 'BlobRecord',
+    'ImageBlobRecord', 'TextBlobRecord', 'DurationRecord', 'UUIDRecord'].includes(entityClass);
 var primitiveTypeName = entityClass.substr(0, entityClass.lastIndexOf("Record"));
 var primitiveType = primitiveTypeName;
 if (primitiveTypeName === 'Blob' || primitiveTypeName === 'AnyBlob' || primitiveTypeName === 'ImageBlob') {

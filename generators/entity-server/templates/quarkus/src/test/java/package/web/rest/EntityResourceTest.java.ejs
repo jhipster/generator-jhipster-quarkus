@@ -20,13 +20,12 @@ package <%=packageName%>.web.rest;
 
 <%- include('../../_partials/imports', this); -%>
 
-<%_
-var primitive = entityClass === 'StringRecord' || entityClass === 'LocalDateRecord' || entityClass === 'InstantRecord' || entityClass === 'ZonedDateTimeRecord'
-        || entityClass === 'IntegerRecord' || entityClass === 'LongRecord' || entityClass === 'FloatRecord' || entityClass === 'DoubleRecord'
-        || entityClass === 'BigDecimalRecord' || entityClass === 'BooleanRecord' || entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord'
-        || entityClass === 'ImageBlobRecord' || entityClass === 'TextBlobRecord' || entityClass === 'DurationRecord' || entityClass === 'UUIDRecord';
-_%>
 
+<%_
+var primitive = ['StringRecord', 'LocalDateRecord', 'InstantRecord', 'ZonedDateTimeRecord', 'IntegerRecord', 'LongRecord',
+    'FloatRecord', 'DoubleRecord', 'BigDecimalRecord', 'BooleanRecord', 'BlobRecord', 'AnyBlobRecord', 'BlobRecord',
+    'ImageBlobRecord', 'TextBlobRecord', 'DurationRecord', 'UUIDRecord'].includes(entityClass);
+_%>
 @QuarkusTest
 public class <%= entityClass%>ResourceTest {
 
@@ -49,10 +48,17 @@ public class <%= entityClass%>ResourceTest {
 
     <%= entityOrDtoClass %> <%= entityOrDtoInstance %>;
 
+<%_ if (primitive) { _%>
+    PrimitiveListRequestDTO <%= entityOrDtoInstance %>PrimitiveListRequestDTO;
+<%_ } _%>
+
 <%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
 <%_ } _%>
+
+    @Inject
+    Jsonb jsonb;
 
     @BeforeAll
     static void jsonMapper() {
@@ -110,6 +116,9 @@ public class <%= entityClass%>ResourceTest {
     @BeforeEach
     public void initTest() {
         <%= entityOrDtoInstance %> = createEntity();
+        <%_ if (primitive) { _%>
+            <%= entityOrDtoInstance %>PrimitiveListRequestDTO = createPrimitiveListRequest();
+        <%_ } _%>
     }
 
     <%_ if (!readOnly) { _%>
@@ -126,7 +135,5 @@ public class <%= entityClass%>ResourceTest {
 
 <%- include('../../_partials/get', this); -%>
 
-    <%_ if (!primitive) { _%>
-    <%- include('../../_partials/batch_execution', this); -%>
-    <%_ } _%>
+<%- include('../../_partials/batch_execution', this); -%>
 }

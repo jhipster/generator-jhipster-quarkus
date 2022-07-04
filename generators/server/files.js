@@ -441,6 +441,14 @@ const serverFiles = {
                     file: 'package/web/rest/errors/FieldErrorVM.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/FieldErrorVM.java`,
                 },
+                {
+                    file: 'package/web/rest/exception/BatchExecutionException.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/exeption/BatchExecutionException.java`,
+                },
+                {
+                    file: 'package/web/rest/exception/BatchExecutionExceptionHandler.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/exeption/BatchExecutionExceptionHandler.java`,
+                },
             ],
         },
         {
@@ -727,11 +735,39 @@ const serverFiles = {
                 },
                 {
                     file: 'package/web/rest/BatchExecutionResource.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/QueryService.java`,
+                    renameTo: generator => `${generator.javaDir}web/rest/BatchExecutionResource.java`,
                 },
                 {
                     file: 'package/service/BatchExecutionService.java',
                     renameTo: generator => `${generator.javaDir}service/BatchExecutionService.java`,
+                },
+                {
+                    file: 'package/service/CriteriaFactory.java',
+                    renameTo: generator => `${generator.javaDir}service/CriteriaFactory.java`,
+                },
+                {
+                    file: 'package/service/Paged.java',
+                    renameTo: generator => `${generator.javaDir}service/Paged.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionServiceInterface.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionServiceInterface.java`,
+                },
+                {
+                    file: 'package/service/dto/BaseDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/BaseDTO.java`,
+                },
+                {
+                    file: 'package/service/dto/ActionType.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/ActionType.java`,
+                },
+                {
+                    file: 'package/service/dto/EnumDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/BaseDTO.java`,
+                },
+                {
+                    file: 'package/service/dto/BatchExecutionRequestDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/BatchExecutionRequestDTO.java`,
                 },
                 {
                     file: 'package/service/dto/BatchExecutionResponseDTO.java',
