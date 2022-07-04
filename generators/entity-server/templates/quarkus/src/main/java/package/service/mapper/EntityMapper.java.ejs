@@ -59,11 +59,13 @@ import <%= packageName %>.service.dto.PrimitiveListRequestDTO;
 import <%= packageName %>.service.dto.<%= asDto(entityClass) %>;
 <%_ if (primitiveTypeName === 'Blob' || primitiveTypeName === 'AnyBlob' || primitiveTypeName === 'ImageBlob') { _%>
 import org.apache.commons.lang3.ArrayUtils;
+import javax.json.bind.JsonbBuilder;
 <%_ } _%>
 <%_ if (primitiveTypeName === 'LocalDate' || primitiveTypeName === 'Instant' || primitiveTypeName === 'ZonedDateTime' || primitiveTypeName === 'Duration') { _%>
 import java.time.<%= primitiveTypeName %>;
 <%_ } _%>
-<%_ if (primitiveTypeName === 'Integer' || primitiveTypeName === 'Long' || primitiveTypeName === 'Float' || primitiveTypeName === 'Double') { _%>
+<%_ if (primitiveTypeName === 'Integer' || primitiveTypeName === 'Long' || primitiveTypeName === 'Float'
+        || primitiveTypeName === 'Double' || primitiveTypeName === 'BigDecimal') { _%>
 import java.math.BigDecimal;
 <%_ } _%>
 <%_ if (primitiveTypeName === 'UUID') { _%>
@@ -180,6 +182,8 @@ _%>
             <%_ } else if (primitiveTypeName === 'Blob' || primitiveTypeName === 'AnyBlob' || primitiveTypeName === 'ImageBlob') { _%>
                 Byte[] bytes = JsonbBuilder.create().fromJson(value.toString(), Byte[].class);
                 return ArrayUtils.toPrimitive(bytes);
+            <%_ } else if (primitiveTypeName === 'TextBlob') { _%>
+                return <%= primitiveType %>.valueOf(value);
             <%_ } else if (primitiveTypeName === 'LocalDate' || primitiveTypeName === 'Instant'
                     || primitiveTypeName === 'ZonedDateTime' || primitiveTypeName === 'Duration') { _%>
                 return <%= primitiveTypeName %>.parse(value.toString());

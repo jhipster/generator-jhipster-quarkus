@@ -763,7 +763,7 @@ const serverFiles = {
                 },
                 {
                     file: 'package/service/dto/EnumDTO.java',
-                    renameTo: generator => `${generator.javaDir}service/dto/BaseDTO.java`,
+                    renameTo: generator => `${generator.javaDir}service/dto/EnumDTO.java`,
                 },
                 {
                     file: 'package/service/dto/BatchExecutionRequestDTO.java',

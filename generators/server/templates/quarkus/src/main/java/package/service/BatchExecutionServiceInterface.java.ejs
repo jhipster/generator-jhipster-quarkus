@@ -1,10 +1,12 @@
 package <%=packageName%>.service;
 
-import io.quarkus.panache.common.Page;
-import io.quarkus.panache.common.Sort;
+import java.util.Optional;
 
-public interface BatchExecutionQueryServiceInterface<T, V> {
+public interface BatchExecutionServiceInterface<T> {
 
-    Paged<T> findAllByCriteria(V criteria, Page page, Sort sort);
+    T persistOrUpdate(T t);
+
+    Optional<T> findOne(Long id);
+
+    void delete(Long id);
 }
-

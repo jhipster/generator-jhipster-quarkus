@@ -173,7 +173,7 @@ _%>
             assertThat(response.uuid).isNotEmpty();
 
             ArrayList<%= entityOrDtoClass %>> <%= entityOrDtoInstance %>List = jsonb.fromJson(jsonb.toJson(response.data),
-                new ArrayList<%= entityOrDtoClass %>>() {}.getClass().getGenericSuperclass());
+                new ArrayList<<%= entityOrDtoClass %>>() {}.getClass().getGenericSuperclass());
             <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
             assertThat(<%= entityOrDtoInstance %>.entityId).isEqualTo(DEFAULT_ENTITY_ID);
             assertThat(<%= entityOrDtoInstance %>.entityName).isEqualTo(DEFAULT_ENTITY_NAME);

@@ -9,9 +9,9 @@ if (fields.length > 0) {
     if (fields[0].fieldType === 'BigDecimal') {
         assertionMethod = 'isEqualByComparingTo';
     }
-}
 _%>
 assertThat(test<%= entityOrDtoClass %>.<%= firstFieldName %>).<%= assertionMethod %>(<%= expectedVariableName %>);
+<%_} _%>
 <%_
     if(fields.length > 1) {
         for (let idx = 1; idx < fields.length; idx++) {

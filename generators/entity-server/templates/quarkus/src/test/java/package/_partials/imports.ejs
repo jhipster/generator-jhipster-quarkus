@@ -28,6 +28,9 @@ import <%= packageName %>.TestUtil;
 import <%= packageName %>.domain.<%= entityClass %>;
 <%_ } else { _%>
 import <%= packageName %>.service.dto.<%= dtoClass %>;
+import <%= packageName %>.service.dto.BatchExecutionRequestDTO;
+import <%= packageName %>.service.dto.BatchExecutionResponseDTO;
+import <%= packageName %>.service.dto.ActionType;
 <%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
 <%_ if (cacheProvider === 'redis') { _%>
@@ -43,6 +46,7 @@ import io.quarkus.liquibase.LiquibaseFactory;
 import org.junit.jupiter.api.*;
 
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
 
 import java.util.List;
     <%_ if (fieldsContainBigDecimal) { _%>
