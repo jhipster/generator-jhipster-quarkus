@@ -22,15 +22,13 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
+import java.util.UUID;
 
 import <%= packageName %>.TestUtil;
 <%_ if (!hasDto) { _%>
 import <%= packageName %>.domain.<%= entityClass %>;
 <%_ } else { _%>
-import <%= packageName %>.service.dto.<%= dtoClass %>;
-import <%= packageName %>.service.dto.BatchExecutionRequestDTO;
-import <%= packageName %>.service.dto.BatchExecutionResponseDTO;
-import <%= packageName %>.service.dto.ActionType;
+import <%= packageName %>.service.dto.*;
 <%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
 <%_ if (cacheProvider === 'redis') { _%>
@@ -47,7 +45,7 @@ import org.junit.jupiter.api.*;
 
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
-
+import java.util.ArrayList;
 import java.util.List;
     <%_ if (fieldsContainBigDecimal) { _%>
 import java.math.BigDecimal;
@@ -74,9 +72,11 @@ import java.time.ZoneId;
     <%_ if (fieldsContainInstant === true || fieldsContainZonedDateTime === true) { _%>
 import java.time.temporal.ChronoUnit;
     <%_ } _%>
-    <%_ if (fieldsContainOwnerManyToMany) { _%>
-import java.util.ArrayList;
-    <%_ } _%>
-    <%_ if (fieldsContainUUID === true) { _%>
-import java.util.UUID;
-    <%_ } _%>
+<%_
+var primitive = ['StringRecord', 'LocalDateRecord', 'InstantRecord', 'ZonedDateTimeRecord', 'IntegerRecord', 'LongRecord',
+    'FloatRecord', 'DoubleRecord', 'BigDecimalRecord', 'BooleanRecord', 'BlobRecord', 'AnyBlobRecord', 'BlobRecord',
+    'ImageBlobRecord', 'TextBlobRecord', 'DurationRecord', 'UUIDRecord'].includes(entityClass);
+_%>
+<%_ if (primitive) { _%>
+import java.util.Collections;
+<%_ } _%>
