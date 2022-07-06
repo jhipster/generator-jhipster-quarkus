@@ -34,6 +34,11 @@ import <%= packageName %>.service.filtering.filter.ZonedDateTimeFilter;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 <%_
+var primitive = ['StringRecord', 'LocalDateRecord', 'InstantRecord', 'ZonedDateTimeRecord', 'IntegerRecord', 'LongRecord',
+    'FloatRecord', 'DoubleRecord', 'BigDecimalRecord', 'BooleanRecord', 'BlobRecord', 'AnyBlobRecord', 'BlobRecord',
+    'ImageBlobRecord', 'TextBlobRecord', 'DurationRecord', 'UUIDRecord'].includes(entityClass);
+_%>
+<%_
 const referenceFilterType = '' + primaryKeyType + 'Filter';
 var filterVariables = [{name:'id', type: primaryKeyType, filterType:referenceFilterType,fieldInJavaBeanMethod:'Id' } ];
 var extraFilters = {};
@@ -80,7 +85,8 @@ _%>
  * fix type specific filters.
  */
 @RegisterForReflection
-public class <%= entityClass %>Criteria implements Serializable, Criteria<%_ if (enumCriteria) { _%>, EnumCriteria<%_ } _%> {
+public class <%= entityClass %>Criteria implements Serializable, Criteria<%_ if (enumCriteria) { _%>, EnumCriteria<%_ } _%>
+<%_ if (primitive) { _%>, PrimitiveListCriteria<%_ } _%> {
 <%_ Object.keys(extraFilters).forEach((key) => {
         extraFilter = extraFilters[key]; _%>
     /**
