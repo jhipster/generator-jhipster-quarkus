@@ -441,14 +441,6 @@ const serverFiles = {
                     file: 'package/web/rest/errors/FieldErrorVM.java',
                     renameTo: generator => `${generator.javaDir}web/rest/errors/FieldErrorVM.java`,
                 },
-                {
-                    file: 'package/web/rest/exception/BatchExecutionException.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/exeption/BatchExecutionException.java`,
-                },
-                {
-                    file: 'package/web/rest/exception/BatchExecutionExceptionHandler.java',
-                    renameTo: generator => `${generator.javaDir}web/rest/exeption/BatchExecutionExceptionHandler.java`,
-                },
             ],
         },
         {
@@ -782,8 +774,8 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/mapper/BatchExecutionMapper.java`,
                 },
                 {
-                    file: 'package/web/util/ClassUtil.java',
-                    renameTo: generator => `${generator.javaDir}web/util/ClassUtil.java`,
+                    file: 'package/service/util/ClassUtil.java',
+                    renameTo: generator => `${generator.javaDir}service/util/ClassUtil.java`,
                 },
                 {
                     file: 'package/service/BatchExecutionQueryServiceInterface.java',
@@ -796,6 +788,14 @@ const serverFiles = {
                 {
                     file: 'package/service/BatchExecutionDecorator.java',
                     renameTo: generator => `${generator.javaDir}service/BatchExecutionDecorator.java`,
+                },
+                {
+                    file: 'package/service/exception/BatchExecutionException.java',
+                    renameTo: generator => `${generator.javaDir}service/exception/BatchExecutionException.java`,
+                },
+                {
+                    file: 'package/service/exception/BatchExecutionExceptionHandler.java',
+                    renameTo: generator => `${generator.javaDir}service/exception/BatchExecutionExceptionHandler.java`,
                 },
                 {
                     file: 'package/service/dto/EnumCriteria.java',

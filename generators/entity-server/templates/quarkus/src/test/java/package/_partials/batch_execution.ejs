@@ -80,7 +80,7 @@ _%>
         assertThat(testSecondRecordsDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
 
         assertThat(batchExecutionResponseDTOList).hasSize(1);
-        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().findFirst().get();
         assertThat(response.uuid).isNotEmpty();
 
         ArrayList<<%= entityOrDtoClass %>> test<%= entityOrDtoClass %>List = jsonb.fromJson(jsonb.toJson(response.data),
@@ -115,7 +115,7 @@ _%>
             .extract()
             .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
 
-        var databaseSizeBeforeCreate = given()
+        var databaseSizeBeforeUpdate = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -162,7 +162,7 @@ _%>
             .extract()
             .as(LIST_OF_ENTITY_TYPE);
 
-            assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate - 1);
+            assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeUpdate - 1);
             var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
             assertThat(testRecordsDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
             assertThat(testRecordsDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
@@ -245,10 +245,10 @@ _%>
             .extract().as(LIST_OF_ENTITY_TYPE);
 
         assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate + 1);
-        var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().filter(it -> <%= entityOrDtoInstance %>.id.equals(it.id)).findFirst().get();
+        var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>List.stream().findFirst().get();
         <%- include('./object_verification', {...this, prefix: 'DEFAULT_'}); -%>
 
-        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        assertThat(batchExecutionResponseDTOList).hasSize(1);
         BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
         assertThat(response.uuid).isNotEmpty();
         test<%= entityOrDtoClass %> = jsonb.fromJson(jsonb.toJson(response.data), <%= entityOrDtoClass %>.class);
@@ -290,7 +290,7 @@ _%>
             .extract()
             .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
 
-        var databaseSizeBeforeCreate = given()
+        var databaseSizeBeforeUpdate = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -304,10 +304,11 @@ _%>
             .as(LIST_OF_ENTITY_TYPE)
             .size();
 
-        BatchExecutionResponseDTO prepareResponse = prepareResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityOrDtoInstance %>")).findFirst().get();
-        var test<%= entityOrDtoClass %> = jsonb.fromJson(jsonb.toJson(prepareResponse.data), <%= entityOrDtoClass %>.class);
-
-        <%- include('./object_verification', {...this, prefix: 'UPDATED_'}); -%>
+        BatchExecutionResponseDTO prepareResponse = prepareResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
+        <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(prepareResponse.data), <%= entityOrDtoClass %>.class);
+        <%_ for (let idx = 0; idx < fields.length; idx++) { _%>
+            <%= entityOrDtoInstance %>.<%= fields[idx].fieldName %> = UPDATED_<%= fields[idx].fieldNameUnderscored.toUpperCase() %>;
+        <%_ } _%>
 
         List<BatchExecutionRequestDTO> requestDTOList = new ArrayList<>();
         requestDTOList.add(modifyEntity(ActionType.UPDATE));
@@ -340,14 +341,18 @@ _%>
             .extract()
             .as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeCreate);
-        test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>DTOList.stream().findFirst().get();
+        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeUpdate);
+        <%_ if (fields.length > 0) { _%>
+        var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>DTOList.stream().findFirst().get();
+        <%_} _%>
         <%- include('./object_verification', {...this, prefix: 'UPDATED_'}); -%>
 
-        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        assertThat(batchExecutionResponseDTOList).hasSize(1);
         BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
         assertThat(response.uuid).isNotEmpty();
+        <%_ if (fields.length > 0) { _%>
         test<%= entityOrDtoClass %> = jsonb.fromJson(jsonb.toJson(response.data), <%= entityOrDtoClass %>.class);
+        <%_} _%>
         <%- include('./object_verification', {...this, prefix: 'UPDATED_'}); -%>
     }
 
@@ -371,7 +376,7 @@ _%>
             .extract()
             .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
 
-        var databaseSizeBeforeCreate = given()
+        var databaseSizeBeforeUpdate = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -426,15 +431,19 @@ _%>
             .extract()
             .as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeCreate);
+        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeUpdate);
+        <%_ if (fields.length > 0) { _%>
         var test<%= entityOrDtoClass %> = <%= entityOrDtoInstance %>DTOList.stream().findFirst().get();
+        <%_} _%>
         <%- include('./part_update_verification', this); -%>
 
 
-        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        assertThat(batchExecutionResponseDTOList).hasSize(1);
         BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
         assertThat(response.uuid).isNotEmpty();
+        <%_ if (fields.length > 0) { _%>
         test<%= entityOrDtoClass %> = jsonb.fromJson(jsonb.toJson(response.data), <%= entityOrDtoClass %>.class);
+        <%_} _%>
         <%- include('./part_update_verification', this); -%>
     }
 
@@ -458,7 +467,7 @@ _%>
             .extract()
             .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
 
-        var databaseSizeBeforeCreate = given()
+        var databaseSizeBeforeDelete = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -506,9 +515,9 @@ _%>
             .extract()
             .as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeCreate - 1);
+        assertThat(<%= entityOrDtoInstance %>DTOList).hasSize(databaseSizeBeforeDelete - 1);
 
-        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        assertThat(batchExecutionResponseDTOList).hasSize(1);
         BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
         assertThat(response.uuid).isNotEmpty();
         assertThat(response.data).isNull();
@@ -535,7 +544,7 @@ _%>
             .extract()
             .as(LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE);
 
-        var databaseSizeBeforeCreate = given()
+        var databaseSizeBeforeRead = given()
             .auth()
             .preemptive()
             .oauth2(adminToken)
@@ -583,9 +592,9 @@ _%>
             .extract()
             .as(LIST_OF_ENTITY_TYPE);
 
-        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate);
+        assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeRead);
 
-        assertThat(batchExecutionResponseDTOList).hasSize(2);
+        assertThat(batchExecutionResponseDTOList).hasSize(1);
         BatchExecutionResponseDTO response = batchExecutionResponseDTOList.stream().filter(it -> it.objectName.equals("<%= entityClass %>")).findFirst().get();
         assertThat(response.uuid).isNotEmpty();
         var <%= entityOrDtoInstance %> = jsonb.fromJson(jsonb.toJson(response.data), <%= entityOrDtoClass %>.class);
