@@ -72,6 +72,11 @@ import java.time.ZoneId;
     <%_ if (fieldsContainInstant === true || fieldsContainZonedDateTime === true) { _%>
 import java.time.temporal.ChronoUnit;
     <%_ } _%>
+    <%_ if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
+import java.util.Arrays;
+    <%_ } else if (entityClass === 'LocalDateRecord') { _%>
+import javax.json.bind.JsonbBuilder;
+    <%_ } _%>
 <%_
 var primitive = ['StringRecord', 'LocalDateRecord', 'InstantRecord', 'ZonedDateTimeRecord', 'IntegerRecord', 'LongRecord',
     'FloatRecord', 'DoubleRecord', 'BigDecimalRecord', 'BooleanRecord', 'BlobRecord', 'AnyBlobRecord', 'BlobRecord',

@@ -69,12 +69,24 @@ _%>
             .as(LIST_OF_ENTITY_TYPE);
 
         assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeCreate + 2);
-        var testFirstRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+        <%_ if (entityClass === 'BigDecimalRecord') { _%>
+            var testFirstRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.compareTo(DEFAULT_VALUE) == 0).findFirst().get();
+        <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
+            var testFirstRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> Arrays.equals(it.value, DEFAULT_VALUE)).findFirst().get();
+        <%_} else {_%>
+            var testFirstRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+        <%_}_%>
         assertThat(testFirstRecordsDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
         assertThat(testFirstRecordsDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
         assertThat(testFirstRecordsDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
 
-        var testSecondRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(UPDATED_VALUE)).findFirst().get();
+        <%_ if (entityClass === 'BigDecimalRecord') { _%>
+            var testSecondRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.compareTo(UPDATED_VALUE) == 0).findFirst().get();
+        <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
+            var testSecondRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> Arrays.equals(it.value, UPDATED_VALUE)).findFirst().get();
+        <%_} else {_%>
+            var testSecondRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(UPDATED_VALUE)).findFirst().get();
+        <%_}_%>
         assertThat(testSecondRecordsDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
         assertThat(testSecondRecordsDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
         assertThat(testSecondRecordsDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
@@ -85,11 +97,23 @@ _%>
 
         ArrayList<<%= entityOrDtoClass %>> test<%= entityOrDtoClass %>List = jsonb.fromJson(jsonb.toJson(response.data),
         new ArrayList<<%= entityOrDtoClass %>>(){}.getClass().getGenericSuperclass());
-        <%= entityOrDtoClass %> firstRecordDTO = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+        <%_ if (entityClass === 'BigDecimalRecord') { _%>
+            <%= entityOrDtoClass %> firstRecordDTO = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.compareTo(DEFAULT_VALUE) == 0).findFirst().get();
+        <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
+            <%= entityOrDtoClass %> firstRecordDTO = test<%= entityOrDtoClass %>List.stream().filter(it -> Arrays.equals(it.value, DEFAULT_VALUE)).findFirst().get();
+        <%_} else {_%>
+            <%= entityOrDtoClass %> firstRecordDTO = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+        <%_}_%>
         assertThat(firstRecordDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
         assertThat(firstRecordDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
         assertThat(firstRecordDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
-        <%= entityOrDtoClass %> secondRecordDTO = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.equals(UPDATED_VALUE)).findFirst().get();
+        <%_ if (entityClass === 'BigDecimalRecord') { _%>
+            <%= entityOrDtoClass %> secondRecordDTO = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.compareTo(UPDATED_VALUE) == 0).findFirst().get();
+        <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
+            <%= entityOrDtoClass %> secondRecordDTO = test<%= entityOrDtoClass %>List.stream().filter(it -> Arrays.equals(it.value, UPDATED_VALUE)).findFirst().get();
+        <%_} else {_%>
+            <%= entityOrDtoClass %> secondRecordDTO = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.equals(UPDATED_VALUE)).findFirst().get();
+        <%_}_%>
         assertThat(secondRecordDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
         assertThat(secondRecordDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
         assertThat(secondRecordDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
@@ -163,7 +187,13 @@ _%>
             .as(LIST_OF_ENTITY_TYPE);
 
             assertThat(<%= entityOrDtoInstance %>List).hasSize(databaseSizeBeforeUpdate - 1);
-            var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+            <%_ if (entityClass === 'BigDecimalRecord') { _%>
+                var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.compareTo(DEFAULT_VALUE) == 0).findFirst().get();
+            <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
+                var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> Arrays.equals(it.value, DEFAULT_VALUE)).findFirst().get();
+            <%_} else {_%>
+                var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+            <%_}_%>
             assertThat(testRecordsDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
             assertThat(testRecordsDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
             assertThat(testRecordsDTO.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
@@ -174,7 +204,13 @@ _%>
 
             ArrayList<<%= entityOrDtoClass %>> test<%= entityOrDtoClass %>List = jsonb.fromJson(jsonb.toJson(response.data),
                 new ArrayList<<%= entityOrDtoClass %>>() {}.getClass().getGenericSuperclass());
-            <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+            <%_ if (entityClass === 'BigDecimalRecord') { _%>
+                <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.compareTo(DEFAULT_VALUE) == 0).findFirst().get();
+            <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
+                <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = test<%= entityOrDtoClass %>List.stream().filter(it -> Arrays.equals(it.value, DEFAULT_VALUE)).findFirst().get();
+            <%_} else {_%>
+                <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
+            <%_}_%>
             assertThat(<%= entityOrDtoInstance %>.entityId).isEqualTo(DEFAULT_ENTITY_ID);
             assertThat(<%= entityOrDtoInstance %>.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
             assertThat(<%= entityOrDtoInstance %>.fieldName).isEqualTo(DEFAULT_FIELD_NAME);
@@ -185,7 +221,11 @@ _%>
             documentRequest.uuid = UUID.randomUUID().toString();
             documentRequest.actionType = actionType;
             documentRequest.objectName = "<%= entityClass %>";
-            documentRequest.data = jsonb.toJson(<%= entityOrDtoInstance %>PrimitiveListRequestDTO);
+            <%_ if (entityClass === 'LocalDateRecord') { _%>
+                documentRequest.data = JsonbBuilder.create().toJson(<%= entityOrDtoInstance %>PrimitiveListRequestDTO);
+            <%_} else {_%>
+                documentRequest.data = jsonb.toJson(<%= entityOrDtoInstance %>PrimitiveListRequestDTO);
+            <%_}_%>
             return documentRequest;
         }
 
