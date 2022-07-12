@@ -212,8 +212,16 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`,
                 },
                 {
-                    file: 'package/config/LocalDateProvider.java',
-                    renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`,
+                    file: 'package/config/JsonbConfiguration.java',
+                    renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`,
+                },
+                {
+                    file: 'package/config/ZonedDateTimeDeserializer.java',
+                    renameTo: generator => `${generator.javaDir}config/ZonedDateTimeDeserializer.java`,
+                },
+                {
+                    file: 'package/config/ZonedDateTimeSerializer.java',
+                    renameTo: generator => `${generator.javaDir}config/ZonedDateTimeSerializer.java`,
                 },
             ],
         },

@@ -71,7 +71,10 @@ import java.math.BigDecimal;
 <%_ if (primitiveTypeName === 'UUID') { _%>
 import java.util.UUID;
 <%_ } _%>
-
+<%_ if (primitiveTypeName === 'ZonedDateTime') { _%>
+import com.mycompany.myapp.config.Constants;
+import java.time.format.DateTimeFormatter;
+<%_ } _%>
 import org.mapstruct.*;
 <%_ if (uuidMapMethod) { _%>
 
@@ -185,8 +188,11 @@ _%>
             <%_ } else if (primitiveTypeName === 'TextBlob') { _%>
                 return <%= primitiveType %>.valueOf(value);
             <%_ } else if (primitiveTypeName === 'LocalDate' || primitiveTypeName === 'Instant'
-                    || primitiveTypeName === 'ZonedDateTime' || primitiveTypeName === 'Duration') { _%>
+                    || primitiveTypeName === 'Duration') { _%>
                 return <%= primitiveTypeName %>.parse(value.toString());
+            <%_ } else if (primitiveTypeName === 'ZonedDateTime') { _%>
+                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.ZONED_DATE_TIME_FORMAT);
+                return ZonedDateTime.parse(value.toString(), formatter);
             <%_ } else if (primitiveTypeName === 'UUID') { _%>
                 return <%= primitiveTypeName %>.fromString(value.toString());
             <%_ } else { _%>

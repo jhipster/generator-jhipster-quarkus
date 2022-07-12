@@ -63,7 +63,9 @@ public class <%= entityClass%>ResourceTest {
     @BeforeAll
     static void jsonMapper() {
         RestAssured.config =
-            RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
+            RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(
+    <%_ if (entityClass === 'ZonedDateTimeRecord') { _%>TestUtil.jsonbZonedDateTimeObjectMapper()
+    <%_ } else { _%>TestUtil.jsonbObjectMapper()<%_ } _%>));
     }
 
     @BeforeEach

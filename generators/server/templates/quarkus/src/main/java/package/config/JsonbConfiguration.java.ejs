@@ -19,7 +19,7 @@
 package <%=packageName%>.config;
 
 import io.quarkus.jsonb.JsonbConfigCustomizer;
-
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.json.bind.JsonbConfig;
 import java.util.Locale;
@@ -31,10 +31,18 @@ import java.util.Locale;
 @Singleton
 public class JsonbConfiguration implements JsonbConfigCustomizer {
 
+    @Inject
+    ZonedDateTimeDeserializer zonedDateTimeDeserializer;
+
+    @Inject
+    ZonedDateTimeSerializer zonedDateTimeSerializer;
+
     @Override
     public void customize(JsonbConfig config) {
         config
-        .withDateFormat(Constants.DATE_TIME_FORMAT, Locale.getDefault());
+        .withDateFormat(Constants.DATE_TIME_FORMAT, Locale.getDefault())
+        .withSerializers(zonedDateTimeSerializer)
+        .withDeserializers(zonedDateTimeDeserializer);
     }
 
 }
