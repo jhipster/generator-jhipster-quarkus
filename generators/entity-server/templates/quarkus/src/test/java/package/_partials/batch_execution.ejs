@@ -87,9 +87,9 @@ _%>
         <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
             var testSecondRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> Arrays.equals(it.value, UPDATED_VALUE)).findFirst().get();
         <%_} else if (entityClass === 'ZonedDateTimeRecord') { _%>
-            var testSecondRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.isEqual(DEFAULT_VALUE)).findFirst().get();
-        <%_} else {_%>
             var testSecondRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.isEqual(UPDATED_VALUE)).findFirst().get();
+        <%_} else {_%>
+            var testSecondRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(UPDATED_VALUE)).findFirst().get();
         <%_}_%>
         assertThat(testSecondRecordsDTO.entityId).isEqualTo(DEFAULT_ENTITY_ID);
         assertThat(testSecondRecordsDTO.entityName).isEqualTo(DEFAULT_ENTITY_NAME);
@@ -199,6 +199,8 @@ _%>
                 var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.compareTo(DEFAULT_VALUE) == 0).findFirst().get();
             <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
                 var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> Arrays.equals(it.value, DEFAULT_VALUE)).findFirst().get();
+            <%_} else if (entityClass === 'ZonedDateTimeRecord') { _%>
+                var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.isEqual(DEFAULT_VALUE)).findFirst().get();
             <%_} else {_%>
                 var testRecordsDTO = <%= entityOrDtoInstance %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
             <%_}_%>
@@ -216,6 +218,8 @@ _%>
                 <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.compareTo(DEFAULT_VALUE) == 0).findFirst().get();
             <%_} else if (entityClass === 'BlobRecord' || entityClass === 'AnyBlobRecord' || entityClass === 'ImageBlobRecord') { _%>
                 <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = test<%= entityOrDtoClass %>List.stream().filter(it -> Arrays.equals(it.value, DEFAULT_VALUE)).findFirst().get();
+            <%_} else if (entityClass === 'ZonedDateTimeRecord') { _%>
+                <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.isEqual(DEFAULT_VALUE)).findFirst().get();
             <%_} else {_%>
                 <%= entityOrDtoClass %> <%= entityOrDtoInstance %> = test<%= entityOrDtoClass %>List.stream().filter(it -> it.value.equals(DEFAULT_VALUE)).findFirst().get();
             <%_}_%>

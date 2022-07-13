@@ -223,6 +223,10 @@ const serverFiles = {
                     file: 'package/config/ZonedDateTimeSerializer.java',
                     renameTo: generator => `${generator.javaDir}config/ZonedDateTimeSerializer.java`,
                 },
+                {
+                    file: 'package/config/LocalDateProvider.java',
+                    renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`,
+                },
             ],
         },
         {

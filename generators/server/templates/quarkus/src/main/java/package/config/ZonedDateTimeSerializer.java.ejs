@@ -17,6 +17,6 @@ public class ZonedDateTimeSerializer implements JsonbSerializer<ZonedDateTime> {
 
     @Override
     public void serialize(ZonedDateTime zonedDateTime, JsonGenerator jsonGenerator, SerializationContext ctx) {
-        jsonGenerator.write(zonedDateTime.format(formatter));
+        jsonGenerator.write(zonedDateTime.format(dateTimeFormatter));
     }
 }
