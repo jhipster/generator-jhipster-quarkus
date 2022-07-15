@@ -1,17 +1,18 @@
 package <%=packageName%>.provider;
 
+import <%=packageName%>.service.BatchExecutionServiceExtension;
 import <%=packageName%>.service.BatchExecutionQueryServiceInterface;
 import <%=packageName%>.service.BatchExecutionServiceInterface;
+import com.mycompany.myapp.service.CriteriaFactory;
 import <%=packageName%>.service.mapper.EntityMapper;
 import <%=packageName%>.service.util.ClassUtil;
-import org.jboss.logging.Logger;
-
+import java.util.concurrent.ConcurrentHashMap;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import java.util.concurrent.ConcurrentHashMap;
+import org.jboss.logging.Logger;
 
 /**
 * Провайдер по получения сервисов для пакетной модификации объектов
@@ -24,7 +25,13 @@ public class BatchExecutionServicesProvider {
     @Inject
     BeanManager beanManager;
 
-    private final ConcurrentHashMap<String, BatchExecutionServiceInterface> services = new ConcurrentHashMap<>();
+    @Inject
+    BatchExecutionServicesProvider servicesProvider;
+
+    @Inject
+    CriteriaFactory criteriaFactory;
+
+    private final ConcurrentHashMap<String, BatchExecutionServiceExtension> serviceExtensions = new ConcurrentHashMap<>();
 
     private final ConcurrentHashMap<String, BatchExecutionQueryServiceInterface> queryServices = new ConcurrentHashMap<>();
 
@@ -35,15 +42,21 @@ public class BatchExecutionServicesProvider {
     * @param objectName наименование объекта для модификации
     * @return сервис, соответствующий переданному наименованию объекта
     */
-    public BatchExecutionServiceInterface getService(String objectName) {
-        log.debug("Get service for object with name " + objectName);
-        if (services.containsKey(objectName)) {
-            return services.get(objectName);
+    public BatchExecutionServiceExtension getServiceExtension(String objectName) {
+        log.debug("Get service extension for object with name " + objectName);
+        if (serviceExtensions.containsKey(objectName)) {
+            return serviceExtensions.get(objectName);
         }
         Class requestServiceClass = ClassUtil.getClass(ClassUtil.SERVICE_CLASS_PATH, objectName + "Service");
         BatchExecutionServiceInterface objectService = (BatchExecutionServiceInterface) getBeanReference(requestServiceClass);
-        services.put(objectName, objectService);
-        return objectService;
+        BatchExecutionServiceExtension batchExecutionServiceExtension = new BatchExecutionServiceExtension(
+        objectService,
+        objectName,
+        servicesProvider,
+        criteriaFactory
+        );
+        serviceExtensions.put(objectName, batchExecutionServiceExtension);
+        return batchExecutionServiceExtension;
     }
 
     /**

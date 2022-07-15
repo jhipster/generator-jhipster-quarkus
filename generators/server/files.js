@@ -794,12 +794,8 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/BatchExecutionQueryServiceInterface.java`,
                 },
                 {
-                    file: 'package/service/BatchExecutionDecorator.java',
-                    renameTo: generator => `${generator.javaDir}service/BatchExecutionDecorator.java`,
-                },
-                {
-                    file: 'package/service/BatchExecutionDecorator.java',
-                    renameTo: generator => `${generator.javaDir}service/BatchExecutionDecorator.java`,
+                    file: 'package/service/BatchExecutionServiceExtension.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionServiceExtension.java`,
                 },
                 {
                     file: 'package/service/exception/BatchExecutionException.java',

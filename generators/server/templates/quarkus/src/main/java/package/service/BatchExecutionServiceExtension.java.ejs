@@ -14,17 +14,19 @@ import java.util.Optional;
 /**
 * Декоратор, расширяющий возможности пакетного обновления объектов
 */
-public class BatchExecutionDecorator<T> implements BatchExecutionServiceInterface {
+public class BatchExecutionServiceExtension<T> implements BatchExecutionServiceInterface<T> {
 
-    private BatchExecutionServiceInterface<T> serviceInterface;
+    private static final int PAGE_SIZE = 50;
 
-    private String objectName;
+    private final BatchExecutionServiceInterface<T> serviceInterface;
+
+    private final String objectName;
 
     BatchExecutionServicesProvider servicesProvider;
 
     CriteriaFactory criteriaFactory;
 
-    public BatchExecutionDecorator(BatchExecutionServiceInterface<T> serviceInterface, String objectName,
+    public BatchExecutionServiceExtension(BatchExecutionServiceInterface<T> serviceInterface, String objectName,
         BatchExecutionServicesProvider servicesProvider, CriteriaFactory criteriaFactory) {
         this.serviceInterface = serviceInterface;
         this.objectName = objectName;
@@ -33,7 +35,10 @@ public class BatchExecutionDecorator<T> implements BatchExecutionServiceInterfac
     }
 
     public T partialUpdate(BaseDTO entityDTO) {
-        T foundEntityDTO = serviceInterface.findOne(entityDTO.getId()).get();
+        T foundEntityDTO = serviceInterface.findOne(entityDTO.getId()).orElse(null);
+        if (foundEntityDTO == null ) {
+        return null;
+        }
 
         EntityMapper objectMapper = servicesProvider.getMapper(objectName);
         Object foundEntity = objectMapper.toEntity(foundEntityDTO);
@@ -51,14 +56,14 @@ public class BatchExecutionDecorator<T> implements BatchExecutionServiceInterfac
             codeFilter.setEquals(enumDTO.code);
             enumCriteria.setCode(codeFilter);
             return (T) objectQueryService.findAllByCriteria(enumCriteria, Page.of(0, 50), Sort.by("code"))
-                .content.stream().findFirst().get();
+                .content.stream().findFirst().orElse(null);
         } catch (NoSuchElementException e) {
             throw new BatchExecutionException(String.format("Enum with name %s and code %s not found", objectName, enumDTO.code));
         }
     }
 
     public void deletePrimitiveList(PrimitiveListRequestDTO primitiveListRequestDTO) {
-        BatchExecutionServiceInterface primitiveListService = servicesProvider.getService(objectName);
+        BatchExecutionServiceExtension batchExecutionServiceExtension = servicesProvider.getServiceExtension(objectName);
         BatchExecutionQueryServiceInterface primitiveListQueryService = servicesProvider.getQueryService(objectName);
         PrimitiveListCriteria primitiveListCriteria = (PrimitiveListCriteria) criteriaFactory.createCriteria(objectName);
 
@@ -73,8 +78,13 @@ public class BatchExecutionDecorator<T> implements BatchExecutionServiceInterfac
         StringFilter fieldNameFilter = new StringFilter();
         fieldNameFilter.setEquals(primitiveListRequestDTO.fieldName);
         primitiveListCriteria.setFieldName(fieldNameFilter);
-        primitiveListQueryService.findAllByCriteria(primitiveListCriteria, Page.of(0, 50), Sort.by("entityName")).content
-                .forEach(it ->  primitiveListService.delete(((BaseDTO) it).getId()));
+
+        long pageCount = primitiveListQueryService.findAllByCriteria(primitiveListCriteria, Page.of(0, PAGE_SIZE), Sort.by("entityName")).pageCount;
+        for (long page = 0; page < pageCount; page++) {
+            primitiveListQueryService
+                .findAllByCriteria(primitiveListCriteria, Page.of(0, PAGE_SIZE), Sort.by("entityName"))
+                .content.forEach(it -> batchExecutionServiceExtension.delete(((BaseDTO) it).getId()));
+        }
     }
 
     @Override

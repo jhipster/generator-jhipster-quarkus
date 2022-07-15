@@ -28,9 +28,6 @@ public class BatchExecutionService {
     @Inject
     BatchExecutionMapper batchExecutionMapper;
 
-    @Inject
-    CriteriaFactory criteriaFactory;
-
     /**
      * Выполнение пакетной модификации объектов
      * @param batchExecutionRequests список запросов для модификации объектов
@@ -40,26 +37,25 @@ public class BatchExecutionService {
     public List<BatchExecutionResponseDTO> batchExecution(List<BatchExecutionRequestDTO> batchExecutionRequests) {
         List<BatchExecutionResponseDTO> responseDTOList = new ArrayList<>();
         for (BatchExecutionRequestDTO request : batchExecutionRequests) {
-            BatchExecutionServiceInterface requestObjectService = servicesProvider.getService(request.objectName);
-            BatchExecutionDecorator batchExecutionDecorator = new BatchExecutionDecorator(requestObjectService, request.objectName, servicesProvider, criteriaFactory);
+            BatchExecutionServiceExtension batchExecutionServiceExtension = servicesProvider.getServiceExtension(request.objectName);
             BaseDTO data = (BaseDTO) jsonb.fromJson(request.data, ClassUtil.getClass(ClassUtil.DTO_CLASS_PATH, request.objectName + "DTO"));
             Object responseData = null;
             if (ActionType.CREATE.equals(request.actionType) || ActionType.UPDATE.equals(request.actionType)) {
-                responseData = batchExecutionDecorator.persistOrUpdate(data);
+                responseData = batchExecutionServiceExtension.persistOrUpdate(data);
             } else if (ActionType.PARTIAL_UPDATE.equals(request.actionType)) {
-                responseData = batchExecutionDecorator.partialUpdate(data);
+                responseData = batchExecutionServiceExtension.partialUpdate(data);
             } else if (ActionType.DELETE.equals(request.actionType)) {
-                batchExecutionDecorator.delete(data.getId());
+            batchExecutionServiceExtension.delete(data.getId());
             } else if (ActionType.READ_ENUM.equals(request.actionType)) {
                 EnumDTO enumDTO = jsonb.fromJson(request.data, EnumDTO.class);
-                responseData = batchExecutionDecorator.readEnum(enumDTO);
+                responseData = batchExecutionServiceExtension.readEnum(enumDTO);
             } else if (ActionType.CREATE_PRIMITIVE_LIST.equals(request.actionType)) {
                 PrimitiveListRequestDTO primitiveListRequestDTO = jsonb.fromJson(request.data, PrimitiveListRequestDTO.class);
-                responseData = createPrimitiveList(primitiveListRequestDTO, request.objectName, batchExecutionDecorator);
+                responseData = createPrimitiveList(primitiveListRequestDTO, request.objectName, batchExecutionServiceExtension);
             } else if (ActionType.UPDATE_PRIMITIVE_LIST.equals(request.actionType)) {
                 PrimitiveListRequestDTO primitiveListRequestDTO = jsonb.fromJson(request.data, PrimitiveListRequestDTO.class);
-                batchExecutionDecorator.deletePrimitiveList(primitiveListRequestDTO);
-                responseData = createPrimitiveList(primitiveListRequestDTO, request.objectName, batchExecutionDecorator);
+            batchExecutionServiceExtension.deletePrimitiveList(primitiveListRequestDTO);
+                responseData = createPrimitiveList(primitiveListRequestDTO, request.objectName, batchExecutionServiceExtension);
             }
             BatchExecutionResponseDTO response = batchExecutionMapper.toBatchExecutionResponseDTO(request, responseData);
             responseDTOList.add(response);
@@ -67,12 +63,12 @@ public class BatchExecutionService {
         return responseDTOList;
     }
 
-    private List<Object> createPrimitiveList(PrimitiveListRequestDTO primitiveListRequestDTO, String objectName, BatchExecutionDecorator batchExecutionDecorator) {
+    private List<Object> createPrimitiveList(PrimitiveListRequestDTO primitiveListRequestDTO, String objectName, BatchExecutionServiceExtension batchExecutionServiceExtension) {
         PrimitiveListMapper primitiveListMapper = (PrimitiveListMapper) servicesProvider.getMapper(objectName);
         List<Object> primitiveResponse = new ArrayList<>();
         for (Object value: primitiveListRequestDTO.values) {
             Object objectDTO = primitiveListMapper.toPrimitiveRecordDto(primitiveListRequestDTO, value);
-            Object response = batchExecutionDecorator.persistOrUpdate(objectDTO);
+            Object response = batchExecutionServiceExtension.persistOrUpdate(objectDTO);
             primitiveResponse.add(response);
         }
         return primitiveResponse;
