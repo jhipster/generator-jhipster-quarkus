@@ -60,7 +60,7 @@
         var totalCount = <%= dataAccessObject %>.findAll().count();
         var pageCount = <%= dataAccessObject %>.findAll().page(page).pageCount();
         return new Paged<>(page.index, page.size, totalCount, pageCount, <%= entityInstancePlural %>)<% if(!hasDto) { %>;<% } else { %>
-            .map(<%= entityInstance %> -> <%= mapper %>.toDto((<%= entityClass %>) <%= entityInstance %>));
+            .map(<%= entityInstance %>Item -> <%= mapper %>.toDto((<%= entityClass %>) <%= entityInstance %>Item));
             <%_ } _%>
         <%_ } else { _%>
             <%_ if(hasDto) { _%>
