@@ -1,0 +1,27 @@
+<%_
+var expectedVariableName;
+var firstFieldName;
+var fieldNameUnderscored;
+let assertionMethod = 'isEqualTo';
+if (fields.length > 0) {
+    firstFieldName = fields[0].fieldName;
+    expectedVariableName = 'UPDATED_' + fields[0].fieldNameUnderscored.toUpperCase();
+    if (fields[0].fieldType === 'BigDecimal') {
+        assertionMethod = 'isEqualByComparingTo';
+    }
+_%>
+assertThat(test<%= entityOrDtoClass %>.<%= firstFieldName %>).<%= assertionMethod %>(<%= expectedVariableName %>);
+<%_} _%>
+<%_
+    if(fields.length > 1) {
+        for (let idx = 1; idx < fields.length; idx++) {
+            const fieldName = fields[idx].fieldName;
+            const expectedVariableName = 'DEFAULT_' + fields[idx].fieldNameUnderscored.toUpperCase();
+            let assertionMethod = 'isEqualTo';
+            if (fields[idx].fieldType === 'BigDecimal') {
+                assertionMethod = 'isEqualByComparingTo';
+            }
+_%>
+assertThat(test<%= entityOrDtoClass %>.<%= fieldName %>).<%= assertionMethod %>(<%= expectedVariableName %>);
+<%_ } _%>
+<%_} _%>

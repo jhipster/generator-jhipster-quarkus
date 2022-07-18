@@ -1,0 +1,47 @@
+package <%=packageName%>.web.rest;
+
+import <%=packageName%>.service.BatchExecutionService;
+import <%=packageName%>.service.dto.BatchExecutionRequestDTO;
+import <%=packageName%>.service.dto.BatchExecutionResponseDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+
+/**
+ * REST controller for batch request execution.
+ */
+@Path("/api/batch-execution")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@ApplicationScoped
+public class BatchExecutionResource {
+    private final Logger log = LoggerFactory.getLogger(BatchExecutionResource.class);
+
+    @Inject
+    BatchExecutionService batchExecutionService;
+
+     /**
+     * {@code POST /batch-execution} : Ресурс для пакетной модификации объектов
+     *
+     * @param batchExecutionRequests список запросов для пакетной модификации объектов.
+     * @return список модифицированных объектов
+     */
+    @POST
+    public Response batchExecution(List<BatchExecutionRequestDTO> batchExecutionRequests, @Context UriInfo uriInfo) {
+        log.debug("REST request to batch execution : {}", batchExecutionRequests);
+
+        List<BatchExecutionResponseDTO> response = batchExecutionService.batchExecution(batchExecutionRequests);
+        return Response.ok().entity(response).build();
+    }
+}

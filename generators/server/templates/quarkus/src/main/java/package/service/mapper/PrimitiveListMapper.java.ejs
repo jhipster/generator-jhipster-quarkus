@@ -1,0 +1,8 @@
+package <%=packageName%>.service.mapper;
+
+import <%=packageName%>.service.dto.PrimitiveListRequestDTO;
+
+public interface PrimitiveListMapper<T> {
+
+    T toPrimitiveRecordDto(PrimitiveListRequestDTO primitiveListRequestDTO, Object value);
+}

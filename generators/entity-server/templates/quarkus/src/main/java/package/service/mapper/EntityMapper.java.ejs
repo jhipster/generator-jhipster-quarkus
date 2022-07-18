@@ -42,11 +42,37 @@ for (idx in relationships) {
         }
     }
 }
+var primitive = primitiveTypes.includes(entityClass);
+var primitiveTypeName = entityClass.substr(0, entityClass.lastIndexOf("Record"));
+var primitiveType = primitiveTypeName;
+if (primitiveTypeName === 'Blob' || primitiveTypeName === 'AnyBlob' || primitiveTypeName === 'ImageBlob') {
+    primitiveType = 'byte[]';
+} else if (primitiveTypeName === 'TextBlob') {
+    primitiveType = 'String';
+}
 _%>
 
 import <%= packageName %>.domain.*;
+import <%= packageName %>.service.dto.PrimitiveListRequestDTO;
 import <%= packageName %>.service.dto.<%= asDto(entityClass) %>;
-
+<%_ if (primitiveTypeName === 'Blob' || primitiveTypeName === 'AnyBlob' || primitiveTypeName === 'ImageBlob') { _%>
+import org.apache.commons.lang3.ArrayUtils;
+import javax.json.bind.JsonbBuilder;
+<%_ } _%>
+<%_ if (primitiveTypeName === 'LocalDate' || primitiveTypeName === 'Instant' || primitiveTypeName === 'ZonedDateTime' || primitiveTypeName === 'Duration') { _%>
+import java.time.<%= primitiveTypeName %>;
+<%_ } _%>
+<%_ if (primitiveTypeName === 'Integer' || primitiveTypeName === 'Long' || primitiveTypeName === 'Float'
+        || primitiveTypeName === 'Double' || primitiveTypeName === 'BigDecimal') { _%>
+import java.math.BigDecimal;
+<%_ } _%>
+<%_ if (primitiveTypeName === 'UUID') { _%>
+import java.util.UUID;
+<%_ } _%>
+<%_ if (primitiveTypeName === 'ZonedDateTime') { _%>
+import com.mycompany.myapp.config.Constants;
+import java.time.format.DateTimeFormatter;
+<%_ } _%>
 import org.mapstruct.*;
 <%_ if (uuidMapMethod) { _%>
 
@@ -58,7 +84,14 @@ import java.util.UUID;
  * Mapper for the entity {@link <%= asEntity(entityClass) %>} and its DTO {@link <%= asDto(entityClass) %>}.
  */
 @Mapper(componentModel = "cdi", uses = {<%= existingMappings.map(otherEntityNameCapitalized => otherEntityNameCapitalized + 'Mapper.class').join(', ') %>})
-public interface <%= entityClass %>Mapper extends EntityMapper<<%= asDto(entityClass) %>, <%= asEntity(entityClass) %>> {
+public interface <%= entityClass %>Mapper extends EntityMapper<<%= asDto(entityClass) %>, <%= asEntity(entityClass) %>>
+<%_ if (primitive) { _%>, PrimitiveListMapper<<%= asDto(entityClass) %>><%_ } _%> {
+
+<%_ if (primitive) { _%>
+
+    @Mapping(target = "value", source = "value", qualifiedByName = "toValue")
+    <%= asDto(entityClass) %> toPrimitiveRecordDto(PrimitiveListRequestDTO primitiveListRequestDTO, Object value);
+<%_ } _%>
 
 <%_
 // entity -> DTO mapping
@@ -133,4 +166,37 @@ _%>
         return new String(value);
     }
     <%_ } _%>
+
+    <%_ if (primitive) { _%>
+        @Named("toValue")
+        default <%= primitiveType %> toValue(Object value) {
+            <%_ if (primitiveTypeName === 'Integer') { _%>
+                return ((BigDecimal) value).intValue();
+            <%_ } else if (primitiveTypeName === 'Long') { _%>
+                return ((BigDecimal) value).longValue();
+            <%_ } else if (primitiveTypeName === 'Float') { _%>
+                return ((BigDecimal) value).floatValue();
+            <%_ } else if (primitiveTypeName === 'Double') { _%>
+                return ((BigDecimal) value).doubleValue();
+            <%_ } else if (primitiveTypeName === 'BigDecimal' || primitiveTypeName === 'Boolean') { _%>
+                return (<%= primitiveTypeName %>) value;
+            <%_ } else if (primitiveTypeName === 'Blob' || primitiveTypeName === 'AnyBlob' || primitiveTypeName === 'ImageBlob') { _%>
+                Byte[] bytes = JsonbBuilder.create().fromJson(value.toString(), Byte[].class);
+                return ArrayUtils.toPrimitive(bytes);
+            <%_ } else if (primitiveTypeName === 'TextBlob') { _%>
+                return <%= primitiveType %>.valueOf(value);
+            <%_ } else if (primitiveTypeName === 'LocalDate' || primitiveTypeName === 'Instant'
+                    || primitiveTypeName === 'Duration') { _%>
+                return <%= primitiveTypeName %>.parse(value.toString());
+            <%_ } else if (primitiveTypeName === 'ZonedDateTime') { _%>
+                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.ZONED_DATE_TIME_FORMAT);
+                return ZonedDateTime.parse(value.toString(), formatter);
+            <%_ } else if (primitiveTypeName === 'UUID') { _%>
+                return <%= primitiveTypeName %>.fromString(value.toString());
+            <%_ } else { _%>
+                return <%= primitiveTypeName %>.valueOf(value);
+            <%_ } _%>
+        }
+    <%_ } _%>
 }
+

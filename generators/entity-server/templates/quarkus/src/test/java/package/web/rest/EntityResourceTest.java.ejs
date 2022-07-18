@@ -20,6 +20,10 @@ package <%=packageName%>.web.rest;
 
 <%- include('../../_partials/imports', this); -%>
 
+
+<%_
+var primitive = primitiveTypes.includes(entityClass);
+_%>
 @QuarkusTest
 public class <%= entityClass%>ResourceTest {
 
@@ -27,6 +31,9 @@ public class <%= entityClass%>ResourceTest {
     };
 
     private static final TypeRef<List<<%= entityOrDtoClass%>>> LIST_OF_ENTITY_TYPE = new TypeRef<>() {
+    };
+
+    private static final TypeRef<List<BatchExecutionResponseDTO>> LIST_OF_BATCH_EXECUTION_RESPONSE_TYPE = new TypeRef<>() {
     };
 
 <%- include('../../_partials/defaults', this); -%>
@@ -39,15 +46,24 @@ public class <%= entityClass%>ResourceTest {
 
     <%= entityOrDtoClass %> <%= entityOrDtoInstance %>;
 
+<%_ if (primitive) { _%>
+    PrimitiveListRequestDTO <%= entityOrDtoInstance %>PrimitiveListRequestDTO;
+<%_ } _%>
+
 <%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
 <%_ } _%>
 
+    @Inject
+    Jsonb jsonb;
+
     @BeforeAll
     static void jsonMapper() {
         RestAssured.config =
-            RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
+            RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(
+    <%_ if (entityClass === 'ZonedDateTimeRecord') { _%>TestUtil.jsonbZonedDateTimeObjectMapper()
+    <%_ } else { _%>TestUtil.jsonbObjectMapper()<%_ } _%>));
     }
 
     @BeforeEach
@@ -100,6 +116,9 @@ public class <%= entityClass%>ResourceTest {
     @BeforeEach
     public void initTest() {
         <%= entityOrDtoInstance %> = createEntity();
+        <%_ if (primitive) { _%>
+            <%= entityOrDtoInstance %>PrimitiveListRequestDTO = createPrimitiveListRequest();
+        <%_ } _%>
     }
 
     <%_ if (!readOnly) { _%>
@@ -115,4 +134,6 @@ public class <%= entityClass%>ResourceTest {
 <%- include('../../_partials/get_all', this); -%>
 
 <%- include('../../_partials/get', this); -%>
+
+<%- include('../../_partials/batch_execution', this); -%>
 }

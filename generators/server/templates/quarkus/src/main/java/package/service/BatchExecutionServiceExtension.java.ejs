@@ -1,0 +1,105 @@
+package <%=packageName%>.service;
+
+import <%=packageName%>.provider.BatchExecutionServicesProvider;
+import <%=packageName%>.service.dto.*;
+import <%=packageName%>.service.filtering.filter.StringFilter;
+import <%=packageName%>.service.mapper.EntityMapper;
+import <%=packageName%>.service.exception.BatchExecutionException;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+/**
+* Декоратор, расширяющий возможности пакетного обновления объектов
+*/
+public class BatchExecutionServiceExtension<T> implements BatchExecutionServiceInterface<T> {
+
+    private static final int PAGE_SIZE = 50;
+
+    private final BatchExecutionServiceInterface<T> serviceInterface;
+
+    private final String objectName;
+
+    BatchExecutionServicesProvider servicesProvider;
+
+    CriteriaFactory criteriaFactory;
+
+    public BatchExecutionServiceExtension(BatchExecutionServiceInterface<T> serviceInterface, String objectName,
+        BatchExecutionServicesProvider servicesProvider, CriteriaFactory criteriaFactory) {
+        this.serviceInterface = serviceInterface;
+        this.objectName = objectName;
+        this.servicesProvider = servicesProvider;
+        this.criteriaFactory = criteriaFactory;
+    }
+
+    public T partialUpdate(BaseDTO entityDTO) {
+        T foundEntityDTO = serviceInterface.findOne(entityDTO.getId()).orElse(null);
+        if (foundEntityDTO == null ) {
+        return null;
+        }
+
+        EntityMapper objectMapper = servicesProvider.getMapper(objectName);
+        Object foundEntity = objectMapper.toEntity(foundEntityDTO);
+        objectMapper.partialUpdate(foundEntity, entityDTO);
+
+        return serviceInterface.persistOrUpdate((T) objectMapper.toDto(foundEntity));
+    }
+
+    public T readEnum(EnumDTO enumDTO) {
+        try {
+            BatchExecutionQueryServiceInterface objectQueryService = servicesProvider.getQueryService(objectName);
+            EnumCriteria enumCriteria = (EnumCriteria) criteriaFactory.createCriteria(objectName);
+
+            StringFilter codeFilter = new StringFilter();
+            codeFilter.setEquals(enumDTO.code);
+            enumCriteria.setCode(codeFilter);
+            return (T) objectQueryService.findAllByCriteria(enumCriteria, Page.of(0, 50), Sort.by("code"))
+                .content.stream().findFirst().orElse(null);
+        } catch (NoSuchElementException e) {
+            throw new BatchExecutionException(String.format("Enum with name %s and code %s not found", objectName, enumDTO.code));
+        }
+    }
+
+    public void deletePrimitiveList(PrimitiveListRequestDTO primitiveListRequestDTO) {
+        BatchExecutionServiceExtension batchExecutionServiceExtension = servicesProvider.getServiceExtension(objectName);
+        BatchExecutionQueryServiceInterface primitiveListQueryService = servicesProvider.getQueryService(objectName);
+        PrimitiveListCriteria primitiveListCriteria = (PrimitiveListCriteria) criteriaFactory.createCriteria(objectName);
+
+        StringFilter entityNameFilter = new StringFilter();
+        entityNameFilter.setEquals(primitiveListRequestDTO.entityName);
+        primitiveListCriteria.setEntityName(entityNameFilter);
+
+        StringFilter entityIdFilter = new StringFilter();
+        entityIdFilter.setEquals(primitiveListRequestDTO.entityId);
+        primitiveListCriteria.setEntityId(entityIdFilter);
+
+        StringFilter fieldNameFilter = new StringFilter();
+        fieldNameFilter.setEquals(primitiveListRequestDTO.fieldName);
+        primitiveListCriteria.setFieldName(fieldNameFilter);
+
+        long pageCount = primitiveListQueryService.findAllByCriteria(primitiveListCriteria, Page.of(0, PAGE_SIZE), Sort.by("entityName")).pageCount;
+        for (long page = 0; page < pageCount; page++) {
+            primitiveListQueryService
+                .findAllByCriteria(primitiveListCriteria, Page.of(0, PAGE_SIZE), Sort.by("entityName"))
+                .content.forEach(it -> batchExecutionServiceExtension.delete(((BaseDTO) it).getId()));
+        }
+    }
+
+    @Override
+    public T persistOrUpdate(Object o) {
+        return serviceInterface.persistOrUpdate((T) o);
+    }
+
+    @Override
+    public Optional<T> findOne(Long id) {
+        return serviceInterface.findOne(id);
+    }
+
+    @Override
+    public void delete(Long id) {
+        serviceInterface.delete(id);
+    }
+}
+

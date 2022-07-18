@@ -1,0 +1,12 @@
+package <%=packageName%>.service;
+
+import java.util.Optional;
+
+public interface BatchExecutionServiceInterface<T> {
+
+    T persistOrUpdate(T t);
+
+    Optional<T> findOne(Long id);
+
+    void delete(Long id);
+}

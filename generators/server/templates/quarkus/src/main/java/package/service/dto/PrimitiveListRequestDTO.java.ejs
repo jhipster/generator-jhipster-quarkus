@@ -1,0 +1,19 @@
+package <%=packageName%>.service.dto;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@RegisterForReflection
+public class PrimitiveListRequestDTO implements Serializable {
+
+    public List<Object> values = new ArrayList<>();
+
+    public String entityName;
+
+    public String entityId;
+
+    public String fieldName;
+}

@@ -21,6 +21,25 @@ module.exports = class extends EntityServerGenerator {
         // Drop when jhipster provides by default.
         this.entityStorage = this.getEntityConfig(this.entity.name, true);
         this.entityConfig = this.entityStorage.createProxy();
+        this.primitiveTypes = [
+            'StringRecord',
+            'LocalDateRecord',
+            'InstantRecord',
+            'ZonedDateTimeRecord',
+            'IntegerRecord',
+            'LongRecord',
+            'FloatRecord',
+            'DoubleRecord',
+            'BigDecimalRecord',
+            'BooleanRecord',
+            'BlobRecord',
+            'AnyBlobRecord',
+            'BlobRecord',
+            'ImageBlobRecord',
+            'TextBlobRecord',
+            'DurationRecord',
+            'UUIDRecord',
+        ];
     }
 
     get initializing() {

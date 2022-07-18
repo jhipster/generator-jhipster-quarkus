@@ -88,7 +88,7 @@ import <%=packageName%>.domain.enumeration.<%= element %>;
 @ApiModel(description = "<%- formatAsApiDescription(javadoc) %>")
 <%_ } _%>
 @RegisterForReflection
-public class <%= asDto(entityClass) %> implements Serializable {
+public class <%= asDto(entityClass) %> implements Serializable, BaseDTO {
     <% if (!embedded) { %>
     public <%= primaryKeyType %> id;
     <%_ } _%>
@@ -177,6 +177,11 @@ public class <%= asDto(entityClass) %> implements Serializable {
         <%_ } else { _%>
         return false;
         <%_ } _%>
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 
     @Override

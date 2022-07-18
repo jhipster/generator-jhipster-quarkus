@@ -1,0 +1,13 @@
+package <%=packageName%>.service.dto;
+
+import <%=packageName%>.service.filtering.Criteria;
+import <%=packageName%>.service.filtering.filter.StringFilter;
+
+public interface PrimitiveListCriteria extends Criteria {
+
+    void setEntityName(StringFilter entityName);
+
+    void setEntityId(StringFilter entityId);
+
+    void setFieldName(StringFilter fieldName);
+}

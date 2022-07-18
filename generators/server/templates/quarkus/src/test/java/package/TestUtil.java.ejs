@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 <%_ if(!skipUserManagement) { _%>
 import <%=packageName%>.web.rest.vm.LoginVM;
+import <%=packageName%>.config.Constants;
 <%_ } _%>
 import io.restassured.mapper.ObjectMapper;
 import io.restassured.mapper.ObjectMapperDeserializationContext;
@@ -113,19 +114,12 @@ public final class TestUtil {
 <%_ } _%>
     public static ObjectMapper jsonbObjectMapper() {
         final var config = new JsonbConfig().withDateFormat(DATE_TIME_FORMAT, null);
-        final Jsonb jsonb = JsonbBuilder.create(config);
-        return new ObjectMapper() {
+        return createObjectMapper(config);
+    }
 
-            @Override
-            public Object deserialize(ObjectMapperDeserializationContext context) {
-                return jsonb.fromJson(context.getDataToDeserialize().asString(), context.getType());
-            }
-
-            @Override
-            public Object serialize(ObjectMapperSerializationContext context) {
-                return jsonb.toJson(context.getObjectToSerialize());
-            }
-        };
+    public static ObjectMapper jsonbZonedDateTimeObjectMapper() {
+        final var config = new JsonbConfig().withDateFormat(Constants.ZONED_DATE_TIME_FORMAT, null);
+        return createObjectMapper(config);
     }
 
     public static byte[] createByteArray(int size, String data) {
@@ -137,4 +131,19 @@ public final class TestUtil {
     }
 
     private TestUtil() {}
+
+    private static ObjectMapper createObjectMapper(JsonbConfig config) {
+        final Jsonb jsonb = JsonbBuilder.create(config);
+        return new ObjectMapper() {
+            @Override
+            public Object deserialize(ObjectMapperDeserializationContext context) {
+                return jsonb.fromJson(context.getDataToDeserialize().asString(), context.getType());
+            }
+
+            @Override
+            public Object serialize(ObjectMapperSerializationContext context) {
+                return jsonb.toJson(context.getObjectToSerialize());
+            }
+        };
+    }
 }

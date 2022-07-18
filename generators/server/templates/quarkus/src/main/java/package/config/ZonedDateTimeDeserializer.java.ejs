@@ -1,0 +1,23 @@
+package <%=packageName%>.config;
+
+import javax.inject.Singleton;
+import javax.json.bind.serializer.DeserializationContext;
+import javax.json.bind.serializer.JsonbDeserializer;
+import javax.json.stream.JsonParser;
+import java.lang.reflect.Type;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+/*
+* Десериализатор для ZonedDateTime
+*/
+@Singleton
+public class ZonedDateTimeDeserializer implements JsonbDeserializer<ZonedDateTime> {
+
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(Constants.ZONED_DATE_TIME_FORMAT);
+
+    @Override
+    public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext, Type type) {
+        return ZonedDateTime.parse(jsonParser.getString(), dateTimeFormatter);
+    }
+}

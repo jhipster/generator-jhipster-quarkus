@@ -1,0 +1,22 @@
+package <%=packageName%>.config;
+
+import javax.inject.Singleton;
+import javax.json.bind.serializer.JsonbSerializer;
+import javax.json.bind.serializer.SerializationContext;
+import javax.json.stream.JsonGenerator;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+/*
+* Сериализатор для ZonedDateTime
+*/
+@Singleton
+public class ZonedDateTimeSerializer implements JsonbSerializer<ZonedDateTime> {
+
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(Constants.ZONED_DATE_TIME_FORMAT);
+
+    @Override
+    public void serialize(ZonedDateTime zonedDateTime, JsonGenerator jsonGenerator, SerializationContext ctx) {
+        jsonGenerator.write(zonedDateTime.format(dateTimeFormatter));
+    }
+}

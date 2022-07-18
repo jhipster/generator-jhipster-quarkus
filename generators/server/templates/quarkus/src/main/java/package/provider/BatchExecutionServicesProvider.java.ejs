@@ -1,0 +1,100 @@
+package <%=packageName%>.provider;
+
+import <%=packageName%>.service.BatchExecutionServiceExtension;
+import <%=packageName%>.service.BatchExecutionQueryServiceInterface;
+import <%=packageName%>.service.BatchExecutionServiceInterface;
+import com.mycompany.myapp.service.CriteriaFactory;
+import <%=packageName%>.service.mapper.EntityMapper;
+import <%=packageName%>.service.util.ClassUtil;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+import org.jboss.logging.Logger;
+
+/**
+* Провайдер по получения сервисов для пакетной модификации объектов
+*/
+@ApplicationScoped
+public class BatchExecutionServicesProvider {
+
+    private final static Logger log = Logger.getLogger(BatchExecutionServicesProvider.class);
+
+    @Inject
+    BeanManager beanManager;
+
+    @Inject
+    BatchExecutionServicesProvider servicesProvider;
+
+    @Inject
+    CriteriaFactory criteriaFactory;
+
+    private final ConcurrentHashMap<String, BatchExecutionServiceExtension> serviceExtensions = new ConcurrentHashMap<>();
+
+    private final ConcurrentHashMap<String, BatchExecutionQueryServiceInterface> queryServices = new ConcurrentHashMap<>();
+
+    private final ConcurrentHashMap<String, EntityMapper> mappers = new ConcurrentHashMap<>();
+
+    /**
+    * Получение сервиса, соответствующего переданному наименованию объекта
+    * @param objectName наименование объекта для модификации
+    * @return сервис, соответствующий переданному наименованию объекта
+    */
+    public BatchExecutionServiceExtension getServiceExtension(String objectName) {
+        log.debug("Get service extension for object with name " + objectName);
+        if (serviceExtensions.containsKey(objectName)) {
+            return serviceExtensions.get(objectName);
+        }
+        Class requestServiceClass = ClassUtil.getClass(ClassUtil.SERVICE_CLASS_PATH, objectName + "Service");
+        BatchExecutionServiceInterface objectService = (BatchExecutionServiceInterface) getBeanReference(requestServiceClass);
+        BatchExecutionServiceExtension batchExecutionServiceExtension = new BatchExecutionServiceExtension(
+        objectService,
+        objectName,
+        servicesProvider,
+        criteriaFactory
+        );
+        serviceExtensions.put(objectName, batchExecutionServiceExtension);
+        return batchExecutionServiceExtension;
+    }
+
+    /**
+    * Получение сервиса для фильтрации, соответствующего переданному наименованию объекта
+    * @param objectName наименование объекта для модификации
+    * @return сервис для фильтрации, соответствующий переданному наименованию объекта
+    */
+    public BatchExecutionQueryServiceInterface getQueryService(String objectName) {
+        log.debug("Get query-service for object with name " + objectName);
+        if (queryServices.containsKey(objectName)) {
+            return queryServices.get(objectName);
+        }
+        Class requestQueryServiceClass = ClassUtil.getClass(ClassUtil.SERVICE_CLASS_PATH, objectName + "QueryService");
+        BatchExecutionQueryServiceInterface objectQueryService = (BatchExecutionQueryServiceInterface) getBeanReference(requestQueryServiceClass);
+        queryServices.put(objectName, objectQueryService);
+        return objectQueryService;
+    }
+
+    /**
+    * Получение мапера, соответствующего переданному наименованию объекта
+    * @param objectName наименование объекта для модификации
+    * @return EntityMapper, соответствующий переданному наименованию объекта
+    */
+    public EntityMapper getMapper(String objectName) {
+        log.debug("Get mapper for object with name " + objectName);
+        if (mappers.containsKey(objectName)) {
+            return mappers.get(objectName);
+        }
+        Class mapperClass = ClassUtil.getClass(ClassUtil.MAPPER_CLASS_PATH, objectName + "Mapper");
+        EntityMapper entityMapper = (EntityMapper) getBeanReference(mapperClass);
+        mappers.put(objectName, entityMapper);
+        return entityMapper;
+    }
+
+    private Object getBeanReference(Class objectClass) {
+        Bean<?> objectBean = beanManager.resolve(beanManager.getBeans(objectClass));
+        CreationalContext<?> context = beanManager.createCreationalContext(objectBean);
+        return beanManager.getReference(objectBean, objectBean.getBeanClass(), context);
+    }
+}
+

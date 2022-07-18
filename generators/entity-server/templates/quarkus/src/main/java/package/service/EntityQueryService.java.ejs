@@ -40,7 +40,7 @@ import java.util.UUID;
 /**
  * Service Interface for filtering {@link <%= packageName %>.domain.<%= entityClass %>}.
  */
-public interface <%= entityClass %>QueryService {
+public interface <%= entityClass %>QueryService extends BatchExecutionQueryServiceInterface<<%= entityOrDtoClass %>, <%= entityClass %>Criteria> {
 
     /**
      * Get all the <%= entityInstancePlural %>.

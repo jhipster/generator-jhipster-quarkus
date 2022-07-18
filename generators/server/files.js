@@ -212,6 +212,18 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`,
                 },
                 {
+                    file: 'package/config/JsonbConfiguration.java',
+                    renameTo: generator => `${generator.javaDir}config/JsonbConfiguration.java`,
+                },
+                {
+                    file: 'package/config/ZonedDateTimeDeserializer.java',
+                    renameTo: generator => `${generator.javaDir}config/ZonedDateTimeDeserializer.java`,
+                },
+                {
+                    file: 'package/config/ZonedDateTimeSerializer.java',
+                    renameTo: generator => `${generator.javaDir}config/ZonedDateTimeSerializer.java`,
+                },
+                {
                     file: 'package/config/LocalDateProvider.java',
                     renameTo: generator => `${generator.javaDir}config/LocalDateProvider.java`,
                 },
@@ -724,6 +736,90 @@ const serverFiles = {
                 {
                     file: 'package/service/filtering/filter/DateNoTimeListDeserializer.java',
                     renameTo: generator => `${generator.javaDir}service/filtering/filter/DateNoTimeListDeserializer.java`,
+                },
+                {
+                    file: 'package/web/rest/BatchExecutionResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/BatchExecutionResource.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionService.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionService.java`,
+                },
+                {
+                    file: 'package/service/CriteriaFactory.java',
+                    renameTo: generator => `${generator.javaDir}service/CriteriaFactory.java`,
+                },
+                {
+                    file: 'package/service/Paged.java',
+                    renameTo: generator => `${generator.javaDir}service/Paged.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionServiceInterface.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionServiceInterface.java`,
+                },
+                {
+                    file: 'package/service/dto/BaseDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/BaseDTO.java`,
+                },
+                {
+                    file: 'package/service/dto/ActionType.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/ActionType.java`,
+                },
+                {
+                    file: 'package/service/dto/EnumDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/EnumDTO.java`,
+                },
+                {
+                    file: 'package/service/dto/BatchExecutionRequestDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/BatchExecutionRequestDTO.java`,
+                },
+                {
+                    file: 'package/service/dto/BatchExecutionResponseDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/BatchExecutionResponseDTO.java`,
+                },
+                {
+                    file: 'package/provider/BatchExecutionServicesProvider.java',
+                    renameTo: generator => `${generator.javaDir}provider/BatchExecutionServicesProvider.java`,
+                },
+                {
+                    file: 'package/service/mapper/BatchExecutionMapper.java',
+                    renameTo: generator => `${generator.javaDir}service/mapper/BatchExecutionMapper.java`,
+                },
+                {
+                    file: 'package/service/util/ClassUtil.java',
+                    renameTo: generator => `${generator.javaDir}service/util/ClassUtil.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionQueryServiceInterface.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionQueryServiceInterface.java`,
+                },
+                {
+                    file: 'package/service/BatchExecutionServiceExtension.java',
+                    renameTo: generator => `${generator.javaDir}service/BatchExecutionServiceExtension.java`,
+                },
+                {
+                    file: 'package/service/exception/BatchExecutionException.java',
+                    renameTo: generator => `${generator.javaDir}service/exception/BatchExecutionException.java`,
+                },
+                {
+                    file: 'package/service/exception/BatchExecutionExceptionHandler.java',
+                    renameTo: generator => `${generator.javaDir}service/exception/BatchExecutionExceptionHandler.java`,
+                },
+                {
+                    file: 'package/service/dto/EnumCriteria.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/EnumCriteria.java`,
+                },
+                {
+                    file: 'package/service/mapper/PrimitiveListMapper.java',
+                    renameTo: generator => `${generator.javaDir}service/mapper/PrimitiveListMapper.java`,
+                },
+                {
+                    file: 'package/service/dto/PrimitiveListCriteria.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/PrimitiveListCriteria.java`,
+                },
+                {
+                    file: 'package/service/dto/PrimitiveListRequestDTO.java',
+                    renameTo: generator => `${generator.javaDir}service/dto/PrimitiveListRequestDTO.java`,
                 },
             ],
         },

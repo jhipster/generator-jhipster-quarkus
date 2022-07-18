@@ -1,0 +1,27 @@
+package <%=packageName%>.service.dto;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+import java.io.Serializable;
+
+/**
+ * DTO ответа пакетной модификации объектов
+ */
+@RegisterForReflection
+public class BatchExecutionResponseDTO implements Serializable {
+
+     /**
+      * Идентификатор выполненного запроса
+      */
+     public String uuid;
+
+     /**
+      * Наименование модифицированной сущности
+      */
+     public String objectName;
+
+     /**
+      * Данные модифицированной сущности
+      */
+     public Object data;
+}
