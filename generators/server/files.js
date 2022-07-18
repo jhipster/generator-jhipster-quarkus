@@ -790,10 +790,6 @@ const serverFiles = {
                     renameTo: generator => `${generator.javaDir}service/util/ClassUtil.java`,
                 },
                 {
-                    file: 'package/service/util/JsonbTransformationUtil.java',
-                    renameTo: generator => `${generator.javaDir}service/util/JsonbTransformationUtil.java`,
-                },
-                {
                     file: 'package/service/BatchExecutionQueryServiceInterface.java',
                     renameTo: generator => `${generator.javaDir}service/BatchExecutionQueryServiceInterface.java`,
                 },
