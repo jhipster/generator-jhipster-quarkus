@@ -42,9 +42,7 @@ for (idx in relationships) {
         }
     }
 }
-var primitive = ['StringRecord', 'LocalDateRecord', 'InstantRecord', 'ZonedDateTimeRecord', 'IntegerRecord', 'LongRecord',
-    'FloatRecord', 'DoubleRecord', 'BigDecimalRecord', 'BooleanRecord', 'BlobRecord', 'AnyBlobRecord', 'BlobRecord',
-    'ImageBlobRecord', 'TextBlobRecord', 'DurationRecord', 'UUIDRecord'].includes(entityClass);
+var primitive = primitiveTypes.includes(entityClass);
 var primitiveTypeName = entityClass.substr(0, entityClass.lastIndexOf("Record"));
 var primitiveType = primitiveTypeName;
 if (primitiveTypeName === 'Blob' || primitiveTypeName === 'AnyBlob' || primitiveTypeName === 'ImageBlob') {

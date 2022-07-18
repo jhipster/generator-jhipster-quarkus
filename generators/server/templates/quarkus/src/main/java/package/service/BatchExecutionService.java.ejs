@@ -5,6 +5,7 @@ import <%=packageName%>.service.dto.*;
 import <%=packageName%>.service.mapper.BatchExecutionMapper;
 import <%=packageName%>.service.mapper.PrimitiveListMapper;
 import <%=packageName%>.service.util.ClassUtil;
+import <%=packageName%>.service.util.JsonbTransformationUtil;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -38,23 +39,23 @@ public class BatchExecutionService {
         List<BatchExecutionResponseDTO> responseDTOList = new ArrayList<>();
         for (BatchExecutionRequestDTO request : batchExecutionRequests) {
             BatchExecutionServiceExtension batchExecutionServiceExtension = servicesProvider.getServiceExtension(request.objectName);
-            BaseDTO data = (BaseDTO) jsonb.fromJson(request.data, ClassUtil.getClass(ClassUtil.DTO_CLASS_PATH, request.objectName + "DTO"));
+            BaseDTO data = (BaseDTO) JsonbTransformationUtil.fromJson(jsonb, request.data, ClassUtil.getClass(ClassUtil.DTO_CLASS_PATH, request.objectName + "DTO"));
             Object responseData = null;
             if (ActionType.CREATE.equals(request.actionType) || ActionType.UPDATE.equals(request.actionType)) {
                 responseData = batchExecutionServiceExtension.persistOrUpdate(data);
             } else if (ActionType.PARTIAL_UPDATE.equals(request.actionType)) {
                 responseData = batchExecutionServiceExtension.partialUpdate(data);
             } else if (ActionType.DELETE.equals(request.actionType)) {
-            batchExecutionServiceExtension.delete(data.getId());
+                batchExecutionServiceExtension.delete(data.getId());
             } else if (ActionType.READ_ENUM.equals(request.actionType)) {
-                EnumDTO enumDTO = jsonb.fromJson(request.data, EnumDTO.class);
+                EnumDTO enumDTO = (EnumDTO) JsonbTransformationUtil.fromJson(jsonb, request.data, EnumDTO.class);
                 responseData = batchExecutionServiceExtension.readEnum(enumDTO);
             } else if (ActionType.CREATE_PRIMITIVE_LIST.equals(request.actionType)) {
-                PrimitiveListRequestDTO primitiveListRequestDTO = jsonb.fromJson(request.data, PrimitiveListRequestDTO.class);
+                PrimitiveListRequestDTO primitiveListRequestDTO = (PrimitiveListRequestDTO) JsonbTransformationUtil.fromJson(jsonb, request.data, PrimitiveListRequestDTO.class);
                 responseData = createPrimitiveList(primitiveListRequestDTO, request.objectName, batchExecutionServiceExtension);
             } else if (ActionType.UPDATE_PRIMITIVE_LIST.equals(request.actionType)) {
-                PrimitiveListRequestDTO primitiveListRequestDTO = jsonb.fromJson(request.data, PrimitiveListRequestDTO.class);
-            batchExecutionServiceExtension.deletePrimitiveList(primitiveListRequestDTO);
+                PrimitiveListRequestDTO primitiveListRequestDTO = (PrimitiveListRequestDTO) JsonbTransformationUtil.fromJson(jsonb, request.data, PrimitiveListRequestDTO.class);
+                batchExecutionServiceExtension.deletePrimitiveList(primitiveListRequestDTO);
                 responseData = createPrimitiveList(primitiveListRequestDTO, request.objectName, batchExecutionServiceExtension);
             }
             BatchExecutionResponseDTO response = batchExecutionMapper.toBatchExecutionResponseDTO(request, responseData);

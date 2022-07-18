@@ -34,9 +34,7 @@ import <%= packageName %>.service.filtering.filter.ZonedDateTimeFilter;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 <%_
-var primitive = ['StringRecord', 'LocalDateRecord', 'InstantRecord', 'ZonedDateTimeRecord', 'IntegerRecord', 'LongRecord',
-    'FloatRecord', 'DoubleRecord', 'BigDecimalRecord', 'BooleanRecord', 'BlobRecord', 'AnyBlobRecord', 'BlobRecord',
-    'ImageBlobRecord', 'TextBlobRecord', 'DurationRecord', 'UUIDRecord'].includes(entityClass);
+var primitive = primitiveTypes.includes(entityClass);
 _%>
 <%_
 const referenceFilterType = '' + primaryKeyType + 'Filter';
