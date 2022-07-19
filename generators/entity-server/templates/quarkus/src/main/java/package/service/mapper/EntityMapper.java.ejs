@@ -70,7 +70,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 <%_ } _%>
 <%_ if (primitiveTypeName === 'ZonedDateTime') { _%>
-import com.mycompany.myapp.config.Constants;
+import <%= packageName %>.config.Constants;
 import java.time.format.DateTimeFormatter;
 <%_ } _%>
 import org.mapstruct.*;
