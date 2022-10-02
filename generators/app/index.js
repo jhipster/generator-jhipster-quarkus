@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const AppGenerator = require('generator-jhipster/generators/app');
 const constants = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
-const { askForTestOpts } = require("./prompts");
+const { askForTestOpts } = require('./prompts');
 
 module.exports = class extends AppGenerator {
     constructor(args, options, features) {
@@ -83,7 +83,7 @@ module.exports = class extends AppGenerator {
     get composing() {
         return {
             ...super._composing(),
-            askForTestOpts: askForTestOpts,
+            askForTestOpts,
             askForMoreModules: undefined,
         };
     }

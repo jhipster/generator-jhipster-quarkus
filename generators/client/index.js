@@ -41,13 +41,6 @@ module.exports = class extends ClientGenerator {
                     );
 
                     this.deleteDestination(`${REACT_DIR}modules/administration/health/health-modal.tsx`);
-
-                    //                    // Workaround jhipster 7.1.0 bug
-                    //                    this.packageJson.merge({
-                    //                        devDependencies: {
-                    //                            'workbox-webpack-plugin': '6.2.4',
-                    //                        },
-                    //                    });
                 }
             },
         };
