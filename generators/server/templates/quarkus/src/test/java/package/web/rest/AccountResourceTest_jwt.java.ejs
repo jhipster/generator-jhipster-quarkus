@@ -862,7 +862,7 @@ public class AccountResourceTest {
             .body("password-reset-wrong-email@example.com")
             .post("/api/account/reset-password/init")
             .then()
-            .statusCode(BAD_REQUEST.getStatusCode());
+            .statusCode(OK.getStatusCode());
     }
 
     @Test
