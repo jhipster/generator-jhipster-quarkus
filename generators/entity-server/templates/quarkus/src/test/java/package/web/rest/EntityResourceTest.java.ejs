@@ -68,21 +68,6 @@ public class <%= entityClass%>ResourceTest {
     }
 <%_ } _%>
 
-    <%_ if (cacheProvider === 'redis') { _%>
-    @BeforeAll
-    public static void startRedisServer() throws IOException {
-        server = new RedisServer(6379);
-        server.start();
-    }
-    <%_ } _%>
-
-    <%_ if (cacheProvider === 'redis') { _%>
-    @AfterAll
-    public static void stopRedisServer() {
-        server.stop();
-    }
-    <%_ } _%>
-
     /**
      * Create an entity for this test.
      * <p>
