@@ -22,7 +22,7 @@ package <%=packageName%>.domain;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
-import io.quarkus.mongodb.panache.MongoEntity;
+import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
 import org.bson.codecs.pojo.annotations.BsonId;
