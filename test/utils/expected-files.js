@@ -116,7 +116,6 @@ const expectedFiles = {
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/Foo.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/FooRedisCache.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/RedisCacheTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/RedisCacheTestResource.java`,
         ],
     },
 
