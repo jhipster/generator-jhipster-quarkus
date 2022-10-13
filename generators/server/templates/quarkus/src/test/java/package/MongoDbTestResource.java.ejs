@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -31,30 +31,30 @@ import java.util.Collections;
 import java.util.Map;
 
 public class MongoDbTestResource implements QuarkusTestResourceLifecycleManager {
-  private MongodExecutable mongodExecutable;
+    private MongodExecutable mongodExecutable;
 
-  @Override
-  public Map<String, String> start() {
-    String ip = "localhost";
-    int port = 37017;
+    @Override
+    public Map<String, String> start() {
+        String ip = "localhost";
+        int port = 37017;
 
-    try {
-        MongodConfig mongodConfig = MongodConfig.builder()
-            .version(Version.Main.PRODUCTION)
-            .net(new Net(ip, port, Network.localhostIsIPv6()))
-            .build();
+        try {
+            MongodConfig mongodConfig = MongodConfig.builder()
+                .version(Version.Main.PRODUCTION)
+                .net(new Net(ip, port, Network.localhostIsIPv6()))
+                .build();
 
-        MongodStarter starter = MongodStarter.getDefaultInstance();
-        mongodExecutable = starter.prepare(mongodConfig);
-        mongodExecutable.start();
-        return Collections.emptyMap();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+            MongodStarter starter = MongodStarter.getDefaultInstance();
+            mongodExecutable = starter.prepare(mongodConfig);
+            mongodExecutable.start();
+            return Collections.emptyMap();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-  }
 
-  @Override
-  public void stop() {
-    mongodExecutable.stop();
-  }
+    @Override
+    public void stop() {
+        mongodExecutable.stop();
+    }
 }
