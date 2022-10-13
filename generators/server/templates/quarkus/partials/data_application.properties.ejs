@@ -98,6 +98,6 @@ quarkus.mongodb.database=<%= baseName %>
 quarkus.liquibase.change-log=config/liquibase/master.xml
 quarkus.liquibase.migrate-at-start=true
 
-%test.quarkus.datasource.jdbc.url=jdbc:h2:mem:test
+%test.quarkus.datasource.jdbc.url=jdbc:h2:mem:test;MODE=LEGACY
 %test.quarkus.datasource.db-kind=h2
 <%_ } _%>
