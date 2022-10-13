@@ -374,6 +374,10 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                 'pom.xml',
                 '        <dependency>\n' +
                     '            <groupId>io.quarkus</groupId>\n' +
+                    '            <artifactId>quarkus-mongodb-client</artifactId>\n' +
+                    '        </dependency>\n' +
+                    '        <dependency>\n' +
+                    '            <groupId>io.quarkus</groupId>\n' +
                     '            <artifactId>quarkus-mongodb-panache</artifactId>\n' +
                     '        </dependency>'
             );
@@ -389,13 +393,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                     '        <dependency>\n' +
                     '            <groupId>com.github.cloudyrock.mongock</groupId>\n' +
                     '            <artifactId>mongodb-sync-v4-driver</artifactId>\n' +
-                    '        </dependency>\n' +
-                    '        <dependency>\n' +
-                    '            <groupId>org.mongodb</groupId>\n' +
-                    '            <artifactId>mongodb-driver-sync</artifactId>\n' +
-                    // eslint-disable-next-line no-template-curly-in-string
-                    '            <version>${mongodb-driver-sync.version}</version>\n' +
-                    '        </dependency>'
+                    '        </dependency>\n'
             );
             assert.fileContent(
                 'pom.xml',

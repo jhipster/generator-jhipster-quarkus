@@ -76,7 +76,6 @@
          <%_ } _%>
         <%_ if (databaseType === 'mongodb') { _%>
         <mongock-bom.version>4.1.19</mongock-bom.version>
-        <mongodb-driver-sync.version>4.1.1</mongodb-driver-sync.version>
         <commons-vfs2.version>2.0</commons-vfs2.version>
         <graal.version>21.0.0.2</graal.version>
         <%_ } _%>
@@ -168,7 +167,7 @@
             <version>${camel-quarkus-jackson.version}</version>
         </dependency>
         <%_ } _%>
-        <%_ if (!skipUserManagement) { _%>
+        <%_ if (!skipUserManagement && databaseType !== 'mongodb') { _%>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
