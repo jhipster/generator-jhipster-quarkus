@@ -33,6 +33,6 @@ import javax.inject.Singleton;
 public class UserRedisCache extends RedisCache<User> {
 
     public UserRedisCache() {
-        super("USER:");
+        super("USER:", User.class);
     }
 }

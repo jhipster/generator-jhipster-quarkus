@@ -18,9 +18,8 @@
 -%>
 package <%=packageName%>;
 
+<%_ if (authenticationType === 'oauth2' || databaseType === 'mongodb') { _%>
 import io.quarkus.test.common.QuarkusTestResource;
-<%_ if (cacheProvider === 'redis') { _%>
-@QuarkusTestResource(RedisCacheTestResource.class)
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
 @QuarkusTestResource(MockOidcServerTestResource.class)

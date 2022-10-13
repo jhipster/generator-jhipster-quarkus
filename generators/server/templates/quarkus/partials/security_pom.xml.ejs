@@ -16,17 +16,21 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
+<%_ if (authenticationType === 'jwt') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-elytron-security</artifactId>
+            <artifactId>quarkus-elytron-security-jdbc</artifactId>
         </dependency>
-<%_ if (authenticationType === 'jwt') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-jwt</artifactId>
         </dependency>
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-elytron-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-oidc</artifactId>

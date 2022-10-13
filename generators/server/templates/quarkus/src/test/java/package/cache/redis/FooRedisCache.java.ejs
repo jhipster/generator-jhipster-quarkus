@@ -24,6 +24,6 @@ import javax.inject.Singleton;
 public class FooRedisCache extends RedisCache<Foo> {
 
     public FooRedisCache() {
-        super("Foo:");
+        super("Foo:", Foo.class);
     }
 }

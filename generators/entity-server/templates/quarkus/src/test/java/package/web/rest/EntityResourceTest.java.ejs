@@ -31,9 +31,6 @@ public class <%= entityClass%>ResourceTest {
 
 <%- include('../../_partials/defaults', this); -%>
 
-<%_ if (cacheProvider === 'redis') { _%>
-    static RedisServer server;
-<%_ } _%>
 
     String adminToken;
 

@@ -29,50 +29,52 @@
 
     <properties>
         <!-- Build properties -->
-        <maven.version>3.6.3</maven.version>
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <skipITs>true</skipITs>
+
+        <maven.version>3.8.2</maven.version>
         <java.version>11</java.version>
         <node.version>v16.17.0</node.version>
         <npm.version>8.15.0</npm.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
+
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
 
         <!-- Dependency properties -->
         <quarkus.platform.version><%= quarkusVersion %></quarkus.platform.version>
-        <mapstruct.version>1.3.1.Final</mapstruct.version>
-        <resteasy-problem.version>1.0.0</resteasy-problem.version>
-        <archunit-junit5.version>0.12.0</archunit-junit5.version>
+        <mapstruct.version>1.5.2.Final</mapstruct.version>
+        <resteasy-problem.version>2.0.1</resteasy-problem.version>
+        <archunit-junit5.version>1.0.0</archunit-junit5.version>
+        <assertj.version>3.22.0</assertj.version>
         <%_ if(authenticationType === 'oauth2') {_%>
         <wiremock.version>2.27.2</wiremock.version>
         <%_ } _%>
 
         <!-- Plugin versions -->
-        <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
-        <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
-        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
-        <maven-idea-plugin.version>2.2.1</maven-idea-plugin.version>
-        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <maven-checkstyle.version>3.1.0</maven-checkstyle.version>
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+        <maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+        <maven-checkstyle.version>3.2.0</maven-checkstyle.version>
+        <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
+        <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
+        <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
+        <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <%_ if (!skipClient) { _%>
-        <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+        <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
         <%_ } _%>
-        <git-commit-id-plugin.version>4.0.0</git-commit-id-plugin.version>
-        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-        <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
-        <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
         <%_ if (enableSwaggerCodegen) { _%>
         <openapi-generator-maven-plugin.version>3.2.3</openapi-generator-maven-plugin.version>
         <%_ } _%>
-        <quarkus-plugin.version><%= quarkusVersion %></quarkus-plugin.version>
         <%_ if (cacheProvider === 'redis') { _%>
-         <camel-quarkus-jackson.version>1.5.0</camel-quarkus-jackson.version>
+         <camel-quarkus-jackson.version>2.13.0</camel-quarkus-jackson.version>
          <%_ } _%>
         <%_ if (databaseType === 'mongodb') { _%>
         <mongock-bom.version>4.1.19</mongock-bom.version>
@@ -82,18 +84,16 @@
         <%_ } _%>
 
         <!-- Plugin properties -->
-        <checkstyle.version>8.27</checkstyle.version>
-        <junit.utReportFolder>${project.testresult.directory}/test</junit.utReportFolder>
-        <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
-        <quarkus.logManager>org.jboss.logmanager.LogManager</quarkus.logManager>
+        <checkstyle.version>8.29</checkstyle.version>
+
         <!-- jhipster-needle-maven-property -->
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
                 <version>${quarkus.platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -129,9 +129,10 @@
         </dependency>
 <%_ if(databaseType !== 'no') { _%>
 <%- include('./partials/data_pom.xml.ejs', {
-  devDatabaseType:devDatabaseType,
-  prodDatabaseType:
-  prodDatabaseType}) _%>
+    devDatabaseType: devDatabaseType,
+    prodDatabaseType: prodDatabaseType
+    })
+_%>
 <%_ } _%>
 <%- include('./partials/security_pom.xml.ejs', {
   }) _%>
@@ -140,8 +141,8 @@
             <artifactId>quarkus-micrometer</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-micrometer-registry-prometheus</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -175,9 +176,19 @@
         </dependency>
         <%_ } _%>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-arc</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>provided</scope>
         </dependency>
         <%_ if (databaseType === 'mongodb') { _%>
         <dependency>
@@ -192,12 +203,6 @@
             <scope>provided</scope>
         </dependency>
         <%_ } _%>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <version>${mapstruct.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>com.tietoevry.quarkus</groupId>
             <artifactId>quarkus-resteasy-problem</artifactId>
@@ -221,19 +226,12 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit5-api</artifactId>
-            <version>${archunit-junit5.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Adding the engine dependency to the surefire-plugin unfortunately does not work in the current version. -->
-        <!-- https://www.archunit.org/userguide/html/000_Index.html#_junit_5 -->
-        <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit5-engine</artifactId>
+            <artifactId>archunit-junit5</artifactId>
             <version>${archunit-junit5.version}</version>
             <scope>test</scope>
         </dependency>
@@ -250,14 +248,6 @@
             <scope>test</scope>
         </dependency>
         <%_ } _%>
-        <%_ if (cacheProvider === 'redis') { _%>
-        <dependency>
-            <groupId>com.github.kstyrc</groupId>
-            <artifactId>embedded-redis</artifactId>
-            <version>0.6</version>
-            <scope>test</scope>
-        </dependency>
-        <%_ } _%>
         <%_ if (databaseType === 'mongodb') { _%>
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
@@ -271,12 +261,6 @@
         <defaultGoal>compile quarkus:dev</defaultGoal>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>${maven-clean-plugin.version}</version>
-                </plugin>
-
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>properties-maven-plugin</artifactId>
@@ -300,55 +284,46 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <%_ if (!skipClient) { _%>
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <version>${frontend-maven-plugin.version}</version>
-                    </plugin>
-                <%_ } _%>
                 <plugin>
-                    <groupId>pl.project13.maven</groupId>
-                    <artifactId>git-commit-id-plugin</artifactId>
-                    <version>${git-commit-id-plugin.version}</version>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven-plugin.version}</version>
                     <executions>
                         <execution>
+                            <id>install node and npm</id>
                             <goals>
-                                <goal>revision</goal>
+                                <goal>install-node-and-npm</goal>
                             </goals>
+                            <configuration>
+                                <nodeVersion>${node.version}</nodeVersion>
+                                <npmVersion>${npm.version}</npmVersion>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>npm install</id>
+                            <goals>
+                                <goal>npm</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>install</arguments>
+                            </configuration>
                         </execution>
                     </executions>
                     <configuration>
-                        <failOnNoGitDirectory>false</failOnNoGitDirectory>
-                        <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
-                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                        <includeOnlyProperties>
-                            <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
-                            <includeOnlyProperty>^git.commit.id.describe$</includeOnlyProperty>
-                            <includeOnlyProperty>^git.branch$</includeOnlyProperty>
-                        </includeOnlyProperties>
+                        <installDirectory>target</installDirectory>
                     </configuration>
                 </plugin>
+                <%_ } _%>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
-                    <configuration>
-                        <source>${maven.compiler.source}</source>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-eclipse-plugin</artifactId>
-                    <version>${maven-eclipse-plugin.version}</version>
-                    <configuration>
-                        <downloadSources>true</downloadSources>
-                        <downloadJavadocs>true</downloadJavadocs>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -386,60 +361,43 @@
                             <requireJavaVersion>
                                 <message>You are running an incompatible version of Java. JHipster Quarkus supports JDK
                                     8 to
-                                    13.
+                                    18.
                                 </message>
-                                <version>[1.8,14)</version>
+                                <version>[1.8,19)</version>
                             </requireJavaVersion>
                         </rules>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-idea-plugin</artifactId>
-                    <version>${maven-idea-plugin.version}</version>
-                    <configuration>
-                        <exclude>node_modules</exclude>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>${maven-resources-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                            <maven.home>${maven.home}</maven.home>
+                        </systemPropertyVariables>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${maven-failsafe-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${maven-checkstyle.version}</version>
+                    <version>${maven-surefire-plugin.version}</version>
                     <executions>
                         <execution>
                             <goals>
-                                <goal>check</goal>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
                             </goals>
+                            <configuration>
+                                <systemPropertyVariables>
+                                    <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                                    <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                                    <maven.home>${maven.home}</maven.home>
+                                </systemPropertyVariables>
+                            </configuration>
                         </execution>
                     </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.puppycrawl.tools</groupId>
-                            <artifactId>checkstyle</artifactId>
-                            <version>${checkstyle.version}</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <configLocation>checkstyle.xml</configLocation>
-                        <includes>pom.xml,README.md</includes>
-                        <excludes>.git/**/*,target/**/*,node_modules/**/*,node/**/*</excludes>
-                        <sourceDirectories>./</sourceDirectories>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
@@ -447,9 +405,10 @@
                     <version>${sonar-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>io.quarkus</groupId>
+                    <groupId>${quarkus.platform.group-id}</groupId>
                     <artifactId>quarkus-maven-plugin</artifactId>
-                    <version>${quarkus-plugin.version}</version>
+                    <version>${quarkus.platform.version}</version>
+                    <extensions>true</extensions>
                     <executions>
                         <execution>
                             <goals>
@@ -470,15 +429,7 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -487,14 +438,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-idea-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -509,9 +452,8 @@
                 <artifactId>properties-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>io.quarkus</groupId>
+                <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
-                <version>${quarkus-plugin.version}</version>
             </plugin>
             <!-- jhipster-needle-maven-add-plugin -->
         </plugins>
@@ -521,32 +463,91 @@
         <profile>
             <id>webapp</id>
             <activation>
-                <file>
-                    <missing>${basedir}/target/classes/META-INF/resources/app/main.bundle.js</missing>
-                </file>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>net.nicoulaj.maven.plugins</groupId>
+                        <artifactId>checksum-maven-plugin</artifactId>
+                        <version>${checksum-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>create-pre-compiled-webapp-checksum</id>
+                                <goals>
+                                    <goal>files</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                            <execution>
+                                <id>create-compiled-webapp-checksum</id>
+                                <goals>
+                                    <goal>files</goal>
+                                </goals>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <csvSummaryFile>checksums.csv.old</csvSummaryFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.basedir}</directory>
+                                    <includes>
+                                        <include>src/main/webapp/**/*.*</include>
+                                        <include>target/classes/static/**/*.*</include>
+                                        <include>package-lock.json</include>
+                                        <include>package.json</include>
+                                        <include>webpack/*.*</include>
+                                        <include>tsconfig.json</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>**/app/**/service-worker.js</exclude>
+                                        <exclude>**/app/**/vendor.css</exclude>
+                                    </excludes>
+                                </fileSet>
+                            </fileSets>
+                            <failOnError>false</failOnError>
+                            <failIfNoFiles>false</failIfNoFiles>
+                            <individualFiles>false</individualFiles>
+                            <algorithms>
+                                <algorithm>SHA-1</algorithm>
+                            </algorithms>
+                            <includeRelativePath>true</includeRelativePath>
+                            <quiet>true</quiet>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${maven-antrun-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>eval-frontend-checksum</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <condition property="skip.npm" value="true" else="false" >
+                                            <and>
+                                                <available file="checksums.csv" filepath="${project.build.directory}" />
+                                                <available file="checksums.csv.old" filepath="${project.build.directory}" />
+                                                <filesmatch file1="${project.build.directory}/checksums.csv" file2="${project.build.directory}/checksums.csv.old" />
+                                            </and>
+                                        </condition>
+                                    </target>
+                                    <exportAntProperties>true</exportAntProperties>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>install node and npm</id>
-                                <goals>
-                                    <goal>install-node-and-npm</goal>
-                                </goals>
-                                <configuration>
-                                    <nodeVersion>${node.version}</nodeVersion>
-                                    <npmVersion>${npm.version}</npmVersion>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>npm install</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                            </execution>
                             <execution>
                                 <id>webapp build dev</id>
                                 <goals>
@@ -576,12 +577,7 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
-                <!-- default Quarkus profiles -->
-                <quarkus.profile>dev</quarkus.profile>
-            </properties>
-            <%_ if (devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { _%>
-            <%# This dependency is in the dev profile (and not in regular dependencies) because native builds fail if H2 is a dependency. %>
+            <%_ if (devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { _%><%# This dependency is in the dev profile (and not in regular dependencies) because native builds fail if H2 is a dependency. %>
             <dependencies>
                 <dependency>
                     <groupId>io.quarkus</groupId>
@@ -589,62 +585,66 @@
                 </dependency>
             </dependencies>
             <%_ } _%>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <version>${maven-checkstyle.version}</version>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>check</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.puppycrawl.tools</groupId>
+                                    <artifactId>checkstyle</artifactId>
+                                    <version>${checkstyle.version}</version>
+                                </dependency>
+                            </dependencies>
+                            <configuration>
+                                <configLocation>checkstyle.xml</configLocation>
+                                <includes>pom.xml,README.md</includes>
+                                <excludes>.git/**/*,target/**/*,node_modules/**/*,node/**/*</excludes>
+                                <sourceDirectories>./</sourceDirectories>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <!-- default Quarkus profiles -->
+                <quarkus.profile>dev</quarkus.profile>
+            </properties>
         </profile>
         <profile>
             <id>prod</id>
+            <dependencies>
+                <%_ if(databaseType !== 'no') { _%>
+<%- include('./partials/prod_profile_data_pom.xml.ejs', {
+    devDatabaseType: devDatabaseType,
+    prodDatabaseType: prodDatabaseType
+    })
+_%>
+                <%_ } _%>
+            </dependencies>
             <build>
                 <plugins>
-                    <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>JHipster Quarkus remove static</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                                <configuration>
-                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
-                                    <filesets>
-                                        <fileset>
-                                            <directory>${basedir}/target/classes/static</directory>
-                                        </fileset>
-                                    </filesets>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>target/classes/META-INF/resources/</directory>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </plugin>
                     <%_ if (!skipClient) { _%>
                     <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>install node and npm</id>
-                                <goals>
-                                    <goal>install-node-and-npm</goal>
-                                </goals>
-                                <configuration>
-                                    <nodeVersion>${node.version}</nodeVersion>
-                                    <npmVersion>${npm.version}</npmVersion>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>npm install</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>install</arguments>
-                                </configuration>
-                            </execution>
                             <execution>
                                 <id>webapp build test</id>
                                 <phase>test</phase>
@@ -673,32 +673,37 @@
                         </executions>
                     </plugin>
                     <%_ } _%>
-                    <!-- JHipster Quarkus hack to move from target/classes/static to /target/classes/META-INF/resources -->
-                    <plugin>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>JHipster Quarkus copy static to META-INF/resources</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/META-INF/resources/</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${basedir}/target/classes/static/</directory>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>pl.project13.maven</groupId>
                         <artifactId>git-commit-id-plugin</artifactId>
                     </plugin>
                 </plugins>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>pl.project13.maven</groupId>
+                            <artifactId>git-commit-id-plugin</artifactId>
+                            <version>${git-commit-id-plugin.version}</version>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>revision</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <configuration>
+                                <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                                <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+                                <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                                <includeOnlyProperties>
+                                    <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+                                    <includeOnlyProperty>^git.commit.id.describe$</includeOnlyProperty>
+                                    <includeOnlyProperty>^git.branch$</includeOnlyProperty>
+                                </includeOnlyProperties>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
             <properties>
                 <!-- default Quarkus profiles -->
@@ -712,30 +717,8 @@
                     <name>native</name>
                 </property>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>${maven-failsafe-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                                <configuration>
-                                    <systemProperties>
-                                        <native.image.path>
-                                            ${project.build.directory}/${project.build.finalName}-runner
-                                        </native.image.path>
-                                    </systemProperties>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
             <properties>
+                <skipITs>false</skipITs>
                 <quarkus.package.type>native</quarkus.package.type>
             </properties>
         </profile>

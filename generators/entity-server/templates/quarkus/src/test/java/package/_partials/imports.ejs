@@ -30,10 +30,6 @@ import <%= packageName %>.domain.<%= entityClass %>;
 import <%= packageName %>.service.dto.<%= dtoClass %>;
 <%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
-<%_ if (cacheProvider === 'redis') { _%>
-import redis.embedded.RedisServer;
-import java.io.IOException;
-<%_ } _%>
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 <%_ if (databaseType === 'sql') { _%>

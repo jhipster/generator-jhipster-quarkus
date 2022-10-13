@@ -121,16 +121,6 @@ const serverFiles = {
             ],
         },
         {
-            condition: generator => generator.cacheProvider === 'redis',
-            path: SERVER_TEST_SRC_DIR,
-            templates: [
-                {
-                    file: 'package/RedisCacheTestResource.java',
-                    renameTo: generator => `${generator.javaDir}/RedisCacheTestResource.java`,
-                },
-            ],
-        },
-        {
             condition: generator => generator.databaseType === 'mongodb',
             path: SERVER_TEST_SRC_DIR,
             templates: [
@@ -160,6 +150,12 @@ const serverFiles = {
                     file: 'package/cache/redis/RedisCache.java',
                     renameTo: generator => `${generator.javaDir}cache/redis/RedisCache.java`,
                 },
+            ],
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => generator.cacheProvider === 'redis' && generator.authenticationType === 'jwt',
+            templates: [
                 {
                     file: 'package/cache/redis/UserRedisCache.java',
                     renameTo: generator => `${generator.javaDir}cache/redis/UserRedisCache.java`,
