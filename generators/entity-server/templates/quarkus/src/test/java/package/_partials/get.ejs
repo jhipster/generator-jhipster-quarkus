@@ -76,11 +76,11 @@
                     expected = `${expected}.doubleValue()`;
                 } else if (fieldType === 'BigDecimal') {
                     assertionMethod = 'comparesEqualTo';
-                <%_ if (databaseType === 'sql') { _%>
-                    expected = `${expected}.floatValue()`;
-                <%_ } else if (databaseType === 'mongodb') { _%>
-                    expected = `${expected}.intValue()`;
-                <%_ } _%>
+                    if (databaseType === 'sql') {
+                        expected = `${expected}.floatValue()`;
+                    } else if (databaseType === 'mongodb') {
+                        expected = `${expected}.intValue()`;
+                    }
                 } else if (fieldType === 'Boolean') {
                     expected = `${expected}.booleanValue()`;
                 } else if (fieldType === 'Instant' || fieldType === 'ZonedDateTime' || fieldType === 'LocalDate') {
