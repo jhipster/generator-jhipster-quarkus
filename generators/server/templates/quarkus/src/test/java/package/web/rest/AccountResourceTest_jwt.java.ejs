@@ -27,6 +27,11 @@ import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
+<%_ if (databaseType === 'mongodb') { _%>
+import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import com.github.cloudyrock.standalone.MongockStandalone;
+import com.mongodb.client.MongoClient;
+<%_ } _%>
 
 import <%=packageName%>.TestUtil;
 import <%=packageName%>.config.Constants;
@@ -67,6 +72,12 @@ public class AccountResourceTest {
 <%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @Inject
+    MongoClient mongoClient;
+
+    @ConfigProperty(name = "quarkus.mongodb.database")
+    String databaseName;
 <%_ } _%>
 
     @Inject
@@ -90,6 +101,18 @@ public class AccountResourceTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @BeforeEach
+    public void databaseFixture() {
+        mongoClient.getDatabase(databaseName).drop();
+
+        MongockStandalone
+            .builder()
+            .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
+            .addChangeLogsScanPackage("<%=packageName%>.config.dbmigrations")
+            .buildRunner()
+            .execute();
     }
 <%_ } _%>
 
@@ -164,6 +187,26 @@ public class AccountResourceTest {
         registerUser(user);
         activateUser(user.email);
         var token = authenticateUser(user.login, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .accept(MediaType.TEXT_PLAIN)
+            .get("/api/authenticate")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .body(containsString("test"));
+    }
+
+    @Test
+    public void testAuthenticatedUserWithEmail() {
+        var user = new ManagedUserVM();
+        user.login = "test";
+        user.email = "test@example.com";
+        user.password = "test";
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.email, user.password);
 
         given()
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)

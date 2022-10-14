@@ -16,12 +16,15 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-package <%=packageName%>;
+package <%=packageName%>.service;
 
-<%_ if (authenticationType === 'oauth2') { _%>
-import io.quarkus.test.common.QuarkusTestResource;
-<%_ } _%>
-<%_ if (authenticationType === 'oauth2') { _%>
-@QuarkusTestResource(MockOidcServerTestResource.class)
-<%_ } _%>
-public class TestResources {}
+import org.bson.types.ObjectId;
+
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class StringIdGenerator implements IdGenerator<String> {
+    public String generate() {
+        return ObjectId.get().toHexString();
+    }
+}

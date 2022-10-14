@@ -34,6 +34,9 @@
         <%_ if (databaseType === 'cassandra') { _%>
         <%= entityOrDtoInstance %>.id = UUID.randomUUID();
         <%_ } _%>
+        <%_ if (databaseType === 'mongodb') { _%>
+            <%= entityOrDtoInstance %>.id = idGenerator.generate();
+        <%_ } _%>
 <%- include('../common/save', {...this, returnDirectly: false, isController: true}); -%>
         <%_ if (databaseType === 'mongodb' && !viaService) { _%>
         <%= entityClass %> result = <%= entityClass %>.findById(<%= entityOrDtoInstance %>.id);

@@ -77,9 +77,9 @@
          <camel-quarkus-jackson.version>2.13.0</camel-quarkus-jackson.version>
          <%_ } _%>
         <%_ if (databaseType === 'mongodb') { _%>
-        <mongock-bom.version>4.1.19</mongock-bom.version>
-        <commons-vfs2.version>2.0</commons-vfs2.version>
-        <graal.version>21.0.0.2</graal.version>
+        <mongock-bom.version>4.3.8</mongock-bom.version>
+        <commons-vfs2.version>2.9.0</commons-vfs2.version>
+        <graal.version>22.2.0.1</graal.version>
         <%_ } _%>
 
         <!-- Plugin properties -->
@@ -244,13 +244,6 @@ _%>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock-jre8</artifactId>
             <version>${wiremock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <%_ } _%>
-        <%_ if (databaseType === 'mongodb') { _%>
-        <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
             <scope>test</scope>
         </dependency>
         <%_ } _%>

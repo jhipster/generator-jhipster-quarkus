@@ -120,16 +120,6 @@ const serverFiles = {
                 },
             ],
         },
-        {
-            condition: generator => generator.databaseType === 'mongodb',
-            path: SERVER_TEST_SRC_DIR,
-            templates: [
-                {
-                    file: 'package/MongoDbTestResource.java',
-                    renameTo: generator => `${generator.javaDir}/MongoDbTestResource.java`,
-                },
-            ],
-        },
     ],
     serverJavaCache: [
         {
@@ -334,6 +324,21 @@ const serverFiles = {
                 },
             ],
         },
+        {
+            condition: generator => generator.databaseType === 'mongodb',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/IdGenerator.java',
+                    renameTo: generator => `${generator.javaDir}service/IdGenerator.java`,
+                },
+                {
+                    file: 'package/service/StringIdGenerator.java',
+                    renameTo: generator => `${generator.javaDir}service/StringIdGenerator.java`,
+                },
+            ],
+        },
+
         {
             condition: generator => !generator.skipUserManagement,
             path: SERVER_MAIN_SRC_DIR,

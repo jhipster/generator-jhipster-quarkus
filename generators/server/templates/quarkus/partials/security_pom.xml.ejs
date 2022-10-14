@@ -17,10 +17,17 @@
  limitations under the License.
 -%>
 <%_ if (authenticationType === 'jwt') { _%>
+<%_ if (databaseType === 'sql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-elytron-security-jdbc</artifactId>
         </dependency>
+<%_ } else if (databaseType === 'mongodb') { _%>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-elytron-security</artifactId>
+        </dependency>
+<%_ } _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-jwt</artifactId>

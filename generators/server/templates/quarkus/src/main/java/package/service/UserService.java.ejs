@@ -28,14 +28,13 @@ import <%=packageName%>.security.RandomUtil;
 <%_ } _%>
 import <%=packageName%>.service.dto.UserDTO;
 <%_ if (cacheProvider === 'caffeine') { _%>
-import <%=packageName%>.config.Constants;
 import io.quarkus.cache.CacheInvalidate;
 <%_ } else if (cacheProvider === 'redis') { _%>
 import <%= packageName %>.cache.redis.UserRedisCache;
 <%_ } _%>
 import io.quarkus.panache.common.Page;
 import java.time.Instant;
-<%_ if (cacheManagerIsAvailable) { _%>
+<%_ if (cacheProvider === 'redis') { _%>
 import java.util.ArrayList;
 <%_ } _%>
 <%_ if (authenticationType === 'jwt') { _%>
@@ -68,6 +67,12 @@ public class UserService {
     @Inject
     UserRedisCache userRedisCache;
     <%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+
+    @Inject
+    private IdGenerator<String> idGenerator;
+
+<%_ } _%>
 
     @Inject
     public UserService(BCryptPasswordHasher passwordHasher) {
@@ -83,6 +88,9 @@ public class UserService {
                     // activate given user for the registration key.
                     user.activated = true;
                     user.activationKey = null;
+                    <%_ if (databaseType === 'mongodb') { _%>
+                    user.update();
+                    <%_ } _%>
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
                     <%_ } _%>
@@ -102,6 +110,9 @@ public class UserService {
                         throw new InvalidPasswordException();
                     }
                     user.password = passwordHasher.hash(newPassword);
+                    <%_ if (databaseType === 'mongodb') { _%>
+                    user.update();
+                    <%_ } _%>
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
                     <%_ } _%>
@@ -120,6 +131,9 @@ public class UserService {
                     user.password = passwordHasher.hash(newPassword);
                     user.resetKey = null;
                     user.resetDate = null;
+                    <%_ if (databaseType === 'mongodb') { _%>
+                    user.update();
+                    <%_ } _%>
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
                     <%_ } _%>
@@ -136,6 +150,9 @@ public class UserService {
                 user -> {
                     user.resetKey = RandomUtil.generateResetKey();
                     user.resetDate = Instant.now();
+                    <%_ if (databaseType === 'mongodb') { _%>
+                    user.update();
+                    <%_ } _%>
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
                     <%_ } _%>
@@ -183,6 +200,9 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         Authority.<Authority>findByIdOptional(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.authorities = authorities;
+        <%_ if (databaseType === 'mongodb') { _%>
+        newUser.id = idGenerator.generate();
+        <%_ } _%>
         User.persist(newUser);
         <%_ if (cacheManagerIsAvailable) { _%>
         this.clearUserCaches(newUser);
@@ -195,7 +215,11 @@ public class UserService {
         if (existingUser.activated) {
             return false;
         }
+        <%_ if (databaseType === 'sql') { _%>
         User.delete("id", existingUser.id);
+        <%_ } else if (databaseType === 'mongodb') { _%>
+        User.delete("_id", existingUser.id);
+        <%_ } _%>
         <%_ if (cacheManagerIsAvailable) { _%>
         this.clearUserCaches(existingUser);
         <%_ } _%>
@@ -228,6 +252,9 @@ public class UserService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
         }
+        <%_ if (databaseType === 'mongodb') { _%>
+        user.id = idGenerator.generate();
+        <%_ } _%>
         User.persist(user);
         <%_ if (cacheManagerIsAvailable) { _%>
         this.clearUserCaches(user);
@@ -241,12 +268,13 @@ public class UserService {
             .findOneByLogin(login)
             .ifPresent(
                 user -> {
+                    <%_ if (databaseType === 'sql') { _%>
                     User.delete("id", user.id);
+                    <%_ } else if (databaseType === 'mongodb') { _%>
+                    User.delete("_id", user.id);
+                    <%_ } _%>
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
-                    <%_ } _%>
-                    <%_ if (databaseType === 'mongodb') { _%>
-                    user.update();
                     <%_ } _%>
                     log.debug("Deleted User: {}", user);
                 }
@@ -317,6 +345,9 @@ public class UserService {
                     }
                     user.langKey = langKey;
                     user.imageUrl = imageUrl;
+                    <%_ if (databaseType === 'mongodb') { _%>
+                    user.update();
+                    <%_ } _%>
                     <%_ if (cacheManagerIsAvailable) { _%>
                     this.clearUserCaches(user);
                     <%_ } _%>

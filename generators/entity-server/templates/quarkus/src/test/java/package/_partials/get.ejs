@@ -76,7 +76,7 @@
                     expected = `${expected}.doubleValue()`;
                 } else if (fieldType === 'BigDecimal') {
                     assertionMethod = 'comparesEqualTo';
-                    expected = `${expected}.floatValue()`;
+                    expected = `${expected}.intValue()`;
                 } else if (fieldType === 'Boolean') {
                     expected = `${expected}.booleanValue()`;
                 } else if (fieldType === 'Instant' || fieldType === 'ZonedDateTime' || fieldType === 'LocalDate') {

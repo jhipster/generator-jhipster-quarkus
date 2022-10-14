@@ -33,11 +33,16 @@ import org.reflections.Reflections;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class MongockConfiguration {
+
+  @Inject
+  MongoClient mongoClient;
+
   private static final List<Class<?>> changeLogs;
 
   static {
@@ -53,7 +58,6 @@ public class MongockConfiguration {
   String databaseName;
 
   void onStart(@Observes StartupEvent ev) {
-    MongoClient mongoClient = MongoClients.create(MongoClientSettings.builder().build());
     MongockStandalone
       .builder()
       .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))

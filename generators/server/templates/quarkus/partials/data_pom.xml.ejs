@@ -21,11 +21,11 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
+    <%_ } _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
-    <%_ } _%>
     <%_ if (devDatabaseType === 'mariadb' && prodDatabaseType === 'mariadb') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -62,10 +62,6 @@
         </dependency>
     <%_ } _%>
     <%_ if (databaseType === 'mongodb') { _%>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-mongodb-client</artifactId>
-        </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-mongodb-panache</artifactId>

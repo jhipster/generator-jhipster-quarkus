@@ -86,11 +86,9 @@ quarkus.hibernate-orm.second-level-caching-enabled=<%= enableHibernateCache %>
 # jhipster-quarkus-needle-hibernate-cache-add-entry
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
-jhi.mongodb.port=27017
-%test.jhi.mongodb.port=37017
-jhi.mongodb.host=localhost
+%prod.jhi.mongodb.port=27017
 %prod.jhi.mongodb.host=localhost
-quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}
+%prod.quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}
 quarkus.mongodb.database=<%= baseName %>
 <%_ } _%>
 

@@ -36,7 +36,12 @@ public class <%= entityClass %>Resource {
 
     @ConfigProperty(name = "application.name")
     String applicationName;
+<%_ if (databaseType === 'mongodb') { _%>
 
+    @Inject
+    private IdGenerator<String> idGenerator;
+
+<%_ } _%>
 <%_ } _%>
 <%- include('../../_partials/imperative/common/inject', { ...this, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isController: true}); -%>
 <%_ if (!readOnly) { _%>
