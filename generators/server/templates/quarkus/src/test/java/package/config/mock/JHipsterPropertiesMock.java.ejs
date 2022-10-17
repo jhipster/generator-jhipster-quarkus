@@ -60,11 +60,6 @@ public class JHipsterPropertiesMock {
         Mockito.when(spyJHipsterProperties.mail()).thenReturn(spyMail);
 <%_ } _%>
 
-<%_ if (authenticationType === 'oauth2') { _%>
-        JHipsterProperties.Oidc spyOidc = Mockito.spy(jHipsterProperties.oidc());
-        Mockito.when(spyJHipsterProperties.oidc()).thenReturn(spyOidc);
-
-<%_ } _%>
         return spyJHipsterProperties;
     }
 }

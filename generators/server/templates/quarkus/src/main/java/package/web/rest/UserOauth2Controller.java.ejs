@@ -43,9 +43,8 @@ public class UserOauth2Controller {
     @GET
     @Path("oauth2/authorization/oidc")
     @Authenticated
-    public void initCodeFlow() {
-        //Never executed
-        return;
+    public Response initCodeFlow(@Context UriInfo uriInfo) {
+        return Response.status(Response.Status.FOUND).location(uriInfo.getBaseUri()).build();
     }
 
     @GET

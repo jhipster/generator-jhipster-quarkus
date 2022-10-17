@@ -65,11 +65,4 @@ public interface JHipsterProperties {
         String baseUrl();
     }
 <%_ } _%>
-<%_ if (authenticationType === 'oauth2') { _%>
-    Oidc oidc();
-
-    interface Oidc {
-        String logoutUrl();
-    }
-<%_ } _%>
 }
