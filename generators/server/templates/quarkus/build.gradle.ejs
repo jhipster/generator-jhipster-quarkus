@@ -303,7 +303,7 @@ dependencies {
     testImplementation "io.quarkus:quarkus-junit5"
     testImplementation "io.quarkus:quarkus-junit5-mockito"
     testImplementation "io.rest-assured:rest-assured"
-    testImplementation "org.assertj:assertj-core:{assertj_version}"
+    testImplementation "org.assertj:assertj-core:${assertj_version}"
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
 <%_ if (authenticationType === 'oauth2') { _%>
     testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremock_version}"
