@@ -323,15 +323,6 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.oidc.enabled=true');
         });
 
-        it('should JHipster properties contains OIDC logout url', () => {
-            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`, 'String logoutUrl()');
-
-            assert.fileContent(
-                `${SERVER_MAIN_RES_DIR}application.properties`,
-                'jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout'
-            );
-        });
-
         it('should AccountResource uses JsonWebToken to build UserDTO', () => {
             assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`, 'JsonWebToken accessToken;');
         });
