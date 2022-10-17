@@ -18,7 +18,7 @@ module.exports = class extends AppGenerator {
     }
 
     get initializing() {
-        constants.CLIENT_DIST_DIR = 'META-INF/resources';
+        constants.CLIENT_DIST_DIR = 'META-INF/resources/';
         const phaseFromJHipster = super._initializing();
         const phaseFromQuarkus = {
             displayLogo() {

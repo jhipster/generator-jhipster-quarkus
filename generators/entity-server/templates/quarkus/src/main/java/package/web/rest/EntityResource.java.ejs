@@ -39,7 +39,7 @@ public class <%= entityClass %>Resource {
 <%_ if (databaseType === 'mongodb') { _%>
 
     @Inject
-    private IdGenerator<String> idGenerator;
+    IdGenerator<String> idGenerator;
 
 <%_ } _%>
 <%_ } _%>
