@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -28,7 +28,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
-import io.quarkus.mongodb.panache.MongoEntity;
+import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
 import org.bson.codecs.pojo.annotations.BsonId;
 <%_ if (cacheProvider === 'caffeine') { _%>
@@ -277,7 +277,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
         <%_ if (databaseType === 'sql') { _%>
         return find("LOWER(email) = LOWER(?1)", email).firstResultOptional();
         <%_ } else if (databaseType === 'mongodb') { _%>
-        return find("LOWER(email)", email).firstResultOptional();
+        return find("email", email).firstResultOptional();
         <%_ } _%>
     }
 
@@ -286,7 +286,11 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
     }
 
     public static Optional<User> findOneWithAuthoritiesById(Long id) {
+        <%_ if (databaseType === 'sql') { _%>
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.id = ?1", id).firstResultOptional();
+        <%_ } else if (databaseType === 'mongodb') { _%>
+        return find("_id", id).firstResultOptional();
+        <%_ } _%>
     }
 
     <%_ if (cacheProvider === 'caffeine') { _%>
@@ -305,7 +309,11 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
     @CacheResult(cacheName = Constants.USERS_BY_EMAIL_CACHE)
     <%_ } _%>
     public static <% if (cacheProvider === 'redis') { %>User<% } else { %>Optional<User><% } %> findOneWithAuthoritiesByEmailIgnoreCase(String email) {
+        <%_ if (databaseType === 'sql') { _%>
         return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)
+        <%_ } else if (databaseType === 'mongodb') { _%>
+        return find("email", email)
+        <%_ } _%>
             <% if (cacheProvider === 'redis') { %>.firstResult<% } else { %>.firstResultOptional<% } %>();
     }
 

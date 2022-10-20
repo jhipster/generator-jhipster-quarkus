@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -27,5 +27,5 @@ quarkus.cache.caffeine."usersByLogin".expire-after-write=<%= CACHE_EXPIRE_AFTER_
 <%_ } else if (cacheProvider === 'redis') { _%>
 jhi.cache.redis.host=localhost
 jhi.cache.redis.port=6379
-quarkus.redis.hosts=redis://${jhi.cache.redis.host}:${jhi.cache.redis.port}
+%prod.quarkus.redis.hosts=redis://${jhi.cache.redis.host}:${jhi.cache.redis.port}
 <%_ } _%>

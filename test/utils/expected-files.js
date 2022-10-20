@@ -103,7 +103,6 @@ const expectedFiles = {
         mongoDb: [
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/dbmigrations/InitialSetupMigration.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/MongockConfiguration.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/MongoDbTestResource.java`,
             `${SERVER_MAIN_RES_DIR}reflect-config-mongo.json`,
         ],
     },
@@ -116,7 +115,6 @@ const expectedFiles = {
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/Foo.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/FooRedisCache.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/cache/redis/RedisCacheTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/RedisCacheTestResource.java`,
         ],
     },
 

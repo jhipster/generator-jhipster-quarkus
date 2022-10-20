@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -86,11 +86,9 @@ quarkus.hibernate-orm.second-level-caching-enabled=<%= enableHibernateCache %>
 # jhipster-quarkus-needle-hibernate-cache-add-entry
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
-jhi.mongodb.port=27017
-%test.jhi.mongodb.port=37017
-jhi.mongodb.host=localhost
+%prod.jhi.mongodb.port=27017
 %prod.jhi.mongodb.host=localhost
-quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}
+%prod.quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}
 quarkus.mongodb.database=<%= baseName %>
 <%_ } _%>
 
@@ -98,6 +96,6 @@ quarkus.mongodb.database=<%= baseName %>
 quarkus.liquibase.change-log=config/liquibase/master.xml
 quarkus.liquibase.migrate-at-start=true
 
-%test.quarkus.datasource.jdbc.url=jdbc:h2:mem:test
+%test.quarkus.datasource.jdbc.url=jdbc:h2:mem:test;MODE=LEGACY
 %test.quarkus.datasource.db-kind=h2
 <%_ } _%>

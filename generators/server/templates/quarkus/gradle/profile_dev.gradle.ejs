@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -40,23 +40,33 @@ if (project.hasProperty("tls")) {
 
 <%_ if (!skipClient) { _%>
 task webapp(type: <%= _.upperFirst(clientPackageManager) %>Task) {
+    inputs.property('appVersion', project.version)
     <%_ if (clientPackageManager==='npm') { _%>
     inputs.files("package-lock.json")
-    <%_ } else { _%>
-    inputs.files("yarn.lock")
+        .withPropertyName('package-lock')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
     <%_ } _%>
     inputs.files("build.gradle")
-    inputs.dir("<%= CLIENT_MAIN_SRC_DIR %>")
-
-    def webappDevFiles = fileTree("<%= CLIENT_WEBPACK_DIR %>/")
-    webappDevFiles.exclude("webapp.prod.js")
-    inputs.files(webappDevFiles)
-
-    outputs.dir("<%= CLIENT_DIST_DIR %>")
+        .withPropertyName('build.gradle')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.files("angular.json")
+        .withPropertyName('angular.json')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.files("tsconfig.json", "tsconfig.app.json")
+        .withPropertyName("tsconfig")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.dir("webpack/")
+        .withPropertyName("webpack/")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.dir("src/main/webapp/")
+        .withPropertyName("webapp-source-dir")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    outputs.dir("build/resources/main/META-INF/resources/")
+        .withPropertyName("webapp-build-dir")
 
     dependsOn <%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>
 
-    args = ["run", "webapp:build:dev"]
+    args = ["run", "webapp:build"]
     environment = [APP_VERSION: project.version]
 }
 <%_ } _%>
@@ -66,9 +76,5 @@ processResources {
 }
 
 <%_ if (!skipClient) { _%>
-
 processResources.dependsOn webapp
 <%_ } _%>
-
-
-

@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import <%= packageName %>.cache.CacheErrorException;
 import io.quarkus.redis.client.RedisClient;
 import io.vertx.redis.client.Response;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -56,8 +55,8 @@ public abstract class RedisCache<T> {
      */
     final String prefix;
 
-    public RedisCache(String prefix) {
-        this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    public RedisCache(String prefix, Class<T> type) {
+        this.type = type;
         this.prefix = prefix;
     }
 
