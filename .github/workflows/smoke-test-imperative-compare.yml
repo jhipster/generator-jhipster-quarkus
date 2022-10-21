@@ -48,9 +48,8 @@ jobs:
       - name: 'SETUP: Checkout generator-jhipster'
         uses: actions/checkout@v2
         with:
-          repository: 'mshima/generator-jhipster'
+          repository: 'jhipster/generator-jhipster'
           path: generator-jhipster
-          ref: feature-blueprint-action
       - name: 'SETUP: environment'
         id: setup
         uses: ./generator-jhipster/.github/actions/setup
