@@ -1,14 +1,23 @@
 const assert = require('yeoman-assert');
+const { jestExpect: expect } = require('mocha-expect-snapshot');
 const constants = require('generator-jhipster/generators/generator-constants');
 
 const { buildServerGeneratorContext } = require('./utils/generator-testing-api');
 const expectedFiles = require('./utils/expected-files');
 
-const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR, SERVER_TEST_SRC_DIR } = constants;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
-        before(buildServerGeneratorContext());
+        let runResult;
+
+        before(async () => {
+            runResult = await buildServerGeneratorContext()();
+        });
+
+        it('matches snapshot', () => {
+            expect(runResult.getStateSnapshot()).toMatchSnapshot();
+        });
 
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server.common);
@@ -323,15 +332,6 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.oidc.enabled=true');
         });
 
-        it('should JHipster properties contains OIDC logout url', () => {
-            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`, 'String logoutUrl()');
-
-            assert.fileContent(
-                `${SERVER_MAIN_RES_DIR}application.properties`,
-                'jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout'
-            );
-        });
-
         it('should AccountResource uses JsonWebToken to build UserDTO', () => {
             assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`, 'JsonWebToken accessToken;');
         });
@@ -356,14 +356,20 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     });
 
     describe('With maven MongoDb', () => {
-        before(
-            buildServerGeneratorContext({
+        let runResult;
+
+        before(async () => {
+            runResult = await buildServerGeneratorContext({
                 databaseType: 'mongodb',
                 devDatabaseType: 'mongodb',
                 prodDatabaseType: 'mongodb',
                 enableHibernateCache: false,
-            })
-        );
+            })();
+        });
+
+        it('matches snapshot', () => {
+            expect(runResult.getStateSnapshot()).toMatchSnapshot();
+        });
 
         it('should contains MongoDb files', () => {
             assert.file(expectedFiles.server.mongoDb);
@@ -389,13 +395,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                     '        <dependency>\n' +
                     '            <groupId>com.github.cloudyrock.mongock</groupId>\n' +
                     '            <artifactId>mongodb-sync-v4-driver</artifactId>\n' +
-                    '        </dependency>\n' +
-                    '        <dependency>\n' +
-                    '            <groupId>org.mongodb</groupId>\n' +
-                    '            <artifactId>mongodb-driver-sync</artifactId>\n' +
-                    // eslint-disable-next-line no-template-curly-in-string
-                    '            <version>${mongodb-driver-sync.version}</version>\n' +
-                    '        </dependency>'
+                    '        </dependency>\n'
             );
             assert.fileContent(
                 'pom.xml',
@@ -432,20 +432,11 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('application.properties contains MongoDb entries', () => {
             assert.fileContent(
                 `${SERVER_MAIN_RES_DIR}application.properties`,
-                'jhi.mongodb.port=27017\n' +
-                    '%test.jhi.mongodb.port=37017\n' +
-                    'jhi.mongodb.host=localhost\n' +
+                '%prod.jhi.mongodb.port=27017\n' +
                     '%prod.jhi.mongodb.host=localhost\n' +
                     // eslint-disable-next-line no-template-curly-in-string
-                    'quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}\n' +
+                    '%prod.quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}\n' +
                     'quarkus.mongodb.database=sample'
-            );
-        });
-
-        it('TestResource contains MongoDbTestResource', () => {
-            assert.fileContent(
-                `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
-                '@QuarkusTestResource(MongoDbTestResource.class)'
             );
         });
     });

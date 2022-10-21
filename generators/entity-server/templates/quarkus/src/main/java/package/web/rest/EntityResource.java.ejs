@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -36,7 +36,12 @@ public class <%= entityClass %>Resource {
 
     @ConfigProperty(name = "application.name")
     String applicationName;
+<%_ if (databaseType === 'mongodb') { _%>
 
+    @Inject
+    IdGenerator<String> idGenerator;
+
+<%_ } _%>
 <%_ } _%>
 <%- include('../../_partials/imperative/common/inject', { ...this, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isController: true}); -%>
 <%_ if (!readOnly) { _%>

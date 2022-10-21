@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Copyright 2020-2021 the original author or authors from the JHipster project.
+ * Copyright 2020-2022 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see https://www.jhipster.tech/
  * for more information.
@@ -88,6 +88,7 @@ function requireCLI(preferLocal) {
     }
     // load global version
     logger.info('Using JHipster version installed globally');
+    /* eslint-disable import/extensions */
     require('generator-jhipster/cli/cli.js');
     /* eslint-enable  */
 }

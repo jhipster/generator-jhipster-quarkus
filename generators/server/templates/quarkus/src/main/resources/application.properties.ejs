@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -87,18 +87,16 @@ quarkus.container-image.tag=latest
 <%if (authenticationType === 'oauth2') { _%>
 # OAuth 2.0 and OIDC
 quarkus.oidc.enabled=true
-quarkus.oidc.auth-server-url=http://localhost:9080/auth/realms/jhipster/
-%dev.quarkus.oidc.client-id=web_app
-%dev.quarkus.oidc.credentials.secret=web_app
+quarkus.oidc.auth-server-url=http://localhost:9080/realms/jhipster
+quarkus.oidc.client-id=web_app
+quarkus.oidc.credentials.secret=web_app
 quarkus.oidc.application-type=hybrid
-quarkus.oidc.authentication.scopes=profile,address,email,address,phone,offline_access
+quarkus.oidc.authentication.scopes=profile,address,email,phone,offline_access
 quarkus.oidc.authentication.cookie-path=/
 quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc
 quarkus.oidc.authentication.restore-path-after-redirect=false
 
-jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout
-
+%test.quarkus.oidc.auth-server-url=http://localhost:9080/realms/jhipster
 %test.quarkus.oidc.client-id=dummy
 %test.quarkus.oidc.application-type=service
-%test.jhipster.oidc.logout-url=some-dummy-logoutUrl
 <%_ } _%>

@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      node_version: 14.16.0
+      node_version: 16.x
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.node-version }}
       - name: Checkout jhipster-generator-quarkus

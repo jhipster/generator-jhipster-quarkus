@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -19,7 +19,6 @@
 
 pluginManagement {
      repositories {
-          mavenLocal()
           mavenCentral()
           gradlePluginPortal()
      }
@@ -35,9 +34,8 @@ pluginManagement {
           id 'org.liquibase.gradle' version "${liquibase_plugin_version}"
           <%_ } _%>
           id 'org.sonarqube' version "${sonarqube_plugin_version}"
-          id 'net.ltgt.apt-eclipse' version "${apt_plugin_version}"
-          id 'net.ltgt.apt-idea' version "${apt_plugin_version}"
-          id 'net.ltgt.apt' version "${apt_plugin_version}"
+          id "io.spring.nohttp" version "${no_http_checkstyle_version}"
+          id 'com.github.andygoossens.gradle-modernizer-plugin' version "${modernizer_plugin_version}"
           id 'io.quarkus' version "${quarkusPluginVersion}"
      }
 }

@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -22,6 +22,11 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
+<%_ if (databaseType === 'mongodb') { _%>
+import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import com.github.cloudyrock.standalone.MongockStandalone;
+import com.mongodb.client.MongoClient;
+<%_ } _%>
 
 import <%= packageName %>.TestUtil;
 <%_ if (!hasDto) { _%>
@@ -30,15 +35,13 @@ import <%= packageName %>.domain.<%= entityClass %>;
 import <%= packageName %>.service.dto.<%= dtoClass %>;
 <%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
-<%_ if (cacheProvider === 'redis') { _%>
-import redis.embedded.RedisServer;
-import java.io.IOException;
-<%_ } _%>
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 <%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
 import io.quarkus.liquibase.LiquibaseFactory;
+<%_ } else if (databaseType === 'mongodb') { _%>
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 <%_ } _%>
 import org.junit.jupiter.api.*;
 

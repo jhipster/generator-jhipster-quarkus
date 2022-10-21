@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -27,6 +27,11 @@ import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
+<%_ if (databaseType === 'mongodb') { _%>
+import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import com.github.cloudyrock.standalone.MongockStandalone;
+import com.mongodb.client.MongoClient;
+<%_ } _%>
 
 import <%=packageName%>.TestUtil;
 import <%=packageName%>.config.Constants;
@@ -67,6 +72,12 @@ public class AccountResourceTest {
 <%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @Inject
+    MongoClient mongoClient;
+
+    @ConfigProperty(name = "quarkus.mongodb.database")
+    String databaseName;
 <%_ } _%>
 
     @Inject
@@ -90,6 +101,18 @@ public class AccountResourceTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @BeforeEach
+    public void databaseFixture() {
+        mongoClient.getDatabase(databaseName).drop();
+
+        MongockStandalone
+            .builder()
+            .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
+            .addChangeLogsScanPackage("<%=packageName%>.config.dbmigrations")
+            .buildRunner()
+            .execute();
     }
 <%_ } _%>
 
@@ -173,7 +196,29 @@ public class AccountResourceTest {
             .statusCode(OK.getStatusCode())
             .body(containsString("test"));
     }
+    <%_ if (databaseType === 'mongodb') { _%>
 
+    @Test
+    public void testAuthenticatedUserWithEmail() {
+        var user = new ManagedUserVM();
+        user.login = "test";
+        user.email = "test@example.com";
+        user.password = "test";
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.email, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .accept(MediaType.TEXT_PLAIN)
+            .get("/api/authenticate")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .body(containsString("test"));
+    }
+
+    <%_ } _%>
     @Test
     public void testGetExistingAccount() {
         var user = new ManagedUserVM();
@@ -862,7 +907,7 @@ public class AccountResourceTest {
             .body("password-reset-wrong-email@example.com")
             .post("/api/account/reset-password/init")
             .then()
-            .statusCode(BAD_REQUEST.getStatusCode());
+            .statusCode(OK.getStatusCode());
     }
 
     @Test

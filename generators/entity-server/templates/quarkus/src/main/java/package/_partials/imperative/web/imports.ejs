@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -39,6 +39,9 @@ import <%=packageName%>.repository.search.<%= entityClass %>SearchRepository;
 <%_ if (saveUserSnapshot) { _%>
 import <%=packageName%>.domain.User;
 <%_ } _%>
+<%_ if (databaseType === 'mongodb') { _%>
+import <%=packageName%>.service.IdGenerator;
+<%_ } _%>
 import <%=packageName%>.web.rest.errors.BadRequestAlertException;
 import <%=packageName%>.web.util.HeaderUtil;
 import <%=packageName%>.web.util.ResponseUtil;
@@ -70,7 +73,7 @@ import reactor.core.publisher.Flux;
 <%_ } _%>
 
 import javax.enterprise.context.ApplicationScoped;
-<%_ if (viaService || viaRepository || hasDto) { _%>
+<%_ if (viaService || viaRepository || hasDto || databaseType === 'mongodb') { _%>
 import javax.inject.Inject;
 <%_ } _%>
 <%_ if (databaseType === 'sql' && !viaService) { %>

@@ -3,6 +3,7 @@ const chalk = require('chalk');
 const AppGenerator = require('generator-jhipster/generators/app');
 const constants = require('generator-jhipster/generators/generator-constants');
 const packagejs = require('../../package.json');
+const { askForTestOpts } = require('./prompts');
 
 module.exports = class extends AppGenerator {
     constructor(args, options, features) {
@@ -17,36 +18,17 @@ module.exports = class extends AppGenerator {
     }
 
     get initializing() {
-        constants.CLIENT_DIST_DIR = 'META-INF/resources';
+        constants.CLIENT_DIST_DIR = 'META-INF/resources/';
         const phaseFromJHipster = super._initializing();
         const phaseFromQuarkus = {
             displayLogo() {
                 this.log('\n');
-                this.log(
-                    `${chalk.green('        ██╗')}${chalk.red(' ██╗   ██╗ ████████╗ ███████╗   ██████╗ ████████╗ ████████╗ ███████╗')}`
-                );
-                this.log(
-                    `${chalk.green('        ██║')}${chalk.red(' ██║   ██║ ╚══██╔══╝ ██╔═══██╗ ██╔════╝ ╚══██╔══╝ ██╔═════╝ ██╔═══██╗')}`
-                );
-                this.log(
-                    `${chalk.green('        ██║')}${chalk.red(' ████████║    ██║    ███████╔╝ ╚█████╗     ██║    ██████╗   ███████╔╝')}`
-                );
-                this.log(
-                    `${chalk.green('  ██╗   ██║')}${chalk.red(' ██╔═══██║    ██║    ██╔════╝   ╚═══██╗    ██║    ██╔═══╝   ██╔══██║')}`
-                );
-                this.log(
-                    `${chalk.green('  ╚██████╔╝')}${chalk.red(' ██║   ██║ ████████╗ ██║       ██████╔╝    ██║    ████████╗ ██║  ╚██╗')}`
-                );
-                this.log(
-                    `${chalk.green('   ╚═════╝ ')}${chalk.red(' ╚═╝   ╚═╝ ╚═══════╝ ╚═╝       ╚═════╝     ╚═╝    ╚═══════╝ ╚═╝   ╚═╝')}`
-                );
-                this.log('\n');
-                this.log(`${chalk.cyan('             ██████╗ ')}${chalk.red('██╗   ██╗ █████╗ ██████╗ ██╗  ██╗██╗   ██╗███████╗')}`);
-                this.log(`${chalk.cyan('            ██╔═══██╗')}${chalk.red('██║   ██║██╔══██╗██╔══██╗██║ ██╔╝██║   ██║██╔════╝')}`);
-                this.log(`${chalk.cyan('            ██║   ██║')}${chalk.red('██║   ██║███████║██████╔╝█████╔╝ ██║   ██║███████╗')}`);
-                this.log(`${chalk.cyan('            ██║▄▄ ██║')}${chalk.red('██║   ██║██╔══██║██╔══██╗██╔═██╗ ██║   ██║╚════██║')}`);
-                this.log(`${chalk.cyan('            ╚██████╔╝')}${chalk.red('╚██████╔╝██║  ██║██║  ██║██║  ██╗╚██████╔╝███████║')}`);
-                this.log(`${chalk.cyan('             ╚══▀▀═╝ ')}${chalk.red(' ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝')}`);
+                this.log(`${chalk.cyan('             ██████╗ ')}${chalk.red(' ██╗   ██╗  █████╗  ██████╗  ██╗  ██╗ ██╗   ██╗ ███████╗')}`);
+                this.log(`${chalk.cyan('            ██╔═══██╗')}${chalk.red(' ██║   ██║ ██╔══██╗ ██╔══██╗ ██║ ██╔╝ ██║   ██║ ██╔════╝')}`);
+                this.log(`${chalk.cyan('            ██║   ██║')}${chalk.red(' ██║   ██║ ███████║ ██████╔╝ █████╔╝  ██║   ██║ ███████╗')}`);
+                this.log(`${chalk.cyan('            ██║▄▄ ██║')}${chalk.red(' ██║   ██║ ██╔══██║ ██╔══██╗ ██╔═██╗  ██║   ██║ ╚════██║')}`);
+                this.log(`${chalk.cyan('            ╚██████╔╝')}${chalk.red(' ╚██████╔╝ ██║  ██║ ██║  ██║ ██║  ██╗ ╚██████╔╝ ███████║')}`);
+                this.log(`${chalk.cyan('             ╚══▀▀═╝ ')}${chalk.red('  ╚═════╝  ╚═╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝  ╚═╝  ╚═════╝  ╚══════╝')}`);
                 this.log(chalk.white.bold('                            https://www.jhipster.tech - https://quarkus.io\n'));
                 this.log(chalk.white('Welcome to JHipster Quarkus ') + chalk.yellow(`v${packagejs.version}`));
                 this.log(chalk.white(`Application files will be generated in folder: ${chalk.yellow(process.cwd())}`));
@@ -101,7 +83,7 @@ module.exports = class extends AppGenerator {
     get composing() {
         return {
             ...super._composing(),
-            askForTestOpts: undefined,
+            askForTestOpts,
             askForMoreModules: undefined,
         };
     }

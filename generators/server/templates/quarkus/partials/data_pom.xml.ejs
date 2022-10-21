@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -21,30 +21,30 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
+    <%_ } _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
-    <%_ } _%>
-    <%_ if (devDatabaseType === 'mariadb' || prodDatabaseType === 'mariadb') { _%>
+    <%_ if (devDatabaseType === 'mariadb' && prodDatabaseType === 'mariadb') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-mariadb</artifactId>
         </dependency>
     <%_ } _%>
-    <%_ if (devDatabaseType === 'mssql' || prodDatabaseType === 'mssql') { _%>
+    <%_ if (devDatabaseType === 'mssql' && prodDatabaseType === 'mssql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-mssql</artifactId>
         </dependency>
     <%_ } _%>
-    <%_ if (devDatabaseType === 'mysql' || prodDatabaseType === 'mysql') { _%>
+    <%_ if (devDatabaseType === 'mysql' && prodDatabaseType === 'mysql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-mysql</artifactId>
         </dependency>
     <%_ } _%>
-    <%_ if (devDatabaseType === 'postgresql' || prodDatabaseType === 'postgresql') { _%>
+    <%_ if (devDatabaseType === 'postgresql' && prodDatabaseType === 'postgresql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-postgresql</artifactId>
@@ -73,11 +73,6 @@
         <dependency>
             <groupId>com.github.cloudyrock.mongock</groupId>
             <artifactId>mongodb-sync-v4-driver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver-sync</artifactId>
-            <version>${mongodb-driver-sync.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
