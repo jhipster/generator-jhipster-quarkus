@@ -19,10 +19,6 @@
 const cleanup = require('generator-jhipster/generators/cleanup');
 const constants = require('generator-jhipster/generators/generator-constants');
 const jhipsterFiles = require('generator-jhipster/generators/server/files').serverFiles;
-let { serverFiles: sqlServerFiles } = require('generator-jhipster/generators/server/files-sql');
-const { addSectionsCondition } = require('generator-jhipster/generators/utils');
-
-sqlServerFiles = addSectionsCondition(sqlServerFiles, data => data.databaseTypeSql);
 
 /* Constants use throughout */
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
@@ -644,7 +640,19 @@ const serverFiles = {
 };
 
 const serverFilesFromJHipster = {
-    docker: [...jhipsterFiles.docker, ...sqlServerFiles.docker],
+    docker: [
+        ...jhipsterFiles.docker,
+        {
+            condition: generator => generator.databaseTypeSql && !generator.prodDatabaseTypeOracle,
+            path: DOCKER_DIR,
+            templates: [{ file: generator => `${generator.prodDatabaseType}.yml` }],
+        },
+        {
+            condition: generator => generator.databaseTypeSql && !generator.devDatabaseTypeOracle && !generator.devDatabaseTypeH2Any,
+            path: DOCKER_DIR,
+            templates: [{ file: generator => `${generator.devDatabaseType}.yml` }],
+        },
+    ],
     npmWrapper: [
         {
             condition: generator => generator.buildTool === 'maven',
