@@ -640,7 +640,19 @@ const serverFiles = {
 };
 
 const serverFilesFromJHipster = {
-    docker: jhipsterFiles.docker,
+    docker: [
+        ...jhipsterFiles.docker,
+        {
+            condition: generator => generator.databaseTypeSql && !generator.prodDatabaseTypeOracle,
+            path: DOCKER_DIR,
+            templates: [{ file: generator => `${generator.prodDatabaseType}.yml` }],
+        },
+        {
+            condition: generator => generator.databaseTypeSql && !generator.devDatabaseTypeOracle && !generator.devDatabaseTypeH2Any,
+            path: DOCKER_DIR,
+            templates: [{ file: generator => `${generator.devDatabaseType}.yml` }],
+        },
+    ],
     npmWrapper: [
         {
             condition: generator => generator.buildTool === 'maven',
@@ -703,7 +715,7 @@ function writeFiles() {
 
         async writeFiles() {
             await this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
-            await this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('server/templates'));
+            await this.writeFilesToDisk(serverFilesFromJHipster, this, false, ['', 'sql/reactive', 'sql/common']);
         },
     };
 }

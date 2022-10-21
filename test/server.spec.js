@@ -1,4 +1,5 @@
 const assert = require('yeoman-assert');
+const { jestExpect: expect } = require('mocha-expect-snapshot');
 const constants = require('generator-jhipster/generators/generator-constants');
 
 const { buildServerGeneratorContext } = require('./utils/generator-testing-api');
@@ -8,7 +9,15 @@ const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
-        before(buildServerGeneratorContext());
+        let runResult;
+
+        before(async () => {
+            runResult = await buildServerGeneratorContext()();
+        });
+
+        it('matches snapshot', () => {
+            expect(runResult.getStateSnapshot()).toMatchSnapshot();
+        });
 
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server.common);
@@ -347,14 +356,20 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     });
 
     describe('With maven MongoDb', () => {
-        before(
-            buildServerGeneratorContext({
+        let runResult;
+
+        before(async () => {
+            runResult = await buildServerGeneratorContext({
                 databaseType: 'mongodb',
                 devDatabaseType: 'mongodb',
                 prodDatabaseType: 'mongodb',
                 enableHibernateCache: false,
-            })
-        );
+            })();
+        });
+
+        it('matches snapshot', () => {
+            expect(runResult.getStateSnapshot()).toMatchSnapshot();
+        });
 
         it('should contains MongoDb files', () => {
             assert.file(expectedFiles.server.mongoDb);
