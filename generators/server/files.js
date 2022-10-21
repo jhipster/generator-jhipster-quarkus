@@ -19,6 +19,10 @@
 const cleanup = require('generator-jhipster/generators/cleanup');
 const constants = require('generator-jhipster/generators/generator-constants');
 const jhipsterFiles = require('generator-jhipster/generators/server/files').serverFiles;
+let { serverFiles: sqlServerFiles } = require('generator-jhipster/generators/server/files-sql');
+const { addSectionsCondition } = require('generator-jhipster/generators/utils');
+
+sqlServerFiles = addSectionsCondition(sqlServerFiles, data => data.databaseTypeSql);
 
 /* Constants use throughout */
 const INTERPOLATE_REGEX = constants.INTERPOLATE_REGEX;
@@ -640,7 +644,7 @@ const serverFiles = {
 };
 
 const serverFilesFromJHipster = {
-    docker: jhipsterFiles.docker,
+    docker: [...jhipsterFiles.docker, ...sqlServerFiles.docker],
     npmWrapper: [
         {
             condition: generator => generator.buildTool === 'maven',
@@ -703,7 +707,7 @@ function writeFiles() {
 
         async writeFiles() {
             await this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
-            await this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('server/templates'));
+            await this.writeFilesToDisk(serverFilesFromJHipster, this, false, ['', 'sql/reactive', 'sql/common']);
         },
     };
 }
