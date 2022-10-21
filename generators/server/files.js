@@ -636,6 +636,16 @@ const serverFiles = {
             path: DOCKER_DIR,
             templates: ['Dockerfile.jvm', 'Dockerfile.native', 'Dockerfile.native-distroless', 'Dockerfile.legacy-jar'],
         },
+        {
+            condition: generator => !generator.prodDatabaseTypeOracle,
+            path: DOCKER_DIR,
+            templates: [{ file: generator => `${generator.prodDatabaseType}.yml` }],
+        },
+        {
+            condition: generator => !generator.devDatabaseTypeOracle && !generator.devDatabaseTypeH2Any,
+            path: DOCKER_DIR,
+            templates: [{ file: generator => `${generator.devDatabaseType}.yml` }],
+        },
     ],
 };
 
