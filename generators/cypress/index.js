@@ -21,13 +21,15 @@ module.exports = class extends CypressGenerator {
     get postWriting() {
         return {
             customize() {
+                /*
                 this.replaceContent(
-                    `${CLIENT_TEST_SRC_DIR}cypress/integration/account/reset-password-page.spec.ts`,
+                    `${CLIENT_TEST_SRC_DIR}cypress/integration/account/reset-password-page.spec.cy.ts`,
                     "it('should be able to init reset password'",
                     "it.skip('should be able to init reset password'"
                 );
+                */
                 this.replaceContent(
-                    `${CLIENT_TEST_SRC_DIR}cypress/integration/account/register-page.spec.ts`,
+                    `${CLIENT_TEST_SRC_DIR}cypress/integration/account/register-page.spec.cy.ts`,
                     "it('register a valid user'",
                     "it.skip('register a valid user'"
                 );
