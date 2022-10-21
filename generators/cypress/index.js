@@ -23,13 +23,13 @@ module.exports = class extends CypressGenerator {
             customize() {
                 /*
                 this.replaceContent(
-                    `${CLIENT_TEST_SRC_DIR}cypress/integration/account/reset-password-page.spec.cy.ts`,
+                    `${CLIENT_TEST_SRC_DIR}cypress/e2e/account/reset-password-page.cy.ts`,
                     "it('should be able to init reset password'",
                     "it.skip('should be able to init reset password'"
                 );
                 */
                 this.replaceContent(
-                    `${CLIENT_TEST_SRC_DIR}cypress/integration/account/register-page.spec.cy.ts`,
+                    `${CLIENT_TEST_SRC_DIR}cypress/e2e/account/register-page.cy.ts`,
                     "it('register a valid user'",
                     "it.skip('register a valid user'"
                 );
