@@ -36,8 +36,12 @@ module.exports = class extends CypressGenerator {
                 if (this.authenticationTypeOauth2) {
                     this.replaceContent(
                         `${CLIENT_TEST_SRC_DIR}cypress/support/oauth2.ts.ejs`,
-                        "followRedirect: false,",
-                        "followRedirect: true,"
+                        `
+        followRedirect: false,
+        form: true,`,
+                        `
+        followRedirect: true,
+        form: true,`
                     );
                 }
             },
