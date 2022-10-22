@@ -33,6 +33,13 @@ module.exports = class extends CypressGenerator {
                     "it('register a valid user'",
                     "it.skip('register a valid user'"
                 );
+                if (this.authenticationTypeOauth2) {
+                    this.replaceContent(
+                        `${CLIENT_TEST_SRC_DIR}cypress/support/oauth2.ts.ejs`,
+                        "followRedirect: false,",
+                        "followRedirect: true,"
+                    );
+                }
             },
         };
     }
