@@ -37,6 +37,7 @@ quarkus.micrometer.export.prometheus.path=/management/prometheus
 
 quarkus.smallrye-health.root-path=/management/health
 
+jhipster.info.swagger.enable=true
 <%_ if (authenticationType === 'jwt') { _%>
 mp.jwt.verify.publickey.location=META-INF/resources/publicKey.pem
 mp.jwt.verify.issuer=https://www.jhipster.tech
@@ -47,7 +48,6 @@ jhipster.security.authentication.jwt.issuer=https://www.jhipster.tech
 jhipster.security.authentication.jwt.token-validity-in-seconds=86400
 jhipster.security.authentication.jwt.token-validity-in-seconds-for-remember-me=2592000
 jhipster.mail.base-url=http://127.0.0.1:8080
-jhipster.info.swagger.enable=true
 
 quarkus.http.auth.permission.public.paths=/api/authenticate,/api/register,/api/activate,/api/account/reset-password/init,/api/account/reset-password/finish,/management/health,/management/info,/management/prometheus
 quarkus.http.auth.permission.public.policy=permit

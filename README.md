@@ -98,7 +98,7 @@ npm link generator-jhipster (Optional: Needed only if you are using a non-releas
 
 
 
-jhipster -d --blueprint quarkus
+jhipster -d --blueprints quarkus
 
 ```
 

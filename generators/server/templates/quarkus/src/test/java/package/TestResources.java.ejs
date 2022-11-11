@@ -19,13 +19,6 @@
 package <%=packageName%>;
 
 import io.quarkus.test.common.QuarkusTestResource;
-<%_ if (databaseType === 'sql') { _%>
-import io.quarkus.test.h2.H2DatabaseTestResource;
-<%_ } _%>
-
-<%_ if (databaseType === 'sql') { _%>
-@QuarkusTestResource(H2DatabaseTestResource.class)
-<%_ } _%>
 <%_ if (cacheProvider === 'redis') { _%>
 @QuarkusTestResource(RedisCacheTestResource.class)
 <%_ } _%>
