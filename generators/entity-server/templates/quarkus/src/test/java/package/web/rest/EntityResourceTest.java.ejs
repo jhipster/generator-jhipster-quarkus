@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -31,9 +31,6 @@ public class <%= entityClass%>ResourceTest {
 
 <%- include('../../_partials/defaults', this); -%>
 
-<%_ if (cacheProvider === 'redis') { _%>
-    static RedisServer server;
-<%_ } _%>
 
     String adminToken;
 
@@ -42,6 +39,12 @@ public class <%= entityClass%>ResourceTest {
 <%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @Inject
+    MongoClient mongoClient;
+
+    @ConfigProperty(name = "quarkus.mongodb.database")
+    String databaseName;
 <%_ } _%>
 
     @BeforeAll
@@ -66,22 +69,19 @@ public class <%= entityClass%>ResourceTest {
             e.printStackTrace();
         }
     }
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @BeforeEach
+    public void databaseFixture() {
+        mongoClient.getDatabase(databaseName).drop();
+
+        MongockStandalone
+            .builder()
+            .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
+            .addChangeLogsScanPackage("<%=packageName%>.config.dbmigrations")
+            .buildRunner()
+            .execute();
+    }
 <%_ } _%>
-
-    <%_ if (cacheProvider === 'redis') { _%>
-    @BeforeAll
-    public static void startRedisServer() throws IOException {
-        server = new RedisServer(6379);
-        server.start();
-    }
-    <%_ } _%>
-
-    <%_ if (cacheProvider === 'redis') { _%>
-    @AfterAll
-    public static void stopRedisServer() {
-        server.stop();
-    }
-    <%_ } _%>
 
     /**
      * Create an entity for this test.

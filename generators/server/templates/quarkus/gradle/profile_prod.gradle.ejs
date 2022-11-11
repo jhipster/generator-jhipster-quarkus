@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -16,28 +16,27 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-dependencies {
-    <%_ if (databaseType === 'sql') { _%>
-    testImplementation "com.h2database:h2"
-    <%_ } _%>
-}
 
 def profiles = "prod"
 if (project.hasProperty("no-liquibase")) {
     profiles += ",no-liquibase"
 }
 
-if (project.hasProperty("swagger")) {
-    profiles += ",swagger"
+if (project.hasProperty("api-docs")) {
+    profiles += ",api-docs"
+}
+
+if (project.hasProperty("e2e")) {
+    profiles += ",e2e"
 }
 
 <%_ if (!skipClient) { _%>
-task webpack_test(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
-    args = ["run", "webpack:test"]
+task webapp_test(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
+    args = ["run", "webapp:test"]
 }
 
-task webpack(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
-    args = ["run", "webpack:prod"]
+task webapp(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
+    args = ["run", "webapp:prod"]
     environment = [APP_VERSION: project.version]
 }
 <%_ } _%>
@@ -45,8 +44,7 @@ task webpack(type: <%= _.upperFirst(clientPackageManager) %>Task, dependsOn: "<%
 processResources {
     inputs.property('version', version)
 }
-
 <%_ if (!skipClient) { _%>
 
-processResources.dependsOn webpack
+processResources.dependsOn webapp
 <%_ } _%>

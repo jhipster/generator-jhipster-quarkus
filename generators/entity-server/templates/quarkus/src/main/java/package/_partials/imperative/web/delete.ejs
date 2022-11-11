@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -31,6 +31,6 @@
         log.debug("REST request to delete <%= entityClass %> : {}", id);
 <%- include('../common/delete', this); -%>
         var response = Response.noContent();
-        HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (pkType !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        HeaderUtil.createEntityDeletionAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, id<% if (primaryKey.type !== 'String') { %>.toString()<% } %>).forEach(response::header);
         return response.build();
     }

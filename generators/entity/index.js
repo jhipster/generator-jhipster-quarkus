@@ -2,37 +2,22 @@
 const chalk = require('chalk');
 const EntityGenerator = require('generator-jhipster/generators/entity');
 const prompts = require('./prompts');
-const constants = require('../generator-quarkus-constants');
 
 module.exports = class extends EntityGenerator {
     constructor(args, opts) {
         super(args, { fromBlueprint: true, ...opts }); // fromBlueprint variable is important
 
-        const jhContext = (this.jhipsterContext = this.options.jhipsterContext);
+        if (this.options.help) return;
 
-        if (!jhContext) {
-            this.error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprint quarkus')}`);
+        if (!this.options.jhipsterContext) {
+            throw new Error(`This is a JHipster blueprint and should be used only like ${chalk.yellow('jhipster --blueprints quarkus')}`);
         }
 
-        this.configOptions = jhContext.configOptions || {};
-
-        // This sets up options for this sub generator and is being reused from JHipster
-        jhContext.setupEntityOptions(this, jhContext, this);
+        this.entity = this.entity || this.context;
     }
 
     get initializing() {
-        const phaseFromJHipster = super._initializing();
-        return {
-            ...phaseFromJHipster,
-            setupConfigQuarkus() {
-                const context = this.context;
-                if (!context.useConfigurationFile) {
-                    context.dataAccess = constants.DEFAULT_DATA_ACCESS;
-                } else {
-                    context.dataAccess = context.fileData.dataAccess || constants.DEFAULT_DATA_ACCESS;
-                }
-            },
-        };
+        return super._initializing();
     }
 
     get prompting() {
@@ -59,7 +44,7 @@ module.exports = class extends EntityGenerator {
             },
             askForTableName: phaseFromJHipster.askForTableName,
             askForDataAccess: prompts.askForDataAccess,
-            askForService: prompts.askForService,
+            askForService: phaseFromJHipster.askForService,
             askForDTO: phaseFromJHipster.askForDTO,
             // askForFiltering: phaseFromJHipster.askForFiltering,
             // askForReadOnly: phaseFromJHipster.askForReadOnly,
@@ -68,75 +53,46 @@ module.exports = class extends EntityGenerator {
     }
 
     get configuring() {
-        const phaseFromJHipster = super._configuring();
-        return {
-            configureEntityQuarkus() {
-                const context = this.context;
-                if (!this.storageData) {
-                    this.storageData = {};
-                }
-                this.storageData.dataAccess = context.dataAccess;
-            },
-            ...phaseFromJHipster,
-        };
+        return super._configuring();
+    }
+
+    get composing() {
+        return super._composing();
+    }
+
+    get loading() {
+        return super._loading();
+    }
+
+    get preparing() {
+        return super._preparing();
+    }
+
+    get preparingFields() {
+        return super._preparingFields();
+    }
+
+    get preparingRelationships() {
+        return super._preparingRelationships();
     }
 
     get default() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._default();
     }
 
     get writing() {
-        return {
-            composeServer() {
-                const context = this.context;
-                if (context.skipServer) return;
-                const configOptions = this.configOptions;
+        return super._writing();
+    }
 
-                this.composeWith(require.resolve('../entity-server'), {
-                    context,
-                    configOptions,
-                    force: context.options.force,
-                    debug: context.isDebugEnabled,
-                });
-            },
-
-            composeClient() {
-                const context = this.context;
-                if (context.skipClient) return;
-                const configOptions = this.configOptions;
-
-                this.composeWith(require.resolve('generator-jhipster/generators/entity-client'), {
-                    context,
-                    configOptions,
-                    'skip-install': context.options['skip-install'],
-                    force: context.options.force,
-                    debug: context.isDebugEnabled,
-                });
-            },
-
-            composeI18n() {
-                const context = this.context;
-                if (context.skipClient) return;
-                const configOptions = this.configOptions;
-                this.composeWith(require.resolve('generator-jhipster/generators/entity-i18n'), {
-                    context,
-                    configOptions,
-                    'skip-install': context.options['skip-install'],
-                    force: context.options.force,
-                    debug: context.isDebugEnabled,
-                });
-            },
-        };
+    get postWriting() {
+        return super._postWriting();
     }
 
     get install() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._install();
     }
 
     get end() {
-        // Here we are not overriding this phase and hence its being handled by JHipster
         return super._end();
     }
 };

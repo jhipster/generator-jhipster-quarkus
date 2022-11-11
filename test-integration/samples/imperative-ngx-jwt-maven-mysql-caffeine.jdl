@@ -1,15 +1,15 @@
 application {
   config {
     applicationType monolith
-    clientFramework react
     authenticationType jwt
     baseName jhipsterSampleApplication
-    buildTool gradle
+    buildTool maven
     databaseType sql
     packageName io.github.jhipster.sample
     prodDatabaseType mysql
     enableHibernateCache true
     cacheProvider caffeine
+    testFrameworks [cypress]
   }
 
   entities *

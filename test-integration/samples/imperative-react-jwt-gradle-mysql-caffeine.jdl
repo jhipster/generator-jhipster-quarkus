@@ -1,14 +1,16 @@
 application {
   config {
     applicationType monolith
-    authenticationType oauth2
+    clientFramework react
+    authenticationType jwt
     baseName jhipsterSampleApplication
-    buildTool maven
+    buildTool gradle
     databaseType sql
     packageName io.github.jhipster.sample
     prodDatabaseType mysql
     enableHibernateCache true
     cacheProvider caffeine
+    testFrameworks [cypress]
   }
 
   entities *
@@ -29,7 +31,9 @@ entity Operation {
 relationship OneToMany {
   BankAccount{operation} to Operation{bankAccount(name)}
 }
-
+relationship ManyToOne {
+  BankAccount{user(login)} to User
+}
 relationship ManyToMany {
   Operation{label(label)} to Label{operation}
 }

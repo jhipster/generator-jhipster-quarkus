@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -20,36 +20,37 @@ package <%=packageName%>.web.rest;
 
 import <%=packageName%>.TestUtil;
 import io.quarkus.oidc.IdToken;
+import io.quarkus.oidc.OidcConfigurationMetadata;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static io.restassured.RestAssured.given;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @QuarkusTest
 public class LogoutResourceTest {
 
+    public static final String ORIGIN_HEADER = "http://localhost:9999";
     @InjectMock
     @IdToken
     JsonWebToken idToken;
 
-    @BeforeEach
-    public void setup() {
-        // idToken is available only when Quarkus OIDC application type is "web-app".
-        // This is why we need to mock it for test purpose.
-        // https://stackoverflow.com/questions/62692829/how-to-use-idtoken-in-quarkus-apps-when-application-type-service
-        Mockito.when(idToken.getRawToken()).thenReturn("1234");
-    }
+    @InjectMock
+    OidcConfigurationMetadata configMetadata;
 
     @Test
     public void getLogoutInformation() {
-        String expectedLogoutUrl = "some-dummy-logoutUrl";
+
+        var logoutEndpoint = "dummy-logout-url";
+        var rawIdToken = "1234";
+        when(idToken.getRawToken()).thenReturn(rawIdToken);
+        when(configMetadata.getIssuer()).thenReturn("dummy-issuer-url");
+        when(configMetadata.getEndSessionUri()).thenReturn(logoutEndpoint);
 
         var jsonPath = given()
             .auth()
@@ -57,6 +58,7 @@ public class LogoutResourceTest {
             .oauth2(TestUtil.getAdminToken())
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
+            .header("origin", ORIGIN_HEADER)
             .when()
             .post("/api/logout")
             .then()
@@ -64,7 +66,30 @@ public class LogoutResourceTest {
             .extract()
             .jsonPath();
 
-        assertThat(jsonPath.getString("logoutUrl")).isEqualTo(expectedLogoutUrl);
-        assertThat(jsonPath.getString("idToken")).isEqualTo("1234");
+        assertThat(jsonPath.getString("logoutUrl"))
+            .isEqualTo(logoutEndpoint + "?id_token_hint=" + rawIdToken + "&post_logout_redirect_uri=" + ORIGIN_HEADER);
+    }
+
+    @Test
+    public void getAuth0LogoutInformation() {
+        var issuerUrl = "dummy-auth0.com";
+        when(configMetadata.getIssuer()).thenReturn(issuerUrl);
+
+        var jsonPath = given()
+            .auth()
+            .preemptive()
+            .oauth2(TestUtil.getAdminToken())
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .header("origin", ORIGIN_HEADER)
+            .when()
+            .post("/api/logout")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .extract()
+            .jsonPath();
+
+        assertThat(jsonPath.getString("logoutUrl")).
+            isEqualTo(issuerUrl + "/v2/logout?client_id=dummy&returnTo=" + ORIGIN_HEADER);
     }
 }

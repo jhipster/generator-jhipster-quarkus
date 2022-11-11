@@ -27,7 +27,9 @@
 
         "no-multi-assign": "off",
         "no-param-reassign": "off",
-        "no-shadow": "off"
+        "no-shadow": "off",
+        "no-restricted-syntax": "off",
+        "no-await-in-loop": "off"
     },
     "overrides": [
         {

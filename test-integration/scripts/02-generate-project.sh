@@ -12,11 +12,11 @@ fi
 #-------------------------------------------------------------------------------
 rm -rf "$JHI_FOLDER_APP"
 mkdir -p "$JHI_FOLDER_APP"
-cp -f "$JHI_SAMPLES"/"$JHI_APP".jh "$JHI_FOLDER_APP"/project.jh
+cp -f "$JHI_SAMPLES"/"$JHI_APP".jdl "$JHI_FOLDER_APP"/project.jdl
 cd "$JHI_FOLDER_APP"
 ls -al .
 
 
 runOptions="--blueprints quarkus --skip-checks --force --no-insight --skip-install"
 
-jhipster import-jdl project.jh $runOptions
+jhipster import-jdl project.jdl $runOptions

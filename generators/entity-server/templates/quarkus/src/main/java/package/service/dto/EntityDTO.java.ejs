@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -98,6 +98,7 @@ public class <%= asDto(entityClass) %> implements Serializable {
 <%- formatAsFieldJavadoc(fields[idx].javadoc) %>
         <%_ } _%>
         <%_
+        const field = fields[idx];
         const fieldValidate = fields[idx].fieldValidate;
         const fieldValidateRules = fields[idx].fieldValidateRules;
         const fieldValidateRulesMinlength = fields[idx].fieldValidateRulesMinlength;
@@ -113,7 +114,7 @@ public class <%= asDto(entityClass) %> implements Serializable {
         let required = fieldValidate && fieldValidateRules.includes('required');
         _%>
         <%_ if (fieldValidate === true) { _%>
-    <%- include(fetchFromInstalledJHipster('entity-server/templates') + '/src/main/java/package/common/field_validators', { idx, fields }) -%>
+    <%- include('/../src/main/java/package/common/field_validators', { field }) -%>
         <%_ } _%>
         <%_ if (typeof fields[idx].javadoc != 'undefined') { _%>
     @ApiModelProperty(value = "<%- formatAsApiDescription(fields[idx].javadoc) %>"<% if (required) { %>, required = true<% } %>)
@@ -136,13 +137,14 @@ public class <%= asDto(entityClass) %> implements Serializable {
 
     <%_ } _%>
     <%_ for (idx in relationships) {
+        const relationship = relationships[idx];
         const relationshipFieldName = relationships[idx].relationshipFieldName;
         const relationshipFieldNamePlural = relationships[idx].relationshipFieldNamePlural;
         const relationshipType = relationships[idx].relationshipType;
-        const otherEntityPrimaryKeyType = relationships[idx].otherEntityPrimaryKeyType;
-        const otherEntityNameCapitalized = relationships[idx].otherEntityNameCapitalized;
+        const otherEntityPrimaryKeyType = relationships[idx].otherEntity.primaryKey.type;
+        const otherEntityNameCapitalized = relationships[idx].otherEntity.entityNameCapitalized;
         const otherEntityFieldCapitalized = relationships[idx].otherEntityFieldCapitalized;
-        const otherEntityIsEmbedded = relationships[idx].otherEntityIsEmbedded;
+        const otherEntityIsEmbedded = relationships[idx].otherEntity.embedded;
         const ownerSide = relationships[idx].ownerSide;
     _%>
         <%_ if (typeof relationships[idx].javadoc != 'undefined') { _%>

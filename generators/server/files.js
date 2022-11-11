@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2021 the original author or authors from the JHipster project.
+ * Copyright 2020-2022 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see https://www.jhipster.tech/
  * for more information.
@@ -120,26 +120,6 @@ const serverFiles = {
                 },
             ],
         },
-        {
-            condition: generator => generator.cacheProvider === 'redis',
-            path: SERVER_TEST_SRC_DIR,
-            templates: [
-                {
-                    file: 'package/RedisCacheTestResource.java',
-                    renameTo: generator => `${generator.javaDir}/RedisCacheTestResource.java`,
-                },
-            ],
-        },
-        {
-            condition: generator => generator.databaseType === 'mongodb',
-            path: SERVER_TEST_SRC_DIR,
-            templates: [
-                {
-                    file: 'package/MongoDbTestResource.java',
-                    renameTo: generator => `${generator.javaDir}/MongoDbTestResource.java`,
-                },
-            ],
-        },
     ],
     serverJavaCache: [
         {
@@ -160,6 +140,12 @@ const serverFiles = {
                     file: 'package/cache/redis/RedisCache.java',
                     renameTo: generator => `${generator.javaDir}cache/redis/RedisCache.java`,
                 },
+            ],
+        },
+        {
+            path: SERVER_MAIN_SRC_DIR,
+            condition: generator => generator.cacheProvider === 'redis' && generator.authenticationType === 'jwt',
+            templates: [
                 {
                     file: 'package/cache/redis/UserRedisCache.java',
                     renameTo: generator => `${generator.javaDir}cache/redis/UserRedisCache.java`,
@@ -338,6 +324,21 @@ const serverFiles = {
                 },
             ],
         },
+        {
+            condition: generator => generator.databaseType === 'mongodb',
+            path: SERVER_MAIN_SRC_DIR,
+            templates: [
+                {
+                    file: 'package/service/IdGenerator.java',
+                    renameTo: generator => `${generator.javaDir}service/IdGenerator.java`,
+                },
+                {
+                    file: 'package/service/StringIdGenerator.java',
+                    renameTo: generator => `${generator.javaDir}service/StringIdGenerator.java`,
+                },
+            ],
+        },
+
         {
             condition: generator => !generator.skipUserManagement,
             path: SERVER_MAIN_SRC_DIR,
@@ -639,7 +640,28 @@ const serverFiles = {
 };
 
 const serverFilesFromJHipster = {
-    docker: jhipsterFiles.docker,
+    docker: [
+        ...jhipsterFiles.docker,
+        {
+            condition: generator => generator.databaseTypeSql && !generator.prodDatabaseTypeOracle,
+            path: DOCKER_DIR,
+            templates: [{ file: generator => `${generator.prodDatabaseType}.yml` }],
+        },
+        {
+            condition: generator => generator.databaseTypeSql && !generator.devDatabaseTypeOracle && !generator.devDatabaseTypeH2Any,
+            path: DOCKER_DIR,
+            templates: [{ file: generator => `${generator.devDatabaseType}.yml` }],
+        },
+    ],
+    npmWrapper: [
+        {
+            condition: generator => generator.buildTool === 'maven',
+            templates: [
+                { file: 'npmw', method: 'copy', noEjs: true },
+                { file: 'npmw.cmd', method: 'copy', noEjs: true },
+            ],
+        },
+    ],
     serverResource: [
         {
             condition: generator => generator.databaseType === 'sql',
@@ -691,9 +713,9 @@ function writeFiles() {
             );
         },
 
-        writeFiles() {
-            this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
-            this.writeFilesToDisk(serverFilesFromJHipster, this, false, this.fetchFromInstalledJHipster('server/templates'));
+        async writeFiles() {
+            await this.writeFilesToDisk(serverFiles, this, false, 'quarkus');
+            await this.writeFilesToDisk(serverFilesFromJHipster, this, false, ['', 'sql/reactive', 'sql/common']);
         },
     };
 }

@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -37,7 +37,7 @@ const uniqueEnums = {};
 <%_ for (idx in relationships) {
         isUsingMapsId = relationships[idx].useJPADerivedIdentifier;
         if ( isUsingMapsId === true) {
-            primaryKeyType = (relationships[idx].otherEntityName === 'user'  && authenticationType === 'oauth2') ? 'String' : pkType;
+            primaryKeyType = (relationships[idx].otherEntityName === 'user'  && authenticationType === 'oauth2') ? 'String' : primaryKey.type;
             break;
         }
         isUsingMapsId = false;
@@ -80,7 +80,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 <%_ } if (hasTextBlob === true || (fieldsContainUUID === true && ['mysql', 'mariadb'].includes(prodDatabaseType))) { _%>
 import org.hibernate.annotations.Type;
 <%_ } if (databaseType === 'mongodb') { _%>
-import io.quarkus.mongodb.panache.MongoEntity;
+import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
 import org.bson.codecs.pojo.annotations.BsonId;
 <%_ } else if (databaseType === 'couchbase') { _%>
@@ -190,9 +190,10 @@ public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql')
 <%_ if (databaseType === 'mongodb') { _%>
     @BsonId
 <%_ } _%>
-    public <%= pkType %> id;
+    public <%= primaryKey.type %> id;
 
 <%_ for (idx in fields) {
+      const field = fields[idx];
     if (typeof fields[idx].javadoc !== 'undefined') { _%>
 <%- formatAsFieldJavadoc(fields[idx].javadoc) %>
     <%_ }
@@ -213,9 +214,8 @@ public class <%= asEntity(entityClass) %> extends <% if (databaseType === 'sql')
         if (fieldValidateRules.includes('unique')) {
             unique = true;
         } _%>
-    <%- include(fetchFromInstalledJHipster('entity-server/templates') + '/src/main/java/package/common/field_validators', {
-        idx: idx,
-        fields: fields
+    <%- include('/../src/main/java/package/common/field_validators', {
+        field,
     }) -%>
     <%_ } _%>
     <%_ if (!hasDto && typeof fields[idx].javadoc != 'undefined') { _%>

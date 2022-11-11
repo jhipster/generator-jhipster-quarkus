@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -27,6 +27,11 @@ import static javax.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
+<%_ if (databaseType === 'mongodb') { _%>
+import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import com.github.cloudyrock.standalone.MongockStandalone;
+import com.mongodb.client.MongoClient;
+<%_ } _%>
 
 import <%=packageName%>.TestUtil;
 import <%=packageName%>.config.Constants;
@@ -67,6 +72,12 @@ public class AccountResourceTest {
 <%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @Inject
+    MongoClient mongoClient;
+
+    @ConfigProperty(name = "quarkus.mongodb.database")
+    String databaseName;
 <%_ } _%>
 
     @Inject
@@ -90,6 +101,18 @@ public class AccountResourceTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @BeforeEach
+    public void databaseFixture() {
+        mongoClient.getDatabase(databaseName).drop();
+
+        MongockStandalone
+            .builder()
+            .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
+            .addChangeLogsScanPackage("<%=packageName%>.config.dbmigrations")
+            .buildRunner()
+            .execute();
     }
 <%_ } _%>
 
@@ -173,7 +196,29 @@ public class AccountResourceTest {
             .statusCode(OK.getStatusCode())
             .body(containsString("test"));
     }
+    <%_ if (databaseType === 'mongodb') { _%>
 
+    @Test
+    public void testAuthenticatedUserWithEmail() {
+        var user = new ManagedUserVM();
+        user.login = "test";
+        user.email = "test@example.com";
+        user.password = "test";
+
+        registerUser(user);
+        activateUser(user.email);
+        var token = authenticateUser(user.email, user.password);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .accept(MediaType.TEXT_PLAIN)
+            .get("/api/authenticate")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .body(containsString("test"));
+    }
+
+    <%_ } _%>
     @Test
     public void testGetExistingAccount() {
         var user = new ManagedUserVM();
@@ -222,11 +267,11 @@ public class AccountResourceTest {
         validUser.imageUrl = "http://placehold.it/50x50";
         validUser.langKey = Constants.DEFAULT_LANGUAGE;
         validUser.authorities = Collections.singleton(AuthoritiesConstants.USER);
-        get("/api/users/test-register-valid").then().statusCode(NOT_FOUND.getStatusCode());
+        get("/api/admin/users/test-register-valid").then().statusCode(NOT_FOUND.getStatusCode());
 
         registerUser(validUser);
 
-        get("/api/users/{login}", validUser.login).then().statusCode(OK.getStatusCode());
+        get("/api/admin/users/{login}", validUser.login).then().statusCode(OK.getStatusCode());
     }
 
     @Test
@@ -250,7 +295,7 @@ public class AccountResourceTest {
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
 
-        get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+        get("/api/admin/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
     }
 
     @Test
@@ -279,7 +324,7 @@ public class AccountResourceTest {
             .body("fieldErrors[0].field", is("email"))
             .body("fieldErrors[0].message", is("must be a well-formed email address"));
 
-        get("/api/users/{login}", userWihInvalidEmail.login).then().statusCode(NOT_FOUND.getStatusCode());
+        get("/api/admin/users/{login}", userWihInvalidEmail.login).then().statusCode(NOT_FOUND.getStatusCode());
     }
 
     @Test
@@ -308,7 +353,7 @@ public class AccountResourceTest {
             .body("fieldErrors.field", hasItems("email", "password"))
             .body("fieldErrors.message", hasItems("must be a well-formed email address", "size must be between 4 and 100"));
 
-        get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+        get("/api/admin/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
     }
 
     @Test
@@ -332,7 +377,7 @@ public class AccountResourceTest {
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
 
-        get("/api/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+        get("/api/admin/users/{login}", invalidUser.login).then().statusCode(NOT_FOUND.getStatusCode());
     }
 
     @Test
@@ -415,7 +460,7 @@ public class AccountResourceTest {
             .then()
             .statusCode(CREATED.getStatusCode());
 
-        get("/api/users/{login}", firstUser.login).then().statusCode(OK.getStatusCode());
+        get("/api/admin/users/{login}", firstUser.login).then().statusCode(OK.getStatusCode());
 
         // Duplicate email, different login
         var secondUser = new ManagedUserVM();
@@ -438,9 +483,9 @@ public class AccountResourceTest {
             .then()
             .statusCode(CREATED.getStatusCode());
 
-        get("/api/users/{login}", firstUser.login).then().statusCode(NOT_FOUND.getStatusCode());
+        get("/api/admin/users/{login}", firstUser.login).then().statusCode(NOT_FOUND.getStatusCode());
 
-        get("/api/users/{login}", secondUser.login).then().statusCode(OK.getStatusCode());
+        get("/api/admin/users/{login}", secondUser.login).then().statusCode(OK.getStatusCode());
 
         var userWithUpperCaseEmail = new ManagedUserVM();
         userWithUpperCaseEmail.id = firstUser.id;
@@ -463,7 +508,7 @@ public class AccountResourceTest {
             .then()
             .statusCode(CREATED.getStatusCode());
 
-        var testUser = get("/api/users/{login}", userWithUpperCaseEmail.login)
+        var testUser = get("/api/admin/users/{login}", userWithUpperCaseEmail.login)
             .then()
             .statusCode(OK.getStatusCode())
             .extract()
@@ -519,7 +564,7 @@ public class AccountResourceTest {
         registerUser(user);
         activateUser(user.email);
 
-        var activatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        var activatedUser = get("/api/admin/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
         assertThat(activatedUser.activated).isTrue();
     }
 
@@ -559,7 +604,7 @@ public class AccountResourceTest {
             .then()
             .statusCode(OK.getStatusCode());
 
-        var updatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        var updatedUser = get("/api/admin/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
 
         assertThat(updatedUser.firstName).isEqualTo(userDTO.firstName);
         assertThat(updatedUser.lastName).isEqualTo(userDTO.lastName);
@@ -600,7 +645,7 @@ public class AccountResourceTest {
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
 
-        var updatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        var updatedUser = get("/api/admin/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
         assertThat(updatedUser.email).isEqualTo(user.email);
     }
 
@@ -642,7 +687,7 @@ public class AccountResourceTest {
             .then()
             .statusCode(BAD_REQUEST.getStatusCode());
 
-        var updatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        var updatedUser = get("/api/admin/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
         assertThat(updatedUser.email).isEqualTo(user.email);
     }
 
@@ -676,7 +721,7 @@ public class AccountResourceTest {
             .then()
             .statusCode(OK.getStatusCode());
 
-        var updatedUser = get("/api/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
+        var updatedUser = get("/api/admin/users/{login}", user.login).then().statusCode(OK.getStatusCode()).extract().as(User.class);
         assertThat(updatedUser.email).isEqualTo(user.email);
     }
 
@@ -862,7 +907,7 @@ public class AccountResourceTest {
             .body("password-reset-wrong-email@example.com")
             .post("/api/account/reset-password/init")
             .then()
-            .statusCode(BAD_REQUEST.getStatusCode());
+            .statusCode(OK.getStatusCode());
     }
 
     @Test

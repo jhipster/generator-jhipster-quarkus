@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2021 the original author or authors from the JHipster project.
+ Copyright 2020-2022 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -17,10 +17,6 @@
  limitations under the License.
 -%>
 buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
     dependencies {
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
@@ -30,8 +26,7 @@ plugins {
     id 'java'
     id 'io.quarkus'
     id "idea"
-    id 'checkstyle'
-    id "maven-publish"
+    id "eclipse"
     id "jacoco"
     id "com.gorylenko.gradle-git-properties"
     <%_ if (enableSwaggerCodegen) { _%>
@@ -40,30 +35,25 @@ plugins {
     <%_ if (!skipClient) { _%>
     id "com.github.node-gradle.node"
     <%_ } _%>
-    id "net.ltgt.apt-eclipse"
-    id "net.ltgt.apt-idea"
-    id "net.ltgt.apt"
+    id "io.spring.nohttp"
     <%_ if (databaseType === 'sql') { _%>
     id "org.liquibase.gradle"
     <%_ } _%>
     id "org.sonarqube"
+    id "com.github.andygoossens.gradle-modernizer-plugin"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
-
-<%_ if (!skipClient) { _%>
-node {
-    download = true
-}
-<% } %>
 
 group = "<%= packageName %>"
 version = "0.0.1-SNAPSHOT"
 
 description = ""
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
-sourceCompatibility=11
-targetCompatibility=11
-assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13"
+assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17" || "18"
 
 apply from: "gradle/docker.gradle"
 apply from: "gradle/sonar.gradle"
@@ -96,10 +86,14 @@ eclipse {
 
 defaultTasks "quarkusDev"
 
+modernizer {
+    failOnViolations = true
+    includeTestClasses = true
+}
+
 test.onlyIf { !project.hasProperty('skipTests') }
 test {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
-    systemProperty "jhi.mongodb.port", "37017"
     useJUnitPlatform()
     exclude "**/*IT*", "**/*IntTest*"
 
@@ -114,7 +108,6 @@ test {
 
 task integrationTest(type: Test) {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
-    systemProperty "jhi.mongodb.port", "37017"
     useJUnitPlatform()
     description = "Execute integration tests."
     group = "verification"
@@ -180,6 +173,20 @@ liquibase {
             url "<% if (devDatabaseType === 'mysql') { %>jdbc:mysql://localhost:3306/<%= baseName %><% } else if (devDatabaseType === 'mariadb') { %>jdbc:mariadb://localhost:3306/<%= baseName %><% } else if (devDatabaseType === 'postgresql') { %>jdbc:postgresql://localhost:5432/<%= baseName %><% } else if (devDatabaseType === 'h2Disk') { %>jdbc:h2:file:./build/h2db/db/<%= lowercaseBaseName %><% } else if (devDatabaseType === 'oracle') { %>jdbc:oracle:thin:@localhost:1521:<%= baseName %><% } else if (devDatabaseType === 'mssql') { %>jdbc:sqlserver://localhost:1433;database=<%= baseName %><% } %>"
             username "<% if (devDatabaseType === 'mysql') { %>root<% } else if (devDatabaseType === 'postgresql' || devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { %><%= baseName %><% } else if (devDatabaseType === 'mssql') { %>SA<% } %>"
             password "<% if (devDatabaseType === 'mssql') { %>yourStrong(!)Password<% } %>"
+            changeLogFile "src/main/resources/config/liquibase/master.xml"
+            referenceUrl "hibernate:spring:<%= packageName %>.domain?dialect=<% if (devDatabaseType === 'mysql') { %>org.hibernate.dialect.MySQL8Dialect<% } else if (devDatabaseType === 'mariadb') { %>org.hibernate.dialect.MariaDB103Dialect<% } else if (devDatabaseType === 'postgresql') { %>org.hibernate.dialect.PostgreSQLDialect<% } else if (devDatabaseType === 'h2Disk') { %>org.hibernate.dialect.H2Dialect<% } else if (devDatabaseType === 'oracle') { %>org.hibernate.dialect.Oracle12cDialect<% } else if (devDatabaseType === 'mssql') { %>org.hibernate.dialect.SQLServer2012Dialect<% } %>"
+            defaultSchemaName "<% if (devDatabaseType === 'mysql') { %><%= baseName %><% } else if (devDatabaseType === 'postgresql') { %><% } %>"
+            logLevel "debug"
+            classpath "src/main/resources/"
+            <%_ if (authenticationType === 'oauth2') { _%>
+            excludeObjects "oauth_access_token, oauth_approvals, oauth_client_details, oauth_client_token, oauth_code, oauth_refresh_token"
+            <%_ } _%>
+        }
+        diffLog {
+            driver "<% if (devDatabaseType === 'mysql') { %>com.mysql.cj.jdbc.Driver<% } else if (devDatabaseType === 'mariadb') { %>org.mariadb.jdbc.Driver<% } else if (devDatabaseType === 'postgresql') { %>org.postgresql.Driver<% } else if (devDatabaseType === 'h2Disk') { %>org.h2.Driver<% } else if (devDatabaseType === 'oracle') { %>oracle.jdbc.OracleDriver<% } %>"
+            url "<% if (devDatabaseType === 'mysql') { %>jdbc:mysql://localhost:3306/<%= baseName %><% } else if (devDatabaseType === 'mariadb') { %>jdbc:mariadb://localhost:3306/<%= baseName %><% } else if (devDatabaseType === 'postgresql') { %>jdbc:postgresql://localhost:5432/<%= baseName %><% } else if (devDatabaseType === 'h2Disk') { %>jdbc:h2:file:./build/h2db/db/<%= lowercaseBaseName %><% } else if (devDatabaseType === 'oracle') { %>jdbc:oracle:thin:@localhost:1521:<%= baseName %><% } else if (devDatabaseType === 'mssql') { %>jdbc:sqlserver://localhost:1433;database=<%= baseName %><% } %>"
+            username "<% if (devDatabaseType === 'mysql') { %>root<% } else if (devDatabaseType === 'postgresql' || devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { %><%= baseName %><% } else if (devDatabaseType === 'mssql') { %>SA<% } %>"
+            password "<% if (devDatabaseType === 'mssql') { %>yourStrong(!)Password<% } %>"
             changeLogFile project.ext.diffChangelogFile
             referenceUrl "hibernate:spring:<%= packageName %>.domain?dialect=<% if (devDatabaseType === 'mysql') { %>org.hibernate.dialect.MySQL8Dialect<% } else if (devDatabaseType === 'mariadb') { %>org.hibernate.dialect.MariaDB103Dialect<% } else if (devDatabaseType === 'postgresql') { %>org.hibernate.dialect.PostgreSQLDialect<% } else if (devDatabaseType === 'h2Disk') { %>org.hibernate.dialect.H2Dialect<% } else if (devDatabaseType === 'oracle') { %>org.hibernate.dialect.Oracle12cDialect<% } else if (devDatabaseType === 'mssql') { %>org.hibernate.dialect.SQLServer2012Dialect<% } %>"
             defaultSchemaName "<% if (devDatabaseType === 'mysql') { %><%= baseName %><% } else if (devDatabaseType === 'postgresql') { %><% } %>"
@@ -205,8 +212,11 @@ checkstyle {
     checkstyleTest.enabled = false
 }
 
+nohttp {
+    source.include "build.gradle", "README.md"
+}
+
 repositories {
-    mavenLocal()
     mavenCentral()
     //jhipster-needle-gradle-repositories - JHipster will add additional repositories
 }
@@ -219,8 +229,8 @@ dependencies {
     implementation "io.quarkus:quarkus-mailer"
 <%_ if (databaseType === 'sql') { _%>
     implementation "io.quarkus:quarkus-hibernate-orm-panache"
-    implementation "io.quarkus:quarkus-hibernate-validator"
 <%_ } _%>
+    implementation "io.quarkus:quarkus-hibernate-validator"
 <%_ if (devDatabaseType === 'mariadb' || prodDatabaseType === 'mariadb') { _%>
     implementation "io.quarkus:quarkus-jdbc-mariadb"
     liquibaseRuntime "io.quarkus:quarkus-jdbc-mariadb"
@@ -240,26 +250,29 @@ dependencies {
 <%_ if (databaseType === 'mongodb') { _%>
     implementation "io.quarkus:quarkus-mongodb-panache"
     implementation "com.github.cloudyrock.mongock:mongock-standalone"
-    implementation "com.github.cloudyrock.mongock:mongodb-sync-v4-driver:${mongodb_driverSync_version}"
-    implementation "org.mongodb:mongodb-driver-sync"
+    implementation "com.github.cloudyrock.mongock:mongodb-sync-v4-driver"
     implementation "org.apache.commons:commons-lang3"
     implementation "org.apache.commons:commons-vfs2:${commons_vfs2_version}"
     compileOnly "org.graalvm.nativeimage:svm:${graal_version}"
 <%_ } _%>
-<%_ if (!skipUserManagement) { _%>
+<%_ if (!skipUserManagement && databaseType !== 'mongodb') { _%>
     implementation "org.apache.commons:commons-lang3"
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
-    testImplementation "io.quarkus:quarkus-test-h2"
+    testImplementation "io.quarkus:quarkus-jdbc-h2"
     implementation "io.quarkus:quarkus-liquibase"
 <%_ } _%>
     implementation "io.quarkus:quarkus-elytron-security"
 <%_ if (authenticationType === 'jwt') { _%>
+<%_ if (databaseType !== 'mongodb') { _%>
+    implementation "io.quarkus:quarkus-elytron-security-jdbc"
+<%_ } _%>
     implementation "io.quarkus:quarkus-smallrye-jwt"
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
     implementation "io.quarkus:quarkus-oidc"
 <%_ } _%>
+    implementation 'io.quarkus:quarkus-arc'
     implementation "io.quarkus:quarkus-smallrye-openapi"
 <%_ if (cacheProvider === 'caffeine') { _%>
     implementation 'io.quarkus:quarkus-cache'
@@ -270,7 +283,7 @@ dependencies {
 <%_ } _%>
     implementation "io.quarkus:quarkus-smallrye-health"
     implementation "io.quarkus:quarkus-micrometer"
-    implementation "io.micrometer:micrometer-registry-prometheus"
+    implementation "io.quarkus:quarkus-micrometer-registry-prometheus"
     implementation "org.mapstruct:mapstruct:${mapstruct_version}"
     implementation "com.tietoevry.quarkus:quarkus-resteasy-problem:${resteasy_problem_version}"
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
@@ -279,33 +292,22 @@ dependencies {
 <%_ } _%>
 
 <%_ if (databaseType === 'sql') { _%>
-    liquibaseRuntime "org.liquibase:liquibase-core"
-    liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibase_hibernate5_version}"
     liquibaseRuntime sourceSets.main.compileClasspath
-    liquibaseRuntime 'ch.qos.logback:logback-core:1.2.3'
-    liquibaseRuntime 'ch.qos.logback:logback-classic:1.2.3'
 
 <%_ } _%>
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+<%_ if (databaseType === 'mongodb') { _%>
+    annotationProcessor "io.quarkus:quarkus-panache-common"
+<%_ } _%>
 
     testImplementation "io.quarkus:quarkus-junit5"
     testImplementation "io.quarkus:quarkus-junit5-mockito"
     testImplementation "io.rest-assured:rest-assured"
-    testImplementation "org.assertj:assertj-core"
+    testImplementation "org.assertj:assertj-core:${assertj_version}"
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
 <%_ if (authenticationType === 'oauth2') { _%>
     testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremock_version}"
 <%_ } _%>
-<%_ if (cacheProvider === 'redis') { _%>
-    testImplementation "com.github.kstyrc:embedded-redis:${embeddedRedisVersion}"
-<%_ } _%>
-<%_ if (databaseType === 'mongodb') { _%>
-    testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
-<%_ } _%>
-
-    //Adding the engine dependency to the surefire-plugin unfortunately does not work in the current version.
-    //https://www.archunit.org/userguide/html/000_Index.html#_junit_5
-    testImplementation "com.tngtech.archunit:archunit-junit5-engine:${archunit_junit5_version}"
 
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
@@ -324,10 +326,21 @@ if (project.hasProperty("nodeInstall")) {
     node {
         version = "${node_version}"
         npmVersion = "${npm_version}"
-        yarnVersion = "${yarn_version}"
         download = true
     }
+    // Copy local node and npm to a fixed location for npmw
+    def fixedNode = tasks.register("fixedNode", Copy) {
+        from nodeSetup
+        into 'build/node'
+    }
+    tasks.named("nodeSetup").configure { finalizedBy fixedNode }
+
+    def fixedNpm = tasks.register("fixedNpm", Copy) {
+        from npmSetup
+        into 'build/node'
+    }
+    tasks.named("npmSetup").configure { finalizedBy fixedNpm }
 }
+
 <%_ } _%>
 compileJava.dependsOn processResources
-

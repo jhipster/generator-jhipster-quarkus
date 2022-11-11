@@ -1,14 +1,23 @@
 const assert = require('yeoman-assert');
+const { jestExpect: expect } = require('mocha-expect-snapshot');
 const constants = require('generator-jhipster/generators/generator-constants');
 
 const { buildServerGeneratorContext } = require('./utils/generator-testing-api');
 const expectedFiles = require('./utils/expected-files');
 
-const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR, SERVER_TEST_SRC_DIR } = constants;
+const { SERVER_MAIN_SRC_DIR, SERVER_MAIN_RES_DIR, DOCKER_DIR } = constants;
 
 describe('Subgenerator server of quarkus JHipster blueprint', () => {
     describe('With monolith Maven Mysql', () => {
-        before(buildServerGeneratorContext());
+        let runResult;
+
+        before(async () => {
+            runResult = await buildServerGeneratorContext()();
+        });
+
+        it('matches snapshot', () => {
+            expect(runResult.getStateSnapshot()).toMatchSnapshot();
+        });
 
         it('creates expected files for default configuration for server generator', () => {
             assert.file(expectedFiles.server.common);
@@ -218,14 +227,16 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('should contains redis code in UserService', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/UserService.java`,
-                '        List <Object> keys = new ArrayList<>();\n' +
-                    '        keys.add(user.login);\n' +
-                    '\n' +
-                    '        if (user.email != null) {\n' +
-                    '            keys.add(user.email);\n' +
-                    '        }\n' +
-                    '\n' +
-                    '        userRedisCache.evict(keys);'
+                `
+        List<Object> keys = new ArrayList<>();
+        keys.add(user.login);
+
+        if (user.email != null) {
+            keys.add(user.email);
+        }
+
+        userRedisCache.evict(keys);
+`
             );
 
             assert.fileContent(
@@ -252,26 +263,31 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
 
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
-                '            return userRedisCache.get(login, () -> User.findOneWithAuthoritiesByEmailIgnoreCase(login))\n' +
-                    '                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));'
+                `
+            return userRedisCache
+                .get(login, () -> User.findOneWithAuthoritiesByEmailIgnoreCase(login))
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
+`
             );
 
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/service/AuthenticationService.java`,
-                '        return userRedisCache.get(lowercaseLogin, () -> User.findOneWithAuthoritiesByLogin(lowercaseLogin))\n' +
-                    '            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));'
+                `
+        return userRedisCache
+            .get(lowercaseLogin, () -> User.findOneWithAuthoritiesByLogin(lowercaseLogin))
+            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
+`
             );
         });
 
         it('should contains redis code in User', () => {
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
-                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login)\n            .firstResult();'
+                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE u.login = ?1", login).firstResult();'
             );
             assert.fileContent(
                 `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/domain/User.java`,
-                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email)\n' +
-                    '            .firstResult();'
+                'return find("FROM User u LEFT JOIN FETCH u.authorities WHERE LOWER(u.login) = LOWER(?1)", email).firstResult();'
             );
         });
     });
@@ -316,15 +332,6 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
             assert.fileContent(`${SERVER_MAIN_RES_DIR}application.properties`, 'quarkus.oidc.enabled=true');
         });
 
-        it('should JHipster properties contains OIDC logout url', () => {
-            assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/config/JHipsterProperties.java`, 'public String logoutUrl;');
-
-            assert.fileContent(
-                `${SERVER_MAIN_RES_DIR}application.properties`,
-                'jhipster.oidc.logout-url=http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/logout'
-            );
-        });
-
         it('should AccountResource uses JsonWebToken to build UserDTO', () => {
             assert.fileContent(`${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/AccountResource.java`, 'JsonWebToken accessToken;');
         });
@@ -349,14 +356,20 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
     });
 
     describe('With maven MongoDb', () => {
-        before(
-            buildServerGeneratorContext({
+        let runResult;
+
+        before(async () => {
+            runResult = await buildServerGeneratorContext({
                 databaseType: 'mongodb',
                 devDatabaseType: 'mongodb',
                 prodDatabaseType: 'mongodb',
                 enableHibernateCache: false,
-            })
-        );
+            })();
+        });
+
+        it('matches snapshot', () => {
+            expect(runResult.getStateSnapshot()).toMatchSnapshot();
+        });
 
         it('should contains MongoDb files', () => {
             assert.file(expectedFiles.server.mongoDb);
@@ -382,13 +395,7 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
                     '        <dependency>\n' +
                     '            <groupId>com.github.cloudyrock.mongock</groupId>\n' +
                     '            <artifactId>mongodb-sync-v4-driver</artifactId>\n' +
-                    '        </dependency>\n' +
-                    '        <dependency>\n' +
-                    '            <groupId>org.mongodb</groupId>\n' +
-                    '            <artifactId>mongodb-driver-sync</artifactId>\n' +
-                    // eslint-disable-next-line no-template-curly-in-string
-                    '            <version>${mongodb-driver-sync.version}</version>\n' +
-                    '        </dependency>'
+                    '        </dependency>\n'
             );
             assert.fileContent(
                 'pom.xml',
@@ -425,20 +432,11 @@ describe('Subgenerator server of quarkus JHipster blueprint', () => {
         it('application.properties contains MongoDb entries', () => {
             assert.fileContent(
                 `${SERVER_MAIN_RES_DIR}application.properties`,
-                'jhi.mongodb.port=27017\n' +
-                    '%test.jhi.mongodb.port=37017\n' +
-                    'jhi.mongodb.host=localhost\n' +
+                '%prod.jhi.mongodb.port=27017\n' +
                     '%prod.jhi.mongodb.host=localhost\n' +
                     // eslint-disable-next-line no-template-curly-in-string
-                    'quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}\n' +
+                    '%prod.quarkus.mongodb.connection-string=mongodb://${jhi.mongodb.host}:${jhi.mongodb.port}\n' +
                     'quarkus.mongodb.database=sample'
-            );
-        });
-
-        it('TestResource contains MongoDbTestResource', () => {
-            assert.fileContent(
-                `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
-                '@QuarkusTestResource(MongoDbTestResource.class)'
             );
         });
     });
