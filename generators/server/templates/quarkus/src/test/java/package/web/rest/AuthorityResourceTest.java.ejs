@@ -22,6 +22,7 @@ package <%=packageName%>.web.rest;
 import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import com.github.cloudyrock.standalone.MongockStandalone;
 import com.mongodb.client.MongoClient;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 <%_ } _%>
 
 import <%=packageName%>.TestUtil;
@@ -32,6 +33,8 @@ import io.quarkus.liquibase.LiquibaseFactory;
 import io.quarkus.test.junit.QuarkusTest;
 <%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
+<%_ } else if (databaseType === 'mongodb') { _%>
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 <%_ } _%>
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
