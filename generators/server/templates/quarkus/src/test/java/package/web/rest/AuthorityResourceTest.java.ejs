@@ -57,6 +57,18 @@ class AuthorityResourceTest {
 
     @Test
     public void getAllAuthorities() {
-        given().auth().preemptive().oauth2(adminToken).contentType(APPLICATION_JSON).accept(APPLICATION_JSON).when().get("/api/authorities").then().statusCode(OK.getStatusCode()).contentType(APPLICATION_JSON).body("$", hasSize(greaterThan(0))).body("$", hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN));
+        given()
+            .auth()
+            .preemptive()
+            .oauth2(adminToken)
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+        .when()
+            .get("/api/authorities")
+        .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .body("$", hasSize(greaterThan(0)))
+            .body("$", hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN));
     }
 }
