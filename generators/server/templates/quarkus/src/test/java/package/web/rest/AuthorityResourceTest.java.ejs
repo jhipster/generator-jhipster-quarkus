@@ -18,11 +18,21 @@
 -%>
 package <%=packageName%>.web.rest;
 
+<%_ if (databaseType === 'mongodb') { _%>
+import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import com.github.cloudyrock.standalone.MongockStandalone;
+import com.mongodb.client.MongoClient;
+<%_ } _%>
+
 import <%=packageName%>.TestUtil;
 import <%=packageName%>.security.AuthoritiesConstants;
+<%_ if (databaseType === 'sql') { _%>
 import io.quarkus.liquibase.LiquibaseFactory;
+<%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
+<%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
+<%_ } _%>
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,14 +48,23 @@ class AuthorityResourceTest {
 
     String adminToken;
 
+<%_ if (databaseType === 'sql') { _%>
     @Inject
     LiquibaseFactory liquibaseFactory;
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @Inject
+    MongoClient mongoClient;
+
+    @ConfigProperty(name = "quarkus.mongodb.database")
+    String databaseName;
+<%_ } _%>
 
     @BeforeEach
     public void authenticateAdmin() {
         this.adminToken = TestUtil.getAdminToken();
     }
 
+<%_ if (databaseType === 'sql') { _%>
     @BeforeEach
     public void databaseFixture() throws Exception {
         try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
@@ -54,6 +73,19 @@ class AuthorityResourceTest {
             liquibase.update(liquibaseFactory.createContexts(), liquibaseFactory.createLabels());
         }
     }
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @BeforeEach
+    public void databaseFixture() {
+        mongoClient.getDatabase(databaseName).drop();
+
+        MongockStandalone
+            .builder()
+            .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
+            .addChangeLogsScanPackage("<%=packageName%>.config.dbmigrations")
+            .buildRunner()
+            .execute();
+    }
+<%_ } _%>
 
     @Test
     public void getAllAuthorities() {
