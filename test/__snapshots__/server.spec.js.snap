@@ -194,6 +194,9 @@ exports[`Subgenerator server of quarkus JHipster blueprint With maven MongoDb ma
   "src/main/java/com/mycompany/myapp/web/rest/AccountResource.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/web/rest/AuthorityResource.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterConfigurationEndpoint.java": {
     "stateCleared": "modified",
   },
@@ -464,6 +467,9 @@ exports[`Subgenerator server of quarkus JHipster blueprint With maven MongoDb ma
   "src/test/java/com/mycompany/myapp/web/rest/AccountResourceTest.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/web/rest/AuthorityResourceTest.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/web/rest/ManagementInfoResourceTest.java": {
     "stateCleared": "modified",
   },
@@ -662,6 +668,9 @@ exports[`Subgenerator server of quarkus JHipster blueprint With monolith Maven M
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/AccountResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/AuthorityResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterConfigurationEndpoint.java": {
@@ -944,6 +953,9 @@ exports[`Subgenerator server of quarkus JHipster blueprint With monolith Maven M
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/AccountResourceTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/web/rest/AuthorityResourceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/ManagementInfoResourceTest.java": {

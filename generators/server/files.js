@@ -608,6 +608,10 @@ const serverFiles = {
                     file: 'package/web/rest/UserResource.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResource.java`,
                 },
+                {
+                    file: 'package/web/rest/AuthorityResource.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AuthorityResource.java`,
+                },
             ],
         },
         {
@@ -627,6 +631,10 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/UserResourceTest.java',
                     renameTo: generator => `${generator.javaDir}web/rest/UserResourceTest.java`,
+                },
+                {
+                    file: 'package/web/rest/AuthorityResourceTest.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AuthorityResourceTest.java`,
                 },
             ],
         },
