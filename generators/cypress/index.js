@@ -20,31 +20,6 @@ module.exports = class extends CypressGenerator {
 
     get postWriting() {
         return {
-            customize() {
-                /*
-                this.replaceContent(
-                    `${CLIENT_TEST_SRC_DIR}cypress/e2e/account/reset-password-page.cy.ts`,
-                    "it('should be able to init reset password'",
-                    "it.skip('should be able to init reset password'"
-                );
-                */
-                this.replaceContent(
-                    `${CLIENT_TEST_SRC_DIR}cypress/e2e/account/register-page.cy.ts`,
-                    "it('register a valid user'",
-                    "it.skip('register a valid user'"
-                );
-                if (this.authenticationTypeOauth2) {
-                    this.replaceContent(
-                        `${CLIENT_TEST_SRC_DIR}cypress/support/oauth2.ts.ejs`,
-                        `
-        followRedirect: false,
-        form: true,`,
-                        `
-        followRedirect: true,
-        form: true,`
-                    );
-                }
-            },
-        };
+            customize() {};
     }
 };
