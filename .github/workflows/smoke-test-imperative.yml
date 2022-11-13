@@ -44,7 +44,8 @@ jobs:
       - name: 'SETUP: Checkout generator-jhipster'
         uses: actions/checkout@v3
         with:
-          repository: 'jhipster/generator-jhipster#v7.9.3'
+          repository: 'jhipster/generator-jhipster'
+          ref: v7.9.3
           path: generator-jhipster
       - name: 'SETUP: environment'
         id: setup
