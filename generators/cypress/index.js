@@ -20,6 +20,7 @@ module.exports = class extends CypressGenerator {
 
     get postWriting() {
         return {
-            customize() {};
+            customize() {},
+        };
     }
 };
