@@ -51,6 +51,10 @@ import javax.annotation.security.PermitAll;
 <%_ } _%>
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+<%_ if (authenticationType === 'oauth2') { _%>
+import javax.json.JsonArray;
+import javax.json.JsonString;
+<%_ } _%>
 <%_ if (!skipUserManagement) { _%>
 import javax.validation.Valid;
 <%_ } _%>
@@ -66,10 +70,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 <%_ } _%>
 <%_ if (authenticationType === 'oauth2') { _%>
+import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 <%_ } _%>
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+<%_ if (authenticationType === 'oauth2') { _%>
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+<%_ } _%>
 
 /**
  * REST controller for managing the current user's account.
@@ -180,8 +191,26 @@ public class AccountResource {
             user.imageUrl = accessToken.getClaim("picture");
         }
         user.activated = true;
-        user.authorities = accessToken.getClaim("groups");
+        user.authorities = getAuthoritiesFromAccessToken();
         return user;
+    }
+
+    private Set<String> getAuthoritiesFromAccessToken() {
+        return Optional.ofNullable(accessToken.claim(Claims.groups.name()))
+            .filter(Set.class::isInstance)
+            .map(Set.class::cast)
+                .orElseGet(() ->
+                    accessToken.claim("roles")
+                        .filter(JsonArray.class::isInstance)
+                        .map(JsonArray.class::cast)
+                        .orElse(JsonArray.EMPTY_JSON_ARRAY)
+                        .stream()
+                        .filter(JsonString.class::isInstance)
+                        .map(JsonString.class::cast)
+                        .map(JsonString::getString)
+                        .filter(role -> role.startsWith("ROLE_"))
+                        .collect(Collectors.toSet())
+                );
     }
 <%_ } _%>
 

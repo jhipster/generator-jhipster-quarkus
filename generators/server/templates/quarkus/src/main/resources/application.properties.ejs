@@ -95,6 +95,9 @@ quarkus.oidc.authentication.scopes=profile,address,email,phone,offline_access
 quarkus.oidc.authentication.cookie-path=/
 quarkus.oidc.authentication.redirect-path=/login/oauth2/code/oidc
 quarkus.oidc.authentication.restore-path-after-redirect=false
+quarkus.oidc.roles.role-claim-path=roles
+quarkus.oidc.roles.source=userinfo
+quarkus.oidc.authentication.user-info-required=true
 
 %test.quarkus.oidc.auth-server-url=http://localhost:9080/realms/jhipster
 %test.quarkus.oidc.client-id=dummy

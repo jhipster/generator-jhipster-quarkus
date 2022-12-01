@@ -79,6 +79,7 @@ public class MockOidcServerTestResource implements QuarkusTestResourceLifecycleM
                         .put("token_endpoint", server.baseUrl() + "/token")
                         .put("token_introspection_endpoint", server.baseUrl() + "/introspect")
                         .put("jwks_uri", server.baseUrl() + "/jwks")
+                        .put("userinfo_endpoint", server.baseUrl() + "/userinfo")
                         .build()
                     )));
 
@@ -87,6 +88,13 @@ public class MockOidcServerTestResource implements QuarkusTestResourceLifecycleM
                 .willReturn(aResponse()
                     .withHeader("Content-Type", MediaType.APPLICATION_JSON)
                     .withBody(new JsonWebKeySet(getJwk()).toJson())));
+
+        WireMock.stubFor(
+            get(urlEqualTo("/userinfo"))
+                .willReturn(
+                    aResponse().withHeader("Content-Type", MediaType.APPLICATION_JSON).withBody(
+                        "{\"groups\":[\"ROLE_ADMIN\"]}")
+        ));
 
         log.info("Mock OIDC server started: {}", server.baseUrl());
         return Map.of(
