@@ -39,6 +39,10 @@ if (project.hasProperty("tls")) {
 }
 
 <%_ if (!skipClient) { _%>
+task webapp_test(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "webapp:test"]
+}
+
 task webapp(type: <%= _.upperFirst(clientPackageManager) %>Task) {
     inputs.property('appVersion', project.version)
     <%_ if (clientPackageManager==='npm') { _%>
