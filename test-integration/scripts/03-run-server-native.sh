@@ -12,7 +12,7 @@ fi
 #-------------------------------------------------------------------------------
 cd "$JHI_FOLDER_APP"
 if [ -f "mvnw" ]; then
-    ./mvnw verify -Pwebapp,native -DskipTests
+    ./mvnw verify -Pprod,native -DskipTests
 elif [ -f "gradlew" ]; then
     ./gradlew build -Dquarkus.package.type=native -x webapp -PskipTests
 fi
