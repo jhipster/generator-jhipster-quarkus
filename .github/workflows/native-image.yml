@@ -5,8 +5,7 @@ concurrency:
   cancel-in-progress: true
 on: [push, pull_request]
 env:
-    JHI_SCRIPTS: ./test-integration/scripts
-    JHI_SAMPLES: ${{ github.workspace }}/generator-jhipster-quarkus/test-integration/samples/
+  JHI_SAMPLES: ${{ github.workspace }}/generator-jhipster-quarkus/test-integration/samples/
 jobs:
   applications:
     name: ${{ matrix.app }}
