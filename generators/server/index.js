@@ -82,7 +82,7 @@ module.exports = class extends ServerGenerator {
                         scripts: {
                             'ci:e2e:dev': 'concurrently -k -s first "./gradlew" "npm run e2e:headless"',
                             'ci:e2e:server:start':
-                                'java -jar build/libs/quarkus-app/quarkus-run.$npm_package_config_packaging -Dquarkus.profile=$npm_package_config_default_environment',
+                                'java -jar build/quarkus-app/quarkus-run.$npm_package_config_packaging -Dquarkus.profile=$npm_package_config_default_environment',
                             'java:jar': './gradlew build -x test -x integrationTest',
                         },
                     });
