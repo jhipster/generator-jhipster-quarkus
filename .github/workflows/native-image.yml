@@ -82,7 +82,7 @@ jobs:
         uses: ./generator-jhipster/.github/actions/compare
       - name: 'Run JHipster Quarkus Native'
         id: native
-        run: $JHI_SCRIPTS/03-run-server-native.sh $JHI_APP
+        run: ./generator-jhipster-quarkus/test-integration/scripts/03-run-server-native.sh $JHI_APP
       - name: 'Store failsafe-reports'
         uses: actions/upload-artifact@v2
         if: always() && steps.native.outcome == 'failure'
