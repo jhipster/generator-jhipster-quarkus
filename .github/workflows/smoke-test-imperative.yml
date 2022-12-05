@@ -63,6 +63,12 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: ${{ steps.setup.outputs.java-version }}
+      - uses: graalvm/setup-graalvm@v1
+        with:
+           version: '22.3.0'
+           java-version: '11'
+           components: 'native-image'
+           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Generate: Project'
         uses: ./generator-jhipster/.github/actions/generate
       #----------------------------------------------------------------------
@@ -108,3 +114,13 @@ jobs:
         with:
           name: screenshots-${{ matrix.app }}
           path: ${{ steps.setup.outputs.application-path }}/*/cypress/screenshots
+      - name: 'Native: Build Image'
+        id: native
+        run: npm run ci:native:prod
+        working-directory: ${{ steps.setup.outputs.application-path }}
+      - name: 'Native: Store failsafe reports'
+        uses: actions/upload-artifact@v2
+        if: always() && steps.native.outcome == 'failure'
+        with:
+          name: failsafe-reports-${{ matrix.app }}
+          path: /home/runner/app/target/failsafe-reports
