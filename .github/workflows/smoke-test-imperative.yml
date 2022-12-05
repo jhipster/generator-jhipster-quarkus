@@ -72,6 +72,8 @@ jobs:
           distribution: 'adopt'
           java-version: ${{ steps.setup.outputs.java-version }}
       - uses: graalvm/setup-graalvm@v1
+        id: graalvm
+        if: ${{ "contains(fromJson('["push", "pull_request"]'), github.event_name)" }}
         with:
            version: '22.3.0'
            java-version: '11'
@@ -123,7 +125,7 @@ jobs:
           name: screenshots-${{ matrix.app }}
           path: ${{ steps.setup.outputs.application-path }}/*/cypress/screenshots
       - name: 'Native: Build Image'
-        if: "contains(github.event, '[push, pull_request]')"
+        if: steps.graalvm.outcome == 'success'
         id: native
         run: npm run ci:native:prod
         working-directory: ${{ steps.setup.outputs.application-path }}
