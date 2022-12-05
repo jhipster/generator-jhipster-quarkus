@@ -3,7 +3,10 @@ concurrency:
   # Group PRs by head_ref, push to main branch by commit id, and others branch by ref.
   group: ${{ github.workflow }}-${{ github.head_ref || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
   cancel-in-progress: true
-on: [push, pull_request]
+on:
+  - [push, pull_request]
+  - schedule:
+    - cron: '0 2 * * *'
 env:
   JHI_SAMPLES: ${{ github.workspace }}/generator-jhipster-quarkus/test-integration/samples/
 jobs:
@@ -11,7 +14,7 @@ jobs:
     name: ${{ matrix.app }}
     runs-on: ${{ matrix.os }}
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
-    timeout-minutes: 20
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -115,6 +118,7 @@ jobs:
           name: screenshots-${{ matrix.app }}
           path: ${{ steps.setup.outputs.application-path }}/*/cypress/screenshots
       - name: 'Native: Build Image'
+        if: "contains(github.event, '[push, pull_request]')"
         id: native
         run: npm run ci:native:prod
         working-directory: ${{ steps.setup.outputs.application-path }}
