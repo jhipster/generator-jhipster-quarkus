@@ -4,13 +4,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
   cancel-in-progress: true
 on:
-  - pull_request:
-      branches:
-        - main
-  - push:
-      branches:
-        - main
-  - schedule:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  schedule:
     - cron: '0 2 * * *'
 env:
   JHI_SAMPLES: ${{ github.workspace }}/generator-jhipster-quarkus/test-integration/samples/
