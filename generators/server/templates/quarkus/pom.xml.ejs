@@ -621,6 +621,11 @@ _%>
         </profile>
         <profile>
             <id>prod</id>
+            <activation>
+                <property>
+                    <name>native</name>
+                </property>
+            </activation>
             <dependencies>
                 <%_ if(databaseType !== 'no') { _%>
 <%- include('./partials/prod_profile_data_pom.xml.ejs', {
