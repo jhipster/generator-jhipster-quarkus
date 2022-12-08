@@ -47,7 +47,9 @@ import io.restassured.RestAssured;
 import java.time.Instant;
 import java.util.Set;
 import javax.inject.Inject;
+<%_ if (databaseType === 'sql') { _%>
 import javax.transaction.Transactional;
+<%_ } _%>
 import javax.ws.rs.core.HttpHeaders;
 
 <%_ if (databaseType === 'sql') { _%>
@@ -201,7 +203,9 @@ public class UserResourceTest {
     }
 
     @Test
+<%_ if (databaseType === 'sql') { _%>
     @Transactional
+<%_ } _%>
     public void createUserWithExistingLogin() throws Exception {
         given()
             .auth()
@@ -473,7 +477,9 @@ public class UserResourceTest {
     }
 
     @Test
+<%_ if (databaseType === 'sql') { _%>
     @Transactional
+<%_ } _%>
     public void updateUserExistingEmail() throws Exception {
         given()
             .auth()
