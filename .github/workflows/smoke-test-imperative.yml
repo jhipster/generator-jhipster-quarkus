@@ -40,9 +40,9 @@ jobs:
           - app: imperative-react-jwt-gradle-mysql-caffeine
           - app: imperative-ngx-jwt-maven-mysql-redis
           - app: imperative-ngx-oauth2-maven-mysql-caffeine
+          - app: imperative-ngx-jwt-gradle-mongodb-redis
         exclude:
           - app: imperative-sql-jwt-maven-no-db
-          - app: imperative-ngx-jwt-gradle-mongodb-redis
     steps:
       - name: 'SETUP: Checkout quarkus blueprint'
         uses: actions/checkout@v3
