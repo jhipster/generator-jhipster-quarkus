@@ -55,7 +55,7 @@
         "semver": "7.3.8"
     },
     "devDependencies": {
-        "ejs-lint": "2.0.0",
+        "ejs-lint": "1.2.2",
         "eslint": "8.34.0",
         "eslint-config-airbnb-base": "15.0.0",
         "eslint-config-prettier": "8.6.0",
@@ -74,7 +74,7 @@
         "sonarqube-scanner": "3.0.1",
         "yeoman-assert": "3.1.1",
         "yeoman-environment": "3.14.1",
-        "yeoman-test": "7.3.0"
+        "yeoman-test": "6.3.0"
     },
     "engines": {
         "node": ">=16.16.0",
