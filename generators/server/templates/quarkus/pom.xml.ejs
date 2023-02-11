@@ -48,20 +48,20 @@
 
         <!-- Dependency properties -->
         <quarkus.platform.version><%= quarkusVersion %></quarkus.platform.version>
-        <mapstruct.version>1.5.2.Final</mapstruct.version>
-        <resteasy-problem.version>2.1.0</resteasy-problem.version>
-        <archunit-junit5.version>1.0.0</archunit-junit5.version>
-        <assertj.version>3.23.1</assertj.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <resteasy-problem.version>2.2.0</resteasy-problem.version>
+        <archunit-junit5.version>1.0.1</archunit-junit5.version>
+        <assertj.version>3.24.2</assertj.version>
         <%_ if(authenticationType === 'oauth2') {_%>
-        <wiremock.version>2.34.0</wiremock.version>
+        <wiremock.version>2.35.0</wiremock.version>
         <%_ } _%>
 
         <!-- Plugin versions -->
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
-        <maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-        <maven-checkstyle.version>3.2.0</maven-checkstyle.version>
+        <maven-enforcer-plugin.version>3.2.1</maven-enforcer-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>
+        <maven-checkstyle.version>3.2.1</maven-checkstyle.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
         <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
@@ -79,11 +79,11 @@
         <%_ if (databaseType === 'mongodb') { _%>
         <mongock-bom.version>4.3.8</mongock-bom.version>
         <commons-vfs2.version>2.9.0</commons-vfs2.version>
-        <graal.version>22.2.0.1</graal.version>
+        <graal.version>22.3.1</graal.version>
         <%_ } _%>
 
         <!-- Plugin properties -->
-        <checkstyle.version>8.29</checkstyle.version>
+        <checkstyle.version>10.7.0</checkstyle.version>
 
         <!-- jhipster-needle-maven-property -->
     </properties>
