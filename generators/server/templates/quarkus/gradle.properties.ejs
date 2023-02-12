@@ -27,10 +27,10 @@ node_version=<%= NODE_VERSION %>
 npm_version=<%= NPM_VERSION %>
 
 # Dependency versions
-mapstruct_version=1.5.2.Final
-archunit_junit5_version=1.0.0
-resteasy_problem_version=2.1.0
-assertj_version=3.23.1
+mapstruct_version=1.5.3.Final
+archunit_junit5_version=1.0.1
+resteasy_problem_version=2.2.0
+assertj_version=3.24.2
 <%_ if (searchEngine === 'elasticsearch') { _%>
 log4j2_mock_version=0.0.2
 <%_ } _%>
@@ -41,12 +41,12 @@ jackson_databind_nullable_version=<%= JACKSON_DATABIND_NULLABLE_VERSION %>
 liquibaseTaskPrefix=liquibase
 <%_ } _%>
 <%_ if (cacheProvider === 'redis') { _%>
-camel_quarkus_jackson_version=2.13.0
+camel_quarkus_jackson_version=2.16.0
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
 mongockBom_version=4.3.8
 commons_vfs2_version=2.9.0
-graal_version=22.2.0.1
+graal_version=22.3.1
 <%_ } _%>
 
 # gradle plugin version
@@ -61,9 +61,9 @@ sonarqube_plugin_version=3.2.0
 <%_ if (enableSwaggerCodegen) { _%>
 openapi_plugin_version=4.2.3
 <%_ } _%>
-checkstyle_version=10.3.4
+checkstyle_version=10.7.0
 <%_ if (databaseType === 'oauth2') { _%>
-wiremock_version=2.27.2
+wiremock_version=2.35.0
 <%_ } _%>
 no_http_checkstyle_version=0.0.10
 modernizer_plugin_version=1.6.2
