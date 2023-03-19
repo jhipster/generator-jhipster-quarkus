@@ -440,10 +440,10 @@ exports[`Subgenerator server of quarkus JHipster blueprint With maven MongoDb ma
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/TestResources.java": {
+  "src/test/java/com/mycompany/myapp/TestUtil.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/TestUtil.java": {
+  "src/test/java/com/mycompany/myapp/builder/UserBuilder.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/config/LocalDateProviderTest.java": {
@@ -458,10 +458,22 @@ exports[`Subgenerator server of quarkus JHipster blueprint With maven MongoDb ma
   "src/test/java/com/mycompany/myapp/domain/UserTest.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/service/MailServiceIT.java": {
+  "src/test/java/com/mycompany/myapp/infrastructure/EmailServerResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/infrastructure/InjectMailServer.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/service/MailServiceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/service/mapper/UserMapperTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/utility/IntegrationTestBase.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/web/rest/AccountResourceIT.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/AccountResourceTest.java": {
@@ -928,10 +940,10 @@ exports[`Subgenerator server of quarkus JHipster blueprint With monolith Maven M
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/TestResources.java": {
+  "src/test/java/com/mycompany/myapp/TestUtil.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/TestUtil.java": {
+  "src/test/java/com/mycompany/myapp/builder/UserBuilder.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/config/LocalDateProviderTest.java": {
@@ -946,10 +958,22 @@ exports[`Subgenerator server of quarkus JHipster blueprint With monolith Maven M
   "src/test/java/com/mycompany/myapp/domain/UserTest.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/service/MailServiceIT.java": {
+  "src/test/java/com/mycompany/myapp/infrastructure/EmailServerResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/infrastructure/InjectMailServer.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/service/MailServiceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/service/mapper/UserMapperTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/utility/IntegrationTestBase.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/web/rest/AccountResourceIT.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/AccountResourceTest.java": {

@@ -74,15 +74,18 @@ module.exports = class extends ServerGenerator {
             ...super._postWriting(),
             writeKeycloakRealmConfiguration() {
                 if (this.jhipsterConfig.authenticationType === 'oauth2') {
-                    this.fs.copy(`${DOCKER_DIR}realm-config/jhipster-realm.json`, `${SERVER_TEST_RES_DIR}jhipster-realm.json`);
-                    this.replaceContent(
-                        `${SERVER_TEST_RES_DIR}jhipster-realm.json`,
-                        `
+                    const dockerRealmConf = `${DOCKER_DIR}realm-config/jhipster-realm.json`;
+                    if (this.fs.exists(dockerRealmConf)) {
+                        this.fs.copy(dockerRealmConf, `${SERVER_TEST_RES_DIR}jhipster-realm.json`, { ignoreNoMatch: true });
+                        this.replaceContent(
+                            `${SERVER_TEST_RES_DIR}jhipster-realm.json`,
+                            `
       \\"directAccessGrantsEnabled\\"\\:\\s+false,`,
-                        `
+                            `
       "directAccessGrantsEnabled": true,`,
-                        true
-                    );
+                            true
+                        );
+                    }
                 }
             },
             updatePackageJsonScripts() {

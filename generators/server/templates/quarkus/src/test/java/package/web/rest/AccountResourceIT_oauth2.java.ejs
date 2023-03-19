@@ -1,13 +1,13 @@
-package tech.jhipster.sample.web.rest;
+package <%=packageName%>.web.rest;
 
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 import org.junit.jupiter.api.Test;
-import tech.jhipster.sample.infrastructure.InjectKeycloakServer;
-import tech.jhipster.sample.infrastructure.KeycloakServerResource;
-import tech.jhipster.sample.security.AuthoritiesConstants;
-import tech.jhipster.sample.utility.IntegrationTestBase;
+import <%=packageName%>.infrastructure.InjectKeycloakServer;
+import <%=packageName%>.infrastructure.KeycloakServerResource;
+import <%=packageName%>.security.AuthoritiesConstants;
+import <%=packageName%>.utility.IntegrationTestBase;
 
 import static io.restassured.RestAssured.given;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
