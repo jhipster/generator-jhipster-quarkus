@@ -19,6 +19,10 @@
 package <%=packageName%>.web.rest;
 
 import <%=packageName%>.TestUtil;
+<%_ if (authenticationType === 'oauth2') {_%>
+import <%=packageName%>.infrastructure.MockOidcServerTestResource;
+import io.quarkus.test.common.QuarkusTestResource;
+<%_ } _%>
 import <%=packageName%>.config.JHipsterProperties;
 import <%=packageName%>.service.dto.ManagementInfoDTO;
 import io.quarkus.test.junit.QuarkusTest;
@@ -37,6 +41,9 @@ import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusTest
+<%_ if (authenticationType === 'oauth2') {_%>
+@QuarkusTestResource(value = MockOidcServerTestResource.class, restrictToAnnotatedClass = true)
+<%_ } _%>
 public class ManagementInfoResourceTest {
 
     @Inject

@@ -19,6 +19,10 @@
 package <%=packageName%>.web.rest;
 
 import <%=packageName%>.TestUtil;
+<%_ if (authenticationType === 'oauth2') {_%>
+import <%=packageName%>.infrastructure.MockOidcServerTestResource;
+import io.quarkus.test.common.QuarkusTestResource;
+<%_ } _%>
 import io.quarkus.oidc.IdToken;
 import io.quarkus.oidc.OidcConfigurationMetadata;
 import io.quarkus.test.junit.QuarkusTest;
@@ -33,6 +37,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
+<%_ if (authenticationType === 'oauth2') {_%>
+@QuarkusTestResource(value = MockOidcServerTestResource.class, restrictToAnnotatedClass = true)
+<%_ } _%>
 public class LogoutResourceTest {
 
     public static final String ORIGIN_HEADER = "http://localhost:9999";

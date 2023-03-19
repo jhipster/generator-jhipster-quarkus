@@ -246,6 +246,18 @@ _%>
             <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.dasniko</groupId>
+            <artifactId>testcontainers-keycloak</artifactId>
+            <version>2.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <%_ } else { _%>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
         <%_ } _%>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
@@ -386,6 +398,7 @@ _%>
                                     <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                                     <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                     <maven.home>${maven.home}</maven.home>
+                                    <quarkus.test.profile>integration</quarkus.test.profile>
                                 </systemPropertyVariables>
                             </configuration>
                         </execution>
@@ -626,15 +639,6 @@ _%>
                     <name>native</name>
                 </property>
             </activation>
-            <dependencies>
-                <%_ if(databaseType !== 'no') { _%>
-<%- include('./partials/prod_profile_data_pom.xml.ejs', {
-    devDatabaseType: devDatabaseType,
-    prodDatabaseType: prodDatabaseType
-    })
-_%>
-                <%_ } _%>
-            </dependencies>
             <build>
                 <plugins>
                     <%_ if (!skipClient) { _%>

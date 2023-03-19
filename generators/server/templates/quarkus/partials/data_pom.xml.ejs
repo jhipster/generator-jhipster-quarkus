@@ -26,36 +26,38 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
-    <%_ if (devDatabaseType === 'mariadb' && prodDatabaseType === 'mariadb') { _%>
+    <%_ if (prodDatabaseType === 'mariadb') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-mariadb</artifactId>
         </dependency>
     <%_ } _%>
-    <%_ if (devDatabaseType === 'mssql' && prodDatabaseType === 'mssql') { _%>
+    <%_ if (prodDatabaseType === 'mssql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-mssql</artifactId>
         </dependency>
     <%_ } _%>
-    <%_ if (devDatabaseType === 'mysql' && prodDatabaseType === 'mysql') { _%>
+    <%_ if (prodDatabaseType === 'mysql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-mysql</artifactId>
         </dependency>
     <%_ } _%>
-    <%_ if (devDatabaseType === 'postgresql' && prodDatabaseType === 'postgresql') { _%>
+    <%_ if (prodDatabaseType === 'postgresql') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
     <%_ } _%>
     <%_ if (databaseType === 'sql') { _%>
+    <%_ if (prodDatabaseType !== devDatabaseType) { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-h2</artifactId>
             <scope>test</scope>
         </dependency>
+    <%_ } _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-liquibase</artifactId>

@@ -20,6 +20,8 @@ package <%=packageName%>.web.rest;
 
 import <%=packageName%>.TestUtil;
 import <%=packageName%>.web.rest.vm.UserVM;
+import <%=packageName%>.infrastructure.MockOidcServerTestResource;
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -39,6 +41,7 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusTest
+@QuarkusTestResource(value = MockOidcServerTestResource.class, restrictToAnnotatedClass = true)
 public class AccountResourceTest {
 
     private static final TypeRef<UserVM> ENTITY_TYPE = new TypeRef<>() {

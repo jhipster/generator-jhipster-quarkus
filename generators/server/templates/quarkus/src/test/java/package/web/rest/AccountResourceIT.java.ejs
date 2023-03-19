@@ -1,0 +1,88 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.web.rest;
+
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import <%=packageName%>.builder.UserBuilder;
+import <%=packageName%>.infrastructure.EmailServerResource;
+import <%=packageName%>.infrastructure.InjectMailServer;
+import <%=packageName%>.security.AuthoritiesConstants;
+import <%=packageName%>.utility.IntegrationTestBase;
+
+import javax.ws.rs.core.HttpHeaders;
+
+import static io.restassured.RestAssured.given;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.Response.Status.OK;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+
+@QuarkusIntegrationTest
+@TestHTTPEndpoint(AccountResource.class)
+@QuarkusTestResource(value = EmailServerResource.class, restrictToAnnotatedClass = true)
+class AccountResourceIT extends IntegrationTestBase {
+
+    @InjectMailServer
+    String mailServerUrl;
+    UserBuilder userBuilder;
+
+    @BeforeEach
+    void init() {
+        userBuilder = UserBuilder
+            .aUser()
+            .withLogin("johndoe")
+            .withPassword("Passw0rd")
+            .withFirstName("John")
+            .withLastName("Doe")
+            .withEmail("john.doe@jhipster.tech")
+            .withImageUrl("http://placehold.it/50x50")
+            .withLangKey("en");
+    }
+
+    @Test
+    void should_allow_authenticated_user_to_retrieve_own_account_details() {
+        var user = userBuilder.buildVM();
+
+        registerAndActivateUser(user);
+
+        given()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + authenticateUser(user.login, user.password))
+            .when()
+            .get("/account")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .contentType(APPLICATION_JSON)
+            .body("login", is(user.login))
+            .body("firstName", is(user.firstName))
+            .body("lastName", is(user.lastName))
+            .body("email", is(user.email))
+            .body("imageUrl", is(user.imageUrl))
+            .body("langKey", is(user.langKey))
+            .body("authorities", hasItems(AuthoritiesConstants.USER));
+    }
+
+    @Override
+    public String getMailServerUrl() {
+        return mailServerUrl;
+    }
+}

@@ -16,12 +16,17 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-package <%=packageName%>;
+package <%= packageName %>.infrastructure;
 
-<%_ if (authenticationType === 'oauth2') { _%>
-import io.quarkus.test.common.QuarkusTestResource;
-<%_ } _%>
-<%_ if (authenticationType === 'oauth2') { _%>
-@QuarkusTestResource(MockOidcServerTestResource.class)
-<%_ } _%>
-public class TestResources {}
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * In Native / Integration tests, injects Keycloak server connection details.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface InjectKeycloakServer {
+}
