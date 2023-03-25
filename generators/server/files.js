@@ -687,6 +687,15 @@ const serverFilesFromJHipster = {
             path: DOCKER_DIR,
             templates: [{ file: generator => `${generator.devDatabaseType}.yml` }],
         },
+        {
+            condition: generator => generator.authenticationType === 'oauth2',
+            templates: [
+                {
+                    file: generator => `${generator.DOCKER_DIR}config/realm-config/jhipster-realm.json`,
+                    renameTo: generator => `${generator.SERVER_TEST_RES_DIR}jhipster-realm.json`,
+                },
+            ],
+        },
     ],
     npmWrapper: [
         {

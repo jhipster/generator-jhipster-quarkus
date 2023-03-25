@@ -44,10 +44,8 @@ public class KeycloakServerResource implements QuarkusTestResourceLifecycleManag
     @Override
     public Map<String, String> start() {
         container =
-            new KeycloakContainer("quay.io/keycloak/keycloak:19.0.1")
+            new KeycloakContainer("<%= DOCKER_KEYCLOAK %>")
                 .withRealmImportFile("jhipster-realm.json");
-//                .withExposedPorts(9080, 9443)
-//                .withLogConsumer(outputFrame -> {});
 
         containerNetworkId.ifPresent(container::withNetworkMode);
         container.start();

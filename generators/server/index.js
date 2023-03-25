@@ -2,7 +2,7 @@
 const chalk = require('chalk');
 const os = require('os');
 const ServerGenerator = require('generator-jhipster/generators/server');
-const { DOCKER_DIR, SERVER_TEST_RES_DIR } = require('generator-jhipster/generators/generator-constants');
+const { SERVER_TEST_RES_DIR } = require('generator-jhipster/generators/generator-constants');
 const prompts = require('./prompts');
 const writeFiles = require('./files').writeFiles;
 const { QUARKUS_VERSION, CACHE_MAXIMUM_SIZE, CACHE_EXPIRE_AFTER_WRITE } = require('../generator-quarkus-constants');
@@ -72,13 +72,12 @@ module.exports = class extends ServerGenerator {
     get postWriting() {
         return {
             ...super._postWriting(),
-            writeKeycloakRealmConfiguration() {
+            updateKeycloakRealmTestConfiguration() {
                 if (this.jhipsterConfig.authenticationType === 'oauth2') {
-                    const dockerRealmConf = `${DOCKER_DIR}realm-config/jhipster-realm.json`;
-                    if (this.fs.exists(dockerRealmConf)) {
-                        this.fs.copy(dockerRealmConf, `${SERVER_TEST_RES_DIR}jhipster-realm.json`, { ignoreNoMatch: true });
+                    const realmConf = `${SERVER_TEST_RES_DIR}jhipster-realm.json`;
+                    if (this.fs.exists(realmConf)) {
                         this.replaceContent(
-                            `${SERVER_TEST_RES_DIR}jhipster-realm.json`,
+                            realmConf,
                             `
       \\"directAccessGrantsEnabled\\"\\:\\s+false,`,
                             `
