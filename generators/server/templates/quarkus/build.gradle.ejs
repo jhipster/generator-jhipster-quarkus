@@ -126,6 +126,7 @@ task integrationTest(type: Test) {
     reports.html.enabled = false
 }
 integrationTest.onlyIf { !project.hasProperty('skipTests') }
+integrationTest.dependsOn(quarkusBuild)
 <%_ if (cucumberTests) { _%>
 
 task cucumberTest(type: Test) {

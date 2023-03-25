@@ -107,7 +107,7 @@ module.exports = class extends ServerGenerator {
                 } else {
                     this.packageJson.merge({
                         scripts: {
-                            'ci:native:prod': './mvnw verify -Pnative -DskipTests',
+                            'ci:native:prod': './mvnw verify -Pnative,-webapp',
                             'ci:e2e:dev': 'concurrently -k -s first "./mvnw" "npm run e2e:headless"',
                             'ci:e2e:server:start':
                                 'java -jar target/quarkus-app/quarkus-run.$npm_package_config_packaging -Dquarkus.profile=$npm_package_config_default_environment',
