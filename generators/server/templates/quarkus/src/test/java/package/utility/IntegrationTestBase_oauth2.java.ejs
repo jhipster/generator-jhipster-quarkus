@@ -1,0 +1,68 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.utility;
+
+import io.restassured.http.ContentType;
+
+import java.util.Map;
+
+import static io.restassured.RestAssured.given;
+import static javax.ws.rs.core.Response.Status.OK;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.notNullValue;
+
+/**
+ * Base class encapsulating login/logout functions required by all Integration
+ * tests. RestAssured context is derived from <code>@TestHTTPEndpoint</code>
+ * annotation defined in the derived class.
+ */
+public abstract class IntegrationTestBase {
+    protected String getKeycloakServerUrl() {
+        return "http://localhost:9080";
+    }
+
+    protected String getKeycloakClientId() {
+        return "web_app";
+    }
+
+    protected String getKeycloakClientSecret() {
+        return "web_app";
+    }
+
+    protected String getAccessToken(String username, String password) {
+
+        return given()
+            .contentType(ContentType.URLENC)
+            .formParams(Map.of(
+                "username", username,
+                "password", password,
+                "grant_type", "password",
+                "client_id", getKeycloakClientId(),
+                "client_secret", getKeycloakClientSecret()
+            ))
+            .when()
+            .post(getKeycloakServerUrl() + "/protocol/openid-connect/token")
+            .then()
+            .statusCode(OK.getStatusCode())
+            .body("access_token", instanceOf(String.class))
+            .body("access_token", notNullValue())
+            .extract()
+            .path("access_token");
+    }
+}

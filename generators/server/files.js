@@ -102,21 +102,28 @@ const serverFiles = {
             ],
         },
         {
-            path: SERVER_TEST_SRC_DIR,
-            templates: [
-                {
-                    file: 'package/TestResources.java',
-                    renameTo: generator => `${generator.javaDir}/TestResources.java`,
-                },
-            ],
-        },
-        {
             condition: generator => generator.authenticationType === 'oauth2',
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
-                    file: 'package/MockOidcServerTestResource.java',
-                    renameTo: generator => `${generator.javaDir}/MockOidcServerTestResource.java`,
+                    file: 'package/infrastructure/MockOidcServerTestResource.java',
+                    renameTo: generator => `${generator.javaDir}/infrastructure/MockOidcServerTestResource.java`,
+                },
+                {
+                    file: 'package/infrastructure/KeycloakServerResource.java',
+                    renameTo: generator => `${generator.javaDir}infrastructure/KeycloakServerResource.java`,
+                },
+                {
+                    file: 'package/infrastructure/InjectKeycloakServer.java',
+                    renameTo: generator => `${generator.javaDir}infrastructure/InjectKeycloakServer.java`,
+                },
+                {
+                    file: 'package/utility/IntegrationTestBase_oauth2.java',
+                    renameTo: generator => `${generator.javaDir}utility/IntegrationTestBase.java`,
+                },
+                {
+                    file: 'package/web/rest/AccountResourceIT_oauth2.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AccountResourceIT.java`,
                 },
             ],
         },
@@ -398,8 +405,8 @@ const serverFiles = {
             path: SERVER_TEST_SRC_DIR,
             templates: [
                 {
-                    file: 'package/service/MailServiceIT.java',
-                    renameTo: generator => `${generator.javaDir}/service/MailServiceIT.java`,
+                    file: 'package/service/MailServiceTest.java',
+                    renameTo: generator => `${generator.javaDir}/service/MailServiceTest.java`,
                 },
                 {
                     file: 'package/service/mapper/UserMapperTest.java',
@@ -475,6 +482,26 @@ const serverFiles = {
                 {
                     file: 'package/web/rest/AccountResourceTest_jwt.java',
                     renameTo: generator => `${generator.javaDir}web/rest/AccountResourceTest.java`,
+                },
+                {
+                    file: 'package/builder/UserBuilder.java',
+                    renameTo: generator => `${generator.javaDir}builder/UserBuilder.java`,
+                },
+                {
+                    file: 'package/infrastructure/EmailServerResource.java',
+                    renameTo: generator => `${generator.javaDir}infrastructure/EmailServerResource.java`,
+                },
+                {
+                    file: 'package/infrastructure/InjectMailServer.java',
+                    renameTo: generator => `${generator.javaDir}infrastructure/InjectMailServer.java`,
+                },
+                {
+                    file: 'package/utility/IntegrationTestBase.java',
+                    renameTo: generator => `${generator.javaDir}utility/IntegrationTestBase.java`,
+                },
+                {
+                    file: 'package/web/rest/AccountResourceIT.java',
+                    renameTo: generator => `${generator.javaDir}web/rest/AccountResourceIT.java`,
                 },
             ],
         },
@@ -659,6 +686,15 @@ const serverFilesFromJHipster = {
             condition: generator => generator.databaseTypeSql && !generator.devDatabaseTypeOracle && !generator.devDatabaseTypeH2Any,
             path: DOCKER_DIR,
             templates: [{ file: generator => `${generator.devDatabaseType}.yml` }],
+        },
+        {
+            condition: generator => generator.authenticationType === 'oauth2',
+            templates: [
+                {
+                    file: generator => `${generator.DOCKER_DIR}config/realm-config/jhipster-realm.json`,
+                    renameTo: generator => `${generator.SERVER_TEST_RES_DIR}jhipster-realm.json`,
+                },
+            ],
         },
     ],
     npmWrapper: [

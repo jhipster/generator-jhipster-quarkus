@@ -2,6 +2,7 @@
 const chalk = require('chalk');
 const os = require('os');
 const ServerGenerator = require('generator-jhipster/generators/server');
+const { SERVER_TEST_RES_DIR } = require('generator-jhipster/generators/generator-constants');
 const prompts = require('./prompts');
 const writeFiles = require('./files').writeFiles;
 const { QUARKUS_VERSION, CACHE_MAXIMUM_SIZE, CACHE_EXPIRE_AFTER_WRITE } = require('../generator-quarkus-constants');
@@ -71,6 +72,21 @@ module.exports = class extends ServerGenerator {
     get postWriting() {
         return {
             ...super._postWriting(),
+            updateKeycloakRealmTestConfiguration() {
+                if (this.jhipsterConfig.authenticationType === 'oauth2') {
+                    const realmConf = `${SERVER_TEST_RES_DIR}jhipster-realm.json`;
+                    if (this.fs.exists(realmConf)) {
+                        this.replaceContent(
+                            realmConf,
+                            `
+      \\"directAccessGrantsEnabled\\"\\:\\s+false,`,
+                            `
+      "directAccessGrantsEnabled": true,`,
+                            true
+                        );
+                    }
+                }
+            },
             updatePackageJsonScripts() {
                 this.packageJson.merge({
                     scripts: {
@@ -90,7 +106,7 @@ module.exports = class extends ServerGenerator {
                 } else {
                     this.packageJson.merge({
                         scripts: {
-                            'ci:native:prod': './mvnw verify -Pprod,native -DskipTests',
+                            'ci:native:prod': './mvnw verify -Pnative,-webapp',
                             'ci:e2e:dev': 'concurrently -k -s first "./mvnw" "npm run e2e:headless"',
                             'ci:e2e:server:start':
                                 'java -jar target/quarkus-app/quarkus-run.$npm_package_config_packaging -Dquarkus.profile=$npm_package_config_default_environment',

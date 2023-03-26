@@ -36,7 +36,6 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/LoggerVM.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/ArchTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestUtil.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/TestResources.java`,
         ],
 
         liquibase: [
@@ -56,6 +55,8 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/security/jwt/TokenProvider.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTController.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserJWTControllerTest.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/infrastructure/EmailServerResource.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/infrastructure/InjectMailServer.java`,
         ],
 
         oauth2: [
@@ -64,7 +65,9 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResource.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserOauth2Controller.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/LogoutResourceTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/MockOidcServerTestResource.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/infrastructure/KeycloakServerResource.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/infrastructure/InjectKeycloakServer.java`,
         ],
 
         userManagement: [
@@ -96,8 +99,9 @@ const expectedFiles = {
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/vm/ManagedUserVM.java`,
             `${SERVER_MAIN_SRC_DIR}com/mycompany/myapp/web/rest/UserResource.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/web/rest/UserResourceTest.java`,
-            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/MailServiceIT.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/MailServiceTest.java`,
             `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/service/mapper/UserMapperTest.java`,
+            `${SERVER_TEST_SRC_DIR}com/mycompany/myapp/builder/UserBuilder.java`,
         ],
 
         mongoDb: [

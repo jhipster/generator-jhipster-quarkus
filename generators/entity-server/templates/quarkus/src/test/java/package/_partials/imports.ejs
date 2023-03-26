@@ -29,6 +29,10 @@ import com.mongodb.client.MongoClient;
 <%_ } _%>
 
 import <%= packageName %>.TestUtil;
+<%_ if (authenticationType === 'oauth2') {_%>
+import <%=packageName%>.infrastructure.MockOidcServerTestResource;
+import io.quarkus.test.common.QuarkusTestResource;
+<%_ } _%>
 <%_ if (!hasDto) { _%>
 import <%= packageName %>.domain.<%= entityClass %>;
 <%_ } else { _%>

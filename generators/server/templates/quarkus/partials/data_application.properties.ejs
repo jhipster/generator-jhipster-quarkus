@@ -17,25 +17,32 @@
  limitations under the License.
 -%>
 ## configure your datasource
+<%_ if (prodDatabaseType === 'mariadb') { _%>
+quarkus.datasource.db-kind=mariadb
+<%_ } else if (prodDatabaseType === 'mssql') { _%>
+quarkus.datasource.db-kind=sqlserver
+<%_ } else if (prodDatabaseType === 'mysql') { _%>
+quarkus.datasource.db-kind=mysql
+<%_ } else if (prodDatabaseType === 'postgresql') { _%>
+quarkus.datasource.db-kind=postgresql
+<%_ } _%>
+
 <%_ if (devDatabaseType === 'h2Disk') { _%>
 %dev.quarkus.datasource.jdbc.url=jdbc:h2:file:./<%= BUILD_DIR %>h2db/db/<%= baseName.toLowerCase() %>;DB_CLOSE_DELAY=-1
 %dev.quarkus.datasource.db-kind=h2
 %dev.quarkus.datasource.username=<%= baseName %>
 %dev.quarkus.datasource.password=
-<%_ } _%>
-<%_ if (devDatabaseType === 'h2Memory') { _%>
+<%_ }  else if (devDatabaseType === 'h2Memory') { _%>
 %dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:<%= baseName.toLowerCase() %>;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 %dev.quarkus.datasource.db-kind=h2
 %dev.quarkus.datasource.username=<%= baseName %>
 %dev.quarkus.datasource.password=
-<%_ } _%>
-<%_ if (devDatabaseType === 'mariadb') { _%>
+<%_ }  else if (devDatabaseType === 'mariadb') { _%>
 %dev.quarkus.datasource.devservices.image-name=<%= DOCKER_MARIADB %>
 %dev.quarkus.datasource.devservices.port=3306
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mariadb') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
-%prod.quarkus.datasource.db-kind=mariadb
 %prod.quarkus.datasource.username=root
 %prod.quarkus.datasource.password=
 <%_ } _%>
@@ -47,7 +54,6 @@
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mssql') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/<%= baseName %>
-%prod.quarkus.datasource.db-kind=sqlserver
 %prod.quarkus.datasource.username=SA
 %prod.quarkus.datasource.password=yourStrong(!)Password
 <%_ } _%>
@@ -57,7 +63,6 @@
 <%_ } _%>
 <%_ if (prodDatabaseType === 'mysql') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:mysql://localhost:3306/<%= baseName %>?useUnicode=true&characterEncoding=utf8&useSSL=false
-%prod.quarkus.datasource.db-kind=mysql
 %prod.quarkus.datasource.username=root
 %prod.quarkus.datasource.password=
 <%_ } _%>
@@ -67,7 +72,6 @@
 <%_ } _%>
 <%_ if (prodDatabaseType === 'postgresql') { _%>
 %prod.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/<%= baseName %>
-%prod.quarkus.datasource.db-kind=postgresql
 %prod.quarkus.datasource.username=<%= baseName %>
 %prod.quarkus.datasource.password=
 <%_ } _%>
@@ -95,7 +99,8 @@ quarkus.mongodb.database=<%= baseName %>
 <%_ if (databaseType === 'sql') { _%>
 quarkus.liquibase.change-log=config/liquibase/master.xml
 quarkus.liquibase.migrate-at-start=true
-
+<%_ if (prodDatabaseType !== devDatabaseType) { _%>
 %test.quarkus.datasource.jdbc.url=jdbc:h2:mem:test;MODE=LEGACY
 %test.quarkus.datasource.db-kind=h2
+<%_ } _%>
 <%_ } _%>

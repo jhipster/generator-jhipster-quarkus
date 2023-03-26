@@ -1,0 +1,58 @@
+package <%=packageName%>.web.rest;
+
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
+import org.junit.jupiter.api.Test;
+import <%=packageName%>.infrastructure.InjectKeycloakServer;
+import <%=packageName%>.infrastructure.KeycloakServerResource;
+import <%=packageName%>.security.AuthoritiesConstants;
+import <%=packageName%>.utility.IntegrationTestBase;
+
+import static io.restassured.RestAssured.given;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+
+@QuarkusIntegrationTest
+@TestHTTPEndpoint(AccountResource.class)
+@QuarkusTestResource(value = KeycloakServerResource.class, restrictToAnnotatedClass = true)
+public class AccountResourceIT extends IntegrationTestBase {
+
+    @InjectKeycloakServer
+    String keycloakServerUrl;
+
+    @Override
+    public String getKeycloakServerUrl() {
+        return keycloakServerUrl;
+    }
+
+    @Test
+    void should_allow_authenticated_user_to_retrieve_own_account_details() {
+        given()
+                .auth().oauth2(getAccessToken("admin", "admin"))
+                .accept(APPLICATION_JSON)
+                .when()
+                .get("/account")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .body("login", is("admin"))
+                .body("firstName", is("Admin"))
+                .body("lastName", is("Administrator"))
+                .body("email", is("admin@localhost"))
+                .body("authorities", hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN));
+    }
+
+    @Test
+    public void testGetUnknownAccount() {
+        given()
+            .auth().oauth2("")
+                .accept(APPLICATION_JSON)
+                .get("/account")
+                .then()
+                .statusCode(UNAUTHORIZED.getStatusCode());
+    }
+}

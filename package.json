@@ -51,7 +51,7 @@
         "generator-jhipster": "7.9.3",
         "glob": "8.1.0",
         "lodash": "4.17.21",
-        "mocha-expect-snapshot": "^7.0.0",
+        "mocha-expect-snapshot": "7.0.0",
         "semver": "7.3.8"
     },
     "devDependencies": {

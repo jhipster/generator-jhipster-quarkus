@@ -32,6 +32,9 @@ import <%=packageName%>.web.rest.vm.LoginVM;
 import io.restassured.mapper.ObjectMapper;
 import io.restassured.mapper.ObjectMapperDeserializationContext;
 import io.restassured.mapper.ObjectMapperSerializationContext;
+<%_ if(authenticationType === 'oauth2') { _%>
+import <%=packageName%>.infrastructure.MockOidcServerTestResource;
+<%_ } _%>
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;

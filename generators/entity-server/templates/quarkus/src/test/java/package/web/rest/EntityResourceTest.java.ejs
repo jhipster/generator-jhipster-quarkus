@@ -21,6 +21,9 @@ package <%=packageName%>.web.rest;
 <%- include('../../_partials/imports', this); -%>
 
 @QuarkusTest
+<%_ if (authenticationType === 'oauth2') {_%>
+@QuarkusTestResource(value = MockOidcServerTestResource.class, restrictToAnnotatedClass = true)
+<%_ } _%>
 public class <%= entityClass%>ResourceTest {
 
     private static final TypeRef<<%= entityOrDtoClass%>> ENTITY_TYPE = new TypeRef<>() {

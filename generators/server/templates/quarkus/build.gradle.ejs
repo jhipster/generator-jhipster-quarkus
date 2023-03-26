@@ -108,6 +108,7 @@ test {
 
 task integrationTest(type: Test) {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    systemProperty "quarkus.test.profile", "integration"
     useJUnitPlatform()
     description = "Execute integration tests."
     group = "verification"
@@ -125,6 +126,7 @@ task integrationTest(type: Test) {
     reports.html.enabled = false
 }
 integrationTest.onlyIf { !project.hasProperty('skipTests') }
+integrationTest.dependsOn(quarkusBuild)
 <%_ if (cucumberTests) { _%>
 
 task cucumberTest(type: Test) {
@@ -259,7 +261,9 @@ dependencies {
     implementation "org.apache.commons:commons-lang3"
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
+<%_ if (devDatabaseType !== prodDatabaseType) { _%>
     testImplementation "io.quarkus:quarkus-jdbc-h2"
+<%_ } _%>
     implementation "io.quarkus:quarkus-liquibase"
 <%_ } _%>
     implementation "io.quarkus:quarkus-elytron-security"
@@ -307,6 +311,9 @@ dependencies {
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
 <%_ if (authenticationType === 'oauth2') { _%>
     testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremock_version}"
+    testImplementation "com.github.dasniko:testcontainers-keycloak:${testcontainers_keycloak_version}"
+<%_ } else { _%>
+    testImplementation "org.testcontainers:testcontainers"
 <%_ } _%>
 
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
