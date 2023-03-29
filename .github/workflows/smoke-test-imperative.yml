@@ -73,7 +73,7 @@ jobs:
           java-version: ${{ steps.setup.outputs.java-version }}
       - uses: graalvm/setup-graalvm@v1
         id: graalvm
-        if: ${{ !contains(fromJson('["push", "pull_request"]'), github.event_name) || contains(matrix.app, 'mysql-caffeine') }}
+        if: ${{ !contains(fromJson('["push", "pull_request"]'), github.event_name) || contains(matrix.app, 'caffeine') }}
         with:
            version: '22.3.0'
            java-version: '11'
@@ -109,7 +109,7 @@ jobs:
       - name: 'Packaging'
         run: npm run ci:e2e:package
         working-directory: ${{ steps.setup.outputs.application-path }}
-      - name: 'E2E: Start docker-compose containers for e2e tests'
+      - name: 'E2E: Setup'
         if: steps.compare.outputs.equals != 'true'
         run: npm run ci:e2e:prepare
         working-directory: ${{ steps.setup.outputs.application-path }}
@@ -124,7 +124,11 @@ jobs:
         with:
           name: screenshots-${{ matrix.app }}
           path: ${{ steps.setup.outputs.application-path }}/*/cypress/screenshots
-      - name: 'Native: Build Image'
+      - name: 'E2E: Teardown'
+        if: steps.compare.outputs.equals != 'true'
+        run: npm run ci:e2e:teardown
+        working-directory: ${{ steps.setup.outputs.application-path }}
+      - name: 'Native: Build Image and run Integration Tests'
         if: steps.graalvm.outcome == 'success'
         id: native
         run: npm run ci:native:prod
