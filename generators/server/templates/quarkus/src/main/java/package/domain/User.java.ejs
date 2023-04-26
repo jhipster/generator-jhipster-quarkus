@@ -45,14 +45,14 @@ import java.util.Optional;
 <%_ } _%>
 import java.util.Set;
 <%_ if (databaseType === 'sql') { _%>
-import javax.persistence.*;
+import jakarta.persistence.*;
 import org.hibernate.annotations.BatchSize;
 <%_ } _%>
-import javax.json.bind.annotation.JsonbTransient;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 <%_ if (enableHibernateCache) { _%>
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cache;

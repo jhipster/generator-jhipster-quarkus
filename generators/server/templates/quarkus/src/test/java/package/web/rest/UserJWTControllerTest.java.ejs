@@ -19,8 +19,8 @@
 package <%=packageName%>.web.rest;
 
 import static io.restassured.RestAssured.given;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.Response.Status.*;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.Response.Status.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -35,8 +35,8 @@ import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.List;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.HttpHeaders;
 
 <%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;

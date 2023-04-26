@@ -46,12 +46,12 @@ import java.util.Optional;
 import java.util.Set;
 <%_ } _%>
 import java.util.stream.Collectors;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 <%_ if (authenticationType === 'jwt') { _%>
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 <%_ } _%>
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

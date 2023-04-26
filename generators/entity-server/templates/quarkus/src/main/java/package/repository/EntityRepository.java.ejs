@@ -31,7 +31,7 @@ import io.quarkus.mongodb.panache.PanacheMongoRepository;
 <%_ if (databaseType === 'cassandra') { _%>
 <%# TODO -%>
 <%_ } _%>
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 <%_ if (fieldsContainOwnerManyToMany && (databaseType === 'sql' || databaseType === 'mongodb' || databaseType === 'couchbase')) { _%>
 import java.util.Optional;
 <%_ } _%>

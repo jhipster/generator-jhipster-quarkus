@@ -55,7 +55,7 @@ _%>
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 <%_ } _%>
-import javax.json.bind.annotation.JsonbTransient;
+import jakarta.json.bind.annotation.JsonbTransient;
 <%_ if (!viaRepository) { _%>
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -95,9 +95,9 @@ import org.springframework.data.couchbase.core.query.N1qlJoin;
     <%_ } _%>
 <%_ } if (databaseType === 'sql') { _%>
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 <%_ } if (validation) { _%>
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 <%_ } _%>
 
 <%_ if (searchEngine === 'elasticsearch') { _%>

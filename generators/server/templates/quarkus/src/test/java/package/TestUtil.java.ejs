@@ -21,7 +21,7 @@ package <%=packageName%>;
 import static <%=packageName%>.config.Constants.DATE_TIME_FORMAT;
 <%_ if(!skipUserManagement) { _%>
 import static io.restassured.RestAssured.given;
-import static javax.ws.rs.core.Response.Status.OK;
+import static jakarta.ws.rs.core.Response.Status.OK;
 import static org.hamcrest.Matchers.*;
 <%_ } _%>
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,12 +35,12 @@ import io.restassured.mapper.ObjectMapperSerializationContext;
 <%_ if(authenticationType === 'oauth2') { _%>
 import <%=packageName%>.infrastructure.MockOidcServerTestResource;
 <%_ } _%>
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbConfig;
 <%_ if(!skipUserManagement) { _%>
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 <%_ } _%>
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;

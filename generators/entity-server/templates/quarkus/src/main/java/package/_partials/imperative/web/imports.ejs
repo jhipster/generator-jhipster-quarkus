@@ -16,7 +16,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-import static javax.ws.rs.core.UriBuilder.fromPath;
+import static jakarta.ws.rs.core.UriBuilder.fromPath;
 
 <%_ if (!(hasDto && viaService)) { _%>
 import <%=packageName%>.domain.<%= entityClass %>;
@@ -72,18 +72,18 @@ import org.springframework.http.MediaType;
 import reactor.core.publisher.Flux;
 <%_ } _%>
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 <%_ if (viaService || viaRepository || hasDto || databaseType === 'mongodb') { _%>
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 <%_ } _%>
 <%_ if (databaseType === 'sql' && !viaService) { %>
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 <%_ } _%>
 <%_ if (validation) { _%>
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 <%_ } _%>
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
 <%_ if (!hasPagination && hasDto && !viaService && fieldsContainNoOwnerOneToOne === true) { _%>
 import java.util.LinkedList;
 <%_ } _%>

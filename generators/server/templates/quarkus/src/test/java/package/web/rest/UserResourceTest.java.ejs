@@ -21,9 +21,9 @@ package <%=packageName%>.web.rest;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.Response.Status.*;
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 <%_ if (databaseType === 'mongodb') { _%>
@@ -46,11 +46,11 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import java.time.Instant;
 import java.util.Set;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 <%_ if (databaseType === 'sql') { _%>
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 <%_ } _%>
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.HttpHeaders;
 
 <%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
