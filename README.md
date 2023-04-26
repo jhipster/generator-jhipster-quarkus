@@ -1,4 +1,4 @@
-# generator-jhipster-quarkus
+# JHipster Quarkus Blueprint
 
 [![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url][![Generator CI][github-actions-generator-ci-image]][github-actions-generator-ci-url][![Imperative Smoke Tests][github-actions-smoke-tests-image]][github-actions-smoke-tests-url] [![Native image builds][github-actions-native-builds-image]][github-actions-native-builds-url]
 
@@ -29,17 +29,13 @@ As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you hav
 To install this blueprint:
 
 ```bash
-
 npm install -g generator-jhipster-quarkus
-
 ```
 
 To update this blueprint:
 
 ```bash
-
 npm update -g generator-jhipster-quarkus
-
 ```
 
 # Usage
@@ -47,9 +43,7 @@ npm update -g generator-jhipster-quarkus
 To use this blueprint, run the command below:
 
 ```bash
-
 jhipster --blueprints quarkus
-
 ```
 
 ## Running local Blueprint version for development
@@ -58,51 +52,28 @@ During development of blueprint, please note the below steps. They are very impo
 
 1. Link your blueprint globally
 
-Note: If you do not want to link the blueprint(step 3) to each project being created, use NPM instead of Yarn as yeoman doesn't seem to fetch globally linked Yarn modules. On the other hand, this means you have to use NPM in all the below steps as well.
-
-```bash
-
-cd jhipster-quarkus
-
-npm link
-
-```
+       cd generator-jhipster-quarkus
+       npm link
 
 2. Link the development version of JHipster to your blueprint (optional: required only if you want to use a non-released JHipster version, like the master branch or your own custom fork)
 
-```bash
+       cd generator-jhipster
+       npm link
 
-cd generator-jhipster
-
-npm link
-
-
-
-cd quarkus
-
-npm link generator-jhipster
-
-```
-
-1. Create a new folder for the app to be generated and link JHipster and your blueprint there
-
-```bash
-
-mkdir my-app && cd my-app
+       cd quarkus
+       npm link generator-jhipster
 
 
+3. Create a new folder for the app to be generated and link JHipster and your blueprint there
 
-npm link generator-jhipster-quarkus
+       mkdir my-app && cd my-app
+        
+       npm link generator-jhipster-quarkus
+       npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
+        
+       jhipster -d --blueprints quarkus
 
-npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
-
-
-
-jhipster -d --blueprints quarkus
-
-```
-
-🚦 What we have now
+🚦 What we have now:
 
 ✅ Generate App generation - `jhipster --blueprints quarkus`
 
@@ -117,7 +88,7 @@ Check out [JHipster contributing guide](https://github.com/jhipster/generator-jh
 
 # License
 
-Apache-2.0 © [Daniel Petisme](https://github.com/danielpetisme)
+Apache-2.0
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-quarkus.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-quarkus
