@@ -52,7 +52,7 @@
         "glob": "8.1.0",
         "lodash": "4.17.21",
         "mocha-expect-snapshot": "7.0.0",
-        "semver": "7.3.8"
+        "semver": "7.5.2"
     },
     "devDependencies": {
         "ejs-lint": "1.2.2",
