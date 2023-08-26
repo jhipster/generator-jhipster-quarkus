@@ -34,7 +34,7 @@
         <skipITs>true</skipITs>
 
         <maven.version>3.9.4</maven.version>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <node.version>v<%= NODE_VERSION %></node.version>
         <npm.version><%= NPM_VERSION %></npm.version>
 
@@ -364,10 +364,9 @@ _%>
                             </requireMavenVersion>
                             <requireJavaVersion>
                                 <message>You are running an incompatible version of Java. JHipster Quarkus supports JDK
-                                    8 to
-                                    20.
+                                    17 to 20.
                                 </message>
-                                <version>[1.8,21)</version>
+                                <version>[17,21)</version>
                             </requireJavaVersion>
                         </rules>
                     </configuration>

@@ -49,11 +49,11 @@ version = "0.0.1-SNAPSHOT"
 
 description = ""
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
-assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17" || "18"
+assert System.properties["java.specification.version"] == "17" || "18" || "19" || "20"
 
 apply from: "gradle/docker.gradle"
 apply from: "gradle/sonar.gradle"

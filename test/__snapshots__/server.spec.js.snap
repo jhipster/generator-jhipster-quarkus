@@ -71,9 +71,6 @@ exports[`Subgenerator server of quarkus JHipster blueprint With maven MongoDb ma
   "src/main/docker/Dockerfile.native": {
     "stateCleared": "modified",
   },
-  "src/main/docker/Dockerfile.native-distroless": {
-    "stateCleared": "modified",
-  },
   "src/main/docker/app.yml": {
     "stateCleared": "modified",
   },
@@ -572,9 +569,6 @@ exports[`Subgenerator server of quarkus JHipster blueprint With monolith Maven M
     "stateCleared": "modified",
   },
   "src/main/docker/Dockerfile.native": {
-    "stateCleared": "modified",
-  },
-  "src/main/docker/Dockerfile.native-distroless": {
     "stateCleared": "modified",
   },
   "src/main/docker/app.yml": {
