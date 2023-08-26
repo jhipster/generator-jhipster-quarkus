@@ -10,8 +10,8 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 2 * * *'
+  # schedule:
+    # - cron: '0 2 * * *'
 env:
   JHI_SAMPLES: ${{ github.workspace }}/generator-jhipster-quarkus/test-integration/samples/
 jobs:
@@ -75,8 +75,8 @@ jobs:
         id: graalvm
         if: ${{ !contains(fromJson('["push", "pull_request"]'), github.event_name) || contains(matrix.app, 'mysql-caffeine') }}
         with:
-           version: '22.3.0'
-           java-version: '11'
+           java-version: '17'
+           distribution: 'graalvm'
            components: 'native-image'
            github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Generate: Project'
