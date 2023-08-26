@@ -30,7 +30,7 @@ import <%=packageName%>.web.rest.vm.ManagedUserVM;
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.liquibase.LiquibaseFactory;
 <%_ } _%>
-import io.quarkus.mailer.Mail;
+import io.vertx.ext.mail.MailMessage;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.List;
@@ -80,8 +80,8 @@ public class UserJWTControllerTest {
     }
 
     private void activateUser(String email) {
-        List<Mail> sent = mailbox.getMessagesSentTo(email.toLowerCase());
-        Mail creationEmail = sent.get(sent.size() - 1); // get the last mail
+        List<MailMessage> sent = mailbox.getMailMessagesSentTo(email.toLowerCase());
+        MailMessage creationEmail = sent.get(sent.size() - 1); // get the last mail
         var matcher = Pattern.compile(".*key=(\\w+).*", Pattern.MULTILINE).matcher(creationEmail.getHtml());
 
         if (!matcher.find()) {

@@ -33,7 +33,7 @@
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
         <skipITs>true</skipITs>
 
-        <maven.version>3.9.0</maven.version>
+        <maven.version>3.9.4</maven.version>
         <java.version>11</java.version>
         <node.version>v<%= NODE_VERSION %></node.version>
         <npm.version><%= NPM_VERSION %></npm.version>
@@ -48,42 +48,42 @@
 
         <!-- Dependency properties -->
         <quarkus.platform.version><%= quarkusVersion %></quarkus.platform.version>
-        <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
         <resteasy-problem.version>3.0.0</resteasy-problem.version>
-        <archunit-junit5.version>1.0.1</archunit-junit5.version>
+        <archunit-junit5.version>1.1.0</archunit-junit5.version>
         <assertj.version>3.24.2</assertj.version>
         <%_ if(authenticationType === 'oauth2') {_%>
         <wiremock.version>2.35.0</wiremock.version>
         <%_ } _%>
 
         <!-- Plugin versions -->
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
-        <maven-enforcer-plugin.version>3.2.1</maven-enforcer-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>
-        <maven-checkstyle.version>3.2.1</maven-checkstyle.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-enforcer-plugin.version>3.4.0</maven-enforcer-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <maven-checkstyle.version>3.3.0</maven-checkstyle.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
-        <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
+        <properties-maven-plugin.version>1.2.0</properties-maven-plugin.version>
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <%_ if (!skipClient) { _%>
-        <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
+        <frontend-maven-plugin.version>1.13.4</frontend-maven-plugin.version>
         <%_ } _%>
         <%_ if (enableSwaggerCodegen) { _%>
         <openapi-generator-maven-plugin.version>3.2.3</openapi-generator-maven-plugin.version>
         <%_ } _%>
         <%_ if (cacheProvider === 'redis') { _%>
-         <camel-quarkus-jackson.version>3.0.0-M1</camel-quarkus-jackson.version>
+         <camel-quarkus-jackson.version>3.0.0-RC2<camel-quarkus-jackson.version>
          <%_ } _%>
         <%_ if (databaseType === 'mongodb') { _%>
         <mongock-bom.version>4.3.8</mongock-bom.version>
         <commons-vfs2.version>2.9.0</commons-vfs2.version>
-        <graal.version>22.3.1</graal.version>
+        <graal.version>23.0.1</graal.version>
         <%_ } _%>
 
         <!-- Plugin properties -->
-        <checkstyle.version>10.7.0</checkstyle.version>
+        <checkstyle.version>10.12.2</checkstyle.version>
 
         <!-- jhipster-needle-maven-property -->
     </properties>
@@ -365,9 +365,9 @@ _%>
                             <requireJavaVersion>
                                 <message>You are running an incompatible version of Java. JHipster Quarkus supports JDK
                                     8 to
-                                    18.
+                                    20.
                                 </message>
-                                <version>[1.8,19)</version>
+                                <version>[1.8,21)</version>
                             </requireJavaVersion>
                         </rules>
                     </configuration>
