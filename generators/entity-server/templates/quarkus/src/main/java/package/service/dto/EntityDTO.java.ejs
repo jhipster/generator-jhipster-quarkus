@@ -47,7 +47,7 @@ import java.time.Instant;
 <%_ if (fieldsContainLocalDate) { _%>
 import java.time.LocalDate;
 import <%= packageName %>.config.Constants;
-import javax.json.bind.annotation.JsonbDateFormat;
+import jakarta.json.bind.annotation.JsonbDateFormat;
 <%_ } _%>
 <%_ if (fieldsContainZonedDateTime) { _%>
 import java.time.ZonedDateTime;
@@ -56,7 +56,7 @@ import java.time.ZonedDateTime;
 import java.time.Duration;
 <%_ } _%>
 <%_ if (validation) { _%>
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 <%_ } _%>
 import java.io.Serializable;
 <%_ if (fieldsContainBigDecimal) { _%>
@@ -74,7 +74,7 @@ import java.util.Objects;
 import java.util.UUID;
 <%_ } _%>
 <%_ if (fieldsContainBlob && databaseType === 'sql') { _%>
-import javax.persistence.Lob;
+import jakarta.persistence.Lob;
 <%_ }
 Object.keys(uniqueEnums).forEach(function(element) { _%>
 

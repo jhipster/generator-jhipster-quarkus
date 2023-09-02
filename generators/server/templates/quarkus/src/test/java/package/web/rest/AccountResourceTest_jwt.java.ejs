@@ -21,9 +21,9 @@ package <%=packageName%>.web.rest;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
-import static javax.ws.rs.core.Response.Status.*;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
+import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -46,7 +46,7 @@ import <%=packageName%>.web.rest.vm.ManagedUserVM;
 <%_ if (databaseType === 'sql') { _%>
 import io.quarkus.liquibase.LiquibaseFactory;
 <%_ } _%>
-import io.quarkus.mailer.Mail;
+import io.vertx.ext.mail.MailMessage;
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
@@ -55,9 +55,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 
 <%_ if (databaseType === 'sql') { _%>
 import liquibase.Liquibase;
@@ -135,8 +135,8 @@ public class AccountResourceTest {
     }
 
     private void activateUser(String email) {
-        List<Mail> sent = mailbox.getMessagesSentTo(email.toLowerCase());
-        Mail creationEmail = sent.get(sent.size() - 1); // get the last mail
+        List<MailMessage> sent = mailbox.getMailMessagesSentTo(email.toLowerCase());
+        MailMessage creationEmail = sent.get(sent.size() - 1); // get the last mail
         var matcher = Pattern.compile(".*key=(\\w+).*", Pattern.MULTILINE).matcher(creationEmail.getHtml());
 
         if (!matcher.find()) {
@@ -929,8 +929,8 @@ public class AccountResourceTest {
             .then()
             .statusCode(OK.getStatusCode());
 
-        List<Mail> sent = mailbox.getMessagesSentTo(user.email);
-        Mail resetMail = sent.get(sent.size() - 1); // get the last mail
+        List<MailMessage> sent = mailbox.getMailMessagesSentTo(user.email);
+        MailMessage resetMail = sent.get(sent.size() - 1); // get the last mail
         var matcher = Pattern.compile(".*key=(\\w+).*", Pattern.MULTILINE).matcher(resetMail.getHtml());
 
         if (!matcher.find()) {
@@ -971,8 +971,8 @@ public class AccountResourceTest {
             .then()
             .statusCode(OK.getStatusCode());
 
-        List<Mail> sent = mailbox.getMessagesSentTo(user.email);
-        Mail resetMail = sent.get(sent.size() - 1); // get the last mail
+        List<MailMessage> sent = mailbox.getMailMessagesSentTo(user.email);
+        MailMessage resetMail = sent.get(sent.size() - 1); // get the last mail
         var matcher = Pattern.compile(".*key=(\\w+).*", Pattern.MULTILINE).matcher(resetMail.getHtml());
 
         if (!matcher.find()) {

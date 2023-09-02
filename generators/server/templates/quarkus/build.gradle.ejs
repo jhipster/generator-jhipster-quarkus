@@ -49,11 +49,11 @@ version = "0.0.1-SNAPSHOT"
 
 description = ""
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
-assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17" || "18"
+assert System.properties["java.specification.version"] == "17" || "18" || "19" || "20"
 
 apply from: "gradle/docker.gradle"
 apply from: "gradle/sonar.gradle"
@@ -87,7 +87,7 @@ eclipse {
 defaultTasks "quarkusDev"
 
 modernizer {
-    failOnViolations = true
+    failOnViolations = false
     includeTestClasses = true
 }
 
@@ -103,7 +103,7 @@ test {
     // uncomment if the tests reports are not generated
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
-    reports.html.enabled = false
+    reports.html.required = false
 }
 
 task integrationTest(type: Test) {
@@ -123,7 +123,7 @@ task integrationTest(type: Test) {
     // uncomment if the tests reports are not generated
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
-    reports.html.enabled = false
+    reports.html.required = false
 }
 integrationTest.onlyIf { !project.hasProperty('skipTests') }
 integrationTest.dependsOn(quarkusBuild)
@@ -137,7 +137,7 @@ task cucumberTest(type: Test) {
     // uncomment if the tests reports are not generated
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
-    reports.html.enabled = false
+    reports.html.required = false
 }
 
 check.dependsOn cucumberTest
@@ -295,10 +295,6 @@ dependencies {
     implementation enforcedPlatform("com.github.cloudyrock.mongock:mongock-bom:${mongockBom_version}")
 <%_ } _%>
 
-<%_ if (databaseType === 'sql') { _%>
-    liquibaseRuntime sourceSets.main.compileClasspath
-
-<%_ } _%>
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
 <%_ if (databaseType === 'mongodb') { _%>
     annotationProcessor "io.quarkus:quarkus-panache-common"

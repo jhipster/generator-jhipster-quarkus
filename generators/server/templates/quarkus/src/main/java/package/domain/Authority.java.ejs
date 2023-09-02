@@ -31,15 +31,15 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import java.io.Serializable;
 import java.util.Objects;
 <%_ if (databaseType === 'sql') { _%>
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 <%_ } _%>
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 <%_ if (enableHibernateCache) { _%>
-import javax.persistence.*;
+import jakarta.persistence.*;
 <%_ } _%>
 
 /**
