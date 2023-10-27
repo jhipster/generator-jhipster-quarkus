@@ -1,0 +1,121 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%=packageName%>.web.rest;
+
+<%- include('../../_partials/imports', this); -%>
+
+@QuarkusTest
+<%_ if (authenticationType === 'oauth2') {_%>
+@QuarkusTestResource(value = MockOidcServerTestResource.class, restrictToAnnotatedClass = true)
+<%_ } _%>
+public class <%= entityClass%>ResourceTest {
+
+    private static final TypeRef<<%= restClass%>> ENTITY_TYPE = new TypeRef<>() {
+    };
+
+    private static final TypeRef<List<<%= restClass%>>> LIST_OF_ENTITY_TYPE = new TypeRef<>() {
+    };
+
+<%- include('../../_partials/defaults', this); -%>
+
+
+    String adminToken;
+
+    <%= restClass %> <%= restInstance %>;
+
+<%_ if (databaseType === 'sql') { _%>
+    @Inject
+    LiquibaseFactory liquibaseFactory;
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @Inject
+    MongoClient mongoClient;
+
+    @ConfigProperty(name = "quarkus.mongodb.database")
+    String databaseName;
+<%_ } _%>
+
+    @BeforeAll
+    static void jsonMapper() {
+        RestAssured.config =
+            RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
+    }
+
+    @BeforeEach
+    public void authenticateAdmin() {
+        this.adminToken = TestUtil.getAdminToken();
+    }
+
+<%_ if (databaseType === 'sql') { _%>
+    @BeforeEach
+    public void databaseFixture() {
+        try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
+            liquibase.dropAll();
+            liquibase.validate();
+            liquibase.update(liquibaseFactory.createContexts(), liquibaseFactory.createLabels());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+<%_ } else if (databaseType === 'mongodb') { _%>
+    @BeforeEach
+    public void databaseFixture() {
+        mongoClient.getDatabase(databaseName).drop();
+
+        MongockStandalone
+            .builder()
+            .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
+            .addChangeLogsScanPackage("<%=packageName%>.config.dbmigrations")
+            .buildRunner()
+            .execute();
+    }
+<%_ } _%>
+
+    /**
+     * Create an entity for this test.
+     * <p>
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static <%= restClass %> createEntity() {
+        var <%= restInstance %> = new <%= restClass %>();
+        <%_ for (const field of fields.filter(field => !field.id)) { _%>
+        <%= restInstance %>.<%= field.fieldName %> = DEFAULT_<%= field.fieldNameUnderscored.toUpperCase(); %>;
+        <%_ } _%>
+        return <%= restInstance %>;
+    }
+
+    @BeforeEach
+    public void initTest() {
+        <%= restInstance %> = createEntity();
+    }
+
+    <%_ if (!readOnly) { _%>
+<%- include('../../_partials/create', this); -%>
+
+<%- include('../../_partials/create_with_field_required', this); -%>
+
+<%- include('../../_partials/update', this); -%>
+
+<%- include('../../_partials/delete', this); -%>
+
+    <%_ } _%>
+<%- include('../../_partials/get_all', this); -%>
+
+<%- include('../../_partials/get', this); -%>
+}

@@ -1,0 +1,47 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+    /**
+     * {@code POST  /<%= entityApiUrl %>} : Create a new <%= entityInstance %>.
+     *
+     * @param <%= restInstance %> the <%= restInstance %> to create.
+     * @return the {@link Response} with status {@code 201 (Created)} and with body the new <%= restInstance %>, or with status {@code 400 (Bad Request)} if the <%= entityInstance %> has already an ID.
+     */
+    @POST
+    <%_ if (databaseType === 'sql' && !viaService) { _%>
+    @Transactional
+    <%_ } _%>
+    public Response create<%= entityClass %>(<% if (anyPropertyHasValidation) { %>@Valid <% } %><%= restClass %> <%= restInstance %>, @Context UriInfo uriInfo) {
+        log.debug("REST request to save <%= entityClass %> : {}", <%= restInstance %>);
+        if (<%= restInstance %>.id != null) {
+            throw new BadRequestAlertException("A new <%= entityInstance %> cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        <%_ if (databaseType === 'cassandra') { _%>
+        <%= restInstance %>.id = UUID.randomUUID();
+        <%_ } _%>
+        <%_ if (databaseType === 'mongodb') { _%>
+            <%= restInstance %>.id = idGenerator.generate();
+        <%_ } _%>
+<%- include('../common/save', {...this, returnDirectly: false, isController: true}); -%>
+        <%_ if (databaseType === 'mongodb' && !viaService) { _%>
+        <%= entityClass %> result = <%= entityClass %>.findById(<%= restInstance %>.id);
+        <%_ } _%>
+        var response = Response.created(fromPath(uriInfo.getPath()).path(result.id<% if (primaryKey.type !== 'String') { %>.toString()<% } %>).build()).entity(result);
+        HeaderUtil.createEntityCreationAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, result.id<% if (primaryKey.type !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        return response.build();
+    }

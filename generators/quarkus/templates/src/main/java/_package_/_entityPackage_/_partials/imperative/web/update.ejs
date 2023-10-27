@@ -1,0 +1,41 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+    /**
+     * {@code PUT  /<%= entityApiUrl %>} : Updates an existing <%= entityInstance %>.
+     *
+     * @param <%= restInstance %> the <%= restInstance %> to update.
+     * @return the {@link Response} with status {@code 200 (OK)} and with body the updated <%= restInstance %>,
+     * or with status {@code 400 (Bad Request)} if the <%= restInstance %> is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the <%= restInstance %> couldn't be updated.
+     */
+    @PUT
+    @Path("/{id}")
+    <%_ if (databaseType === 'sql' && !viaService) { _%>
+    @Transactional
+    <%_ } _%>
+    public Response update<%= entityClass %>(<% if (anyPropertyHasValidation) { %>@Valid <% } %><%= restClass %> <%= restInstance %>, @PathParam("id") <%= primaryKeyType %> id) {
+        log.debug("REST request to update <%= entityClass %> : {}", <%= restInstance %>);
+        if (<%= restInstance %>.id == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+<%- include('../common/save', {...this, returnDirectly: false}); -%>
+        var response = Response.ok().entity(<% if (databaseType === 'sql') { %>result<% } else { %><%= restInstance %><% } %>);
+        HeaderUtil.createEntityUpdateAlert(applicationName, <%= enableTranslation %>, ENTITY_NAME, <%= restInstance %>.id<% if (primaryKey.type !== 'String') { %>.toString()<% } %>).forEach(response::header);
+        return response.build();
+    }

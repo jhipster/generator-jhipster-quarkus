@@ -1,0 +1,215 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%= packageName %>.service.dto;
+
+<%_
+let importApiModelProperty = false;
+let importJsonIgnore = false;
+let importJsonIgnoreProperties = false;
+let importSet = false;
+const uniqueEnums = {};
+_%>
+<%_ include('../../domain/imports', {
+    fields: fields,
+    relationships: relationships,
+    importApiModelProperty: importApiModelProperty,
+    importJsonIgnore: importJsonIgnore,
+    importJsonIgnoreProperties: importJsonIgnoreProperties,
+    importSet: importSet,
+    uniqueEnums: uniqueEnums
+}) _%>
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+<%_ if (typeof javadoc != 'undefined') { _%>
+import io.swagger.annotations.ApiModel;
+<%_ } if (importApiModelProperty === true) { _%>
+import io.swagger.annotations.ApiModelProperty;
+<%_ } _%>
+<%_ if (anyFieldIsInstant) { _%>
+import java.time.Instant;
+<%_ } _%>
+<%_ if (anyFieldIsLocalDate) { _%>
+import java.time.LocalDate;
+import <%= packageName %>.config.Constants;
+import jakarta.json.bind.annotation.JsonbDateFormat;
+<%_ } _%>
+<%_ if (anyFieldIsZonedDateTime) { _%>
+import java.time.ZonedDateTime;
+<%_ } _%>
+<%_ if (anyFieldIsDuration) { _%>
+import java.time.Duration;
+<%_ } _%>
+<%_ if (anyPropertyHasValidation) { _%>
+import jakarta.validation.constraints.*;
+<%_ } _%>
+import java.io.Serializable;
+<%_ if (anyFieldIsBigDecimal) { _%>
+import java.math.BigDecimal;
+<%_ } _%>
+<%_ if (anyFieldIsBlobDerived && databaseType === 'cassandra') { _%>
+import java.nio.ByteBuffer;
+<%_ } _%>
+<%_ if (fieldsContainOwnerManyToMany || fieldsContainEmbedded) { _%>
+import java.util.HashSet;
+import java.util.Set;
+<%_ } _%>
+import java.util.Objects;
+<%_ if (databaseType === 'cassandra' || anyFieldIsUUID === true) { _%>
+import java.util.UUID;
+<%_ } _%>
+<%_ if (anyFieldIsBlobDerived && databaseType === 'sql') { _%>
+import jakarta.persistence.Lob;
+<%_ }
+Object.keys(uniqueEnums).forEach(function(element) { _%>
+
+import <%=packageName%>.domain.enumeration.<%= element %>;
+<%_ }); _%>
+
+/**
+ * A DTO for the {@link <%= packageName %>.domain.<%= persistClass %>} entity.
+ */
+<%_ if (typeof javadoc !== 'undefined') { _%>
+@ApiModel(description = "<%- formatAsApiDescription(javadoc) %>")
+<%_ } _%>
+@RegisterForReflection
+public class <%= dtoClass %> implements Serializable {
+    <%_ for (idx in fields) { _%>
+        <%_  if (typeof fields[idx].documentation !== 'undefined') { _%>
+<%- formatAsFieldJavadoc(fields[idx].documentation) %>
+        <%_ } _%>
+        <%_
+        const field = fields[idx];
+        const fieldValidate = fields[idx].fieldValidate;
+        const fieldValidateRules = fields[idx].fieldValidateRules;
+        const fieldValidateRulesMinlength = fields[idx].fieldValidateRulesMinlength;
+        const fieldValidateRulesMaxlength = fields[idx].fieldValidateRulesMaxlength;
+        const fieldValidateRulesMinbytes = fields[idx].fieldValidateRulesMinbytes;
+        const fieldValidateRulesMaxbytes = fields[idx].fieldValidateRulesMaxbytes;
+        const fieldValidateRulesMin = fields[idx].fieldValidateRulesMin;
+        const fieldValidateRulesMax = fields[idx].fieldValidateRulesMax;
+        const fieldValidateRulesPatternJava = fields[idx].fieldValidateRulesPatternJava;
+        const fieldType = fields[idx].fieldType;
+        const fieldTypeBlobContent = fields[idx].fieldTypeBlobContent;
+        const fieldName = fields[idx].fieldName;
+        let required = fieldValidate && fieldValidateRules.includes('required');
+        _%>
+        <%_ if (fieldValidate === true) { _%>
+    <%- include('/_global_partials_entity_/field_validators', { field }) -%>
+        <%_ } _%>
+        <%_ if (typeof fields[idx].documentation != 'undefined') { _%>
+    @ApiModelProperty(value = "<%- formatAsApiDescription(fields[idx].documentation) %>"<% if (required) { %>, required = true<% } %>)
+        <%_ } _%>
+        <%_ if (fieldType === 'byte[]' && databaseType === 'sql') { _%>
+    @Lob
+        <%_ } _%>
+        <%_ if (fieldType === 'LocalDate') { _%>
+    @JsonbDateFormat(value = Constants.LOCAL_DATE_FORMAT)
+        <%_ } _%>
+        <%_ if (fieldTypeBlobContent !== 'text') { _%>
+    public <%= fieldType %> <%= fieldName %>;
+        <%_ } else { _%>
+    public String <%= fieldName %>;
+        <%_ } _%>
+        <%_ if ((fieldType === 'byte[]' || fieldType === 'ByteBuffer') && fieldTypeBlobContent !== 'text') { _%>
+
+    public String <%= fieldName %>ContentType;
+        <%_ } _%>
+
+    <%_ } _%>
+    <%_ for (idx in relationships) {
+        const relationship = relationships[idx];
+        const otherEntity = relationship.otherEntity;
+        const relationshipFieldName = relationships[idx].relationshipFieldName;
+        const relationshipFieldNamePlural = relationships[idx].relationshipFieldNamePlural;
+        const relationshipType = relationships[idx].relationshipType;
+        const otherEntityPrimaryKeyType = relationships[idx].otherEntity.primaryKey.type;
+        const otherEntityNameCapitalized = relationships[idx].otherEntity.entityNameCapitalized;
+        const otherEntityFieldCapitalized = relationships[idx].otherEntityFieldCapitalized;
+        const otherEntityIsEmbedded = relationships[idx].otherEntity.embedded;
+        const ownerSide = relationships[idx].ownerSide;
+    _%>
+        <%_ if (typeof relationships[idx].documentation != 'undefined') { _%>
+<%- formatAsFieldJavadoc(relationships[idx].documentation) %>
+    @ApiModelProperty(value = "<%- formatAsApiDescription(relationships[idx].documentation) %>")
+        <%_ } _%>
+        <%_ if ((relationshipType === 'many-to-many' && ownerSide === true) || (relationshipType === 'one-to-many' && otherEntityIsEmbedded)) { _%>
+    public Set<<%= otherEntity.dtoClass %>> <%= relationshipFieldNamePlural %> = new HashSet<>();
+        <%_ } else if (relationshipType === 'one-to-one' && ownerSide === true && otherEntityIsEmbedded) { _%>
+    public <%= otherEntity.dtoClass %> <%= relationshipFieldName %>;
+        <%_ } else if (relationshipType === 'many-to-one' || (relationshipType === 'one-to-one' && ownerSide === true)) { _%>
+    public <%= otherEntityPrimaryKeyType %> <%= relationshipFieldName %>Id;
+            <%_ if (otherEntityFieldCapitalized !== 'Id' && otherEntityFieldCapitalized !== '') { _%>
+    public String <%= relationshipFieldName %><%= otherEntityFieldCapitalized %>;
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof <%= dtoClass %>)) {
+            return false;
+        }
+
+        <%_ if (!embedded) { _%>
+        return id != null && id.equals(((<%= dtoClass %>) o).id);
+        <%_ } else { _%>
+        return false;
+        <%_ } _%>
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+    @Override
+    public String toString() {
+        return "<%= dtoClass %>{" +
+            <%_ for (idx in fields) {
+                const fieldName = fields[idx].fieldName;
+                const fieldType = fields[idx].fieldType;
+                const isNumeric = ['integer', 'long', 'float', 'double', 'bigdecimal'].includes(fieldType.toLowerCase()); _%>
+            "<%- idx === 0 ? '' : ', ' %><%= fieldName %>=<% if (! isNumeric) { %>'<% } %>" + <%= fieldName %> <% if (! isNumeric) { %>+ "'" <% } %>+
+            <%_ } _%>
+            <%_ for (idx in relationships) {
+                const relationshipFieldName = relationships[idx].relationshipFieldName;
+                const relationshipType = relationships[idx].relationshipType;
+                const relationshipNameCapitalized = relationships[idx].relationshipNameCapitalized;
+                const relationshipFieldNamePlural = relationships[idx].relationshipFieldNamePlural;
+                const relationshipNameCapitalizedPlural = relationships[idx].relationshipNameCapitalizedPlural;
+                const otherEntityFieldCapitalized = relationships[idx].otherEntityFieldCapitalized;
+                const otherEntityIsEmbedded = relationships[idx].otherEntityIsEmbedded;
+                const otherEntityPrimaryKeyType = relationships[idx].otherEntityPrimaryKeyType;
+                const ownerSide = relationships[idx].ownerSide; _%>
+                <%_ if ((relationshipType === 'many-to-many' && ownerSide === true)
+                        || (relationshipType === 'one-to-many' && otherEntityIsEmbedded)) { _%>
+            ", <%= relationshipFieldNamePlural %>='" + <%= relationshipFieldNamePlural %> + "'" +
+                <%_ } else if (relationshipType === 'one-to-one' && ownerSide === true && otherEntityIsEmbedded) { _%>
+            ", <%= relationshipFieldName %>='" + <%= relationshipFieldName %> + "'" +
+                <%_ } else if (relationshipType === 'many-to-one' || (relationshipType === 'one-to-one' && ownerSide === true)) { _%>
+            ", <%= relationshipFieldName %>Id=<% if (otherEntityPrimaryKeyType === 'String') { %>'<% } %>" + <%= relationshipFieldName %>Id <% if (otherEntityPrimaryKeyType === 'String') { %>+ "'" <% } %>+
+                    <%_ if (otherEntityFieldCapitalized !== 'Id' && otherEntityFieldCapitalized !== '') { _%>
+            ", <%= relationshipFieldName %><%= otherEntityFieldCapitalized %>='" + <%= relationshipFieldName %><%= otherEntityFieldCapitalized %> + "'" +
+            <%_ } } } _%>
+            "}";
+    }
+}
