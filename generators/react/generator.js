@@ -9,11 +9,9 @@ export default class extends BaseApplicationGenerator {
         return this.asPostWritingTaskGroup({
             async postWritingTemplateTask({ application }) {
                 if (application.withAdminUi) {
-                    /*
                     this.editFile(`${application.clientSrcDir}app/modules/administration/configuration/configuration.tsx`, content =>
                         content.replace('<label>Spring configuration</label>', '<label>Quarkus configuration</label>'),
                     );
-                    */
 
                     this.deleteDestination(`${application.clientSrcDir}app/modules/administration/health/health-modal.tsx`);
                 }
