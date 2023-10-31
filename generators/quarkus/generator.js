@@ -14,13 +14,10 @@ import {
 import command from './command.js';
 import { serverFiles } from './files.js';
 import { entityQuarkusFiles } from './entity-files.js';
-import { DEFAULT_DATA_ACCESS } from '../constants.js';
+import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, DEFAULT_DATA_ACCESS } from '../constants.js';
+import { createNeedleCallback } from 'generator-jhipster/generators/base/support';
 
 export default class extends BaseApplicationGenerator {
-    constructor(args, opts, features) {
-        super(args, opts, features);
-    }
-
     async beforeQueue() {
         await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
         (await this.dependsOnJHipster(GENERATOR_JAVA)).generateEntities = false;
@@ -66,9 +63,21 @@ export default class extends BaseApplicationGenerator {
         });
     }
 
-    get [BaseApplicationGenerator.LOADING]() {
-        return this.asLoadingTaskGroup({
-            async loadingTemplateTask() {},
+    get [BaseApplicationGenerator.PREPARING]() {
+        return this.asPreparingTaskGroup({
+            async preparingTemplateTask({ source, application }) {
+                source.addEntryToCache = ({ entry }) => {
+                    this.editFile(
+                        `${application.srcMainResources}application.properties`,
+                        createNeedleCallback({
+                            contentToAdd:
+                                `quarkus.hibernate-orm.cache."${entry}".expiration.max-idle=${CACHE_EXPIRE_AFTER_WRITE}\n` +
+                                `quarkus.hibernate-orm.cache."${entry}".memory.object-count=${CACHE_MAXIMUM_SIZE}`,
+                            needle: 'quarkus-hibernate-cache-add-entry',
+                        }),
+                    );
+                };
+            },
         });
     }
 
@@ -188,17 +197,15 @@ export default class extends BaseApplicationGenerator {
                     );
                 }
             },
-            updateCacheConfiguration() {
-                /*
-                if (application.enableHibernateCache) {
-                    this.editFile()
-                    new NeedleApi(this).quarkusServerCache.addEntityConfigurationToPropertiesFile(
-                        this.asEntity(this.entityClass),
-                        this.relationships,
-                        this.packageName,
-                    );
+            updateCacheConfiguration({ source, entities, application }) {
+                if (!application.enableHibernateCache) return;
+                for (const entity of entities.filter(entity => !entity.builtIn && !entity.skipServer && entity.dtoMapstruct)) {
+                    const entityCache = `${application.packageName}.domain.${entity.persistClass}`;
+                    source.addEntryToCache({ entry: entityCache });
+                    for (const relationship of entity.relationships.filter(rel => rel.collection)) {
+                        source.addEntryToCache({ entry: `${entityCache}.domain.${relationship.relationshipFieldNamePlural}` });
+                    }
                 }
-                */
             },
         });
     }
