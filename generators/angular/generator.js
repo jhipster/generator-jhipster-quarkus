@@ -1,5 +1,6 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
-// import { Duplex } from 'stream';
+import process from 'node:process';
+import { Duplex } from 'stream';
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
@@ -17,6 +18,7 @@ export default class extends BaseApplicationGenerator {
                 );
 
                 // Remove health modal
+                // TODO node 16 support is kept for workflow diff, drop after first merge
                 this.deleteDestination(`${application.clientSrcDir}app/admin/health/modal/**`);
                 /*
                 TODO enable at node 18, breaks at node 16
