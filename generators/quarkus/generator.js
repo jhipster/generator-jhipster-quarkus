@@ -202,7 +202,7 @@ export default class extends BaseApplicationGenerator {
             },
             updateCacheConfiguration({ source, entities, application }) {
                 if (!application.enableHibernateCache) return;
-                for (const entity of entities.filter(entity => !entity.builtIn && !entity.skipServer && entity.dtoMapstruct)) {
+                for (const entity of entities.filter(entity => !entity.builtIn && !entity.skipServer)) {
                     const entityCache = `${application.packageName}.domain.${entity.persistClass}`;
                     source.addEntryToCache({ entry: entityCache });
                     for (const relationship of entity.relationships.filter(rel => rel.collection)) {
