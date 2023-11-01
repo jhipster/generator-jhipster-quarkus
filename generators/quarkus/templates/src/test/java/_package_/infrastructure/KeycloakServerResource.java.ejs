@@ -44,7 +44,7 @@ public class KeycloakServerResource implements QuarkusTestResourceLifecycleManag
     @Override
     public Map<String, String> start() {
         container =
-            new KeycloakContainer("<%= dockerContainers.postgresql %>")
+            new KeycloakContainer("<%= dockerContainers.keycloak %>")
                 .withRealmImportFile("jhipster-realm.json");
 
         containerNetworkId.ifPresent(container::withNetworkMode);
