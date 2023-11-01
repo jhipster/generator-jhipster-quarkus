@@ -80,11 +80,11 @@ const command = {
             scope: 'storage',
         },
         prodDatabaseType: {
-            prompt: {
+            prompt: gen => ({
                 when: answers => (answers.databaseType ?? gen.jhipsterConfigWithDefaults.databaseType) === 'sql',
                 type: 'list',
                 message: `Which ${chalk.yellow('*production*')} database would you like to use?`,
-            },
+            }),
             choices: [
                 { value: 'postgresql', name: 'PostgreSQL' },
                 { value: 'mysql', name: 'MySQL' },
@@ -95,11 +95,11 @@ const command = {
             scope: 'storage',
         },
         devDatabaseType: {
-            prompt: {
+            prompt: gen => ({
                 when: answers => (answers.databaseType ?? gen.jhipsterConfigWithDefaults.databaseType) === 'sql',
                 type: 'list',
                 message: `Which ${chalk.yellow('*development*')} database would you like to use?`,
-            },
+            }),
             choices: [
                 { value: null, name: 'Same as production' },
                 { value: 'h2Disk', name: 'H2 with disk-based persistence' },

@@ -1,6 +1,4 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
-import process from 'node:process';
-import { Duplex } from 'stream';
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
