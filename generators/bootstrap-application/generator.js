@@ -27,6 +27,7 @@ export default class extends BaseApplicationGenerator {
                 application.backendTypeJavaAny = true;
                 application.CACHE_MAXIMUM_SIZE = CACHE_MAXIMUM_SIZE;
                 application.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
+                application.jhipsterQuarkusVersion = undefined;
             },
         });
     }

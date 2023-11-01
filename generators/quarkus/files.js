@@ -25,7 +25,7 @@ import {
 export const serverFiles = {
     serverBuild: [
         {
-            templates: [{ file: 'checkstyle.xml' }],
+            templates: ['README.md.jhi.quarkus', 'checkstyle.xml'],
         },
         {
             condition: generator => generator.buildTool === 'maven',
