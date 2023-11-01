@@ -206,7 +206,7 @@ export default class extends BaseApplicationGenerator {
                     const entityCache = `${application.packageName}.domain.${entity.persistClass}`;
                     source.addEntryToCache({ entry: entityCache });
                     for (const relationship of entity.relationships.filter(rel => rel.collection)) {
-                        source.addEntryToCache({ entry: `${entityCache}.domain.${relationship.relationshipFieldNamePlural}` });
+                        source.addEntryToCache({ entry: `${entityCache}.${relationship.relationshipFieldNamePlural}` });
                     }
                 }
             },
