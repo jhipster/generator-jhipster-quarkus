@@ -49,9 +49,11 @@ export default class extends BaseApplicationGenerator {
     get [BaseApplicationGenerator.POST_WRITING]() {
         return this.asPostWritingTaskGroup({
             async postWriting({ application }) {
-                this.editFile(`${application.srcTestResources}jhipster-realm.json`, content =>
-                    content.replaceAll('"directAccessGrantsEnabled": false,', '"directAccessGrantsEnabled": true,'),
-                );
+                if (application.authenticationTypeOauth2) {
+                    this.editFile(`${application.srcTestResources}jhipster-realm.json`, content =>
+                        content.replaceAll('"directAccessGrantsEnabled": false,', '"directAccessGrantsEnabled": true,'),
+                    );
+                }
             },
         });
     }
