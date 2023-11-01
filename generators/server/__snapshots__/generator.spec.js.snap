@@ -287,7 +287,7 @@ exports[`SubGenerator server of quarkus JHipster blueprint > run > should succee
   "src/main/resources/config/liquibase/master.xml": {
     "stateCleared": "modified",
   },
-  "src/main/resources/default.txt": {
+  "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
   "src/main/resources/i18n/messages_en.properties": {

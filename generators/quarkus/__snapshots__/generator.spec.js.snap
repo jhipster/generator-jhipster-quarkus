@@ -287,7 +287,7 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
   "src/main/resources/config/liquibase/master.xml": {
     "stateCleared": "modified",
   },
-  "src/main/resources/default.txt": {
+  "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
   "src/main/resources/i18n/messages_en.properties": {
@@ -712,7 +712,7 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 an
   "src/main/resources/application.properties": {
     "stateCleared": "modified",
   },
-  "src/main/resources/default.txt": {
+  "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
   "src/main/resources/i18n/messages_en.properties": {
@@ -1170,7 +1170,7 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities
   "src/main/resources/config/liquibase/master.xml": {
     "stateCleared": "modified",
   },
-  "src/main/resources/default.txt": {
+  "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
   "src/main/resources/i18n/messages_en.properties": {

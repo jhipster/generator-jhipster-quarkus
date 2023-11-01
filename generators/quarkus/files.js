@@ -16,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TEMPLATES_MAIN_RESOURCES_DIR } from 'generator-jhipster';
 import {
     javaMainPackageTemplatesBlock,
     javaTestPackageTemplatesBlock,
@@ -45,10 +46,11 @@ export const serverFiles = {
         },
     ],
     serverResource: [
-        javaMainResourceTemplatesBlock({
+        {
+            path: TEMPLATES_MAIN_RESOURCES_DIR,
             transform: false,
             templates: ['default_banner.txt'],
-        }),
+        },
         javaMainResourceTemplatesBlock({
             templates: ['application.properties'],
         }),
