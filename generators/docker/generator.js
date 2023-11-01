@@ -36,7 +36,7 @@ export default class extends BaseApplicationGenerator {
                                 path: TEMPLATES_DOCKER_DIR,
                                 condition: ctx => ctx.authenticationTypeOauth2,
                                 renameTo: () => `${application.srcTestResources}jhipster-realm.json`,
-                                templates: ['realm-config/jhipster-realm.json'],
+                                templates: ['realm-config/jhipster-realm-v19.json'],
                             },
                         ],
                     },
