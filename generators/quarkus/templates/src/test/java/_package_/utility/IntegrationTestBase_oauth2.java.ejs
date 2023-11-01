@@ -52,6 +52,7 @@ public abstract class IntegrationTestBase {
             .formParams(Map.of(
                 "username", username,
                 "password", password,
+                "grant_type", "password",
                 "client_id", getKeycloakClientId(),
                 "client_secret", getKeycloakClientSecret()
             ))
