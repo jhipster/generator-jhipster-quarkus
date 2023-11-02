@@ -1,9 +1,1 @@
-.prettierrc.yml
-README.md skip
-.editorconfig skip
-generators/angular/generator.js skip
-generators/react/generator.js skip
-generators/server/generator.js skip
-generators/server/command.js skip
-cli/cli.cjs skip
-generators/bootstrap-application/generator.js skip
+!package.json skip
