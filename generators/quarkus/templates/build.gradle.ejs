@@ -53,7 +53,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-assert System.properties["java.specification.version"] == "17" || "18" || "19" || "20"
+assert System.properties["java.specification.version"] == "17" || "18" || "19" || "20" || "21"
 
 apply from: "gradle/docker.gradle"
 apply from: "gradle/sonar.gradle"
