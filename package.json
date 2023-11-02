@@ -42,7 +42,7 @@
     },
     "dependencies": {
         "chalk": "^5.3.0",
-        "generator-jhipster": "github:jhipster/generator-jhipster#main"
+        "generator-jhipster": "github:mshima/generator-jhipster#skip_ci-maven"
     },
     "devDependencies": {
         "ejs-lint": "2.0.0",
