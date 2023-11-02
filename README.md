@@ -4,10 +4,6 @@
 
 <img src="https://raw.githubusercontent.com/jhipster/jhipster-artwork/main/family/jhipster_family_member_8.png" alt="JHipster Quarkus Family Member" width=200 style="max-width:50%;">
 
-> ## 🛠 Mode: In Development
-
-> JHipster blueprint, JHipster Quarkus blueprint
-
 # Introduction
 
 This is a [JHipster](https://www.jhipster.tech/) blueprint, that is meant to be used in a JHipster application.
