@@ -55,7 +55,7 @@ public class KeycloakServerResource implements QuarkusTestResourceLifecycleManag
     }
 
     private String getAuthServerUrl() {
-        String authServerUrl = container.getAuthServerUrl() + "/realms/jhipster";
+        String authServerUrl = container.getAuthServerUrl() + "realms/jhipster";
         if(containerNetworkId.isPresent()) {
             authServerUrl = "http://" + container.getCurrentContainerInfo().getConfig().getHostName() + authServerUrl.substring(authServerUrl.lastIndexOf(":"));
         }
