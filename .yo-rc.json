@@ -29,6 +29,34 @@
                 "sbs": true,
                 "written": true
             },
+            "maven": {
+                "command": false,
+                "priorities": [
+                    "initializing",
+                    "prompting",
+                    "configuring",
+                    "composing",
+                    "loading",
+                    "preparing",
+                    "configuringEachEntity",
+                    "loadingEntities",
+                    "preparingEachEntity",
+                    "preparingEachEntityField",
+                    "preparingEachEntityRelationship",
+                    "postPreparingEachEntity",
+                    "default",
+                    "writing",
+                    "writingEntities",
+                    "postWriting",
+                    "postWritingEntities",
+                    "loadingTranslations",
+                    "install",
+                    "postInstall",
+                    "end"
+                ],
+                "sbs": false,
+                "written": true
+            },
             "quarkus": {
                 "command": false,
                 "priorities": [
@@ -85,7 +113,7 @@
         "localBlueprint": false,
         "sampleWritten": true,
         "skipCommitHook": true,
-        "subGenerators": ["angular", "bootstrap-application", "cypress", "docker", "react", "server"]
+        "subGenerators": ["angular", "bootstrap-application", "cypress", "docker", "maven", "react", "server"]
     },
     "generator-jhipster-blueprint": {
         "promptValues": {
