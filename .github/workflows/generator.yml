@@ -6,7 +6,7 @@ jobs:
   quarkus:
     strategy:
       matrix:
-        version: [ 18, 20 ]
+        version: [18, 20]
     name: npm-test
     runs-on: ubuntu-latest
     timeout-minutes: 10
