@@ -4,10 +4,6 @@
 
 <img src="https://raw.githubusercontent.com/jhipster/jhipster-artwork/main/family/jhipster_family_member_8.png" alt="JHipster Quarkus Family Member" width=200 style="max-width:50%;">
 
-> ## 🛠 Mode: In Development
-
-> JHipster blueprint, JHipster Quarkus blueprint
-
 # Introduction
 
 This is a [JHipster](https://www.jhipster.tech/) blueprint, that is meant to be used in a JHipster application.
@@ -52,26 +48,25 @@ During development of blueprint, please note the below steps. They are very impo
 
 1. Link your blueprint globally
 
-       cd generator-jhipster-quarkus
-       npm link
+    cd generator-jhipster-quarkus
+    npm link
 
 2. Link the development version of JHipster to your blueprint (optional: required only if you want to use a non-released JHipster version, like the master branch or your own custom fork)
 
-       cd generator-jhipster
-       npm link
+    cd generator-jhipster
+    npm link
 
-       cd quarkus
-       npm link generator-jhipster
-
+    cd quarkus
+    npm link generator-jhipster
 
 3. Create a new folder for the app to be generated and link JHipster and your blueprint there
 
-       mkdir my-app && cd my-app
-        
-       npm link generator-jhipster-quarkus
-       npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
-        
-       jhipster -d --blueprints quarkus
+    mkdir my-app && cd my-app
+
+    npm link generator-jhipster-quarkus
+    npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
+
+    jhipster -d --blueprints quarkus
 
 🚦 What we have now:
 

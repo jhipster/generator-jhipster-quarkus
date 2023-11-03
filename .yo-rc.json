@@ -1,10 +1,126 @@
 {
+    "generator-jhipster": {
+        "additionalSubGenerators": "quarkus",
+        "baseName": "quarkus",
+        "cli": true,
+        "entities": [],
+        "generators": {
+            "angular": {
+                "command": false,
+                "priorities": ["postWriting"],
+                "sbs": true,
+                "written": true
+            },
+            "bootstrap-application": {
+                "command": false,
+                "priorities": ["loading"],
+                "sbs": true,
+                "written": true
+            },
+            "cypress": {
+                "command": false,
+                "priorities": ["postWriting"],
+                "sbs": true,
+                "written": true
+            },
+            "docker": {
+                "command": false,
+                "priorities": ["writing"],
+                "sbs": true,
+                "written": true
+            },
+            "maven": {
+                "command": false,
+                "priorities": [
+                    "initializing",
+                    "prompting",
+                    "configuring",
+                    "composing",
+                    "loading",
+                    "preparing",
+                    "configuringEachEntity",
+                    "loadingEntities",
+                    "preparingEachEntity",
+                    "preparingEachEntityField",
+                    "preparingEachEntityRelationship",
+                    "postPreparingEachEntity",
+                    "default",
+                    "writing",
+                    "writingEntities",
+                    "postWriting",
+                    "postWritingEntities",
+                    "loadingTranslations",
+                    "install",
+                    "postInstall",
+                    "end"
+                ],
+                "sbs": false,
+                "written": true
+            },
+            "quarkus": {
+                "command": false,
+                "priorities": [
+                    "initializing",
+                    "prompting",
+                    "loading",
+                    "preparing",
+                    "writing",
+                    "writingEntities",
+                    "postWriting",
+                    "postWritingEntities",
+                    "end"
+                ],
+                "sbs": null,
+                "written": true
+            },
+            "react": {
+                "command": false,
+                "priorities": ["postWriting"],
+                "sbs": true,
+                "written": true
+            },
+            "server": {
+                "command": false,
+                "priorities": [
+                    "initializing",
+                    "prompting",
+                    "configuring",
+                    "composing",
+                    "loading",
+                    "preparing",
+                    "configuringEachEntity",
+                    "loadingEntities",
+                    "preparingEachEntity",
+                    "preparingEachEntityField",
+                    "preparingEachEntityRelationship",
+                    "postPreparingEachEntity",
+                    "default",
+                    "writing",
+                    "writingEntities",
+                    "postWriting",
+                    "postWritingEntities",
+                    "loadingTranslations",
+                    "install",
+                    "postInstall",
+                    "end"
+                ],
+                "sbs": false,
+                "written": true
+            }
+        },
+        "jhipsterVersion": "8.0.0-rc.1",
+        "js": true,
+        "localBlueprint": false,
+        "sampleWritten": true,
+        "skipCommitHook": true,
+        "subGenerators": ["angular", "bootstrap-application", "cypress", "docker", "maven", "react", "server"]
+    },
     "generator-jhipster-blueprint": {
         "promptValues": {
-            "githubName": "danielpetisme",
-            "authorName": "Daniel Petisme",
             "authorEmail": "daniel@jhipster.tech",
-            "authorUrl": ""
+            "authorName": "Daniel Petisme",
+            "authorUrl": "",
+            "githubName": "danielpetisme"
         }
     }
 }

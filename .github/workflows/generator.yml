@@ -1,26 +1,17 @@
-name: Generator CI
-concurrency:
-  # Group PRs by head_ref, push to main branch by commit id, and others branch by ref.
-  group: ${{ github.workflow }}-${{ github.head_ref || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
-  cancel-in-progress: true
+name: Generator
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
-  generator-jhipster-quarkus:
-    name: npm test
-    runs-on: ${{ matrix.os }}
-    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [16]
-        os: [ubuntu-latest]
+  quarkus:
+    name: npm-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Run git history
-        run: git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
+          node-version: 18
+          cache: 'npm'
       - run: npm ci
-      - run: npm test
+      - run: npm run test

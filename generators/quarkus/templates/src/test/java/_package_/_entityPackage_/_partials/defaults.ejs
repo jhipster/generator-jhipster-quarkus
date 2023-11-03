@@ -1,0 +1,166 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+<%_ for (const field of fields.filter(field => !field.id)) {
+    const defaultValueName = 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase();
+    const updatedValueName = 'UPDATED_' + field.fieldNameUnderscored.toUpperCase();
+    const smallerValueName = 'SMALLER_' + field.fieldNameUnderscored.toUpperCase();
+    const needsSmallerValueName = jpaMetamodelFiltering && !['byte[]', 'ByteBuffer'].includes(field.fieldType)
+            && ['BigDecimal', 'Byte', 'Double', 'Duration', 'Float', 'Short', 'Integer', 'Long', 'LocalDate', 'ZonedDateTime'].includes(field.fieldType);
+    var defaultValue = 1;
+    var updatedValue = 2;
+
+    if (field.fieldValidate) {
+        if (field.fieldValidateRules.includes('max')) {
+            defaultValue = field.fieldValidateRulesMax;
+            updatedValue = parseInt(field.fieldValidateRulesMax) - 1;
+        }
+        if (field.fieldValidateRules.includes('min')) {
+            defaultValue = field.fieldValidateRulesMin;
+            updatedValue = parseInt(field.fieldValidateRulesMin) + 1;
+        }
+        if (field.fieldValidateRules.includes('minbytes')) {
+            defaultValue = field.fieldValidateRulesMinbytes;
+            updatedValue = field.fieldValidateRulesMinbytes;
+        }
+        if (field.fieldValidateRules.includes('maxbytes')) {
+            updatedValue = field.fieldValidateRulesMaxbytes;
+        }
+    }
+
+    let fieldType = field.fieldType;
+    const fieldTypeBlobContent = field.fieldTypeBlobContent;
+    const isEnum = field.fieldIsEnum;
+    let enumValue1;
+    let enumValue2;
+    if (isEnum) {
+        const values = field.fieldValues.replace(/\s/g, '').split(',');
+        enumValue1 = values[0];
+        if (values.length > 1) {
+            enumValue2 = values[1];
+        } else {
+            enumValue2 = enumValue1;
+        }
+    }
+
+    if (fieldType === 'String' || fieldTypeBlobContent === 'text') {
+        fieldType = 'String'; //use String rather than byte[]
+        // Generate Strings, using the min and max string length if they are configured
+        let sampleTextString = "";
+        let updatedTextString = "";
+        let sampleTextLength = 10;
+        if (field.fieldValidateRulesMinlength > sampleTextLength) {
+            sampleTextLength = field.fieldValidateRulesMinlength;
+        }
+        if (field.fieldValidateRulesMaxlength < sampleTextLength) {
+            sampleTextLength = field.fieldValidateRulesMaxlength;
+        }
+        for (let i = 0; i < sampleTextLength; i++) {
+            sampleTextString += "A";
+            updatedTextString += "B";
+        }
+        if (field.fieldValidateRulesPattern) {
+            // Generate Strings, using pattern
+            try {
+                const patternRegExp = new RegExp(field.fieldValidateRulesPattern);
+                const randExp = new this.randexp(field.fieldValidateRulesPattern);
+                // set infinite repetitions max range
+                if (!patternRegExp.test(sampleTextString.replace(/\\"/g, '"').replace(/\\\\/g, '\\'))) {
+                    sampleTextString = randExp.gen().replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+                }
+                if (!patternRegExp.test(updatedTextString.replace(/\\"/g, '"').replace(/\\\\/g, '\\'))) {
+                    updatedTextString = randExp.gen().replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+                }
+            } catch (error) {
+                log('Error generating test value for entity "' + entityClass +
+                    '" field "' + field.fieldName + '" with pattern "' + field.fieldValidateRulesPattern +
+                    '", generating default values for this field. Detailed error message: "' + error.message + '".');
+            }
+            if (sampleTextString === updatedTextString) {
+                updatedTextString = updatedTextString + "B";
+                log('Randomly generated first and second test values for entity "' + entityClass +
+                    '" field "' + field.fieldName + '" with pattern "' + field.fieldValidateRulesPattern +
+                    '" in file "' + entityClass + 'ResourceIT" where equal, added symbol "B" to second value.');
+            }
+        }
+        defaultValue = `"${sampleTextString}"`
+        updatedValue = `"${updatedTextString}"`
+    } else if (fieldType === 'Integer') {
+        smallerValue = `${defaultValue} - 1`;
+    } else if (fieldType === 'Long') {
+        smallerValue = `${defaultValue}L - 1L`;
+        defaultValue = `${defaultValue}L`
+        updatedValue = `${updatedValue}L`
+    } else if (fieldType === 'Float') {
+        smallerValue = `${defaultValue}F - 1F`;
+        defaultValue = `${defaultValue}F`
+        updatedValue = `${updatedValue}F`
+    } else if (fieldType === 'Double') {
+        smallerValue = `${defaultValue}D - 1D`;
+        defaultValue = `${defaultValue}D`
+        updatedValue = `${updatedValue}D`
+    } else if (fieldType === 'BigDecimal') {
+        smallerValue = `new BigDecimal(${defaultValue} - 1)`;
+        defaultValue = `new BigDecimal(${defaultValue})`;
+        updatedValue = `new BigDecimal(${updatedValue})`;
+    } else if (fieldType === 'UUID') {
+        defaultValue = 'UUID.randomUUID()';
+        updatedValue = 'UUID.randomUUID()';
+    } else if (fieldType === 'LocalDate') {
+        smallerValue = 'LocalDate.ofEpochDay(-1L)';
+        defaultValue = 'LocalDate.ofEpochDay(0L)';
+        updatedValue = 'LocalDate.now(ZoneId.systemDefault())';
+    } else if (fieldType === 'Instant') {
+        smallerValue = 'Instant.ofEpochSecond(-1L).truncatedTo(ChronoUnit.SECONDS)';
+        defaultValue = 'Instant.ofEpochSecond(0L).truncatedTo(ChronoUnit.SECONDS)';
+        updatedValue = 'Instant.now().truncatedTo(ChronoUnit.SECONDS)';
+    } else if (fieldType === 'ZonedDateTime') {
+        smallerValue = 'ZonedDateTime.ofInstant(Instant.ofEpochSecond(-1L).truncatedTo(ChronoUnit.SECONDS), ZoneOffset.UTC)';
+        defaultValue = 'ZonedDateTime.ofInstant(Instant.ofEpochSecond(0L).truncatedTo(ChronoUnit.SECONDS), ZoneOffset.UTC)';
+        updatedValue = 'ZonedDateTime.now(ZoneId.systemDefault()).truncatedTo(ChronoUnit.SECONDS)';
+    } else if (fieldType === 'Duration') {
+        smallerValue = 'Duration.ofHours(5)';
+        defaultValue = 'Duration.ofHours(6)';
+        updatedValue = 'Duration.ofHours(12)';
+    } else if (fieldType === 'Boolean') {
+        defaultValue = 'false';
+        updatedValue = 'true';
+    } else if ((fieldType === 'byte[]' || fieldType === 'ByteBuffer') && fieldTypeBlobContent !== 'text') {
+        if (databaseType !== 'cassandra') {
+            defaultValue = 'TestUtil.createByteArray(1, "0")';
+            updatedValue = 'TestUtil.createByteArray(1, "1")';
+        } else {
+            defaultValue = 'ByteBuffer.wrap(TestUtil.createByteArray(1, "0"))';
+            updatedValue = 'ByteBuffer.wrap(TestUtil.createByteArray(1, "1"))';
+        }
+    } else if (isEnum) {
+        defaultValue = enumValue1;
+        updatedValue = enumValue2;
+    }
+_%>
+    private static final <%= fieldType %> <%= defaultValueName %> = <%- defaultValue %>;
+    private static final <%= fieldType %> <%= updatedValueName %> = <%- updatedValue %>;
+    <%_ if (needsSmallerValueName) { _%>
+    private static final <%= fieldType %> <%= smallerValueName %> = <%- smallerValue %>;
+    <%_ } _%>
+    <%_ if ((fieldType === 'byte[]' || fieldType === 'ByteBuffer') && fieldTypeBlobContent !== 'text') { _%>
+    private static final String <%= defaultValueName %>_CONTENT_TYPE = "image/jpg";
+    private static final String <%= updatedValueName %>_CONTENT_TYPE = "image/png";
+    <%_ } _%>
+
+<%_ } _%>

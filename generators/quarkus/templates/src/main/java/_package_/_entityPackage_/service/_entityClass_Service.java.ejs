@@ -1,0 +1,98 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%= packageName %>.service;
+
+<%_ if (dtoMapstruct) { _%>
+import <%= packageName %>.service.dto.<%= restClass %>;
+<%_ } else { _%>
+import <%= packageName %>.domain.<%= restClass %>;
+<%_ } _%>
+<%_ if (paginationAny) { _%>
+import io.quarkus.panache.common.Page;
+<%_ } _%>
+
+<%_ if (!paginationAny || fieldsContainNoOwnerOneToOne === true) { _%>
+import java.util.List;
+<%_ } _%>
+import java.util.Optional;
+<%_ if (databaseType === 'cassandra') { _%>
+import java.util.UUID;
+<%_ } _%>
+
+/**
+ * Service Interface for managing {@link <%= packageName %>.domain.<%= entityClass %>}.
+ */
+public interface <%= entityClass %>Service {
+
+    /**
+     * Save a <%= entityInstance %>.
+     *
+     * @param <%= restInstance %> the entity to save.
+     * @return the persisted entity.
+     */
+    <%= restClass %> persistOrUpdate(<%= restClass %> <%= restInstance %>);
+
+    /**
+     * Delete the "id" <%= restInstance %>.
+     *
+     * @param id the id of the entity.
+     */
+    void delete(<%= primaryKeyType %> id);
+
+    /**
+     * Get all the <%= entityInstancePlural %>.
+    <%_ if (paginationAny) { _%>
+     * @param page the pagination information.
+    <%_ } _%>
+     * @return the list of entities.
+     */
+    public <% if(paginationAny) { %>Paged<<%= restClass %>><% } else { %> List<<%= restClass %>><% } %> findAll(<% if(paginationAny) { %>Page page<% } %>);
+
+    /**
+     * Get the "id" <%= restInstance %>.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Optional<<%= restClass %>> findOne(<%= primaryKeyType %> id);
+
+    <%_ for (idx in relationships) { _%>
+        <%_ if (relationships[idx].relationshipType === 'one-to-one' && relationships[idx].ownerSide !== true) { _%>
+    /**
+     * Get all the <%= restClass %> where <%= relationships[idx].relationshipNameCapitalized %> is {@code null}.
+     *
+     * @return the list of entities.
+     */
+    List<<%= restClass %>> findAllWhere<%= relationships[idx].relationshipNameCapitalized %>IsNull();
+        <%_ } _%>
+    <%_ } _%>
+
+    <%_ if (fieldsContainOwnerManyToMany === true) { _%>
+    /**
+     * Get all the <%= entityInstancePlural %> with eager load of many-to-many relationships.
+    <%_ if (paginationAny) { _%>
+     * @param page the pagination information.
+    <%_ } _%>
+     * @return the list of entities.
+    */
+    public <% if(paginationAny) { %>Paged<<%= restClass %>><% } else { %> List<<%= restClass %>><% } %> findAllWithEagerRelationships(<% if(paginationAny) { %>Page page<% } %>);
+
+    <%_ } _%>
+
+}

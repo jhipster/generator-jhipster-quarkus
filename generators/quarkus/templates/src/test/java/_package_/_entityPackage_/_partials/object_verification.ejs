@@ -1,0 +1,10 @@
+<%_ for (const field of fields.filter(field => !field.id)) {
+    const fieldName = field.fieldName;
+    const expectedVariableName = prefix + field.fieldNameUnderscored.toUpperCase();
+    let assertionMethod = 'isEqualTo';
+    if (field.fieldType === 'BigDecimal') {
+        assertionMethod = 'isEqualByComparingTo';
+    }
+_%>
+        assertThat(test<%= restClass %>.<%= fieldName %>).<%= assertionMethod %>(<%= expectedVariableName %>);
+<%_ } _%>

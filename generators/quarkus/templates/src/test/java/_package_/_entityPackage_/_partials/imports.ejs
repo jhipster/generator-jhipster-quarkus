@@ -1,0 +1,85 @@
+<%#
+ Copyright 2020-2023 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+import static io.restassured.RestAssured.given;
+import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.Response.Status.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
+<%_ if (databaseType === 'mongodb') { _%>
+import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import com.github.cloudyrock.standalone.MongockStandalone;
+import com.mongodb.client.MongoClient;
+<%_ } _%>
+
+import <%= packageName %>.TestUtil;
+<%_ if (authenticationType === 'oauth2') {_%>
+import <%=packageName%>.infrastructure.MockOidcServerTestResource;
+import io.quarkus.test.common.QuarkusTestResource;
+<%_ } _%>
+<%_ if (!dtoMapstruct) { _%>
+import <%= packageName %>.domain.<%= entityClass %>;
+<%_ } else { _%>
+import <%= packageName %>.service.dto.<%= dtoClass %>;
+<%_ } _%>
+import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
+<%_ if (databaseType === 'sql') { _%>
+import liquibase.Liquibase;
+import io.quarkus.liquibase.LiquibaseFactory;
+<%_ } else if (databaseType === 'mongodb') { _%>
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+<%_ } _%>
+import org.junit.jupiter.api.*;
+
+import jakarta.inject.Inject;
+
+import java.util.List;
+    <%_ if (anyFieldIsBigDecimal) { _%>
+import java.math.BigDecimal;
+    <%_ } _%>
+    <%_ if (anyFieldIsBlobDerived) { _%>
+import java.nio.ByteBuffer;
+    <%_ } _%>
+    <%_ if (anyFieldIsDuration) { _%>
+import java.time.Duration;
+    <%_ } _%>
+    <% if (anyFieldIsLocalDate) { _%>
+import java.time.LocalDate;
+    <%_ } _%>
+    <%_ if (anyFieldIsInstant|| anyFieldIsZonedDateTime) { _%>
+import java.time.Instant;
+    <%_ } _%>
+    <%_ if (anyFieldIsZonedDateTime) { _%>
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+    <%_ } _%>
+    <%_ if (anyFieldIsLocalDate|| anyFieldIsZonedDateTime) { _%>
+import java.time.ZoneId;
+    <%_ } _%>
+    <%_ if (anyFieldIsInstant === true || anyFieldIsZonedDateTime === true) { _%>
+import java.time.temporal.ChronoUnit;
+    <%_ } _%>
+    <%_ if (fieldsContainOwnerManyToMany) { _%>
+import java.util.ArrayList;
+    <%_ } _%>
+    <%_ if (anyFieldIsUUID === true) { _%>
+import java.util.UUID;
+    <%_ } _%>
