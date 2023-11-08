@@ -14,7 +14,6 @@ on:
   # - cron: '0 2 * * *'
 env:
   JHI_SAMPLES: ${{ github.workspace }}/generator-jhipster-quarkus/.blueprint/generate-sample/templates/samples/
-  JHI_SCRIPTS: ${{ github.workspace }}/generator-jhipster/test-integration/scripts
 jobs:
   applications:
     name: ${{ matrix.app }}
@@ -28,6 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
+        node: [18]
+        java: [17]
         app:
           - imperative-ngx-jwt-maven-mysql-caffeine
           - imperative-ngx-jwt-maven-mongodb-caffeine
@@ -48,39 +49,31 @@ jobs:
           - app: imperative-sql-jwt-maven-no-db
           - app: imperative-ngx-jwt-gradle-mongodb-redis
     steps:
+      - name: 'SETUP: environment'
+        run: |
+          git config --global user.name "JHipster Bot"
+          git config --global user.email "jhipster-bot@jhipster.tech"
+          git config --global init.defaultBranch main
+          mkdir app
+          mkdir -p base/app
+        working-directory: ${{ github.workspace }}
       - name: 'SETUP: Checkout quarkus blueprint'
         uses: actions/checkout@v3
         with:
           path: generator-jhipster-quarkus
           fetch-depth: 5
-      - name: 'SETUP: Checkout generator-jhipster'
-        uses: actions/checkout@v3
-        with:
-          repository: 'jhipster/generator-jhipster'
-          ref: v8.0.0-rc.1
-          path: generator-jhipster
-      - name: 'SETUP: environment'
-        id: setup
-        uses: ./generator-jhipster/.github/actions/setup
-        with:
-          jdl-sample: ${{ github.workspace }}/generator-jhipster-quarkus/.blueprint/generate-sample/templates/samples/${{ matrix.app }}.jdl
-          generator-jhipster-branch: local
-          jhipster-bom-branch: ignore
-          package-with-executable: generator-jhipster-quarkus
-          executable: jhipster-quarkus
       - uses: actions/setup-node@v3
         with:
-          # use node 16 for compare
-          node-version: 16
+          node-version: ${{matrix.node}}
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: ${{matrix.java}}
       - uses: graalvm/setup-graalvm@v1
         id: graalvm
         if: ${{ !contains(fromJson('["push", "pull_request"]'), github.event_name) || contains(matrix.app, 'mysql-caffeine') }}
         with:
-          java-version: '17'
+          java-version: ${{matrix.java}}
           distribution: 'graalvm'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -91,9 +84,7 @@ jobs:
       # Generate project
       #----------------------------------------------------------------------
       - name: 'GENERATION: project'
-        run: |
-          ls -la
-          jhipster-quarkus generate-sample ${{ matrix.app }}
+        run: jhipster-quarkus generate-sample ${{ matrix.app }}
       #----------------------------------------------------------------------
       # Detect changes against base commit
       #----------------------------------------------------------------------
@@ -106,13 +97,10 @@ jobs:
           git checkout @~1
           npm install
           npm link
-          $JHI_SCRIPTS/11-generate-config.sh
-          $JHI_SCRIPTS/12-generate-project.sh --skip-install --skip-git
+          cd ${{ github.workspace }}/base/app
+          jhipster-quarkus generate-sample ${{ matrix.app }} --skip-install --skip-git 
           cp -a "${{ github.workspace }}/app/.git" "${{ github.workspace }}/base/app/"
         working-directory: ${{ github.workspace }}/generator-jhipster-quarkus/
-        env:
-          JHI_JDL_APP: ${{ github.workspace }}/generator-jhipster-quarkus/test-integration/samples/${{ matrix.app }}.jdl
-          JHI_FOLDER_APP: ${{ github.workspace }}/base/app
       - name: 'MERGE: compare changes'
         continue-on-error: true
         id: compare
@@ -131,8 +119,6 @@ jobs:
             '.gitignore' '**/.gitignore' \
             '.gitattributes' '**/.gitattributes' \
             'README.md' '**/README.md' \
-            'src/main/webapp/**' '**/src/main/webapp/**' \
-            'src/test/javascript/**' '**/test/javascript/**' \
             '.jhipster/**' '**/.jhipster/**'
           echo "::endgroup::"
           echo "Showing source diff changes (will trigger builds)"
@@ -142,8 +128,6 @@ jobs:
             ':!.gitignore' ':!**/.gitignore' \
             ':!.gitattributes' ':!**/.gitattributes' \
             ':!README.md' ':!**/README.md' \
-            ':!src/main/webapp/**' ':!**/src/main/webapp/**' \
-            ':!src/test/javascript/**' ':!**/test/javascript/**' \
             ':!.jhipster/**' ':!**/.jhipster/**' \
             ':!package-lock.json' ':!**/package-lock.json' \
             ':!**/keystore.p12' \
@@ -154,34 +138,31 @@ jobs:
       # Run tests
       #----------------------------------------------------------------------
       - name: 'Run JHipster Application server tests'
+        if: steps.compare.outputs.equals != 'true'
         run: npm run ci:backend:test
-        working-directory: ${{ steps.setup.outputs.application-path }}
       - name: 'Run JHipster Application client tests'
+        if: steps.compare.outputs.equals != 'true'
         run: npm run ci:frontend:test
-        working-directory: ${{ steps.setup.outputs.application-path }}
       - name: 'Packaging'
+        if: steps.compare.outputs.equals != 'true'
         run: npm run ci:e2e:package
-        working-directory: ${{ steps.setup.outputs.application-path }}
       - name: 'E2E: Start docker-compose containers for e2e tests'
         if: steps.compare.outputs.equals != 'true'
         run: npm run ci:e2e:prepare
-        working-directory: ${{ steps.setup.outputs.application-path }}
       - name: 'E2E: Run'
         if: steps.compare.outputs.equals != 'true'
         id: e2e
         run: npm run ci:e2e:run --if-present
-        working-directory: ${{ steps.setup.outputs.application-path }}
       - name: 'E2E: Store failure screenshots'
         uses: actions/upload-artifact@v2
         if: always() && steps.e2e.outcome == 'failure'
         with:
           name: screenshots-${{ matrix.app }}
-          path: ${{ steps.setup.outputs.application-path }}/*/cypress/screenshots
+          path: ${{ github.workspace }}/app/*/cypress/screenshots
       - name: 'Native: Build Image'
         if: steps.graalvm.outcome == 'success'
         id: native
         run: npm run ci:native:prod
-        working-directory: ${{ steps.setup.outputs.application-path }}
       - name: 'Native: Store failsafe reports'
         uses: actions/upload-artifact@v2
         if: always() && steps.native.outcome == 'failure'
