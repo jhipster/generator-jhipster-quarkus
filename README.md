@@ -39,7 +39,7 @@ npm update -g generator-jhipster-quarkus
 To use this blueprint, run the command below:
 
 ```bash
-jhipster --blueprints quarkus
+jhipster-quarkus
 ```
 
 ## Running local Blueprint version for development
@@ -66,15 +66,15 @@ During development of blueprint, please note the below steps. They are very impo
     npm link generator-jhipster-quarkus
     npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
 
-    jhipster -d --blueprints quarkus
+    npx jhipster-quarkus
 
 🚦 What we have now:
 
-✅ Generate App generation - `jhipster --blueprints quarkus`
+✅ Generate App generation - `jhipster-quarkus`
 
-✅ Entity generation - `jhipster --blueprints quarkus entity <entity-name>`
+✅ Entity generation - `jhipster-quarkus entity <entity-name>`
 
-✅ JDL import - `jhipster --blueprints quarkus import-jdl sample.jh`
+✅ JDL import - `jhipster-quarkus jdl sample.jh`
 
 # ❤️ for community
 
