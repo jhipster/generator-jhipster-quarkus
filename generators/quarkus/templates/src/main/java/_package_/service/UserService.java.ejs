@@ -232,18 +232,8 @@ public class UserService {
 
     public User createUser(UserDTO userDTO) {
         User user = new User();
-        user.login = userDTO.login.toLowerCase();
-        user.firstName = userDTO.firstName;
-        user.lastName = userDTO.lastName;
-        if (userDTO.email != null) {
-            user.email = userDTO.email.toLowerCase();
-        }
-        user.imageUrl = userDTO.imageUrl;
-        if (userDTO.langKey == null) {
-            user.langKey = Constants.DEFAULT_LANGUAGE; // default language
-        } else {
-            user.langKey = userDTO.langKey;
-        }
+        setCommonFields(userDTO, user);
+        user.langKey = Objects.requireNonNullElse(userDTO.langKey, Constants.DEFAULT_LANGUAGE);
         user.password = passwordHasher.hash(RandomUtil.generatePassword());
         user.resetKey = RandomUtil.generateResetKey();
         user.resetDate = Instant.now();
@@ -251,7 +241,7 @@ public class UserService {
         if (userDTO.authorities != null) {
             user.authorities = userDTO
                 .authorities.stream()
-                .map(authority -> Authority.<Authority>findByIdOptional(authority))
+                .map(Authority::<Authority>findByIdOptional)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
@@ -265,6 +255,51 @@ public class UserService {
         <%_ } _%>
         log.debug("Created Information for User: {}", user);
         return user;
+    }
+
+    /**
+     * Update all information for a specific user, and return the modified user.
+     *
+     * @param userDTO user to update.
+     * @return updated user.
+     */
+    public Optional<UserDTO> updateUser(UserDTO userDTO) {
+        return User
+            .<User>findByIdOptional(userDTO.id)
+            .map(
+                user -> {
+                    setCommonFields(userDTO, user);
+                    user.activated = userDTO.activated;
+                    user.langKey = userDTO.langKey;
+                    Set<Authority> managedAuthorities = user.authorities;
+                    managedAuthorities.clear();
+                    userDTO
+                        .authorities.stream()
+                        .map(Authority::<Authority>findByIdOptional)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .forEach(managedAuthorities::add);
+                    <%_ if (cacheProviderAny) { _%>
+                    this.clearUserCaches(user);
+                    <%_ } _%>
+                    <%_ if (databaseType === 'mongodb') { _%>
+                    user.update();
+                    <%_ } _%>
+                    log.debug("Changed Information for User: {}", user);
+                    return user;
+                }
+            )
+            .map(UserDTO::new);
+    }
+
+    private void setCommonFields(UserDTO userDTO, User user) {
+        user.login = userDTO.login.toLowerCase();
+        user.firstName = userDTO.firstName;
+        user.lastName = userDTO.lastName;
+        if (userDTO.email != null) {
+            user.email = userDTO.email.toLowerCase();
+        }
+        user.imageUrl = userDTO.imageUrl;
     }
 
     public void deleteUser(String login) {
@@ -283,47 +318,6 @@ public class UserService {
                     log.debug("Deleted User: {}", user);
                 }
             );
-    }
-
-    /**
-     * Update all information for a specific user, and return the modified user.
-     *
-     * @param userDTO user to update.
-     * @return updated user.
-     */
-    public Optional<UserDTO> updateUser(UserDTO userDTO) {
-        return User
-            .<User>findByIdOptional(userDTO.id)
-            .map(
-                user -> {
-                    user.login = userDTO.login.toLowerCase();
-                    user.firstName = userDTO.firstName;
-                    user.lastName = userDTO.lastName;
-                    if (userDTO.email != null) {
-                        user.email = userDTO.email.toLowerCase();
-                    }
-                    user.imageUrl = userDTO.imageUrl;
-                    user.activated = userDTO.activated;
-                    user.langKey = userDTO.langKey;
-                    Set<Authority> managedAuthorities = user.authorities;
-                    managedAuthorities.clear();
-                    userDTO
-                        .authorities.stream()
-                        .map(authority -> Authority.<Authority>findByIdOptional(authority))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .forEach(managedAuthorities::add);
-                    <%_ if (cacheProviderAny) { _%>
-                    this.clearUserCaches(user);
-                    <%_ } _%>
-                    <%_ if (databaseType === 'mongodb') { _%>
-                    user.update();
-                    <%_ } _%>
-                    log.debug("Changed Information for User: {}", user);
-                    return user;
-                }
-            )
-            .map(UserDTO::new);
     }
 
 <%_ } _%>
