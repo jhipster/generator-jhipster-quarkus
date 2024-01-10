@@ -159,6 +159,13 @@ export default class extends BaseApplicationGenerator {
                         'ci:backend:test': 'npm run backend:info && npm run backend:doc:test && npm run backend:unit:test',
                     },
                 });
+                if (application.prodDatabaseTypeMysql) {
+                    this.packageJson.merge({
+                        scripts: {
+                            'services:db:await': 'sleep 10',
+                        },
+                    });
+                }
                 if (application.buildToolGradle) {
                     this.packageJson.merge({
                         scripts: {
