@@ -240,15 +240,15 @@ dependencies {
 <%_ if (devDatabaseType === 'mssql' || prodDatabaseType === 'mssql') { _%>
     implementation "io.quarkus:quarkus-jdbc-mssql"
     liquibaseRuntime "io.quarkus:quarkus-jdbc-mssql"
+<%_ } _%>
+<%_ if (devDatabaseType === 'mysql' || prodDatabaseType === 'mysql') { _%>
+    implementation "io.quarkus:quarkus-jdbc-mysql"
+    liquibaseRuntime "io.quarkus:quarkus-jdbc-mysql"
     constraints {
         implementation('com.mysql:mysql-connector-j:8.2.0') {
             because 'previous versions have a bug in github actions'
         }
     }
-<%_ } _%>
-<%_ if (devDatabaseType === 'mysql' || prodDatabaseType === 'mysql') { _%>
-    implementation "io.quarkus:quarkus-jdbc-mysql"
-    liquibaseRuntime "io.quarkus:quarkus-jdbc-mysql"
 <%_ } _%>
 <%_ if (devDatabaseType === 'postgresql' || prodDatabaseType === 'postgresql') { _%>
     implementation "io.quarkus:quarkus-jdbc-postgresql"
