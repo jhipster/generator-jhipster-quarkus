@@ -38,6 +38,9 @@ import <%= packageName %>.domain.<%= entityClass %>;
 <%_ } else { _%>
 import <%= packageName %>.service.dto.<%= dtoClass %>;
 <%_ } _%>
+<%_ for (const enumField of fields.filter(field => !field.transient && field.fieldIsEnum)) { _%>
+import <%= packageName %>.domain.enumeration.<%= enumField.fieldType %>;
+<%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
