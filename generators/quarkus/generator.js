@@ -233,7 +233,7 @@ export default class extends BaseApplicationGenerator {
                 if (os.platform() === 'win32') {
                     logMsgComment = ` (${chalk.yellow.bold(executable)} if using Windows Command Prompt)`;
                 }
-                this.log(chalk.green(`Run your Quarkus application:\n${chalk.yellow.bold(`./${executable}`)}${logMsgComment}`));
+                this.log(chalk.green(`  Run your Quarkus application:\n  ${chalk.yellow.bold(`./${executable}`)}${logMsgComment}`));
             },
         });
     }
