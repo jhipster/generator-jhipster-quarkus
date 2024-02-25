@@ -48,9 +48,7 @@ export default class extends BaseApplicationGenerator {
                 await this.composeWithJHipster(GENERATOR_DOCKER);
 
                 if (this.jhipsterConfigWithDefaults.buildTool === 'maven') {
-                    const mavenGenerator = await this.composeWithJHipster(GENERATOR_MAVEN);
-                    // Not officially supported at v8.0.0 drop maven generator when support lands.
-                    mavenGenerator.savePomStorage = false;
+                    await this.composeWithJHipster(GENERATOR_MAVEN);
                 }
                 if (this.jhipsterConfigWithDefaults.buildTool === 'gradle') {
                     await this.composeWithJHipster(GENERATOR_GRADLE);
