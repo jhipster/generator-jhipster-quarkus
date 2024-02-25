@@ -1,0 +1,75 @@
+#
+# Copyright the original author or authors from the JHipster project.
+#
+# This file is part of the JHipster project, see https://www.jhipster.tech/
+# for more information.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    rebase-strategy: 'auto'
+    schedule:
+      interval: 'daily'
+      # Before cache workflow
+      time: '23:00'
+    open-pull-requests-limit: 10
+    labels:
+      - 'theme: jhipster-internals'
+      - 'theme: dependencies'
+      - 'skip-changelog'
+    ignore:
+      # Should match supported node major version.
+      - dependency-name: '@types/node'
+        versions: ['>=19']
+    groups:
+      typescript-eslint:
+        patterns:
+          - '@typescript-eslint/*'
+
+  - package-ecosystem: 'maven'
+    directory: '/generators/quarkus/templates/'
+    schedule:
+      interval: 'daily'
+      # Maven doesn't have many PRs, but it triggers every client workflow. Let 2h of interval.
+      time: '05:00'
+    open-pull-requests-limit: 5
+    labels:
+      - 'theme: dependencies'
+      - 'theme: java'
+      - 'skip-changelog'
+
+  - package-ecosystem: 'gradle'
+    directory: '/generators/quarkus/templates'
+    schedule:
+      interval: 'daily'
+      time: '08:00'
+    open-pull-requests-limit: 5
+    labels:
+      - 'theme: dependencies'
+      - 'theme: java'
+      - 'skip-changelog'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      time: '00:30'
+    open-pull-requests-limit: 10
+    labels:
+      - 'theme: github_actions'
+      - 'theme: CI builds'
+      - 'skip-changelog'
