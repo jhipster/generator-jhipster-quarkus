@@ -62,7 +62,7 @@ jobs:
         with:
           path: generator-jhipster-quarkus
           fetch-depth: 5
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{matrix.node}}
       - uses: actions/setup-java@v3
