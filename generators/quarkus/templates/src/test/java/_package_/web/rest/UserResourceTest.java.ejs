@@ -44,7 +44,6 @@ import io.quarkus.liquibase.LiquibaseFactory;
 <%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
-import io.restassured.parsing.Parser;
 import java.time.Instant;
 import java.util.Set;
 import jakarta.inject.Inject;
@@ -105,7 +104,6 @@ public class UserResourceTest {
     static void jsonMapper() {
         RestAssured.config =
             RestAssured.config().objectMapperConfig(objectMapperConfig().defaultObjectMapper(TestUtil.jsonbObjectMapper()));
-        RestAssured.defaultParser = Parser.JSON;
     }
 
     @BeforeEach
