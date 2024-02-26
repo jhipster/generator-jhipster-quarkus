@@ -455,51 +455,6 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   "src/main/webapp/i18n/en/user-management.json": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/i18n/fr/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/configuration.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/health.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/logs.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/metrics.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/settings.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/user-management.json": {
-    "stateCleared": "modified",
-  },
   "src/main/webapp/index.html": {
     "stateCleared": "modified",
   },

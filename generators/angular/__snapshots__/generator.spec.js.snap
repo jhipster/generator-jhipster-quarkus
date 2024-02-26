@@ -176,7 +176,7 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   "src/main/webapp/app/account/settings/settings.route.ts": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/app/admin/admin-routing.module.ts": {
+  "src/main/webapp/app/admin/admin.routes.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/admin/configuration/configuration.component.html": {
@@ -377,13 +377,16 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   "src/main/webapp/app/app-page-title-strategy.ts": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/app/app-routing.module.ts": {
+  "src/main/webapp/app/app.component.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/app.config.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/app.constants.ts": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/app/app.module.ts": {
+  "src/main/webapp/app/app.routes.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/config/authority.constants.ts": {
@@ -500,7 +503,7 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   "src/main/webapp/app/entities/entity-navbar-items.ts": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/app/entities/entity-routing.module.ts": {
+  "src/main/webapp/app/entities/entity.routes.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/entities/user/user.model.ts": {
@@ -546,9 +549,6 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
     "stateCleared": "modified",
   },
   "src/main/webapp/app/layouts/main/main.component.ts": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/app/layouts/main/main.module.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/layouts/navbar/active-menu.directive.ts": {
@@ -831,51 +831,6 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
     "stateCleared": "modified",
   },
   "src/main/webapp/i18n/en/user-management.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/configuration.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/health.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/logs.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/metrics.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/settings.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/fr/user-management.json": {
     "stateCleared": "modified",
   },
   "src/main/webapp/index.html": {

@@ -48,9 +48,7 @@ export default class extends BaseApplicationGenerator {
                 await this.composeWithJHipster(GENERATOR_DOCKER);
 
                 if (this.jhipsterConfigWithDefaults.buildTool === 'maven') {
-                    const mavenGenerator = await this.composeWithJHipster(GENERATOR_MAVEN);
-                    // Not officially supported at v8.0.0 drop maven generator when support lands.
-                    mavenGenerator.savePomStorage = false;
+                    await this.composeWithJHipster(GENERATOR_MAVEN);
                 }
                 if (this.jhipsterConfigWithDefaults.buildTool === 'gradle') {
                     await this.composeWithJHipster(GENERATOR_GRADLE);
@@ -159,6 +157,13 @@ export default class extends BaseApplicationGenerator {
                         'ci:backend:test': 'npm run backend:info && npm run backend:doc:test && npm run backend:unit:test',
                     },
                 });
+                if (application.prodDatabaseTypeMysql) {
+                    this.packageJson.merge({
+                        scripts: {
+                            'services:db:await': 'sleep 10',
+                        },
+                    });
+                }
                 if (application.buildToolGradle) {
                     this.packageJson.merge({
                         scripts: {
@@ -228,7 +233,7 @@ export default class extends BaseApplicationGenerator {
                 if (os.platform() === 'win32') {
                     logMsgComment = ` (${chalk.yellow.bold(executable)} if using Windows Command Prompt)`;
                 }
-                this.log(chalk.green(`Run your Quarkus application:\n${chalk.yellow.bold(`./${executable}`)}${logMsgComment}`));
+                this.log(chalk.green(`  Run your Quarkus application:\n  ${chalk.yellow.bold(`./${executable}`)}${logMsgComment}`));
             },
         });
     }

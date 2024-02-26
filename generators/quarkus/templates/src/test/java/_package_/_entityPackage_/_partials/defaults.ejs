@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2023 the original author or authors from the JHipster project.
+ Copyright 2020-2024 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -49,10 +49,10 @@
     let enumValue1;
     let enumValue2;
     if (isEnum) {
-        const values = field.fieldValues.replace(/\s/g, '').split(',');
-        enumValue1 = values[0];
-        if (values.length > 1) {
-            enumValue2 = values[1];
+        const enumValues = field.enumValues;
+        enumValue1 = enumValues[0];
+        if (enumValues.length > 1) {
+            enumValue2 = enumValues[1];
         } else {
             enumValue2 = enumValue1;
         }
@@ -149,8 +149,9 @@
             updatedValue = 'ByteBuffer.wrap(TestUtil.createByteArray(1, "1"))';
         }
     } else if (isEnum) {
-        defaultValue = enumValue1;
-        updatedValue = enumValue2;
+        const enumFieldType = `${fieldType}.`;
+        defaultValue = enumFieldType + enumValue1.name;
+        updatedValue = enumFieldType + enumValue2.name;
     }
 _%>
     private static final <%= fieldType %> <%= defaultValueName %> = <%- defaultValue %>;
