@@ -55,11 +55,11 @@ quarkus.http.auth.permission.public.policy=permit
 <%_ if(!skipUserManagement) { _%>
 
 quarkus.http.auth.policy.admin-role.roles-allowed=ROLE_ADMIN
-quarkus.http.auth.permission.admin.paths=/api/admin/**,/management/**
+quarkus.http.auth.permission.admin.paths=/api/admin/*,/management/*
 quarkus.http.auth.permission.admin.policy=admin-role
 
 quarkus.http.auth.policy.user-role.roles-allowed=ROLE_USER
-quarkus.http.auth.permission.user.paths=/api/**
+quarkus.http.auth.permission.user.paths=/api/*
 quarkus.http.auth.permission.user.policy=user-role
 <%_ } _%>
 
