@@ -1,5 +1,5 @@
 <%#
- Copyright 2020-2023 the original author or authors from the JHipster project.
+ Copyright 2020-2024 the original author or authors from the JHipster project.
 
  This file is part of the JHipster project, see https://www.jhipster.tech/
  for more information.
@@ -37,6 +37,9 @@ import io.quarkus.test.common.QuarkusTestResource;
 import <%= packageName %>.domain.<%= entityClass %>;
 <%_ } else { _%>
 import <%= packageName %>.service.dto.<%= dtoClass %>;
+<%_ } _%>
+<%_ for (const enumField of fields.filter(field => !field.transient && field.fieldIsEnum)) { _%>
+import <%= packageName %>.domain.enumeration.<%= enumField.fieldType %>;
 <%_ } _%>
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;

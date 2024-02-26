@@ -1,5 +1,5 @@
 /**
- * Copyright 2020-2023 the original author or authors from the JHipster project.
+ * Copyright 2020-2024 the original author or authors from the JHipster project.
  *
  * This file is part of the JHipster project, see https://www.jhipster.tech/
  * for more information.
@@ -44,7 +44,7 @@ export const entityQuarkusFiles = {
         }),
         javaMainPackageTemplatesBlock({
             condition: generator => generator.service === 'serviceClass' && !generator.embedded,
-            renameTo: (data, filename) => filename.replace('ServiceImpl.java', 'Service.java'),
+            renameTo: (_data, file) => file.replace('service/impl', 'service').replace('Impl.java', '.java'),
             templates: ['_entityPackage_/service/impl/_entityClass_ServiceImpl.java'],
         }),
         javaMainPackageTemplatesBlock({

@@ -5,6 +5,10 @@ import command from './command.mjs';
 export default class extends BaseGenerator {
     sampleName;
 
+    constructor(args, opts, features) {
+        super(args, opts, { ...features, jhipsterBootstrap: false });
+    }
+
     get [BaseGenerator.INITIALIZING]() {
         return this.asInitializingTaskGroup({
             async initializeOptions() {
