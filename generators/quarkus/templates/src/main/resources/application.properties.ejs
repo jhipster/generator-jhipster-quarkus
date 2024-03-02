@@ -58,13 +58,8 @@ quarkus.http.auth.policy.admin-role.roles-allowed=ROLE_ADMIN
 quarkus.http.auth.permission.admin.paths=/api/admin/*,/management/*
 quarkus.http.auth.permission.admin.policy=admin-role
 
-quarkus.http.auth.policy.user-role.roles-allowed=ROLE_USER
-quarkus.http.auth.permission.user.paths=/api/*
-quarkus.http.auth.permission.user.policy=user-role
-
-quarkus.http.auth.permission.permit1.paths=/api/admin/users/*
-quarkus.http.auth.permission.permit1.policy=authenticated
-quarkus.http.auth.permission.permit1.methods=GET
+quarkus.http.auth.permission.secured.paths=/api/*
+quarkus.http.auth.permission.secured.policy=authenticated
 <%_ } _%>
 
 quarkus.smallrye-openapi.path=/v2/api-docs
