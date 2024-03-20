@@ -26,7 +26,7 @@ const blueprint = packageFolderName.startsWith('jhipster-') ? `generator-${packa
         printLogo: () => {
             console.log(getLogo());
         },
-        lookups: [{ packagePaths: [packagePath] }],
+        lookups: [{ packagePaths: [packagePath], lookups: ['generators'] }],
     }).catch(done);
 
     process.on('unhandledRejection', up => {
