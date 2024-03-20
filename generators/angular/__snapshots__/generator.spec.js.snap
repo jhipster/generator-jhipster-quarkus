@@ -506,13 +506,16 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   "src/main/webapp/app/entities/entity.routes.ts": {
     "stateCleared": "modified",
   },
+  "src/main/webapp/app/entities/user/service/user.service.spec.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/entities/user/service/user.service.ts": {
+    "stateCleared": "modified",
+  },
   "src/main/webapp/app/entities/user/user.model.ts": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/app/entities/user/user.service.spec.ts": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/app/entities/user/user.service.ts": {
+  "src/main/webapp/app/entities/user/user.test-samples.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/home/home.component.html": {
@@ -695,10 +698,16 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   "src/main/webapp/app/shared/sort/sort-by.directive.ts": {
     "stateCleared": "modified",
   },
+  "src/main/webapp/app/shared/sort/sort-state.ts": {
+    "stateCleared": "modified",
+  },
   "src/main/webapp/app/shared/sort/sort.directive.spec.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/shared/sort/sort.directive.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/shared/sort/sort.service.spec.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/shared/sort/sort.service.ts": {
