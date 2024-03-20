@@ -28,72 +28,84 @@ export default class extends MavenGenerator {
     get [MavenGenerator.PROMPTING]() {
         return this.asPromptingTaskGroup({
             ...super.prompting,
+            async promptingTemplateTask() {},
         });
     }
 
     get [MavenGenerator.CONFIGURING]() {
         return this.asConfiguringTaskGroup({
             ...super.configuring,
+            async configuringTemplateTask() {},
         });
     }
 
     get [MavenGenerator.COMPOSING]() {
         return this.asComposingTaskGroup({
             ...super.composing,
+            async composingTemplateTask() {},
         });
     }
 
     get [MavenGenerator.LOADING]() {
         return this.asLoadingTaskGroup({
             ...super.loading,
+            async loadingTemplateTask() {},
         });
     }
 
     get [MavenGenerator.PREPARING]() {
         return this.asPreparingTaskGroup({
             ...super.preparing,
+            async preparingTemplateTask() {},
         });
     }
 
     get [MavenGenerator.CONFIGURING_EACH_ENTITY]() {
         return this.asConfiguringEachEntityTaskGroup({
             ...super.configuringEachEntity,
+            async configuringEachEntityTemplateTask() {},
         });
     }
 
     get [MavenGenerator.LOADING_ENTITIES]() {
         return this.asLoadingEntitiesTaskGroup({
             ...super.loadingEntities,
+            async loadingEntitiesTemplateTask() {},
         });
     }
 
     get [MavenGenerator.PREPARING_EACH_ENTITY]() {
         return this.asPreparingEachEntityTaskGroup({
             ...super.preparingEachEntity,
+            async preparingEachEntityTemplateTask() {},
         });
     }
 
     get [MavenGenerator.PREPARING_EACH_ENTITY_FIELD]() {
         return this.asPreparingEachEntityFieldTaskGroup({
             ...super.preparingEachEntityField,
+            async preparingEachEntityFieldTemplateTask() {},
         });
     }
 
     get [MavenGenerator.PREPARING_EACH_ENTITY_RELATIONSHIP]() {
         return this.asPreparingEachEntityRelationshipTaskGroup({
             ...super.preparingEachEntityRelationship,
+            async preparingEachEntityRelationshipTemplateTask() {},
         });
     }
 
     get [MavenGenerator.POST_PREPARING_EACH_ENTITY]() {
         return this.asPostPreparingEachEntityTaskGroup({
             ...super.postPreparingEachEntity,
+            async postPreparingEachEntityTemplateTask() {},
         });
     }
 
     get [MavenGenerator.DEFAULT]() {
         return this.asDefaultTaskGroup({
             ...super.default,
+            async defaultTemplateTask() {},
         });
     }
 
@@ -106,6 +118,7 @@ export default class extends MavenGenerator {
     get [MavenGenerator.WRITING_ENTITIES]() {
         return this.asWritingEntitiesTaskGroup({
             ...super.writingEntities,
+            async writingEntitiesTemplateTask() {},
         });
     }
 
@@ -120,30 +133,35 @@ export default class extends MavenGenerator {
     get [MavenGenerator.POST_WRITING_ENTITIES]() {
         return this.asPostWritingEntitiesTaskGroup({
             ...super.postWritingEntities,
+            async postWritingEntitiesTemplateTask() {},
         });
     }
 
     get [MavenGenerator.LOADING_TRANSLATIONS]() {
         return this.asLoadingTranslationsTaskGroup({
             ...super.loadingTranslations,
+            async loadingTranslationsTemplateTask() {},
         });
     }
 
     get [MavenGenerator.INSTALL]() {
         return this.asInstallTaskGroup({
             ...super.install,
+            async installTemplateTask() {},
         });
     }
 
     get [MavenGenerator.POST_INSTALL]() {
         return this.asPostInstallTaskGroup({
             ...super.postInstall,
+            async postInstallTemplateTask() {},
         });
     }
 
     get [MavenGenerator.END]() {
         return this.asEndTaskGroup({
             ...super.end,
+            async endTemplateTask() {},
         });
     }
 }

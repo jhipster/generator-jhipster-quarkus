@@ -22,16 +22,10 @@ As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you hav
 
 # Installation
 
-To install this blueprint:
+To install or update this blueprint:
 
 ```bash
 npm install -g generator-jhipster-quarkus
-```
-
-To update this blueprint:
-
-```bash
-npm update -g generator-jhipster-quarkus
 ```
 
 # Usage
@@ -41,6 +35,42 @@ To use this blueprint, run the command below:
 ```bash
 jhipster-quarkus
 ```
+
+Or, you can use:
+
+```bash
+jhipster --blueprints quarkus
+```
+
+You can look for updated quarkus blueprint specific options by running
+
+```bash
+jhipster app --blueprints quarkus --help
+```
+
+And looking for `(blueprint option: quarkus)` like
+
+## Pre-release
+
+To use an unreleased version, install it using git.
+
+```bash
+npm install -g jhipster/generator-jhipster-quarkus#main
+jhipster --blueprints quarkus --skip-jhipster-dependencies
+```
+
+🚦 What we have now:
+
+✅ Generate App generation - `jhipster-quarkus`
+
+✅ Entity generation - `jhipster-quarkus entity <entity-name>`
+
+✅ JDL import - `jhipster-quarkus jdl sample.jh`
+
+# ❤️ for community
+
+Interested in contributing?
+Check out [JHipster contributing guide](https://github.com/jhipster/generator-jhipster/blob/master/CONTRIBUTING.md) to get started.
 
 ## Running local Blueprint version for development
 
@@ -67,19 +97,6 @@ During development of blueprint, please note the below steps. They are very impo
     npm link generator-jhipster (Optional: Needed only if you are using a non-released JHipster version)
 
     npx jhipster-quarkus
-
-🚦 What we have now:
-
-✅ Generate App generation - `jhipster-quarkus`
-
-✅ Entity generation - `jhipster-quarkus entity <entity-name>`
-
-✅ JDL import - `jhipster-quarkus jdl sample.jh`
-
-# ❤️ for community
-
-Interested in contributing?
-Check out [JHipster contributing guide](https://github.com/jhipster/generator-jhipster/blob/master/CONTRIBUTING.md) to get started.
 
 # License
 

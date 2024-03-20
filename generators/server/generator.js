@@ -59,7 +59,7 @@ export default class extends ServerGenerator {
 
     get [ServerGenerator.WRITING_ENTITIES]() {
         return this.asWritingTaskGroup({
-            async writeMicronautServerFiles({ application, entities }) {
+            async writeQuarkusServerFiles({ application, entities }) {
                 for (const entity of entities.filter(entity => !entity.skipServer && !entity.builtIn)) {
                     this.writeFiles({
                         sections: entityServerFilesFromJHipster,
