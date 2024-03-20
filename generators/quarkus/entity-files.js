@@ -68,7 +68,12 @@ export const entityServerFilesFromJHipster = {
             condition: generator =>
                 generator.dtoMapstruct &&
                 (generator.databaseType === 'sql' || generator.databaseType === 'mongodb' || generator.databaseType === 'couchbase'),
-            templates: ['_entityPackage_/service/mapper/_entityClass_MapperTest.java'],
+            templates: [
+                '_entityPackage_/domain/_persistClass_Asserts.java',
+                '_entityPackage_/domain/_persistClass_Test.java',
+                '_entityPackage_/domain/_persistClass_TestSamples.java',
+                '_entityPackage_/service/mapper/_entityClass_MapperTest.java',
+            ],
         }),
     ],
 };
