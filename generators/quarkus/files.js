@@ -42,6 +42,8 @@ export const serverFiles = {
                 'gradle/docker.gradle',
                 'gradle/profile_dev.gradle',
                 'gradle/profile_prod.gradle',
+                `buildSrc/src/main/groovy/jhipster.code-quality-conventions.gradle`,
+                `buildSrc/src/main/groovy/jhipster.docker-conventions.gradle`,
             ],
         },
     ],
