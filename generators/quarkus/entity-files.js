@@ -36,7 +36,11 @@ export const entityQuarkusFiles = {
             templates: ['web/rest/vm/PageRequestVM.java', 'web/rest/vm/SortRequestVM.java', 'web/util/PaginationUtil.java'],
         }),
         javaTestPackageTemplatesBlock({
-            templates: ['_entityPackage_/domain/_persistClass_Test.java', '_entityPackage_/web/rest/_entityClass_ResourceTest.java'],
+            templates: [
+                '_entityPackage_/domain/_persistClass_Test.java',
+                '_entityPackage_/web/rest/_entityClass_ResourceTest.java',
+                '_entityPackage_/service/mapper/_entityClass_MapperTest.java',
+            ],
         }),
         javaMainPackageTemplatesBlock({
             condition: generator => generator.service === 'serviceImpl' && !generator.embedded,
@@ -72,7 +76,6 @@ export const entityServerFilesFromJHipster = {
                 '_entityPackage_/domain/_persistClass_Asserts.java',
                 '_entityPackage_/domain/_persistClass_Test.java',
                 '_entityPackage_/domain/_persistClass_TestSamples.java',
-                '_entityPackage_/service/mapper/_entityClass_MapperTest.java',
             ],
         }),
     ],
