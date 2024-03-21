@@ -59,13 +59,13 @@ npm install -g jhipster/generator-jhipster-quarkus#main
 jhipster --blueprints quarkus --skip-jhipster-dependencies
 ```
 
-🚦 What we have now:
+## 🚦 Blueprint features:
 
-✅ Generate App generation - `jhipster-quarkus`
+✅ Generate App generation: `jhipster-quarkus`
 
-✅ Entity generation - `jhipster-quarkus entity <entity-name>`
+✅ Entity generation: `jhipster-quarkus entity <entity-name>`
 
-✅ JDL import - `jhipster-quarkus jdl sample.jh`
+✅ JDL import: `jhipster-quarkus jdl sample.jh`
 
 # ❤️ for community
 
