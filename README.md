@@ -78,8 +78,8 @@ During development of blueprint, please note the below steps. They are very impo
 
 1. Link your blueprint globally
 
-    cd generator-jhipster-quarkus
-    npm link
+       cd generator-jhipster-quarkus
+       npm link
 
 2. Link the development version of JHipster to your blueprint (optional: required only if you want to use a non-released JHipster version, like the master branch or your own custom fork)
 
