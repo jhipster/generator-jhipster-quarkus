@@ -106,6 +106,7 @@ export default class extends BaseApplicationGenerator {
         return this.asPreparingTaskGroup({
             async prepareQuarkusRendering({ entity }) {
                 entity.mapsIdAssoc = undefined;
+                entity.fluentMethods = false;
                 entity.primaryKeyType = entity.primaryKey.type;
                 // eslint-disable-next-line no-restricted-syntax
                 for (const relationship of entity.relationships) {

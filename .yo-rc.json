@@ -29,6 +29,12 @@
                 "sbs": true,
                 "written": true
             },
+            "java": {
+                "command": false,
+                "priorities": ["end"],
+                "sbs": true,
+                "written": true
+            },
             "maven": {
                 "command": false,
                 "priorities": [
