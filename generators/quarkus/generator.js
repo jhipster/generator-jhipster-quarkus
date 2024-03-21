@@ -234,9 +234,7 @@ export default class extends BaseApplicationGenerator {
                     }
                     this.editFile(
                         `${application.srcTestJava}/${application.packageFolder}/domain/${entity.persistClass}Test.java`,
-                        content =>
-                            content
-                                .replaceAll('web.rest.TestUtil', 'TestUtil'),
+                        content => content.replaceAll('web.rest.TestUtil', 'TestUtil'),
                     );
                 }
             },
