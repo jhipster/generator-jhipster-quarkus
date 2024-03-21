@@ -206,11 +206,7 @@ export default class extends BaseApplicationGenerator {
                     );
                     this.editFile(
                         `${application.srcTestJava}/${application.packageFolder}/domain/${entity.entityClass}Asserts.java`,
-                        content => content.replaceAll('getId()', 'id'),
-                    );
-                    this.editFile(
-                        `${application.srcTestJava}/${application.packageFolder}/domain/${entity.entityClass}TestSamples.java`,
-                        content => content.replaceAll('getId()', 'id'),
+                        content => content.replaceAll(/get([^(]+)\(\)/g, (_match, group) => group.charAt(0).toLowerCase() + group.slice(1)),
                     );
                 }
             },
