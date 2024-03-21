@@ -8,12 +8,6 @@ export default class extends ServerGenerator {
             ...features,
             checkBlueprint: true,
         });
-        if (!this.options.help) {
-            this.jhipsterTemplatesFolders.push(
-                // For _entityPackage_/domain/_persistClass_*.java files
-                this.fetchFromInstalledJHipster('java/templates'),
-            );
-        }
     }
 
     async beforeQueue() {

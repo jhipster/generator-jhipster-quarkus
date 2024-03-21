@@ -38,12 +38,6 @@ export const entityQuarkusFiles = {
         javaTestPackageTemplatesBlock({
             templates: ['_entityPackage_/web/rest/_entityClass_ResourceTest.java'],
         }),
-        javaTestPackageTemplatesBlock({
-            condition: generator =>
-                generator.dtoMapstruct &&
-                (generator.databaseType === 'sql' || generator.databaseType === 'mongodb' || generator.databaseType === 'couchbase'),
-            templates: ['_entityPackage_/service/mapper/_entityClass_MapperTest.java'],
-        }),
         javaMainPackageTemplatesBlock({
             condition: generator => generator.service === 'serviceImpl' && !generator.embedded,
             templates: ['_entityPackage_/service/_entityClass_Service.java', '_entityPackage_/service/impl/_entityClass_ServiceImpl.java'],
@@ -56,6 +50,12 @@ export const entityQuarkusFiles = {
         javaMainPackageTemplatesBlock({
             condition: generator => generator.dtoMapstruct,
             templates: ['_entityPackage_/service/dto/_dtoClass_.java', '_entityPackage_/service/mapper/_entityClass_Mapper.java'],
+        }),
+        javaTestPackageTemplatesBlock({
+            condition: generator =>
+                generator.dtoMapstruct &&
+                (generator.databaseType === 'sql' || generator.databaseType === 'mongodb' || generator.databaseType === 'couchbase'),
+            templates: ['_entityPackage_/service/mapper/_entityClass_MapperTest.java'],
         }),
     ],
 };
