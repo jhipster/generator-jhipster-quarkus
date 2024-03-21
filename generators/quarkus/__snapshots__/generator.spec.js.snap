@@ -430,6 +430,12 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 an
   "buildSrc/gradle/libs.versions.toml": {
     "stateCleared": "modified",
   },
+  "buildSrc/src/main/groovy/jhipster.code-quality-conventions.gradle": {
+    "stateCleared": "modified",
+  },
+  "buildSrc/src/main/groovy/jhipster.docker-conventions.gradle": {
+    "stateCleared": "modified",
+  },
   "checkstyle.xml": {
     "stateCleared": "modified",
   },
