@@ -77,8 +77,7 @@ export default class extends ServerGenerator {
     get [ServerGenerator.POST_WRITING]() {
         return this.asPostWritingTaskGroup({
             ...super.postWriting,
-            addTestSpringFactory: undefined,
-            customizeMaven: undefined,
+            customizeGradle: undefined,
         });
     }
 }
