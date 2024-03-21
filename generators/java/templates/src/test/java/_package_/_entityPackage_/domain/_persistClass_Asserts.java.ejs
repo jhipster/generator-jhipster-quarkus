@@ -16,7 +16,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-package <%= entityAbsolutePackage %>.domain;
+package <%- entityAbsolutePackage %>.domain;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +28,7 @@ import static <%- packageName %>.domain.AssertUtils.bigDecimalCompareTo;
 import static <%- packageName %>.domain.AssertUtils.zonedDataTimeSameInstant;
 <%_ } _%>
 
-public class <%= persistClass %>Asserts {
+public class <%- persistClass %>Asserts {
 
     /**
      * Asserts that the entity has all properties (fields/relationships) set.
@@ -61,7 +61,7 @@ public class <%= persistClass %>Asserts {
      */
     public static void assert<%- persistClass %>MapsIdRelationshipPersistedValue(<%- persistClass %> entityToPersist, <%- persistClass %> persisted) {
         // Validate the id for MapsId, the ids must be same
-        assertThat(entityToPersist.<%= primaryKey.relationships[0].propertyName %>.<%= primaryKey.name %>).isEqualTo(persisted.<%= primaryKey.name %>);
+        assertThat(entityToPersist.<%- primaryKey.relationships[0].propertyGet %>.<%- primaryKey.propertyGet %>).isEqualTo(persisted.<%- primaryKey.propertyGet %>);
     }
 <%_ } _%>
 
@@ -76,10 +76,10 @@ public class <%= persistClass %>Asserts {
         assertThat(expected)
             .as("Verify <%- persistClass %> auto generated properties")
   <%_ for (const field of fields.filter(field => !field.transient && field.autoGenerate)) { _%>
-            .satisfies(e -> assertThat(e.<%- field.propertyName %>).as("check <%- field.propertyName %>").isEqualTo(actual.<%- field.propertyName %>))
+            .satisfies(e -> assertThat(e.<%- field.propertyGet %>).as("check <%- field.propertyGet %>").isEqualTo(actual.<%- field.propertyGet %>))
   <%_ } _%>
   <%_ for (const relationship of relationships.filter(relationship => relationship.autoGenerate && !relationship.otherEntity.builtInUser)) { _%>
-            .satisfies(e -> assertThat(e.<%- relationship.propertyName %>).as("check <%- relationship.propertyName %>").isEqualTo(actual.<%- relationship.propertyName %>))
+            .satisfies(e -> assertThat(e.<%- relationship.propertyGet %>).as("check <%- relationship.propertyGet %>").isEqualTo(actual.<%- relationship.propertyGet %>))
   <%_ } _%>
         ;
 <%_ } _%>
@@ -97,13 +97,13 @@ public class <%= persistClass %>Asserts {
             .as("Verify <%- persistClass %> relevant properties")
   <%_ for (const field of fields.filter(field => !field.transient && !field.autoGenerate)) { _%>
     <%_ if (field.fieldTypeZonedDateTime) { _%>
-            .satisfies(e -> assertThat(e.<%- field.propertyName %>).as("check <%- field.propertyName %>").usingComparator(zonedDataTimeSameInstant).isEqualTo(actual.<%- field.propertyName %>))
+            .satisfies(e -> assertThat(e.<%- field.propertyGet %>).as("check <%- field.propertyGet %>").usingComparator(zonedDataTimeSameInstant).isEqualTo(actual.<%- field.propertyGet %>))
     <%_ } else if (field.fieldTypeBigDecimal) { _%>
-            .satisfies(e -> assertThat(e.<%- field.propertyName %>).as("check <%- field.propertyName %>").usingComparator(bigDecimalCompareTo).isEqualTo(actual.<%- field.propertyName %>))
+            .satisfies(e -> assertThat(e.<%- field.propertyGet %>).as("check <%- field.propertyGet %>").usingComparator(bigDecimalCompareTo).isEqualTo(actual.<%- field.propertyGet %>))
     <%_ } else { _%>
-            .satisfies(e -> assertThat(e.<%- field.propertyName %>).as("check <%- field.propertyName %>").isEqualTo(actual.<%- field.propertyName %>))
+            .satisfies(e -> assertThat(e.<%- field.propertyGet %>).as("check <%- field.propertyGet %>").isEqualTo(actual.<%- field.propertyGet %>))
       <%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
-            .satisfies(e -> assertThat(e.<%- field.propertyName %>ContentType).as("check <%- field.propertyName %> contenty type").isEqualTo(actual.<%- field.propertyName %>ContentType))
+            .satisfies(e -> assertThat(e.<%- field.propertyGet %>ContentType).as("check <%- field.propertyGet %> contenty type").isEqualTo(actual.<%- field.propertyGet %>ContentType))
       <%_ } -%>
     <%_ } -%>
   <%_ } -%>
@@ -122,7 +122,7 @@ public class <%= persistClass %>Asserts {
         assertThat(expected)
             .as("Verify <%- persistClass %> relationships")
   <%_ for (const relationship of relationships.filter(relationship => relationship.persistableRelationship && !relationship.id && !relationship.autoGenerate && !relationship.otherEntity.builtInUser)) { _%>
-            .satisfies(e -> assertThat(e.<%- relationship.propertyName %>).as("check <%- relationship.propertyName %>").isEqualTo(actual.<%- relationship.propertyName %>))
+            .satisfies(e -> assertThat(e.<%- relationship.propertyGet %>).as("check <%- relationship.propertyGet %>").isEqualTo(actual.<%- relationship.propertyGet %>))
   <%_ } _%>
         ;
 <%_ } _%>

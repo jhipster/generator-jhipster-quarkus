@@ -92,6 +92,8 @@ export default class extends BaseApplicationGenerator {
                 entity.hasServiceImpl = entity.service === 'serviceImpl';
                 entity.viaRepository = entity.dataAccess === 'repository';
                 entity.paginationAny = entity.pagination !== 'no';
+                entity.propertiesOnly = true;
+                entity.fluentMethods = false;
 
                 entity.dataAccessObject = entity.viaRepository ? `${entity.entityInstance}Repository` : entity.entityClass;
                 entity.mapper = `${entity.entityInstance}Mapper`;
@@ -102,12 +104,35 @@ export default class extends BaseApplicationGenerator {
         });
     }
 
+    get [BaseApplicationGenerator.PREPARING_EACH_ENTITY_FIELD]() {
+        return this.asPreparingEachEntityFieldTaskGroup({
+            prepareField({ entity, field }) {
+                if (!entity.skipServer) {
+                    field.propertyGet = field.propertyName;
+                    field.propertySet = value => `${field.propertyName} = ${value}`;
+                }
+            },
+        });
+    }
+
+    get [BaseApplicationGenerator.PREPARING_EACH_ENTITY_RELATIONSHIP]() {
+        return this.asPreparingEachEntityRelationshipTaskGroup({
+            prepareField({ entity, relationship }) {
+                if (!entity.skipServer) {
+                    relationship.propertyGet = relationship.propertyName;
+                    relationship.propertySet = value => `${relationship.propertyName} = ${value}`;
+                }
+            },
+        });
+    }
+
     get [BaseApplicationGenerator.POST_PREPARING_EACH_ENTITY]() {
         return this.asPreparingTaskGroup({
             async prepareQuarkusRendering({ entity }) {
                 entity.mapsIdAssoc = undefined;
-                entity.fluentMethods = false;
                 entity.primaryKeyType = entity.primaryKey.type;
+                entity.primaryKey.propertyGet = entity.primaryKey.name;
+                entity.primaryKey.propertySet = value => `${entity.primaryKey.name} = ${value}`;
                 // eslint-disable-next-line no-restricted-syntax
                 for (const relationship of entity.relationships) {
                     if (relationship.id) {
@@ -192,22 +217,26 @@ export default class extends BaseApplicationGenerator {
     get [BaseApplicationGenerator.POST_WRITING_ENTITIES]() {
         return this.asPostWritingEntitiesTaskGroup({
             async postWritingEntitiesTemplateTask({ application, entities }) {
-                for (const entity of entities.filter(entity => !entity.builtIn && !entity.skipServer && entity.dtoMapstruct)) {
+                for (const entity of entities.filter(entity => !entity.builtIn && !entity.skipServer)) {
+                    if (entity.dtoMapstruct) {
+                        this.editFile(
+                            `${application.srcTestJava}/${application.packageFolder}/service/dto/${entity.dtoClass}Test.java`,
+                            content =>
+                                content
+                                    .replaceAll('web.rest.TestUtil', 'TestUtil')
+                                    .replaceAll('getId()', 'id')
+                                    .replaceAll(/setId\((.+)\)/g, 'id = $1'),
+                        );
+                        this.editFile(
+                            `${application.srcTestJava}/${application.packageFolder}/service/mapper/${entity.entityClass}MapperTest.java`,
+                            content => content.replaceAll('getId()', 'id'),
+                        );
+                    }
                     this.editFile(
-                        `${application.srcTestJava}/${application.packageFolder}/service/dto/${entity.dtoClass}Test.java`,
+                        `${application.srcTestJava}/${application.packageFolder}/domain/${entity.persistClass}Test.java`,
                         content =>
                             content
-                                .replaceAll('web.rest.TestUtil', 'TestUtil')
-                                .replaceAll('getId()', 'id')
-                                .replaceAll(/setId\((.+)\)/g, 'id = $1'),
-                    );
-                    this.editFile(
-                        `${application.srcTestJava}/${application.packageFolder}/service/mapper/${entity.entityClass}MapperTest.java`,
-                        content => content.replaceAll('getId()', 'id'),
-                    );
-                    this.editFile(
-                        `${application.srcTestJava}/${application.packageFolder}/domain/${entity.entityClass}Asserts.java`,
-                        content => content.replaceAll(/get([^(]+)\(\)/g, (_match, group) => group.charAt(0).toLowerCase() + group.slice(1)),
+                                .replaceAll('web.rest.TestUtil', 'TestUtil'),
                     );
                 }
             },
