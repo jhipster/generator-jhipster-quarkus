@@ -7,9 +7,13 @@ export default class extends ServerGenerator {
         super(args, opts, {
             ...features,
             checkBlueprint: true,
-            // Dropped it once migration is done.
-            jhipster7Migration: true,
         });
+        if (!this.options.help) {
+            this.jhipsterTemplatesFolders.push(
+                // For _entityPackage_/domain/_persistClass_*.java files
+                this.fetchFromInstalledJHipster('java/templates'),
+            );
+        }
     }
 
     async beforeQueue() {

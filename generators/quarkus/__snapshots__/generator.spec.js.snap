@@ -1170,7 +1170,13 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities
   "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/EntityAsserts.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/domain/EntityTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/domain/EntityTestSamples.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/domain/UserTest.java": {

@@ -200,9 +200,16 @@ export default class extends BaseApplicationGenerator {
                                 .replaceAll('getId()', 'id')
                                 .replaceAll(/setId\((.+)\)/g, 'id = $1'),
                     );
-
                     this.editFile(
                         `${application.srcTestJava}/${application.packageFolder}/service/mapper/${entity.entityClass}MapperTest.java`,
+                        content => content.replaceAll('getId()', 'id'),
+                    );
+                    this.editFile(
+                        `${application.srcTestJava}/${application.packageFolder}/domain/${entity.entityClass}Asserts.java`,
+                        content => content.replaceAll('getId()', 'id'),
+                    );
+                    this.editFile(
+                        `${application.srcTestJava}/${application.packageFolder}/domain/${entity.entityClass}TestSamples.java`,
                         content => content.replaceAll('getId()', 'id'),
                     );
                 }
