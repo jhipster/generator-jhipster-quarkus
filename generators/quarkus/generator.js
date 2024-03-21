@@ -257,7 +257,7 @@ export default class extends BaseApplicationGenerator {
                 this.log.ok('Quarkus application generated successfully.');
 
                 let executable = 'mvnw';
-                if (this.buildTool === 'gradle') {
+                if (this.jhipsterConfigWithDefaults.buildTool === 'gradle') {
                     executable = 'gradlew';
                 }
                 let logMsgComment = '';
