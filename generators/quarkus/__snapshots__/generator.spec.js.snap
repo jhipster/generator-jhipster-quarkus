@@ -368,6 +368,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
   "src/test/java/com/mycompany/myapp/config/mock/JHipsterPropertiesMock.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
     "stateCleared": "modified",
   },
@@ -421,6 +424,12 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 an
   "build.gradle": {
     "stateCleared": "modified",
   },
+  "buildSrc/build.gradle": {
+    "stateCleared": "modified",
+  },
+  "buildSrc/gradle/libs.versions.toml": {
+    "stateCleared": "modified",
+  },
   "checkstyle.xml": {
     "stateCleared": "modified",
   },
@@ -428,6 +437,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 an
     "stateCleared": "modified",
   },
   "gradle/docker.gradle": {
+    "stateCleared": "modified",
+  },
+  "gradle/libs.versions.toml": {
     "stateCleared": "modified",
   },
   "gradle/profile_dev.gradle": {
@@ -715,9 +727,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 an
   "src/main/webapp/i18n/en/settings.json": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/i18n/en/user-management.json": {
-    "stateCleared": "modified",
-  },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
     "stateCleared": "modified",
   },
@@ -728,6 +737,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 an
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/config/mock/JHipsterPropertiesMock.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/infrastructure/InjectKeycloakServer.java": {
@@ -1152,10 +1164,19 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities
   "src/test/java/com/mycompany/myapp/config/mock/JHipsterPropertiesMock.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/EntityAsserts.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/domain/EntityTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/domain/EntityTestSamples.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/domain/UserTest.java": {

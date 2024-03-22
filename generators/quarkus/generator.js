@@ -92,6 +92,8 @@ export default class extends BaseApplicationGenerator {
                 entity.hasServiceImpl = entity.service === 'serviceImpl';
                 entity.viaRepository = entity.dataAccess === 'repository';
                 entity.paginationAny = entity.pagination !== 'no';
+                entity.propertiesOnly = true;
+                entity.fluentMethods = false;
 
                 entity.dataAccessObject = entity.viaRepository ? `${entity.entityInstance}Repository` : entity.entityClass;
                 entity.mapper = `${entity.entityInstance}Mapper`;
@@ -138,7 +140,7 @@ export default class extends BaseApplicationGenerator {
 
     get [BaseApplicationGenerator.WRITING_ENTITIES]() {
         return this.asWritingTaskGroup({
-            async writeMicronautServerFiles({ application, entities }) {
+            async writeQuarkusServerFiles({ application, entities }) {
                 for (const entity of entities.filter(entity => !entity.skipServer && !entity.builtIn)) {
                     this.writeFiles({
                         sections: entityQuarkusFiles,
@@ -191,19 +193,24 @@ export default class extends BaseApplicationGenerator {
     get [BaseApplicationGenerator.POST_WRITING_ENTITIES]() {
         return this.asPostWritingEntitiesTaskGroup({
             async postWritingEntitiesTemplateTask({ application, entities }) {
-                for (const entity of entities.filter(entity => !entity.builtIn && !entity.skipServer && entity.dtoMapstruct)) {
+                for (const entity of entities.filter(entity => !entity.builtIn && !entity.skipServer)) {
+                    if (entity.dtoMapstruct) {
+                        this.editFile(
+                            `${application.srcTestJava}/${application.packageFolder}/service/dto/${entity.dtoClass}Test.java`,
+                            content =>
+                                content
+                                    .replaceAll('web.rest.TestUtil', 'TestUtil')
+                                    .replaceAll('getId()', 'id')
+                                    .replaceAll(/setId\((.+)\)/g, 'id = $1'),
+                        );
+                        this.editFile(
+                            `${application.srcTestJava}/${application.packageFolder}/service/mapper/${entity.entityClass}MapperTest.java`,
+                            content => content.replaceAll('getId()', 'id'),
+                        );
+                    }
                     this.editFile(
-                        `${application.srcTestJava}/${application.packageFolder}/service/dto/${entity.dtoClass}Test.java`,
-                        content =>
-                            content
-                                .replaceAll('web.rest.TestUtil', 'TestUtil')
-                                .replaceAll('getId()', 'id')
-                                .replaceAll(/setId\((.+)\)/g, 'id = $1'),
-                    );
-
-                    this.editFile(
-                        `${application.srcTestJava}/${application.packageFolder}/service/mapper/${entity.entityClass}MapperTest.java`,
-                        content => content.replaceAll('getId()', 'id'),
+                        `${application.srcTestJava}/${application.packageFolder}/domain/${entity.persistClass}Test.java`,
+                        content => content.replaceAll('web.rest.TestUtil', 'TestUtil'),
                     );
                 }
             },
@@ -226,7 +233,7 @@ export default class extends BaseApplicationGenerator {
                 this.log.ok('Quarkus application generated successfully.');
 
                 let executable = 'mvnw';
-                if (this.buildTool === 'gradle') {
+                if (this.jhipsterConfigWithDefaults.buildTool === 'gradle') {
                     executable = 'gradlew';
                 }
                 let logMsgComment = '';
