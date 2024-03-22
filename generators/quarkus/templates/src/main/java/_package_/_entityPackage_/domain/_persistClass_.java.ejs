@@ -191,11 +191,6 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
 <%_ } _%>
     public <%= primaryKey.type %> id;
 
-    public <%= persistClass %> id(<%= primaryKey.type %> id) {
-        this.id = id;
-        return this;
-    }
-
 <%_ for (const field of fields.filter(field => !field.id)) {
     if (field.fieldJavadoc) { _%>
 <%- field.fieldJavadoc %>
@@ -250,18 +245,8 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
     <%_ } _%>
     <%_ if (fieldTypeBlobContent !== 'text') { _%>
     public <%= fieldType %> <%= fieldName %>;
-
-    public <%= persistClass %> <%= fieldName %>(<%= fieldType %> <%= fieldName %>) {
-        this.<%= fieldName %> = <%= fieldName %>;
-        return this;
-    }
     <%_ } else { _%>
      public String <%= fieldName %>;
-
-     public <%= persistClass %> <%= fieldName %>(String <%= fieldName %>) {
-        this.<%= fieldName %> = <%= fieldName %>;
-        return this;
-     }
     <%_ } _%>
 
     <%_ if ((fieldType === 'byte[]' || fieldType === 'ByteBuffer') && fieldTypeBlobContent !== 'text') { _%>
