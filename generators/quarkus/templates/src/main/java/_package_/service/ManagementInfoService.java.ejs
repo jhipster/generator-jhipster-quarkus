@@ -43,8 +43,10 @@ public class ManagementInfoService {
         if(jHipsterProperties.info().swagger().enable()){
             info.activeProfiles.add("swagger");
         }
-        info.activeProfiles.add(ProfileManager.getActiveProfile());
-        info.displayRibbonOnProfiles = ProfileManager.getActiveProfile();
+        info.activeProfiles.addAll(ConfigUtils.getProfiles());
+        var joiner = new StringJoiner(",");
+        ConfigUtils.getProfiles().forEach(joiner::add);
+        info.displayRibbonOnProfiles = joiner.toString();
         return info;
     }
 }
