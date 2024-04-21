@@ -443,6 +443,8 @@ git_properties_plugin_version=2.4.1
 gradle_node_plugin_version=7.0.2
 sonarqube_plugin_version=4.3.0.3225
 checkstyle_version=10.12.2
+wiremock_version=2.35.0
+testcontainers_keycloak_version=3.2.0
 no_http_checkstyle_version=0.0.11
 modernizer_plugin_version=1.8.0
 
