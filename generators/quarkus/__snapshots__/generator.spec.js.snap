@@ -416,6 +416,79 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
 }
 `;
 
+exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 and mongodb > gradle.properties content should match 1`] = `
+{
+  "gradle.properties": {
+    "contents": "rootProject.name=jhipster
+quarkusPluginVersion=3.8.3
+quarkusPlatformArtifactId=quarkus-bom
+quarkusPlatformGroupId=io.quarkus
+quarkusPlatformVersion=3.8.3
+
+# Build properties
+node_version=NODE_VERSION
+npm_version=NPM_VERSION
+
+# Dependency versions
+mapstruct_version=1.5.5.Final
+archunit_junit5_version=1.2.1
+resteasy_problem_version=3.1.0
+assertj_version=3.25.3
+mongockBom_version=4.3.8
+commons_vfs2_version=2.9.0
+graal_version=23.1.2
+
+# gradle plugin version
+git_properties_plugin_version=2.4.1
+gradle_node_plugin_version=7.0.2
+sonarqube_plugin_version=4.3.0.3225
+checkstyle_version=10.12.2
+wiremock_version=2.35.0
+testcontainers_keycloak_version=3.2.0
+no_http_checkstyle_version=0.0.11
+modernizer_plugin_version=1.8.0
+
+# jhipster-needle-gradle-property - JHipster will add additional properties here
+
+## below are some of the gradle performance improvement settings that can be used as required, these are not enabled by default
+
+## The Gradle daemon aims to improve the startup and execution time of Gradle.
+## The daemon is enabled by default in Gradle 3+ setting this to false will disable this.
+## TODO: disable daemon on CI, since builds should be clean and reliable on servers
+## https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:ways_to_disable_gradle_daemon
+## uncomment the below line to disable the daemon
+
+#org.gradle.daemon=false
+
+## Specifies the JVM arguments used for the daemon process.
+## The setting is particularly useful for tweaking memory settings.
+## Default value: -Xmx1024m -XX:MaxPermSize=256m
+## uncomment the below line to override the daemon defaults
+
+#org.gradle.jvmargs=-Xmx1024m -XX:MaxPermSize=256m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+
+## When configured, Gradle will run in incubating parallel mode.
+## This option should only be used with decoupled projects. More details, visit
+## http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects
+## uncomment the below line to enable parallel mode
+
+#org.gradle.parallel=true
+
+## Enables new incubating mode that makes Gradle selective when configuring projects.
+## Only relevant projects are configured which results in faster builds for large multi-projects.
+## http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:configuration_on_demand
+## uncomment the below line to enable the selective mode
+
+#org.gradle.configureondemand=true
+
+## Install and use a local version of node and npm.
+nodeInstall
+",
+    "stateCleared": "modified",
+  },
+}
+`;
+
 exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 and mongodb > should succeed 1`] = `
 {
   ".yo-rc.json": {
