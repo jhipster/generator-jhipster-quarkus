@@ -27,7 +27,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        node: [18]
+        node: [20]
         java: [17]
         app:
           - imperative-ngx-jwt-maven-mysql-caffeine
@@ -98,7 +98,7 @@ jobs:
           npm install
           npm link
           cd ${{ github.workspace }}/base/app
-          jhipster-quarkus generate-sample ${{ matrix.app }} --skip-install --skip-git 
+          jhipster-quarkus generate-sample ${{ matrix.app }} --skip-install --skip-git
           cp -a "${{ github.workspace }}/app/.git" "${{ github.workspace }}/base/app/"
         working-directory: ${{ github.workspace }}/generator-jhipster-quarkus/
       - name: 'MERGE: compare changes'
@@ -132,7 +132,7 @@ jobs:
             ':!package-lock.json' ':!**/package-lock.json' \
             ':!**/keystore.p12' \
             && echo "equals=true" >> $GITHUB_OUTPUT \
-            || echo "has-changes=true" >> $GITHUB_OUTPUT  
+            || echo "has-changes=true" >> $GITHUB_OUTPUT
           echo "::endgroup::"
       #----------------------------------------------------------------------
       # Run tests
@@ -169,3 +169,16 @@ jobs:
         with:
           name: failsafe-reports-${{ matrix.app }}
           path: /home/runner/app/target/failsafe-reports
+  check-samples:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: [applications]
+    if: always()
+    steps:
+      - run: |
+          echo '${{ toJSON(needs) }}'
+          if [ 'skipped' == '${{ needs.applications.result }}' ] || [ 'success' == '${{ needs.applications.result }}' ] || [ 'closed' == '${{ github.event.action }}' ]; then
+            exit 0
+          fi
+          exit 1

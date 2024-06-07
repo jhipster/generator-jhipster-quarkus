@@ -368,6 +368,9 @@ exports[`SubGenerator server of quarkus JHipster blueprint > run > should succee
   "src/test/java/com/mycompany/myapp/config/mock/JHipsterPropertiesMock.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
     "stateCleared": "modified",
   },

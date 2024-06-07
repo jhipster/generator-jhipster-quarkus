@@ -36,7 +36,7 @@ export const entityQuarkusFiles = {
             templates: ['web/rest/vm/PageRequestVM.java', 'web/rest/vm/SortRequestVM.java', 'web/util/PaginationUtil.java'],
         }),
         javaTestPackageTemplatesBlock({
-            templates: ['_entityPackage_/domain/_persistClass_Test.java', '_entityPackage_/web/rest/_entityClass_ResourceTest.java'],
+            templates: ['_entityPackage_/web/rest/_entityClass_ResourceTest.java'],
         }),
         javaMainPackageTemplatesBlock({
             condition: generator => generator.service === 'serviceImpl' && !generator.embedded,
@@ -51,6 +51,12 @@ export const entityQuarkusFiles = {
             condition: generator => generator.dtoMapstruct,
             templates: ['_entityPackage_/service/dto/_dtoClass_.java', '_entityPackage_/service/mapper/_entityClass_Mapper.java'],
         }),
+        javaTestPackageTemplatesBlock({
+            condition: generator =>
+                generator.dtoMapstruct &&
+                (generator.databaseType === 'sql' || generator.databaseType === 'mongodb' || generator.databaseType === 'couchbase'),
+            templates: ['_entityPackage_/service/mapper/_entityClass_MapperTest.java'],
+        }),
     ],
 };
 
@@ -63,12 +69,6 @@ export const entityServerFilesFromJHipster = {
         javaTestPackageTemplatesBlock({
             condition: generator => generator.dtoMapstruct,
             templates: ['_entityPackage_/service/dto/_dtoClass_Test.java'],
-        }),
-        javaTestPackageTemplatesBlock({
-            condition: generator =>
-                generator.dtoMapstruct &&
-                (generator.databaseType === 'sql' || generator.databaseType === 'mongodb' || generator.databaseType === 'couchbase'),
-            templates: ['_entityPackage_/service/mapper/_entityClass_MapperTest.java'],
         }),
     ],
 };

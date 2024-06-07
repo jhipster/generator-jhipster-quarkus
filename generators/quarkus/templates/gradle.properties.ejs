@@ -28,9 +28,9 @@ npm_version=<%= nodeDependencies.npm %>
 
 # Dependency versions
 mapstruct_version=1.5.5.Final
-archunit_junit5_version=1.1.0
-resteasy_problem_version=3.0.0
-assertj_version=3.24.2
+archunit_junit5_version=1.2.1
+resteasy_problem_version=3.1.0
+assertj_version=3.25.3
 <%_ if (searchEngine === 'elasticsearch') { _%>
 log4j2_mock_version=0.0.2
 <%_ } _%>
@@ -46,13 +46,13 @@ camel_quarkus_jackson_version=3.0.0-RC2
 <%_ if (databaseType === 'mongodb') { _%>
 mongockBom_version=4.3.8
 commons_vfs2_version=2.9.0
-graal_version=23.0.1
+graal_version=23.1.2
 <%_ } _%>
 
 # gradle plugin version
 git_properties_plugin_version=2.4.1
 <%_ if (!skipClient) { _%>
-gradle_node_plugin_version=7.0.0
+gradle_node_plugin_version=7.0.2
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
 liquibase_plugin_version=2.2.0
@@ -62,9 +62,9 @@ sonarqube_plugin_version=4.3.0.3225
 openapi_plugin_version=4.2.3
 <%_ } _%>
 checkstyle_version=10.12.2
-<%_ if (databaseType === 'oauth2') { _%>
+<%_ if (authenticationType === 'oauth2') { _%>
 wiremock_version=2.35.0
-testcontainers_keycloak_version=3.0.0
+testcontainers_keycloak_version=3.2.0
 <%_ } _%>
 no_http_checkstyle_version=0.0.11
 modernizer_plugin_version=1.8.0

@@ -6,8 +6,6 @@ export default class extends MavenGenerator {
         super(args, opts, {
             ...features,
             checkBlueprint: true,
-            // Dropped it once migration is done.
-            jhipster7Migration: true,
         });
     }
 

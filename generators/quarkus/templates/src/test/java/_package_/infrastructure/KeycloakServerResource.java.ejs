@@ -44,7 +44,7 @@ public class KeycloakServerResource implements QuarkusTestResourceLifecycleManag
     @Override
     public Map<String, String> start() {
         container =
-            new KeycloakContainer("quay.io/keycloak/keycloak:19.0.1")
+            new KeycloakContainer("<%= dockerContainers.keycloak %>")
                 .withRealmImportFile("jhipster-realm.json");
 
         containerNetworkId.ifPresent(container::withNetworkMode);
@@ -55,7 +55,7 @@ public class KeycloakServerResource implements QuarkusTestResourceLifecycleManag
     }
 
     private String getAuthServerUrl() {
-        String authServerUrl = container.getAuthServerUrl() + "realms/jhipster";
+        String authServerUrl = container.getAuthServerUrl() + "/realms/jhipster";
         if(containerNetworkId.isPresent()) {
             authServerUrl = "http://" + container.getCurrentContainerInfo().getConfig().getHostName() + authServerUrl.substring(authServerUrl.lastIndexOf(":"));
         }

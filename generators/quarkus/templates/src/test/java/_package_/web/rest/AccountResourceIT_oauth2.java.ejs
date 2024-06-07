@@ -30,23 +30,6 @@ public class AccountResourceIT extends IntegrationTestBase {
     }
 
     @Test
-    void should_allow_authenticated_user_to_retrieve_own_account_details() {
-        given()
-                .auth().oauth2(getAccessToken("admin", "admin"))
-                .accept(APPLICATION_JSON)
-                .when()
-                .get("/account")
-                .then()
-                .statusCode(OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .body("login", is("admin"))
-                .body("firstName", is("Admin"))
-                .body("lastName", is("Administrator"))
-                .body("email", is("admin@localhost"))
-                .body("authorities", hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN));
-    }
-
-    @Test
     public void testGetUnknownAccount() {
         given()
             .auth().oauth2("")

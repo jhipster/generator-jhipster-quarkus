@@ -7,8 +7,6 @@ export default class extends ServerGenerator {
         super(args, opts, {
             ...features,
             checkBlueprint: true,
-            // Dropped it once migration is done.
-            jhipster7Migration: true,
         });
     }
 
@@ -59,7 +57,7 @@ export default class extends ServerGenerator {
 
     get [ServerGenerator.WRITING_ENTITIES]() {
         return this.asWritingTaskGroup({
-            async writeMicronautServerFiles({ application, entities }) {
+            async writeQuarkusServerFiles({ application, entities }) {
                 for (const entity of entities.filter(entity => !entity.skipServer && !entity.builtIn)) {
                     this.writeFiles({
                         sections: entityServerFilesFromJHipster,
@@ -73,8 +71,7 @@ export default class extends ServerGenerator {
     get [ServerGenerator.POST_WRITING]() {
         return this.asPostWritingTaskGroup({
             ...super.postWriting,
-            addTestSpringFactory: undefined,
-            customizeMaven: undefined,
+            customizeGradle: undefined,
         });
     }
 }

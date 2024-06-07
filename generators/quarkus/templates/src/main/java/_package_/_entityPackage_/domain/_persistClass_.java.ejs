@@ -329,7 +329,6 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
     <%_ }
     }
     _%>
-    @JsonbTransient
     public <%= otherEntity.persistClass %> <%= relationshipFieldName %>;
 
     <%_ } else if (relationshipType === 'many-to-many') {
