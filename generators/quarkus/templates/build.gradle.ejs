@@ -220,8 +220,8 @@ repositories {
 dependencies {
     implementation 'io.quarkus:quarkus-container-image-jib'
     implementation "io.quarkus:quarkus-undertow"
-    implementation "io.quarkus:quarkus-rest"
-    implementation "io.quarkus:quarkus-rest-jsonb"
+    implementation "io.quarkus:quarkus-resteasy"
+    implementation "io.quarkus:quarkus-resteasy-jsonb"
     implementation "io.quarkus:quarkus-mailer"
 <%_ if (databaseType === 'sql') { _%>
     implementation "io.quarkus:quarkus-hibernate-orm-panache"
