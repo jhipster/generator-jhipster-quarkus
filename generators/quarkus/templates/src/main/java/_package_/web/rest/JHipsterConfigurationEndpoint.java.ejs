@@ -57,6 +57,6 @@ public class JHipsterConfigurationEndpoint {
       .map(configSource -> new EnvVM.PropertySource(configSource.getName(), configSource.getProperties()))
       .collect(Collectors.toList());
 
-    return new EnvVM(List.of(ConfigUtils.getProfiles()), propertySources);
+    return new EnvVM(ConfigUtils.getProfiles(), propertySources);
   }
 }
