@@ -42,6 +42,14 @@ export default class extends BaseApplicationGenerator {
         });
     }
 
+    get [BaseApplicationGenerator.CONFIGURING]() {
+        return this.asConfiguringTaskGroup({
+            async configureCommand() {
+                await this.configureCurrentJHipsterCommandConfig();
+            },
+        });
+    }
+
     get [BaseApplicationGenerator.COMPOSING]() {
         return this.asComposingTaskGroup({
             async composingTemplateTask() {
@@ -62,6 +70,14 @@ export default class extends BaseApplicationGenerator {
                     liquibaseGenerator.injectLogs = false;
                     liquibaseGenerator.injectBuildTool = false;
                 }
+            },
+        });
+    }
+
+    get [BaseApplicationGenerator.LOADING]() {
+        return this.asLoadingTaskGroup({
+            async loadCommand({ application }) {
+                await this.loadCurrentJHipsterCommandConfig(application);
             },
         });
     }
