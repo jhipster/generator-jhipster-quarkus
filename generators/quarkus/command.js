@@ -13,7 +13,7 @@ const command = {
     options: {},
     configs: {
         applicationType,
-        // defaultPackaging,
+        defaultPackaging,
         serverPort: {
             prompt: gen => ({
                 when: answers =>
