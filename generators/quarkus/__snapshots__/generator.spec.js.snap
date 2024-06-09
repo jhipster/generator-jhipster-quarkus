@@ -420,10 +420,10 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with oauth2 an
 {
   "gradle.properties": {
     "contents": "rootProject.name=jhipster
-quarkusPluginVersion=3.8.3
+quarkusPluginVersion=3.11.1
 quarkusPlatformArtifactId=quarkus-bom
 quarkusPlatformGroupId=io.quarkus
-quarkusPlatformVersion=3.8.3
+quarkusPlatformVersion=3.11.1
 
 # Build properties
 node_version=NODE_VERSION
@@ -432,7 +432,7 @@ npm_version=NPM_VERSION
 # Dependency versions
 mapstruct_version=1.5.5.Final
 archunit_junit5_version=1.2.1
-resteasy_problem_version=3.1.0
+resteasy_problem_version=3.9.0
 assertj_version=3.25.3
 mongockBom_version=4.3.8
 commons_vfs2_version=2.9.0
