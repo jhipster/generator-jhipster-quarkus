@@ -114,6 +114,7 @@
                 "written": true
             }
         },
+        "githubWorkflows": true,
         "jhipsterVersion": "8.1.0",
         "js": true,
         "localBlueprint": false,
