@@ -290,9 +290,6 @@ dependencies {
 <%_ } _%>
 
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
-<%_ if (databaseType === 'mongodb') { _%>
-    annotationProcessor "io.quarkus:quarkus-panache-common"
-<%_ } _%>
 
     testImplementation "io.quarkus:quarkus-junit5"
     testImplementation "io.quarkus:quarkus-junit5-mockito"
