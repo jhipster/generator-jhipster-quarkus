@@ -21,7 +21,7 @@ package <%=packageName%>.web.rest;
 import <%=packageName%>.web.rest.vm.ConfigPropsVM;
 import <%=packageName%>.web.rest.vm.EnvVM;
 import <%=packageName%>.security.AuthoritiesConstants;
-import io.quarkus.runtime.configuration.ProfileManager;
+import io.quarkus.runtime.configuration.ConfigUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
@@ -57,6 +57,6 @@ public class JHipsterConfigurationEndpoint {
       .map(configSource -> new EnvVM.PropertySource(configSource.getName(), configSource.getProperties()))
       .collect(Collectors.toList());
 
-    return new EnvVM(List.of(ProfileManager.getActiveProfile()), propertySources);
+    return new EnvVM(ConfigUtils.getProfiles(), propertySources);
   }
 }
