@@ -1,2 +1,3 @@
 generators/** skip
-README.md
+README.md diff
+cli/cli.cjs diff
