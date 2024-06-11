@@ -280,7 +280,7 @@ You can use the `native` profile as follow to build native executable.
 <%_ } _%>
 <%_ if (buildTool === 'gradle') { _%>
 ```
-./gradlew build -Dquarkus.package.type=native.
+./gradlew build -Dquarkus.native.enabled=true.
 ```
 <%_ } _%>
 Keep in mind that the generated native executable is dependent on your Operating System.
@@ -294,7 +294,7 @@ If you plan to run your application in a container, run:
 <%_ } _%>
 <%_ if (buildTool === 'gradle') { _%>
 ```
-./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
+./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
 ```
 <%_ } _%>
 It will use a Docker container with GraalVM installed and produce an 64 bit Linux executable.
