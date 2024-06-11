@@ -46,6 +46,7 @@ const command = {
                 type: String,
             },
             prompt: {
+                type: 'list',
                 message: `Which ${chalk.yellow('*type*')} of authentication would you like to use?`,
             },
             choices: [
