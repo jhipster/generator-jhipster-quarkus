@@ -280,7 +280,7 @@ You can use the `native` profile as follow to build native executable.
 <%_ } _%>
 <%_ if (buildTool === 'gradle') { _%>
 ```
-./gradlew build -Dquarkus.native.enabled=true.
+./gradlew build -Dquarkus.native.enabled=true -Dquarkus.package.jar.enabled=false
 ```
 <%_ } _%>
 Keep in mind that the generated native executable is dependent on your Operating System.
