@@ -11,7 +11,6 @@ import {
     GENERATOR_MAVEN,
     GENERATOR_SERVER,
 } from 'generator-jhipster/generators';
-import command from './command.js';
 import { serverFiles } from './files.js';
 import { entityQuarkusFiles } from './entity-files.js';
 import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, DEFAULT_DATA_ACCESS } from '../constants.js';
@@ -26,18 +25,25 @@ export default class extends BaseApplicationGenerator {
 
     get [BaseApplicationGenerator.INITIALIZING]() {
         return this.asInitializingTaskGroup({
-            async initializingTemplateTask() {
-                this.parseJHipsterArguments(command.arguments);
-                this.parseJHipsterOptions(command.options);
+            async parseCommand() {
+                await this.parseCurrentJHipsterCommand();
             },
         });
     }
 
     get [BaseApplicationGenerator.PROMPTING]() {
         return this.asPromptingTaskGroup({
-            async prompting({ control }) {
+            async promptCommand({ control }) {
                 if (control.existingProject && this.options.askAnswered !== true) return;
-                await this.prompt(this.prepareQuestions(command.configs));
+                await this.promptCurrentJHipsterCommand();
+            },
+        });
+    }
+
+    get [BaseApplicationGenerator.CONFIGURING]() {
+        return this.asConfiguringTaskGroup({
+            async configureCommand() {
+                await this.configureCurrentJHipsterCommandConfig();
             },
         });
     }
@@ -62,6 +68,14 @@ export default class extends BaseApplicationGenerator {
                     liquibaseGenerator.injectLogs = false;
                     liquibaseGenerator.injectBuildTool = false;
                 }
+            },
+        });
+    }
+
+    get [BaseApplicationGenerator.LOADING]() {
+        return this.asLoadingTaskGroup({
+            async loadCommand({ application }) {
+                await this.loadCurrentJHipsterCommandConfig(application);
             },
         });
     }

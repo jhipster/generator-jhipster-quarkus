@@ -1,8 +1,10 @@
 import chalk from 'chalk';
 import { GENERATOR_JAVA, GENERATOR_LIQUIBASE, GENERATOR_SPRING_DATA_RELATIONAL } from 'generator-jhipster/generators';
 import { command as serverCommand } from 'generator-jhipster/generators/server';
+import { command as springBootCommand } from 'generator-jhipster/generators/spring-boot';
 
 const { applicationType } = serverCommand.configs;
+const { defaultPackaging } = springBootCommand.configs;
 
 /**
  * @type {import('generator-jhipster').JHipsterCommandDefinition}
@@ -11,6 +13,7 @@ const command = {
     options: {},
     configs: {
         applicationType,
+        defaultPackaging,
         serverPort: {
             prompt: gen => ({
                 when: answers =>
@@ -43,6 +46,7 @@ const command = {
                 type: String,
             },
             prompt: {
+                type: 'list',
                 message: `Which ${chalk.yellow('*type*')} of authentication would you like to use?`,
             },
             choices: [

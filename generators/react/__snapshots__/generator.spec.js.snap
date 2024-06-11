@@ -251,6 +251,12 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   "src/main/webapp/app/shared/error/page-not-found.tsx": {
     "stateCleared": "modified",
   },
+  "src/main/webapp/app/shared/jhipster/headers.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/shared/jhipster/problem-details.ts": {
+    "stateCleared": "modified",
+  },
   "src/main/webapp/app/shared/layout/footer/footer.scss": {
     "stateCleared": "modified",
   },
