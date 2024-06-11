@@ -183,7 +183,8 @@ export default class extends BaseApplicationGenerator {
                 if (application.buildToolGradle) {
                     this.packageJson.merge({
                         scripts: {
-                            'ci:native:prod': './gradlew build -Dquarkus.native.enabled=true -Dquarkus.package.jar.enabled=false -x webapp -x test',
+                            'ci:native:prod':
+                                './gradlew build -Dquarkus.native.enabled=true -Dquarkus.package.jar.enabled=false -x webapp -x test',
                             'ci:e2e:dev': 'concurrently -k -s first "./gradlew" "npm run e2e:headless"',
                             'ci:e2e:server:start':
                                 'java -jar build/quarkus-app/quarkus-run.$npm_package_config_packaging -Dquarkus.profile=$npm_package_config_default_environment',
