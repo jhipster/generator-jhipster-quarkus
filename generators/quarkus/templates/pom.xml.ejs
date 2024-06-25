@@ -50,21 +50,21 @@
         <quarkus.platform.version><%= quarkusVersion %></quarkus.platform.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <resteasy-problem.version>3.9.0</resteasy-problem.version>
-        <archunit-junit5.version>1.2.1</archunit-junit5.version>
-        <assertj.version>3.25.3</assertj.version>
+        <archunit-junit5.version>1.3.0</archunit-junit5.version>
+        <assertj.version>3.26.0</assertj.version>
         <%_ if(authenticationType === 'oauth2') {_%>
-        <wiremock.version>2.35.0</wiremock.version>
+        <wiremock.version>3.0.1</wiremock.version>
         <%_ } _%>
 
         <!-- Plugin versions -->
-        <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
-        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
-        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
-        <maven-checkstyle.version>3.3.1</maven-checkstyle.version>
+        <maven-checkstyle.version>3.4.0</maven-checkstyle.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
-        <sonar-maven-plugin.version>3.10.0.2594</sonar-maven-plugin.version>
+        <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <%_ if (!skipClient) { _%>
@@ -74,7 +74,7 @@
         <openapi-generator-maven-plugin.version>3.2.3</openapi-generator-maven-plugin.version>
         <%_ } _%>
         <%_ if (cacheProvider === 'redis') { _%>
-         <camel-quarkus-jackson.version>3.0.0-RC2</camel-quarkus-jackson.version>
+         <camel-quarkus-jackson.version>3.11.0</camel-quarkus-jackson.version>
          <%_ } _%>
         <%_ if (databaseType === 'mongodb') { _%>
         <mongock-bom.version>4.3.8</mongock-bom.version>
@@ -83,7 +83,7 @@
         <%_ } _%>
 
         <!-- Plugin properties -->
-        <checkstyle.version>10.14.0</checkstyle.version>
+        <checkstyle.version>10.17.0</checkstyle.version>
 
         <!-- jhipster-needle-maven-property -->
     </properties>
@@ -249,7 +249,7 @@ _%>
         <dependency>
             <groupId>com.github.dasniko</groupId>
             <artifactId>testcontainers-keycloak</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.1</version>
             <scope>test</scope>
         </dependency>
         <%_ } else { _%>
@@ -717,7 +717,7 @@ _%>
             </activation>
             <properties>
                 <skipITs>false</skipITs>
-                <quarkus.package.type>native</quarkus.package.type>
+                <quarkus.native.enabled>true</quarkus.native.enabled>
             </properties>
         </profile>
         <!-- jhipster-needle-maven-add-profile -->
