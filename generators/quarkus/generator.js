@@ -11,10 +11,10 @@ import {
     GENERATOR_MAVEN,
     GENERATOR_SERVER,
 } from 'generator-jhipster/generators';
+import { createNeedleCallback } from 'generator-jhipster/generators/base/support';
+import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, DEFAULT_DATA_ACCESS } from '../constants.js';
 import { serverFiles } from './files.js';
 import { entityQuarkusFiles } from './entity-files.js';
-import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, DEFAULT_DATA_ACCESS } from '../constants.js';
-import { createNeedleCallback } from 'generator-jhipster/generators/base/support';
 
 export default class extends BaseApplicationGenerator {
     async beforeQueue() {
@@ -123,7 +123,7 @@ export default class extends BaseApplicationGenerator {
             async prepareQuarkusRendering({ entity }) {
                 entity.mapsIdAssoc = undefined;
                 entity.primaryKeyType = entity.primaryKey.type;
-                // eslint-disable-next-line no-restricted-syntax
+
                 for (const relationship of entity.relationships) {
                     if (relationship.id) {
                         entity.mapsIdAssoc = relationship;

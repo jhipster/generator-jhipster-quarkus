@@ -84,7 +84,7 @@ jobs:
       # Generate project
       #----------------------------------------------------------------------
       - name: 'GENERATION: project'
-        run: jhipster-quarkus generate-sample ${{ matrix.app }}
+        run: jhipster-quarkus generate-sample ${{ matrix.app }}.jdl
       #----------------------------------------------------------------------
       # Detect changes against base commit
       #----------------------------------------------------------------------
@@ -98,7 +98,7 @@ jobs:
           npm install
           npm link
           cd ${{ github.workspace }}/base/app
-          jhipster-quarkus generate-sample ${{ matrix.app }} --skip-install --skip-git
+          jhipster-quarkus generate-sample ${{ matrix.app }}.jdl --skip-install --skip-git
           cp -a "${{ github.workspace }}/app/.git" "${{ github.workspace }}/base/app/"
         working-directory: ${{ github.workspace }}/generator-jhipster-quarkus/
       - name: 'MERGE: compare changes'
