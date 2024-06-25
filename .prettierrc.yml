@@ -6,6 +6,6 @@ tabWidth: 4
 useTabs: false
 arrowParens: avoid
 overrides:
-    files: '.github/**/*.yml'
-    options:
-        tabWidth: 2
+    - files: '.github/**/*.yml'
+      options:
+          tabWidth: 2
