@@ -216,7 +216,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
         field,
     }) -%>
     <%_ } _%>
-    <%_ if (!dtoMapstruct && typeof field.documentation != 'undefined') { _%>
+    <%_ if (!dtoMapstruct && field.fieldApiDescription) { _%>
     @ApiModelProperty(value = "<%- field.fieldApiDescription %>"<% if (required) { %>, required = true<% } %>)
     <%_ } _%>
     <%_ if (databaseType === 'sql') {
