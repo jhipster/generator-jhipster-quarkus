@@ -84,15 +84,12 @@ import <%=packageName%>.domain.enumeration.<%= element %>;
 /**
  * A DTO for the {@link <%= packageName %>.domain.<%= persistClass %>} entity.
  */
-<%_ if (typeof javadoc !== 'undefined') { _%>
-@ApiModel(description = "<%- formatAsApiDescription(javadoc) %>")
+<%_ if (entityApiDescription) { _%>
+@ApiModel(description = "<%- entityApiDescription %>")
 <%_ } _%>
 @RegisterForReflection
 public class <%= dtoClass %> implements Serializable {
     <%_ for (idx in fields) { _%>
-        <%_  if (typeof fields[idx].documentation !== 'undefined') { _%>
-<%- formatAsFieldJavadoc(fields[idx].documentation) %>
-        <%_ } _%>
         <%_
         const field = fields[idx];
         const fieldValidate = fields[idx].fieldValidate;
@@ -109,11 +106,14 @@ public class <%= dtoClass %> implements Serializable {
         const fieldName = fields[idx].fieldName;
         let required = fieldValidate && fieldValidateRules.includes('required');
         _%>
+        <%_  if (field.fieldJavadoc) { _%>
+<%- field.fieldJavadoc %>
+        <%_ } _%>
         <%_ if (fieldValidate === true) { _%>
     <%- include('/_global_partials_entity_/field_validators', { field }) -%>
         <%_ } _%>
-        <%_ if (typeof fields[idx].documentation != 'undefined') { _%>
-    @ApiModelProperty(value = "<%- formatAsApiDescription(fields[idx].documentation) %>"<% if (required) { %>, required = true<% } %>)
+        <%_ if (field.fieldApiDescription) { _%>
+    @ApiModelProperty(value = "<%- field.fieldApiDescription %>"<% if (required) { %>, required = true<% } %>)
         <%_ } _%>
         <%_ if (fieldType === 'byte[]' && databaseType === 'sql') { _%>
     @Lob
@@ -144,9 +144,9 @@ public class <%= dtoClass %> implements Serializable {
         const otherEntityIsEmbedded = relationships[idx].otherEntity.embedded;
         const ownerSide = relationships[idx].ownerSide;
     _%>
-        <%_ if (typeof relationships[idx].documentation != 'undefined') { _%>
-<%- formatAsFieldJavadoc(relationships[idx].documentation) %>
-    @ApiModelProperty(value = "<%- formatAsApiDescription(relationships[idx].documentation) %>")
+        <%_ if (relationship.relationshipJavadoc) { _%>
+<%- relationship.relationshipJavadoc %>
+    @ApiModelProperty(value = "<%- relationship.relationshipApiDescription %>")
         <%_ } _%>
         <%_ if ((relationshipType === 'many-to-many' && ownerSide === true) || (relationshipType === 'one-to-many' && otherEntityIsEmbedded)) { _%>
     public Set<<%= otherEntity.dtoClass %>> <%= relationshipFieldNamePlural %> = new HashSet<>();
