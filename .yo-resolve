@@ -1,1 +1,4 @@
-!package.json skip
+generators/** skip
+README.md skip
+cli/cli.cjs skip
+.prettierrc.yml skip
