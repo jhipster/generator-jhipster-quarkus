@@ -51,8 +51,7 @@ public class UserMapper {
             user.imageUrl = userDTO.imageUrl;
             user.activated = userDTO.activated;
             user.langKey = userDTO.langKey;
-            Set<Authority> authorities = this.authoritiesFromStrings(userDTO.authorities);
-            user.authorities = authorities;
+            user.authorities = this.authoritiesFromStrings(userDTO.authorities);
             return user;
         }
     }
