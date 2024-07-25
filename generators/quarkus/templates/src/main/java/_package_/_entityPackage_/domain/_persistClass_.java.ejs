@@ -143,7 +143,7 @@ import static org.springframework.data.couchbase.core.mapping.id.GenerationStrat
 <%_ } else { _%>
 <%- entityJavadoc %>
     <%_ if (!dtoMapstruct) { _%>
-@ApiModel(description = "<%- formatAsApiDescription(javadoc) %>")
+@ApiModel(description = "<%- entityApiDescription %>")
     <%_ }_%>
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
@@ -217,7 +217,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
     }) -%>
     <%_ } _%>
     <%_ if (!dtoMapstruct && typeof field.documentation != 'undefined') { _%>
-    @ApiModelProperty(value = "<%- formatAsApiDescription(field.documentation) %>"<% if (required) { %>, required = true<% } %>)
+    @ApiModelProperty(value = "<%- field.fieldApiDescription %>"<% if (required) { %>, required = true<% } %>)
     <%_ } _%>
     <%_ if (databaseType === 'sql') {
         if (field.fieldIsEnum) { _%>
@@ -284,7 +284,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
         if (relationship.relationshipJavadoc) { _%>
 <%- relationship.relationshipJavadoc %>
             <%_ if (!dtoMapstruct) { _%>
-    @ApiModelProperty(value = "<%- formatAsApiDescription(relationships[idx].documentation) %>")
+    @ApiModelProperty(value = "<%- relationship.relationshipApiDescription %>")
             <%_ } _%>
     <%_ }
         if (relationshipType === 'one-to-many') {
