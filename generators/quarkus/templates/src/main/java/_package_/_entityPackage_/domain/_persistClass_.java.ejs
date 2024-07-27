@@ -69,7 +69,7 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.Table;
 <%_ } if (importJsonIgnore === true) { _%>
 import com.fasterxml.jackson.annotation.JsonIgnore;
-<%_ } if (!dtoMapstruct && typeof javadoc != 'undefined') { _%>
+<%_ } if (!dtoMapstruct && entityApiDescription) { _%>
 import io.swagger.annotations.ApiModel;
 <%_ } if (!dtoMapstruct && importApiModelProperty === true) { _%>
 import io.swagger.annotations.ApiModelProperty;
