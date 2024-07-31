@@ -18,10 +18,10 @@
 -%>
 <%_
     if (pagination === 'no') { %>
-    public List<<%= restClass %>> search<%= entityClassPlural %>(@RequestParam String query) {
+    public List<<%= restClass %>> search<%= entityClassPlural %>(@QueryParam(value = "query") String query) {
         log.debug("REST request to search <%= entityClassPlural %> for query {}", query);<%- include('search_stream_template', {viaService: viaService}); -%>
     <% } if (pagination !== 'no') { %>
-    public ResponseEntity<List<<%= restClass %>>> search<%= entityClassPlural %>(@RequestParam String query, Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %>) {
+    public ResponseEntity<List<<%= restClass %>>> search<%= entityClassPlural %>(@QueryParam(value = "query") String query, Pageable pageable<% if (reactive) { %>, ServerHttpRequest request<% } %>) {
         log.debug("REST request to search for a page of <%= entityClassPlural %> for query {}", query);<% if (viaService) { %>
         Page<<%= restClass %>> page = <%= entityInstance %>Service.search(query, pageable);<% } else { %>
         Page<<%= persistClass %>> page = <%= entityInstance %>SearchRepository.search(queryStringQuery(query), pageable);<% } %>
