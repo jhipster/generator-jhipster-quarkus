@@ -23,7 +23,31 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
             expect(result.getStateSnapshot()).toMatchSnapshot();
         });
     });
-    describe('run with oauth2 and mongodb', () => {
+
+    describe('run with maven, oauth2 and mongodb', () => {
+        beforeAll(async function () {
+            await helpers
+                .run(SUB_GENERATOR_NAMESPACE)
+                .withJHipsterConfig({
+                    applicationType: 'gateway',
+                    buildTool: 'maven',
+                    authenticationType: 'oauth2',
+                    databaseType: 'mongodb',
+                })
+                .withOptions({
+                    ignoreNeedlesError: true,
+                    blueprints: 'quarkus',
+                })
+                .withJHipsterLookup()
+                .withParentBlueprintLookup();
+        });
+
+        it('should succeed', () => {
+            expect(result.getStateSnapshot()).toMatchSnapshot();
+        });
+    });
+
+    describe('run with gradle, oauth2 and mongodb', () => {
         beforeAll(async function () {
             await helpers
                 .run(SUB_GENERATOR_NAMESPACE)
