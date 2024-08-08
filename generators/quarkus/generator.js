@@ -82,6 +82,18 @@ export default class extends BaseApplicationGenerator {
                 if (application.buildTool === 'gradle') {
                     this.loadJavaDependenciesFromGradleCatalog(application.javaDependencies);
                 }
+
+                if (application.buildTool === 'maven') {
+                    const pomFile = this.readTemplate('../../quarkus/resources/pom.xml')?.toString();
+                    const applicationJavaDependencies = this.prepareDependencies(
+                        {
+                            ...getPomVersionProperties(pomFile),
+                        },
+                        'java',
+                    );
+
+                    Object.assign(application.javaDependencies, applicationJavaDependencies);
+                }
             },
             async loadCommand({ application }) {
                 await this.loadCurrentJHipsterCommandConfig(application);
