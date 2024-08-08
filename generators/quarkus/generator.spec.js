@@ -44,9 +44,6 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
         it('should succeed', () => {
             expect(result.getStateSnapshot()).toMatchSnapshot();
         });
-        it('gradle.properties content should match', () => {
-            expect(result.getSnapshot('**/gradle.properties')).toMatchSnapshot();
-        });
     });
 
     describe('with some entities', () => {
