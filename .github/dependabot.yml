@@ -20,7 +20,7 @@
 version: 2
 updates:
   - package-ecosystem: 'maven'
-    directory: '/generators/quarkus/templates/'
+    directory: '/generators/quarkus/resources/'
     schedule:
       interval: 'daily'
       # Maven doesn't have many PRs, but it triggers every client workflow. Let 2h of interval.
