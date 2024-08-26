@@ -48,6 +48,7 @@
 
         <!-- Dependency properties -->
         <quarkus.platform.version><%= quarkusVersion %></quarkus.platform.version>
+        <swagger.version>1.6.14</swagger.version>
         <mapstruct.version><%= javaDependencies['mapstruct'] %></mapstruct.version>
         <resteasy-problem.version><%= javaDependencies['resteasy-problem'] %></resteasy-problem.version>
         <archunit-junit5.version><%= javaDependencies['archunit-junit5'] %></archunit-junit5.version>
@@ -207,6 +208,11 @@ _%>
             <groupId>com.tietoevry.quarkus</groupId>
             <artifactId>quarkus-resteasy-problem</artifactId>
             <version>${resteasy-problem.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
