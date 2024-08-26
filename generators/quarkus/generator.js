@@ -1,6 +1,8 @@
 import os from 'os';
 import chalk from 'chalk';
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
+import { getPomVersionProperties } from 'generator-jhipster/generators/maven/support';
+
 import {
     GENERATOR_BOOTSTRAP_APPLICATION,
     GENERATOR_DOCKER,
@@ -11,16 +13,18 @@ import {
     GENERATOR_MAVEN,
     GENERATOR_SERVER,
 } from 'generator-jhipster/generators';
+import { createNeedleCallback } from 'generator-jhipster/generators/base/support';
+import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, DEFAULT_DATA_ACCESS } from '../constants.js';
 import { serverFiles } from './files.js';
 import { entityQuarkusFiles } from './entity-files.js';
-import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, DEFAULT_DATA_ACCESS } from '../constants.js';
-import { createNeedleCallback } from 'generator-jhipster/generators/base/support';
 
 export default class extends BaseApplicationGenerator {
     async beforeQueue() {
         await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
         (await this.dependsOnJHipster(GENERATOR_JAVA)).generateEntities = false;
         await this.dependsOnJHipster(GENERATOR_SERVER);
+
+        await this.dependsOnJHipster('jhipster:java:build-tool');
     }
 
     get [BaseApplicationGenerator.INITIALIZING]() {
@@ -74,6 +78,23 @@ export default class extends BaseApplicationGenerator {
 
     get [BaseApplicationGenerator.LOADING]() {
         return this.asLoadingTaskGroup({
+            async loadDependencyVersions({ application }) {
+                if (application.buildTool === 'gradle') {
+                    this.loadJavaDependenciesFromGradleCatalog(application.javaDependencies);
+                }
+
+                if (application.buildTool === 'maven') {
+                    const pomFile = this.readTemplate('../../quarkus/resources/pom.xml')?.toString();
+                    const applicationJavaDependencies = this.prepareDependencies(
+                        {
+                            ...getPomVersionProperties(pomFile),
+                        },
+                        'java',
+                    );
+
+                    Object.assign(application.javaDependencies, applicationJavaDependencies);
+                }
+            },
             async loadCommand({ application }) {
                 await this.loadCurrentJHipsterCommandConfig(application);
             },
@@ -123,7 +144,7 @@ export default class extends BaseApplicationGenerator {
             async prepareQuarkusRendering({ entity }) {
                 entity.mapsIdAssoc = undefined;
                 entity.primaryKeyType = entity.primaryKey.type;
-                // eslint-disable-next-line no-restricted-syntax
+
                 for (const relationship of entity.relationships) {
                     if (relationship.id) {
                         entity.mapsIdAssoc = relationship;
@@ -183,7 +204,8 @@ export default class extends BaseApplicationGenerator {
                 if (application.buildToolGradle) {
                     this.packageJson.merge({
                         scripts: {
-                            'ci:native:prod': './gradlew build -Dquarkus.package.type=native -x webapp -x test',
+                            'ci:native:prod':
+                                './gradlew build -Dquarkus.native.enabled=true -Dquarkus.package.jar.enabled=false -x webapp -x test',
                             'ci:e2e:dev': 'concurrently -k -s first "./gradlew" "npm run e2e:headless"',
                             'ci:e2e:server:start':
                                 'java -jar build/quarkus-app/quarkus-run.$npm_package_config_packaging -Dquarkus.profile=$npm_package_config_default_environment',

@@ -40,7 +40,7 @@ task containerNativeImage {
         System.setProperty('quarkus.container-image.push', 'true')
         System.setProperty('quarkus.native.container-build', 'true')
         System.setProperty('quarkus.container-image.build', 'true')
-        System.setProperty('quarkus.package.type', 'native')
+        System.setProperty('quarkus.native.enabled', 'true')
     }
     finalizedBy 'assemble'
 }
