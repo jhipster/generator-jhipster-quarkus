@@ -27,13 +27,10 @@ node_version=<%= nodeVersion %>
 npm_version=<%= nodeDependencies.npm %>
 
 # Dependency versions
-mapstruct_version=1.5.5.Final
-archunit_junit5_version=1.2.1
-resteasy_problem_version=3.9.0
-assertj_version=3.26.0
-<%_ if (searchEngine === 'elasticsearch') { _%>
-log4j2_mock_version=0.0.2
-<%_ } _%>
+mapstruct_version=<%= javaDependencies['mapstruct'] %>
+archunit_junit5_version=<%= javaDependencies['archunit-junit5-api'] %>
+resteasy_problem_version=<%= javaDependencies['quarkus-resteasy-problem'] %>
+assertj_version=<%= javaDependencies['assertj-core'] %>
 <%_ if (enableSwaggerCodegen) { _%>
 jackson_databind_nullable_version=<%= JACKSON_DATABIND_NULLABLE_VERSION %>
 <%_ } _%>
@@ -41,33 +38,33 @@ jackson_databind_nullable_version=<%= JACKSON_DATABIND_NULLABLE_VERSION %>
 liquibaseTaskPrefix=liquibase
 <%_ } _%>
 <%_ if (cacheProvider === 'redis') { _%>
-camel_quarkus_jackson_version=3.11.0
+camel_quarkus_jackson_version=<%= javaDependencies['camel-quarkus-jackson'] %>
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
-mongockBom_version=4.3.8
-commons_vfs2_version=2.9.0
-graal_version=23.1.2
+mongockBom_version=<%= javaDependencies['mongock-bom'] %>
+commons_vfs2_version=<%= javaDependencies['commons-vfs2'] %>
+graal_version=<%= javaDependencies['graal'] %>
+<%_ } _%>
+<%_ if (authenticationType === 'oauth2') { _%>
+wiremock_version=<%= javaDependencies['wiremock'] %>
+testcontainers_keycloak_version=<%= javaDependencies['testcontainers-keycloak'] %>
 <%_ } _%>
 
 # gradle plugin version
-git_properties_plugin_version=2.4.1
+git_properties_plugin_version=<%= javaDependencies['gradle-git-properties'] %>
 <%_ if (!skipClient) { _%>
-gradle_node_plugin_version=7.0.2
+gradle_node_plugin_version=<%= javaDependencies['gradle-node'] %>
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
-liquibase_plugin_version=2.2.0
+liquibase_plugin_version=<%= javaDependencies['liquibase'] %>
 <%_ } _%>
-sonarqube_plugin_version=4.3.0.3225
+sonarqube_plugin_version=<%= javaDependencies['sonarqube'] %>
 <%_ if (enableSwaggerCodegen) { _%>
-openapi_plugin_version=4.2.3
+openapi_plugin_version=<%= javaDependencies['openapi-generator'] %>
 <%_ } _%>
-checkstyle_version=10.17.0
-<%_ if (authenticationType === 'oauth2') { _%>
-wiremock_version=3.0.1
-testcontainers_keycloak_version=3.3.1
-<%_ } _%>
-no_http_checkstyle_version=0.0.11
-modernizer_plugin_version=1.8.0
+checkstyle_version=<%= javaDependencies['checkstyle'] %>
+no_http_checkstyle_version=<%= javaDependencies['no-http-checkstyle'] %>
+modernizer_plugin_version=<%= javaDependencies['modernizer'] %>
 
 # jhipster-needle-gradle-property - JHipster will add additional properties here
 
