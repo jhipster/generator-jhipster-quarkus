@@ -1,6 +1,8 @@
 import os from 'os';
 import chalk from 'chalk';
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
+import { getPomVersionProperties } from 'generator-jhipster/generators/maven/support';
+
 import {
     GENERATOR_BOOTSTRAP_APPLICATION,
     GENERATOR_DOCKER,
@@ -21,6 +23,8 @@ export default class extends BaseApplicationGenerator {
         await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
         (await this.dependsOnJHipster(GENERATOR_JAVA)).generateEntities = false;
         await this.dependsOnJHipster(GENERATOR_SERVER);
+
+        await this.dependsOnJHipster('jhipster:java:build-tool');
     }
 
     get [BaseApplicationGenerator.INITIALIZING]() {
@@ -74,6 +78,23 @@ export default class extends BaseApplicationGenerator {
 
     get [BaseApplicationGenerator.LOADING]() {
         return this.asLoadingTaskGroup({
+            async loadDependencyVersions({ application }) {
+                if (application.buildTool === 'gradle') {
+                    this.loadJavaDependenciesFromGradleCatalog(application.javaDependencies);
+                }
+
+                if (application.buildTool === 'maven') {
+                    const pomFile = this.readTemplate('../../quarkus/resources/pom.xml')?.toString();
+                    const applicationJavaDependencies = this.prepareDependencies(
+                        {
+                            ...getPomVersionProperties(pomFile),
+                        },
+                        'java',
+                    );
+
+                    Object.assign(application.javaDependencies, applicationJavaDependencies);
+                }
+            },
             async loadCommand({ application }) {
                 await this.loadCurrentJHipsterCommandConfig(application);
             },
