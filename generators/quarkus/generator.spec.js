@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { defaultHelpers as helpers, result } from 'generator-jhipster/testing';
+import { fromMatrix, defaultHelpers as helpers, result } from 'generator-jhipster/testing';
 
 const SUB_GENERATOR = 'quarkus';
 const SUB_GENERATOR_NAMESPACE = `jhipster-quarkus:${SUB_GENERATOR}`;
@@ -24,49 +24,28 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
         });
     });
 
-    describe('run with maven, oauth2 and mongodb', () => {
-        beforeAll(async function () {
-            await helpers
-                .run(SUB_GENERATOR_NAMESPACE)
-                .withJHipsterConfig({
-                    applicationType: 'gateway',
-                    buildTool: 'maven',
-                    authenticationType: 'oauth2',
-                    databaseType: 'mongodb',
-                })
-                .withOptions({
-                    ignoreNeedlesError: true,
-                    blueprints: 'quarkus',
-                })
-                .withJHipsterLookup()
-                .withParentBlueprintLookup();
-        });
+    Object.entries(fromMatrix({ buildTool: ['maven', 'gradle'] })).forEach(([name, config]) => {
+        describe(`run with ${name}, oauth2 and mongodb`, () => {
+            beforeAll(async function () {
+                await helpers
+                    .run(SUB_GENERATOR_NAMESPACE)
+                    .withJHipsterConfig({
+                        applicationType: 'gateway',
+                        authenticationType: 'oauth2',
+                        databaseType: 'mongodb',
+                        ...config,
+                    })
+                    .withOptions({
+                        ignoreNeedlesError: true,
+                        blueprints: 'quarkus',
+                    })
+                    .withJHipsterLookup()
+                    .withParentBlueprintLookup();
+            });
 
-        it('should succeed', () => {
-            expect(result.getStateSnapshot()).toMatchSnapshot();
-        });
-    });
-
-    describe('run with gradle, oauth2 and mongodb', () => {
-        beforeAll(async function () {
-            await helpers
-                .run(SUB_GENERATOR_NAMESPACE)
-                .withJHipsterConfig({
-                    applicationType: 'gateway',
-                    buildTool: 'gradle',
-                    authenticationType: 'oauth2',
-                    databaseType: 'mongodb',
-                })
-                .withOptions({
-                    ignoreNeedlesError: true,
-                    blueprints: 'quarkus',
-                })
-                .withJHipsterLookup()
-                .withParentBlueprintLookup();
-        });
-
-        it('should succeed', () => {
-            expect(result.getStateSnapshot()).toMatchSnapshot();
+            it('should succeed', () => {
+                expect(result.getStateSnapshot()).toMatchSnapshot();
+            });
         });
     });
 
