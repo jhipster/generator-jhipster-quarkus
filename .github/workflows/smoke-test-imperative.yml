@@ -160,7 +160,7 @@ jobs:
           name: screenshots-${{ matrix.app }}
           path: ${{ github.workspace }}/app/*/cypress/screenshots
       - name: 'Native: Build Image'
-        if: steps.graalvm.outcome == 'success'
+        if: steps.compare.outputs.equals != 'true' && steps.graalvm.outcome == 'success'
         id: native
         run: npm run ci:native:prod
       - name: 'Native: Store failsafe reports'
