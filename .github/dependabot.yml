@@ -32,7 +32,7 @@ updates:
       - 'skip-changelog'
 
   - package-ecosystem: 'gradle'
-    directory: '/generators/quarkus/templates'
+    directory: '/generators/quarkus/resources/'
     schedule:
       interval: 'daily'
       time: '08:00'
