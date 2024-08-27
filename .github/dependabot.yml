@@ -28,7 +28,6 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - 'theme: dependencies'
-      - 'theme: java'
       - 'skip-changelog'
 
   - package-ecosystem: 'gradle'
@@ -39,7 +38,6 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - 'theme: dependencies'
-      - 'theme: java'
       - 'skip-changelog'
 
   - package-ecosystem: 'github-actions'
