@@ -13,7 +13,7 @@ testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "10.18.0" }
 
 [plugins]
-gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = "2.4.1" }
+gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = "2.4.2" }
 gradle-node = { id = "com.github.node-gradle.node", version = "7.0.2" }
 liquibase = { id = "org.liquibase.gradle", version = "2.2.0" }
 sonarqube = { id = "org.sonarqube", version = "4.3.0.3225" }
