@@ -15,6 +15,11 @@ export default [
         },
     },
     { ignores: ['coverage/**'] },
+    {
+        rules: {
+            "@typescript-eslint/no-deprecated": "off",
+        },
+    },
     jhipster.recommended,
     // jhipster-needle-eslint-add-config - JHipster will add additional config here
     prettier,
