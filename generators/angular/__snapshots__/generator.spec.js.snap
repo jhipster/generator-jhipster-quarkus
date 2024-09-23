@@ -5,12 +5,6 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   ".editorconfig": {
     "stateCleared": "modified",
   },
-  ".eslintignore": {
-    "stateCleared": "modified",
-  },
-  ".eslintrc.json": {
-    "stateCleared": "modified",
-  },
   ".gitattributes": {
     "stateCleared": "modified",
   },
@@ -36,6 +30,9 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
     "stateCleared": "modified",
   },
   "angular.json": {
+    "stateCleared": "modified",
+  },
+  "eslint.config.mjs": {
     "stateCleared": "modified",
   },
   "jest.conf.js": {

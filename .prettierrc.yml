@@ -1,11 +1,8 @@
-# Prettier configuration
-
 printWidth: 140
 singleQuote: true
 tabWidth: 4
 useTabs: false
 arrowParens: avoid
-overrides:
-    - files: '.github/**/*.yml'
-      options:
-          tabWidth: 2
+bracketSameLine: false
+plugins:
+    - prettier-plugin-packagejson

@@ -5,12 +5,6 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   ".editorconfig": {
     "stateCleared": "modified",
   },
-  ".eslintignore": {
-    "stateCleared": "modified",
-  },
-  ".eslintrc.json": {
-    "stateCleared": "modified",
-  },
   ".gitattributes": {
     "stateCleared": "modified",
   },
@@ -33,6 +27,9 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
     "stateCleared": "modified",
   },
   "README.md": {
+    "stateCleared": "modified",
+  },
+  "eslint.config.mjs": {
     "stateCleared": "modified",
   },
   "jest.conf.js": {

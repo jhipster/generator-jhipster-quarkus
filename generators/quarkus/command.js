@@ -6,10 +6,9 @@ import { command as springBootCommand } from 'generator-jhipster/generators/spri
 const { applicationType } = serverCommand.configs;
 const { defaultPackaging } = springBootCommand.configs;
 
-/**
- * @type {import('generator-jhipster').JHipsterCommandDefinition}
- */
-const command = {
+import { asCommand } from 'generator-jhipster';
+
+export default asCommand({
     options: {},
     configs: {
         applicationType,
@@ -144,6 +143,4 @@ const command = {
         },
     },
     import: [GENERATOR_JAVA, GENERATOR_LIQUIBASE, GENERATOR_SPRING_DATA_RELATIONAL],
-};
-
-export default command;
+});
