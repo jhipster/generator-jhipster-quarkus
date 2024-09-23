@@ -11,7 +11,10 @@ export default class extends ServerGenerator {
     }
 
     async beforeQueue() {
-        this.jhipsterTemplatesFolders.push(this.fetchFromInstalledJHipster('java/generators/node/templates'));
+        this.jhipsterTemplatesFolders.push(
+          this.fetchFromInstalledJHipster('java/generators/node/templates'),
+          this.fetchFromInstalledJHipster('spring-boot/templates'),
+        );
         await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
     }
 
