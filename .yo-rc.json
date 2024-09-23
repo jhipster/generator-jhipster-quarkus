@@ -118,6 +118,7 @@
         "jhipsterVersion": "8.1.0",
         "js": true,
         "localBlueprint": false,
+        "prettierTabWidth": 4,
         "sampleWritten": true,
         "skipCommitHook": true,
         "subGenerators": ["angular", "bootstrap-application", "cypress", "docker", "maven", "react", "server"]
