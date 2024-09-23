@@ -17,7 +17,7 @@ export default [
     { ignores: ['coverage/**'] },
     {
         rules: {
-            "@typescript-eslint/no-deprecated": "off",
+            '@typescript-eslint/no-deprecated': 'off',
         },
     },
     jhipster.recommended,
