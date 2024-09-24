@@ -29,7 +29,6 @@ export default class extends BaseApplicationGenerator {
                 application.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;
                 application.jhipsterQuarkusVersion = undefined;
                 application.messageBrokerAny ??= undefined;
-                application.devDatabaseType ??= this.jhipsterConfig.devDatabaseType ?? this.jhipsterConfig.prodDatabaseType;
             },
         });
     }
