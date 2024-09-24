@@ -79,6 +79,10 @@ export default class extends BaseApplicationGenerator {
 
     get [BaseApplicationGenerator.PREPARING]() {
         return this.asPreparingTaskGroup({
+            async workaround({ application }) {
+                // Workaround jhipster but with null choice.
+                application.devDatabaseType = this.jhipsterConfigWithDefaults.devDatabaseType;
+            },
             async preparingTemplateTask({ source, application }) {
                 source.addEntryToCache = ({ entry }) => {
                     this.editFile(
