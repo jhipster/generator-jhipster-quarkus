@@ -82,6 +82,10 @@ export default class extends BaseApplicationGenerator {
             async workaround({ application }) {
                 // Workaround jhipster but with null choice.
                 application.devDatabaseType = this.jhipsterConfigWithDefaults.devDatabaseType;
+                application.devDatabaseTypeH2Any = ['h2Disk', 'h2Memory'].includes(application.devDatabaseType);
+                application.liquibaseAddH2Properties = application.devDatabaseTypeH2Any;
+                application.devDatabaseTypeH2Disk = application.devDatabaseType === 'h2Disk';
+                application.devDatabaseTypeH2Memory = application.devDatabaseType === 'h2Memory';
             },
             async preparingTemplateTask({ source, application }) {
                 source.addEntryToCache = ({ entry }) => {
