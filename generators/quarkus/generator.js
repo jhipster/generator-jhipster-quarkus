@@ -19,6 +19,10 @@ import { serverFiles } from './files.js';
 import { entityQuarkusFiles } from './entity-files.js';
 
 export default class extends BaseApplicationGenerator {
+    constructor(args, opts, features) {
+        super(args, opts, { ...features, queueCommandTasks: true });
+    }
+
     async beforeQueue() {
         await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
         (await this.dependsOnJHipster(GENERATOR_JAVA)).generateEntities = false;

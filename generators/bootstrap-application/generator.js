@@ -3,7 +3,7 @@ import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, QUARKUS_VERSION } from '.
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
-        super(args, opts, { ...features, sbsBlueprint: true });
+        super(args, opts, { ...features, queueCommandTasks: true, sbsBlueprint: true });
     }
 
     get [BaseApplicationGenerator.CONFIGURING]() {

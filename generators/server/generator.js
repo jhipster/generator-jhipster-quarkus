@@ -6,7 +6,9 @@ export default class extends ServerGenerator {
     constructor(args, opts, features) {
         super(args, opts, {
             ...features,
+            queueCommandTasks: true,
             checkBlueprint: true,
+            sbsBlueprint: true,
         });
     }
 
@@ -18,9 +20,11 @@ export default class extends ServerGenerator {
         await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
     }
 
-    get [ServerGenerator.LOADING]() {
-        return this.asLoadingTaskGroup({
-            ...super.loading,
+    get [ServerGenerator.CONFIGURING]() {
+        return this.asConfiguringTaskGroup({
+            async configuring() {
+                this.jhipsterConfig.backendType = 'Quarkus';
+            },
         });
     }
 
@@ -28,16 +32,6 @@ export default class extends ServerGenerator {
         return this.asComposingTaskGroup({
             async composing() {
                 await this.composeWith('jhipster-quarkus:quarkus');
-            },
-        });
-    }
-
-    get [ServerGenerator.POST_PREPARING]() {
-        return this.asPostPreparingTaskGroup({
-            useNpmWrapper({ application }) {
-                if (application.useNpmWrapper) {
-                    this.useNpmWrapperInstallTask();
-                }
             },
         });
     }
@@ -69,13 +63,6 @@ export default class extends ServerGenerator {
                     });
                 }
             },
-        });
-    }
-
-    get [ServerGenerator.POST_WRITING]() {
-        return this.asPostWritingTaskGroup({
-            ...super.postWriting,
-            customizeGradle: undefined,
         });
     }
 }

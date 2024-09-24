@@ -6,7 +6,7 @@ const renameTo = (ctx, filepath) => `${ctx.dockerServicesDir}${filepath}`.replac
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
-        super(args, opts, { ...features, sbsBlueprint: true });
+        super(args, opts, { ...features, queueCommandTasks: true, sbsBlueprint: true });
     }
 
     async beforeQueue() {
