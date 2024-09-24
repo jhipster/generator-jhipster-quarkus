@@ -98,6 +98,9 @@ export default asCommand({
             scope: 'storage',
         },
         devDatabaseType: {
+            cli: {
+                type: String,
+            },
             prompt: gen => ({
                 when: answers => (answers.databaseType ?? gen.jhipsterConfigWithDefaults.databaseType) === 'sql',
                 type: 'list',
