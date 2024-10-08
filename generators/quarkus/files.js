@@ -19,8 +19,8 @@
 import { TEMPLATES_MAIN_RESOURCES_DIR } from 'generator-jhipster';
 import {
     javaMainPackageTemplatesBlock,
-    javaTestPackageTemplatesBlock,
     javaMainResourceTemplatesBlock,
+    javaTestPackageTemplatesBlock,
 } from 'generator-jhipster/generators/java/support';
 
 export const serverFiles = {

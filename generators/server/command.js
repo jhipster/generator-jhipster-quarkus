@@ -1,11 +1,8 @@
-/**
- * @type {import('generator-jhipster').JHipsterCommandDefinition}
- */
-const command = {
+import { asCommand } from 'generator-jhipster';
+
+export default asCommand({
     configs: {},
     options: {},
     override: true,
     import: ['jhipster-quarkus:quarkus'],
-};
-
-export default command;
+});

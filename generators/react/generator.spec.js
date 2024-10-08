@@ -15,7 +15,7 @@ describe('SubGenerator react of quarkus JHipster blueprint', () => {
                 })
                 .withOptions({
                     ignoreNeedlesError: true,
-                    blueprint: 'quarkus',
+                    blueprint: ['quarkus'],
                 })
                 .withJHipsterLookup()
                 .withParentBlueprintLookup();

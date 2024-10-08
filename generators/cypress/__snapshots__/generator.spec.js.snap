@@ -14,9 +14,6 @@ exports[`SubGenerator cypress of quarkus JHipster blueprint > run > should succe
   "package.json": {
     "stateCleared": "modified",
   },
-  "src/test/javascript/cypress/.eslintrc.json": {
-    "stateCleared": "modified",
-  },
   "src/test/javascript/cypress/e2e/account/login-page.cy.ts": {
     "stateCleared": "modified",
   },

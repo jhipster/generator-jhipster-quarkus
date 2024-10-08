@@ -19,37 +19,16 @@ import { serverFiles } from './files.js';
 import { entityQuarkusFiles } from './entity-files.js';
 
 export default class extends BaseApplicationGenerator {
+    constructor(args, opts, features) {
+        super(args, opts, { ...features, queueCommandTasks: true });
+    }
+
     async beforeQueue() {
         await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
         (await this.dependsOnJHipster(GENERATOR_JAVA)).generateEntities = false;
         await this.dependsOnJHipster(GENERATOR_SERVER);
 
         await this.dependsOnJHipster('jhipster:java:build-tool');
-    }
-
-    get [BaseApplicationGenerator.INITIALIZING]() {
-        return this.asInitializingTaskGroup({
-            async parseCommand() {
-                await this.parseCurrentJHipsterCommand();
-            },
-        });
-    }
-
-    get [BaseApplicationGenerator.PROMPTING]() {
-        return this.asPromptingTaskGroup({
-            async promptCommand({ control }) {
-                if (control.existingProject && this.options.askAnswered !== true) return;
-                await this.promptCurrentJHipsterCommand();
-            },
-        });
-    }
-
-    get [BaseApplicationGenerator.CONFIGURING]() {
-        return this.asConfiguringTaskGroup({
-            async configureCommand() {
-                await this.configureCurrentJHipsterCommandConfig();
-            },
-        });
     }
 
     get [BaseApplicationGenerator.COMPOSING]() {
@@ -94,9 +73,6 @@ export default class extends BaseApplicationGenerator {
 
                     Object.assign(application.javaDependencies, applicationJavaDependencies);
                 }
-            },
-            async loadCommand({ application }) {
-                await this.loadCurrentJHipsterCommandConfig(application);
             },
         });
     }

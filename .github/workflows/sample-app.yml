@@ -1,64 +1,64 @@
 name: Generate the sample app
 concurrency:
-  # Group PRs by head_ref, push to main branch by commit id, and others branch by ref.
-  group: ${{ github.workflow }}-${{ github.head_ref || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
-  cancel-in-progress: true
+    # Group PRs by head_ref, push to main branch by commit id, and others branch by ref.
+    group: ${{ github.workflow }}-${{ github.head_ref || (github.ref == 'refs/heads/main' && github.sha) || github.ref }}
+    cancel-in-progress: true
 on:
-  push:
-    tags:
-      - 'v*'
+    push:
+        tags:
+            - 'v*'
 jobs:
-  sample-app:
-    name: update-sample-app
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      node-version: 20
-    steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.node-version }}
-      - name: Checkout jhipster-generator-quarkus
-        uses: actions/checkout@v4
-        with:
-          path: generator-jhipster-quarkus
-      - name: Run generator-jhipster-quarkus git history
-        run: |
-          cd generator-jhipster-quarkus
-          git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
-      - name: Prepare JHipster env
-        run: |
-          cd generator-jhipster-quarkus
-          npm install
-          npm link
-      - name: Prepare Git
-        run: |
-          git config --global user.name "JHipster Quarkus Bot"
-          git config --global user.email "git@github.com"
-      - name: Checkout jhipster-sample-app-quarkus
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
-          repository: jhipster/jhipster-sample-app-quarkus
-          path: sample-app
-      - name: Clean the sample app
-        run: |
-          cd sample-app
-          find . -not -name ".yo-rc.json" -not -name "Dockerfile" -type f -maxdepth 1 -delete
-          rm .git/index
-          rm -rf src
-          rm -rf node_modules
-      - name: Generate the new sample app
-        run: |
-          cd sample-app
-          jhipster-quarkus --no-insight --skip-checks --skip-install
-          npm install
-          git status
-          git add .
-          git commit -m "Generate the application with the ${{ github.ref }} version"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          repository: jhipster/jhipster-sample-app-quarkus
-          github_token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
-          directory: sample-app
+    sample-app:
+        name: update-sample-app
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        env:
+            node-version: 20
+        steps:
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.node-version }}
+            - name: Checkout jhipster-generator-quarkus
+              uses: actions/checkout@v4
+              with:
+                  path: generator-jhipster-quarkus
+            - name: Run generator-jhipster-quarkus git history
+              run: |
+                  cd generator-jhipster-quarkus
+                  git --no-pager log -n 10 --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue) <%an>%Creset' --abbrev-commit
+            - name: Prepare JHipster env
+              run: |
+                  cd generator-jhipster-quarkus
+                  npm install
+                  npm link
+            - name: Prepare Git
+              run: |
+                  git config --global user.name "JHipster Quarkus Bot"
+                  git config --global user.email "git@github.com"
+            - name: Checkout jhipster-sample-app-quarkus
+              uses: actions/checkout@v4
+              with:
+                  token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
+                  repository: jhipster/jhipster-sample-app-quarkus
+                  path: sample-app
+            - name: Clean the sample app
+              run: |
+                  cd sample-app
+                  find . -not -name ".yo-rc.json" -not -name "Dockerfile" -type f -maxdepth 1 -delete
+                  rm .git/index
+                  rm -rf src
+                  rm -rf node_modules
+            - name: Generate the new sample app
+              run: |
+                  cd sample-app
+                  jhipster-quarkus --no-insight --skip-checks --skip-install
+                  npm install
+                  git status
+                  git add .
+                  git commit -m "Generate the application with the ${{ github.ref }} version"
+            - name: Push changes
+              uses: ad-m/github-push-action@master
+              with:
+                  repository: jhipster/jhipster-sample-app-quarkus
+                  github_token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
+                  directory: sample-app
