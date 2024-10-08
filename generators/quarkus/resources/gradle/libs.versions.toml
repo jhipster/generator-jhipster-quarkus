@@ -9,7 +9,7 @@ mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", v
 mongock-bom = { group = "com.github.cloudyrock.mongock", name = "mongock-bom", version = "4.3.8" }
 quarkus-resteasy-problem = { group = "com.tietoevry.quarkus", name = "quarkus-resteasy-problem", version = "3.9.0" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
-testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "3.4.0" }
+testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "3.5.0" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "10.18.2" }
 
 [plugins]
@@ -17,6 +17,6 @@ gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = 
 gradle-node = { id = "com.github.node-gradle.node", version = "7.1.0" }
 liquibase = { id = "org.liquibase.gradle", version = "2.2.0" }
 sonarqube = { id = "org.sonarqube", version = "5.1.0.4882" }
-openapi-generator = { id = "org.openapi.generator", version = "7.8.0" }
+openapi-generator = { id = "org.openapi.generator", version = "7.9.0" }
 no-http-checkstyle = { id = "io.github.checkstyle.checkstyle", version = "0.0.11" }
 modernizer = { id = "org.gaul.modernizer", version = "1.8.0" }
