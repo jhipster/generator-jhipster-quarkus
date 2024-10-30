@@ -19,6 +19,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 
 import HealthComponent from './health.component';
@@ -34,7 +35,7 @@ describe('HealthComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [HealthComponent],
-        providers: [provideHttpClientTesting()],
+        providers: [provideHttpClientTesting(), provideHttpClient()],
       })
         .overrideTemplate(HealthComponent, '')
         .compileComponents();
