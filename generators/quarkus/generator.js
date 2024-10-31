@@ -164,19 +164,21 @@ export default class extends BaseApplicationGenerator {
 
     get [BaseApplicationGenerator.POST_WRITING]() {
         return this.asPostWritingTaskGroup({
+            addMysqlSleep({ application }) {
+                if (application.prodDatabaseTypeMysql) {
+                    this.editFile(`${application.dockerServicesDir}mysql.yml`, content =>
+                        content
+                            .replace(/test: [^\n]*/, "test: ['CMD-SHELL', 'mysql -e \"SHOW DATABASES;\" && sleep 5']")
+                            .replace('timeout: 5s', 'timeout: 10s'),
+                    );
+                }
+            },
             updatePackageJsonScripts({ application }) {
                 this.packageJson.merge({
                     scripts: {
                         'ci:backend:test': 'npm run backend:info && npm run backend:doc:test && npm run backend:unit:test',
                     },
                 });
-                if (application.prodDatabaseTypeMysql) {
-                    this.packageJson.merge({
-                        scripts: {
-                            'services:db:await': 'sleep 10',
-                        },
-                    });
-                }
                 if (application.buildToolGradle) {
                     this.packageJson.merge({
                         scripts: {
