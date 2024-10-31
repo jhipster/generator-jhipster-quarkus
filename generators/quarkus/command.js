@@ -6,10 +6,9 @@ import { command as springBootCommand } from 'generator-jhipster/generators/spri
 const { applicationType } = serverCommand.configs;
 const { defaultPackaging } = springBootCommand.configs;
 
-/**
- * @type {import('generator-jhipster').JHipsterCommandDefinition}
- */
-const command = {
+import { asCommand } from 'generator-jhipster';
+
+export default asCommand({
     options: {},
     configs: {
         applicationType,
@@ -99,16 +98,20 @@ const command = {
             scope: 'storage',
         },
         devDatabaseType: {
+            cli: {
+                type: String,
+            },
             prompt: gen => ({
                 when: answers => (answers.databaseType ?? gen.jhipsterConfigWithDefaults.databaseType) === 'sql',
                 type: 'list',
+                default: null,
                 message: `Which ${chalk.yellow('*development*')} database would you like to use?`,
+                choices: [
+                    { value: 'h2Disk', name: 'H2 with disk-based persistence' },
+                    { value: 'h2Memory', name: 'H2 with in-memory persistence' },
+                    { value: null, name: 'Same as production' },
+                ],
             }),
-            choices: [
-                { value: null, name: 'Same as production' },
-                { value: 'h2Disk', name: 'H2 with disk-based persistence' },
-                { value: 'h2Memory', name: 'H2 with in-memory persistence' },
-            ],
             scope: 'storage',
         },
         cacheProvider: {
@@ -144,6 +147,4 @@ const command = {
         },
     },
     import: [GENERATOR_JAVA, GENERATOR_LIQUIBASE, GENERATOR_SPRING_DATA_RELATIONAL],
-};
-
-export default command;
+});

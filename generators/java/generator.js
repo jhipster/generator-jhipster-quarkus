@@ -3,7 +3,7 @@ import { javaTestPackageTemplatesBlock } from 'generator-jhipster/generators/jav
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
-        super(args, opts, { ...features, sbsBlueprint: true });
+        super(args, opts, { ...features, queueCommandTasks: true, sbsBlueprint: true });
     }
 
     get [BaseApplicationGenerator.PREPARING_EACH_ENTITY_FIELD]() {

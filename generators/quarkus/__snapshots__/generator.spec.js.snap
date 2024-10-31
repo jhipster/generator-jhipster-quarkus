@@ -2,6 +2,21 @@
 
 exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succeed 1`] = `
 {
+  ".editorconfig": {
+    "stateCleared": "modified",
+  },
+  ".gitattributes": {
+    "stateCleared": "modified",
+  },
+  ".gitignore": {
+    "stateCleared": "modified",
+  },
+  ".husky/pre-commit": {
+    "stateCleared": "modified",
+  },
+  ".lintstagedrc.cjs": {
+    "stateCleared": "modified",
+  },
   ".mvn/jvm.config": {
     "stateCleared": "modified",
   },
@@ -11,7 +26,16 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
   ".mvn/wrapper/maven-wrapper.properties": {
     "stateCleared": "modified",
   },
+  ".prettierignore": {
+    "stateCleared": "modified",
+  },
+  ".prettierrc": {
+    "stateCleared": "modified",
+  },
   ".yo-rc.json": {
+    "stateCleared": "modified",
+  },
+  "README.md": {
     "stateCleared": "modified",
   },
   "checkstyle.xml": {
@@ -33,6 +57,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
     "stateCleared": "modified",
   },
   "pom.xml": {
+    "stateCleared": "modified",
+  },
+  "sonar-project.properties": {
     "stateCleared": "modified",
   },
   "src/main/docker/Dockerfile.jvm": {
@@ -418,7 +445,31 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
 
 exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gradle, oauth2 and mongodb > should succeed 1`] = `
 {
+  ".editorconfig": {
+    "stateCleared": "modified",
+  },
+  ".gitattributes": {
+    "stateCleared": "modified",
+  },
+  ".gitignore": {
+    "stateCleared": "modified",
+  },
+  ".husky/pre-commit": {
+    "stateCleared": "modified",
+  },
+  ".lintstagedrc.cjs": {
+    "stateCleared": "modified",
+  },
+  ".prettierignore": {
+    "stateCleared": "modified",
+  },
+  ".prettierrc": {
+    "stateCleared": "modified",
+  },
   ".yo-rc.json": {
+    "stateCleared": "modified",
+  },
+  "README.md": {
     "stateCleared": "modified",
   },
   "build.gradle": {
@@ -473,6 +524,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gradle, o
     "stateCleared": "modified",
   },
   "settings.gradle": {
+    "stateCleared": "modified",
+  },
+  "sonar-project.properties": {
     "stateCleared": "modified",
   },
   "src/main/docker/Dockerfile.jvm": {
@@ -774,6 +828,21 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gradle, o
 
 exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with maven, oauth2 and mongodb > should succeed 1`] = `
 {
+  ".editorconfig": {
+    "stateCleared": "modified",
+  },
+  ".gitattributes": {
+    "stateCleared": "modified",
+  },
+  ".gitignore": {
+    "stateCleared": "modified",
+  },
+  ".husky/pre-commit": {
+    "stateCleared": "modified",
+  },
+  ".lintstagedrc.cjs": {
+    "stateCleared": "modified",
+  },
   ".mvn/jvm.config": {
     "stateCleared": "modified",
   },
@@ -783,7 +852,16 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with maven, oa
   ".mvn/wrapper/maven-wrapper.properties": {
     "stateCleared": "modified",
   },
+  ".prettierignore": {
+    "stateCleared": "modified",
+  },
+  ".prettierrc": {
+    "stateCleared": "modified",
+  },
   ".yo-rc.json": {
+    "stateCleared": "modified",
+  },
+  "README.md": {
     "stateCleared": "modified",
   },
   "checkstyle.xml": {
@@ -805,6 +883,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with maven, oa
     "stateCleared": "modified",
   },
   "pom.xml": {
+    "stateCleared": "modified",
+  },
+  "sonar-project.properties": {
     "stateCleared": "modified",
   },
   "src/main/docker/Dockerfile.jvm": {
@@ -1106,7 +1187,22 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with maven, oa
 
 exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities > should succeed 1`] = `
 {
+  ".editorconfig": {
+    "stateCleared": "modified",
+  },
+  ".gitattributes": {
+    "stateCleared": "modified",
+  },
+  ".gitignore": {
+    "stateCleared": "modified",
+  },
+  ".husky/pre-commit": {
+    "stateCleared": "modified",
+  },
   ".jhipster/Entity.json": {
+    "stateCleared": "modified",
+  },
+  ".lintstagedrc.cjs": {
     "stateCleared": "modified",
   },
   ".mvn/jvm.config": {
@@ -1118,7 +1214,16 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities
   ".mvn/wrapper/maven-wrapper.properties": {
     "stateCleared": "modified",
   },
+  ".prettierignore": {
+    "stateCleared": "modified",
+  },
+  ".prettierrc": {
+    "stateCleared": "modified",
+  },
   ".yo-rc.json": {
+    "stateCleared": "modified",
+  },
+  "README.md": {
     "stateCleared": "modified",
   },
   "checkstyle.xml": {
@@ -1140,6 +1245,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities
     "stateCleared": "modified",
   },
   "pom.xml": {
+    "stateCleared": "modified",
+  },
+  "sonar-project.properties": {
     "stateCleared": "modified",
   },
   "src/main/docker/Dockerfile.jvm": {

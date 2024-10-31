@@ -1,20 +1,20 @@
 name: Publish
 on:
-  release:
-    types: [published]
+    release:
+        types: [published]
 jobs:
-  publish-quarkus-blueprint:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-    steps:
-      - name: Checkout quarkus blueprint repository
-        uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    publish-quarkus-blueprint:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: true
+        steps:
+            - name: Checkout quarkus blueprint repository
+              uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  registry-url: 'https://registry.npmjs.org'
+            - run: npm ci
+            - run: npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
