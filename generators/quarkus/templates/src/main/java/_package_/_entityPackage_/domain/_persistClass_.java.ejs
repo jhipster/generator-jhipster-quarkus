@@ -380,7 +380,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
             <%_ } _%>
         <%_ } else { _%>
     @OneToOne(mappedBy = "<%= otherEntityRelationshipName %>")
-    @JsonIgnore
+    <%_ if (importJsonIgnore === true) { _%>@JsonIgnore<%_ } _%>
         <%_ }
         } else if (databaseType === 'mongodb' || databaseType === 'couchbase') {
             if (databaseType === 'mongodb') { _%>
