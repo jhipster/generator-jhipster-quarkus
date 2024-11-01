@@ -106,7 +106,7 @@ During development of blueprint, please note the below steps. They are very impo
 
 # License
 
-Apache-2.0
+Apache 2.0, see [LICENSE](LICENSE).
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-quarkus.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-quarkus
