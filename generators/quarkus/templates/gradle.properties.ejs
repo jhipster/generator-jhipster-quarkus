@@ -57,6 +57,7 @@ gradle_node_plugin_version=<%= javaDependencies['gradle-node'] %>
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
 liquibase_plugin_version=<%= javaDependencies['liquibase'] %>
+liquibase_core_version=<%= javaDependencies['liquibase_core'] %>
 <%_ } _%>
 sonarqube_plugin_version=<%= javaDependencies['sonarqube'] %>
 <%_ if (enableSwaggerCodegen) { _%>
