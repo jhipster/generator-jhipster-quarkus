@@ -26,8 +26,8 @@ import static jakarta.ws.rs.core.Response.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 <%_ if (databaseType === 'mongodb') { _%>
-import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
-import com.github.cloudyrock.standalone.MongockStandalone;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.mongock.runner.standalone.MongockStandalone;
 import com.mongodb.client.MongoClient;
 <%_ } _%>
 

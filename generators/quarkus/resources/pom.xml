@@ -30,7 +30,7 @@
         <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
         <openapi-generator-maven-plugin.version>3.2.3</openapi-generator-maven-plugin.version>
         <camel-quarkus-jackson.version>3.11.0</camel-quarkus-jackson.version>
-        <mongock-bom.version>4.3.8</mongock-bom.version>
+        <mongock-bom.version>5.0.35</mongock-bom.version>
         <commons-vfs2.version>2.9.0</commons-vfs2.version>
         <graal.version>23.1.2</graal.version>
 

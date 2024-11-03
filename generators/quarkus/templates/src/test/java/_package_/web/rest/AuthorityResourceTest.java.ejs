@@ -19,8 +19,8 @@
 package <%=packageName%>.web.rest;
 
 <%_ if (databaseType === 'mongodb') { _%>
-import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
-import com.github.cloudyrock.standalone.MongockStandalone;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.mongock.runner.standalone.MongockStandalone;
 import com.mongodb.client.MongoClient;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 <%_ } _%>

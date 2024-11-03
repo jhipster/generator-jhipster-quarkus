@@ -21,8 +21,9 @@ package <%=packageName%>.config.dbmigrations;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-import com.github.cloudyrock.mongock.ChangeLog;
-import com.github.cloudyrock.mongock.ChangeSet;
+import io.mongock.api.annotations.ChangeUnit;
+import io.mongock.api.annotations.Execution;
+import io.mongock.api.annotations.RollbackExecution;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoDatabase;
 import <%=packageName%>.security.AuthoritiesConstants;
@@ -38,11 +39,17 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 /**
  * Creates the initial database setup.
  */
-@ChangeLog(order = "001")
+@ChangeUnit(id="users-initialization", order = "001")
 public class InitialSetupMigration {
 
-  @ChangeSet(order = "01", author = "initiator", id = "01-addAuthorities")
-  public void addAuthorities(MongoDatabase db) {
+    private final MongoDatabase db;
+
+    public InitialSetupMigration(MongoDatabase db) {
+        this.db = db;
+    }
+
+  @Execution
+  public void addAuthorities() {
     Authority adminAuthority = new Authority(AuthoritiesConstants.ADMIN);
     Authority userAuthority = new Authority(AuthoritiesConstants.USER);
 
@@ -51,11 +58,14 @@ public class InitialSetupMigration {
       .getCollection("jhi_authority", Authority.class)
       .withCodecRegistry(getCodecRegistry())
       .insertMany(Arrays.asList(adminAuthority, userAuthority));
+
+      <%_ if (authenticationType !== 'oauth2') { _%>
+        addUsers();
+      <%_ } _%>
   }
 
 <%_ if (authenticationType !== 'oauth2') { _%>
-  @ChangeSet(order = "02", author = "initiator", id = "02-addUsers")
-  public void addUsers(MongoDatabase db) {
+  public void addUsers() {
     Authority adminAuthority = new Authority(AuthoritiesConstants.ADMIN);
     Authority userAuthority = new Authority(AuthoritiesConstants.USER);
 
@@ -113,4 +123,7 @@ public class InitialSetupMigration {
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
     return fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
   }
+
+  @RollbackExecution
+  public void rollback() {}
 }
