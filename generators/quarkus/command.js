@@ -106,12 +106,12 @@ export default asCommand({
                 type: 'list',
                 default: null,
                 message: `Which ${chalk.yellow('*development*')} database would you like to use?`,
-                choices: [
-                    { value: 'h2Disk', name: 'H2 with disk-based persistence' },
-                    { value: 'h2Memory', name: 'H2 with in-memory persistence' },
-                    { value: null, name: 'Same as production' },
-                ],
             }),
+            choices: [
+                { value: 'h2Disk', name: 'H2 with disk-based persistence' },
+                { value: 'h2Memory', name: 'H2 with in-memory persistence' },
+                { value: null, name: 'Same as production' },
+            ],
             scope: 'storage',
         },
         cacheProvider: {
