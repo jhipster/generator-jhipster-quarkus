@@ -38,6 +38,17 @@ pluginManagement {
           id 'com.github.andygoossens.gradle-modernizer-plugin' version "${modernizer_plugin_version}"
           id 'io.quarkus' version "${quarkusPluginVersion}"
      }
+
+    <%_ if (databaseType === 'sql') { _%>
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath group: 'org.liquibase', name: 'liquibase-core', version: "${liquibase_core_version}"
+        }
+    }
+    <%_ } _%>
 }
 
 rootProject.name = "<%= dasherizedBaseName %>"
