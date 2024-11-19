@@ -1,6 +1,6 @@
 # JHipster Quarkus Blueprint
 
-[![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url][![Generator CI][github-actions-generator-ci-image]][github-actions-generator-ci-url][![Imperative Smoke Tests][github-actions-smoke-tests-image]][github-actions-smoke-tests-url] [![Native image builds][github-actions-native-builds-image]][github-actions-native-builds-url]
+[![NPM version][npm-image]][npm-url] [![Generator CI][github-actions-generator-ci-image]][github-actions-generator-ci-url] [![Imperative Smoke Tests][github-actions-smoke-tests-image]][github-actions-smoke-tests-url]
 
 <img src="https://raw.githubusercontent.com/jhipster/jhipster-artwork/main/family/jhipster_family_member_8.png" alt="JHipster Quarkus Family Member" width=200 style="max-width:50%;">
 
@@ -110,11 +110,7 @@ Apache 2.0, see [LICENSE](LICENSE).
 
 [npm-image]: https://img.shields.io/npm/v/generator-jhipster-quarkus.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-quarkus
-[daviddm-image]: https://david-dm.org/jhipster/jhipster-quarkus.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/jhipster/jhipster-quarkus
 [github-actions-generator-ci-image]: https://github.com/jhipster/generator-jhipster-quarkus/actions/workflows/generator.yml/badge.svg
 [github-actions-generator-ci-url]: https://github.com/jhipster/generator-jhipster-quarkus/actions/workflows/generator.yml
 [github-actions-smoke-tests-image]: https://github.com/jhipster/generator-jhipster-quarkus/actions/workflows/smoke-test-imperative.yml/badge.svg
 [github-actions-smoke-tests-url]: https://github.com/jhipster/generator-jhipster-quarkus/actions/workflows/smoke-test-imperative.yml
-[github-actions-native-builds-image]: https://github.com/jhipster/generator-jhipster-quarkus/actions/workflows/native-image.yml/badge.svg
-[github-actions-native-builds-url]: https://github.com/jhipster/generator-jhipster-quarkus/actions/workflows/native-image.yml
