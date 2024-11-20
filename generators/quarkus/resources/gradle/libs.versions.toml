@@ -17,7 +17,7 @@ gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = 
 gradle-node = { id = "com.github.node-gradle.node", version = "7.1.0" }
 liquibase = { id = "org.liquibase.gradle", version = "3.0.1" }
 liquibase_core = { group = 'org.liquibase', id = "liquibase-core", version = "4.27.0" }
-sonarqube = { id = "org.sonarqube", version = "5.1.0.4882" }
+sonarqube = { id = "org.sonarqube", version = "6.0.0.5145" }
 openapi-generator = { id = "org.openapi.generator", version = "7.10.0" }
 no-http-checkstyle = { id = "io.github.checkstyle.checkstyle", version = "0.0.11" }
 modernizer = { id = "org.gaul.modernizer", version = "1.8.0" }
