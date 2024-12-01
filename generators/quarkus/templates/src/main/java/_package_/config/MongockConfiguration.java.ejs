@@ -47,9 +47,12 @@ public class MongockConfiguration {
   String databaseName;
 
   void onStart(@Observes StartupEvent ev) {
+    var driver = MongoSync4Driver.withDefaultLock(mongoClient, databaseName);
+    driver.disableTransaction();
+
     MongockStandalone
       .builder()
-      .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
+      .setDriver(driver)
       .addMigrationScanPackage("<%=packageName%>.config.dbmigrations")
       .buildRunner()
       .execute();
