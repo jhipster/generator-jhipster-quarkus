@@ -10,7 +10,7 @@ mongock-bom = { group = "io.mongock", name = "mongock-bom", version = "5.5.0" }
 quarkus-resteasy-problem = { group = "com.tietoevry.quarkus", name = "quarkus-resteasy-problem", version = "3.9.0" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
 testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "3.5.1" }
-checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "10.20.1" }
+checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "10.20.2" }
 
 [plugins]
 gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = "2.4.2" }
