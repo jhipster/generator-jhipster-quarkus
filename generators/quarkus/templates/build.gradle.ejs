@@ -245,8 +245,8 @@ dependencies {
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
     implementation "io.quarkus:quarkus-mongodb-panache"
-    implementation "com.github.cloudyrock.mongock:mongock-standalone"
-    implementation "com.github.cloudyrock.mongock:mongodb-sync-v4-driver"
+    implementation "io.mongock:mongock-standalone"
+    implementation "io.mongock:mongodb-sync-v4-driver"
     implementation "org.apache.commons:commons-lang3"
     implementation "org.apache.commons:commons-vfs2:${commons_vfs2_version}"
     compileOnly "org.graalvm.nativeimage:svm:${graal_version}"
@@ -286,7 +286,7 @@ dependencies {
     implementation "com.tietoevry.quarkus:quarkus-resteasy-problem:${resteasy_problem_version}"
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 <%_ if (databaseType === 'mongodb') { _%>
-    implementation enforcedPlatform("com.github.cloudyrock.mongock:mongock-bom:${mongockBom_version}")
+    implementation enforcedPlatform("io.mongock:mongock-bom:${mongockBom_version}")
 <%_ } _%>
 
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"

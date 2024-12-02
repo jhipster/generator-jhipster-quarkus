@@ -18,9 +18,9 @@
 -%>
 package <%=packageName%>.config;
 
-import com.github.cloudyrock.mongock.MongockAnnotationProcessor;
-import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
-import com.github.cloudyrock.standalone.MongockStandalone;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.mongock.runner.standalone.MongockStandalone;
+import io.mongock.api.annotations.ChangeUnit;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -43,25 +43,17 @@ public class MongockConfiguration {
   @Inject
   MongoClient mongoClient;
 
-  private static final List<Class<?>> changeLogs;
-
-  static {
-    changeLogs = new MongockAnnotationProcessor().getChangeLogAnnotationClass()
-      .stream()
-      .flatMap(changeLogClass ->
-        new Reflections("<%=packageName%>.config.dbmigrations").getTypesAnnotatedWith(changeLogClass).stream()
-      )
-      .collect(Collectors.toList());
-  }
-
   @ConfigProperty(name = "quarkus.mongodb.database")
   String databaseName;
 
   void onStart(@Observes StartupEvent ev) {
+    var driver = MongoSync4Driver.withDefaultLock(mongoClient, databaseName);
+    driver.disableTransaction();
+
     MongockStandalone
       .builder()
-      .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
-      .addChangeLogClasses(changeLogs)
+      .setDriver(driver)
+      .addMigrationScanPackage("<%=packageName%>.config.dbmigrations")
       .buildRunner()
       .execute();
   }
@@ -70,10 +62,11 @@ public class MongockConfiguration {
   private static class NativeSupport implements Feature {
     @Override
     public void beforeAnalysis(BeforeAnalysisAccess access) {
-      changeLogs.forEach(clazz -> {
-        RuntimeReflection.register(clazz);
-        RuntimeReflection.register(clazz.getConstructors());
-        RuntimeReflection.register(clazz.getMethods());
+      new Reflections("<%=packageName%>.config.dbmigrations")
+        .getTypesAnnotatedWith(ChangeUnit.class).forEach(clazz -> {
+          RuntimeReflection.register(clazz);
+          RuntimeReflection.register(clazz.getConstructors());
+          RuntimeReflection.register(clazz.getMethods());
       });
     }
   }
