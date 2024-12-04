@@ -53,6 +53,7 @@ public class MongockConfiguration {
       .setDriver(driver)
       .setLockGuardEnabled(false)
       .addMigrationScanPackage("<%=packageName%>.config.dbmigrations")
+      .addMigrationClasses(ChangeUnitsList.changeUnits)
       .buildRunner()
       .execute();
   }
