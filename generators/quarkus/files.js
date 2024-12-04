@@ -131,7 +131,7 @@ export const serverFiles = {
             templates: [
                 'config/dbmigrations/InitialSetupMigration.java',
                 'config/dbmigrations/ChangeUnitsList.java',
-                'config/MongockConfiguration.java'
+                'config/MongockConfiguration.java',
             ],
         }),
         javaTestPackageTemplatesBlock({
