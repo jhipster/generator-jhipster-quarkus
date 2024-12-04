@@ -249,6 +249,7 @@ dependencies {
     implementation "io.mongock:mongodb-sync-v4-driver"
     implementation "org.apache.commons:commons-lang3"
     implementation "org.apache.commons:commons-vfs2:${commons_vfs2_version}"
+    implementation "org.jboss:jboss-vfs:${jboss_vfs_version}"
     compileOnly "org.graalvm.nativeimage:svm:${graal_version}"
 <%_ } _%>
 <%_ if (!skipUserManagement && databaseType !== 'mongodb') { _%>

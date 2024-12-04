@@ -128,7 +128,11 @@ export const serverFiles = {
             condition: generator =>
                 generator.databaseType === 'mongodb' &&
                 (!generator.skipUserManagement || (generator.skipUserManagement && generator.authenticationType === 'oauth2')),
-            templates: ['config/dbmigrations/InitialSetupMigration.java', 'config/MongockConfiguration.java'],
+            templates: [
+                'config/dbmigrations/InitialSetupMigration.java',
+                'config/dbmigrations/ChangeUnitsList.java',
+                'config/MongockConfiguration.java'
+            ],
         }),
         javaTestPackageTemplatesBlock({
             templates: ['config/mock/JHipsterPropertiesMock.java', 'config/LocalDateProviderTest.java'],

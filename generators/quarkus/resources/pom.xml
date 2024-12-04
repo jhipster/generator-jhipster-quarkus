@@ -32,6 +32,7 @@
         <camel-quarkus-jackson.version>3.11.0</camel-quarkus-jackson.version>
         <mongock-bom.version>5.5.0</mongock-bom.version>
         <commons-vfs2.version>2.9.0</commons-vfs2.version>
+        <jboss-vfs.version>3.3.2.Final</jboss-vfs.version>
         <graal.version>23.1.2</graal.version>
 
         <!-- Plugin properties -->
