@@ -619,6 +619,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gradle, o
   "src/main/java/com/mycompany/myapp/config/MongockConfiguration.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/config/dbmigrations/ChangeUnitsList.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/config/dbmigrations/InitialSetupMigration.java": {
     "stateCleared": "modified",
   },
@@ -976,6 +979,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with maven, oa
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/config/MongockConfiguration.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/config/dbmigrations/ChangeUnitsList.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/config/dbmigrations/InitialSetupMigration.java": {

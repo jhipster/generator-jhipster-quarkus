@@ -80,6 +80,7 @@
         <%_ } _%>
         <%_ if (databaseType === 'mongodb') { _%>
         <mongock-bom.version><%= javaDependencies['mongock-bom'] %></mongock-bom.version>
+        <jboss-vfs.version><%= javaDependencies['jboss-vfs'] %></jboss-vfs.version>
         <commons-vfs2.version><%= javaDependencies['commons-vfs2'] %></commons-vfs2.version>
         <graal.version><%= javaDependencies['graal'] %></graal.version>
         <%_ } _%>
@@ -202,6 +203,11 @@ _%>
             <artifactId>svm</artifactId>
             <version>${graal.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-vfs</artifactId>
+            <version>${jboss-vfs.version}</version>
         </dependency>
         <%_ } _%>
         <dependency>
