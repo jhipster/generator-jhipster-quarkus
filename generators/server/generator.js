@@ -43,7 +43,6 @@ export default class extends ServerGenerator {
                     blocks: [
                         {
                             condition: ctx => ctx.useNpmWrapper,
-                            transform: false,
                             templates: ['npmw', 'npmw.cmd'],
                         },
                     ],

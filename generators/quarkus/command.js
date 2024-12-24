@@ -110,7 +110,8 @@ export default asCommand({
             choices: [
                 { value: 'h2Disk', name: 'H2 with disk-based persistence' },
                 { value: 'h2Memory', name: 'H2 with in-memory persistence' },
-                { value: null, name: 'Same as production' },
+                // Drop null value due to jhipster issue
+                // { value: null, name: 'Same as production' },
             ],
             scope: 'storage',
         },

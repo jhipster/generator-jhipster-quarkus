@@ -29,6 +29,7 @@ export default class extends BaseApplicationGenerator {
         await this.dependsOnJHipster(GENERATOR_SERVER);
 
         await this.dependsOnJHipster('jhipster:java:build-tool');
+        await this.dependsOnJHipster('jhipster:java:server');
     }
 
     get [BaseApplicationGenerator.COMPOSING]() {
