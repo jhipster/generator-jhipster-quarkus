@@ -467,6 +467,9 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   "src/main/webapp/robots.txt": {
     "stateCleared": "modified",
   },
+  "src/main/webapp/swagger-ui/dist/images/throbber.gif": {
+    "stateCleared": "modified",
+  },
   "src/main/webapp/swagger-ui/index.html": {
     "stateCleared": "modified",
   },

@@ -380,6 +380,9 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   "src/main/webapp/app/app.config.ts": {
     "stateCleared": "modified",
   },
+  "src/main/webapp/app/app.constants.ts": {
+    "stateCleared": "modified",
+  },
   "src/main/webapp/app/app.routes.ts": {
     "stateCleared": "modified",
   },
@@ -788,12 +791,6 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   "src/main/webapp/declarations.d.ts": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/environments/environment.development.ts": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/environments/environment.ts": {
-    "stateCleared": "modified",
-  },
   "src/main/webapp/favicon.ico": {
     "stateCleared": "modified",
   },
@@ -852,6 +849,9 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
     "stateCleared": "modified",
   },
   "src/main/webapp/robots.txt": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/swagger-ui/dist/images/throbber.gif": {
     "stateCleared": "modified",
   },
   "src/main/webapp/swagger-ui/index.html": {
