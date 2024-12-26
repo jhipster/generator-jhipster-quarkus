@@ -106,12 +106,12 @@ export default asCommand({
                 type: 'list',
                 default: gen.jhipsterConfigWithDefaults.prodDatabaseType,
                 message: `Which ${chalk.yellow('*development*')} database would you like to use?`,
-                choices: [
+                choices: answers => [
                     { value: 'h2Disk', name: 'H2 with disk-based persistence' },
                     { value: 'h2Memory', name: 'H2 with in-memory persistence' },
                     {
-                        value: gen.jhipsterConfigWithDefaults.prodDatabaseType,
-                        name: `Same as production (${gen.jhipsterConfigWithDefaults.prodDatabaseType})`,
+                        value: answers.prodDatabaseType ?? gen.jhipsterConfigWithDefaults.prodDatabaseType,
+                        name: `Same as production (${answers.prodDatabaseType ?? gen.jhipsterConfigWithDefaults.prodDatabaseType})`,
                     },
                 ],
             }),
