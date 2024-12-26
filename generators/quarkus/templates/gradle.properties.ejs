@@ -42,6 +42,7 @@ camel_quarkus_jackson_version=<%= javaDependencies['camel-quarkus-jackson'] %>
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
 mongockBom_version=<%= javaDependencies['mongock-bom'] %>
+jboss_vfs_version=<%= javaDependencies['jboss-vfs'] %>
 commons_vfs2_version=<%= javaDependencies['commons-vfs2'] %>
 graal_version=<%= javaDependencies['graal'] %>
 <%_ } _%>
@@ -57,6 +58,7 @@ gradle_node_plugin_version=<%= javaDependencies['gradle-node'] %>
 <%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
 liquibase_plugin_version=<%= javaDependencies['liquibase'] %>
+liquibase_core_version=<%= javaDependencies['liquibase_core'] %>
 <%_ } _%>
 sonarqube_plugin_version=<%= javaDependencies['sonarqube'] %>
 <%_ if (enableSwaggerCodegen) { _%>

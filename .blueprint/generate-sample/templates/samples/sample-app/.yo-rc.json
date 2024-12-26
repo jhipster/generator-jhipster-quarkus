@@ -4,7 +4,6 @@
         "packageName": "io.github.jhipster.sample",
         "packageFolder": "io/github/jhipster/sample",
         "authenticationType": "jwt",
-        "hibernateCache": "ehcache",
         "clusteredHttpSession": false,
         "websocket": false,
         "databaseType": "sql",
@@ -27,7 +26,6 @@
         "clientPackageManager": "npm",
         "clientFramework": "angularX",
         "jwtSecretKey": "bXktc2VjcmV0LWtleS13aGljaC1zaG91bGQtYmUtY2hhbmdlZC1pbi1wcm9kdWN0aW9uLWFuZC1iZS1iYXNlNjQtZW5jb2RlZAo=",
-        "cacheProvider": "ehcache",
         "enableHibernateCache": true,
         "reactive": false,
         "otherModules": [

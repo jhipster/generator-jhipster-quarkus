@@ -27,7 +27,7 @@ jobs:
             fail-fast: false
             matrix:
                 os: [ubuntu-latest]
-                node: [20]
+                node: [22]
                 java: [17]
                 app:
                     - imperative-ngx-jwt-maven-mysql-caffeine

@@ -18,9 +18,10 @@
 -%>
 package <%=packageName%>.config;
 
-import com.github.cloudyrock.mongock.MongockAnnotationProcessor;
-import com.github.cloudyrock.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
-import com.github.cloudyrock.standalone.MongockStandalone;
+import <%=packageName%>.config.dbmigrations.ChangeUnitsList;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.mongock.runner.standalone.MongockStandalone;
+import io.mongock.api.annotations.ChangeUnit;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -29,13 +30,10 @@ import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.graalvm.nativeimage.hosted.Feature;
 import org.graalvm.nativeimage.hosted.RuntimeReflection;
-import org.reflections.Reflections;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class MongockConfiguration {
@@ -43,38 +41,34 @@ public class MongockConfiguration {
   @Inject
   MongoClient mongoClient;
 
-  private static final List<Class<?>> changeLogs;
-
-  static {
-    changeLogs = new MongockAnnotationProcessor().getChangeLogAnnotationClass()
-      .stream()
-      .flatMap(changeLogClass ->
-        new Reflections("<%=packageName%>.config.dbmigrations").getTypesAnnotatedWith(changeLogClass).stream()
-      )
-      .collect(Collectors.toList());
-  }
-
   @ConfigProperty(name = "quarkus.mongodb.database")
   String databaseName;
 
   void onStart(@Observes StartupEvent ev) {
+    var driver = MongoSync4Driver.withDefaultLock(mongoClient, databaseName);
+    driver.disableTransaction();
+
     MongockStandalone
       .builder()
-      .setDriver(MongoSync4Driver.withDefaultLock(mongoClient, databaseName))
-      .addChangeLogClasses(changeLogs)
+      .setDriver(driver)
+      .setLockGuardEnabled(false)
+      .addMigrationScanPackage("<%=packageName%>.config.dbmigrations")
+      .addMigrationClasses(ChangeUnitsList.changeUnits)
       .buildRunner()
       .execute();
   }
 
   @AutomaticFeature
   private static class NativeSupport implements Feature {
-    @Override
+
     public void beforeAnalysis(BeforeAnalysisAccess access) {
-      changeLogs.forEach(clazz -> {
+        ChangeUnitsList.changeUnits.forEach(NativeSupport::registerClass);
+    }
+
+    private static void registerClass(Class<?> clazz) {
         RuntimeReflection.register(clazz);
-        RuntimeReflection.register(clazz.getConstructors());
-        RuntimeReflection.register(clazz.getMethods());
-      });
+        RuntimeReflection.register(clazz.getDeclaredConstructors());
+        RuntimeReflection.register(clazz.getDeclaredMethods());
     }
   }
 }
