@@ -12,13 +12,13 @@ This is a [JHipster](https://www.jhipster.tech/) blueprint, that is meant to be 
 
 Because a code worth a 1k words here your have sample JHipster Quarkus repositories
 
--   The classic [JHipster Sample App](https://github.com/jhipster/jhipster-sample-app-quarkus)
+- The classic [JHipster Sample App](https://github.com/jhipster/jhipster-sample-app-quarkus)
 
 # Prerequisites
 
 As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you have JHipster and its related tools already installed:
 
--   [Installing JHipster](https://www.jhipster.tech/installation/)
+- [Installing JHipster](https://www.jhipster.tech/installation/)
 
 # Installation
 
