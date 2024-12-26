@@ -104,15 +104,17 @@ export default asCommand({
             prompt: gen => ({
                 when: answers => (answers.databaseType ?? gen.jhipsterConfigWithDefaults.databaseType) === 'sql',
                 type: 'list',
-                default: null,
+                default: gen.jhipsterConfigWithDefaults.prodDatabaseType,
                 message: `Which ${chalk.yellow('*development*')} database would you like to use?`,
+                choices: [
+                    { value: 'h2Disk', name: 'H2 with disk-based persistence' },
+                    { value: 'h2Memory', name: 'H2 with in-memory persistence' },
+                    {
+                        value: gen.jhipsterConfigWithDefaults.prodDatabaseType,
+                        name: `Same as production (${gen.jhipsterConfigWithDefaults.prodDatabaseType})`,
+                    },
+                ],
             }),
-            choices: [
-                { value: 'h2Disk', name: 'H2 with disk-based persistence' },
-                { value: 'h2Memory', name: 'H2 with in-memory persistence' },
-                // Drop null value due to jhipster issue
-                // { value: null, name: 'Same as production' },
-            ],
             scope: 'storage',
         },
         cacheProvider: {
