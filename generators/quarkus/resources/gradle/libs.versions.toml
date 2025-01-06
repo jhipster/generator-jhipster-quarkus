@@ -1,5 +1,5 @@
 [libraries]
-assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.1" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.2" }
 archunit-junit5-api = { group = "com.tngtech.archunit", name = "archunit-junit5-api", version = "1.3.0" }
 camel-quarkus-jackson = { group = "org.apache.camel.quarkus", name = "camel-quarkus-jackson", version = "3.17.0" }
 commons-vfs2 = { group = "org.apache.commons", name = "commons-vfs2", version = "2.9.0" }
