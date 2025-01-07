@@ -242,6 +242,10 @@ export const serverFiles = {
             templates: ['web/rest/UserJWTController.java'],
         }),
         javaTestPackageTemplatesBlock({
+            condition: ctx => ctx.authenticationTypeJwt && !ctx.generateUserManagement,
+            templates: ['TestTokenProvider.java'],
+        }),
+        javaTestPackageTemplatesBlock({
             condition: ctx => ctx.authenticationTypeJwt && ctx.generateUserManagement,
             templates: [
                 'web/rest/AccountResourceTest_jwt.java',
