@@ -260,7 +260,7 @@ export const serverFiles = {
     ],
     oauth2: [
         javaMainPackageTemplatesBlock({
-            condition: generator => generator.authenticationTypeOauth2,
+            condition: ctx => ctx.authenticationTypeOauth2 && ctx.generateAuthenticationApi,
             templates: [
                 'web/rest/vm/UserVM.java',
                 'web/rest/AuthInfoResource.java',
@@ -269,15 +269,18 @@ export const serverFiles = {
             ],
         }),
         javaTestPackageTemplatesBlock({
-            condition: generator => generator.authenticationTypeOauth2,
+            condition: ctx => ctx.authenticationTypeOauth2,
+            templates: ['infrastructure/MockOidcServerTestResource.java'],
+        }),
+        javaTestPackageTemplatesBlock({
+            condition: ctx => ctx.authenticationTypeOauth2 && ctx.generateAuthenticationApi,
             templates: [
                 'web/rest/AccountResourceTest_oauth2.java',
+                'web/rest/AccountResourceIT_oauth2.java',
                 'web/rest/LogoutResourceTest.java',
-                'infrastructure/MockOidcServerTestResource.java',
                 'infrastructure/KeycloakServerResource.java',
                 'infrastructure/InjectKeycloakServer.java',
                 'utility/IntegrationTestBase_oauth2.java',
-                'web/rest/AccountResourceIT_oauth2.java',
             ],
         }),
     ],

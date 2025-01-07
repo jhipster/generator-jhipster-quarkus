@@ -2941,9 +2941,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/java/com/mycompany/myapp/service/package-info.java": {
     "stateCleared": "modified",
   },
-  "src/main/java/com/mycompany/myapp/web/rest/AuthInfoResource.java": {
-    "stateCleared": "modified",
-  },
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterConfigurationEndpoint.java": {
     "stateCleared": "modified",
   },
@@ -2953,13 +2950,7 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterMetricsEndpoint.java": {
     "stateCleared": "modified",
   },
-  "src/main/java/com/mycompany/myapp/web/rest/LogoutResource.java": {
-    "stateCleared": "modified",
-  },
   "src/main/java/com/mycompany/myapp/web/rest/SpaFilter.java": {
-    "stateCleared": "modified",
-  },
-  "src/main/java/com/mycompany/myapp/web/rest/UserOauth2Controller.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java": {
@@ -2987,9 +2978,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/vm/LoggerVM.java": {
-    "stateCleared": "modified",
-  },
-  "src/main/java/com/mycompany/myapp/web/rest/vm/UserVM.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/vm/package-info.java": {
@@ -3061,25 +3049,7 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/infrastructure/InjectKeycloakServer.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/infrastructure/KeycloakServerResource.java": {
-    "stateCleared": "modified",
-  },
   "src/test/java/com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/utility/IntegrationTestBase.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/web/rest/AccountResourceIT.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/web/rest/AccountResourceTest.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/web/rest/LogoutResourceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/resources/jhipster-realm.json": {
@@ -3264,9 +3234,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/java/com/mycompany/myapp/service/package-info.java": {
     "stateCleared": "modified",
   },
-  "src/main/java/com/mycompany/myapp/web/rest/AuthInfoResource.java": {
-    "stateCleared": "modified",
-  },
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterConfigurationEndpoint.java": {
     "stateCleared": "modified",
   },
@@ -3276,13 +3243,7 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterMetricsEndpoint.java": {
     "stateCleared": "modified",
   },
-  "src/main/java/com/mycompany/myapp/web/rest/LogoutResource.java": {
-    "stateCleared": "modified",
-  },
   "src/main/java/com/mycompany/myapp/web/rest/SpaFilter.java": {
-    "stateCleared": "modified",
-  },
-  "src/main/java/com/mycompany/myapp/web/rest/UserOauth2Controller.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java": {
@@ -3310,9 +3271,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/vm/LoggerVM.java": {
-    "stateCleared": "modified",
-  },
-  "src/main/java/com/mycompany/myapp/web/rest/vm/UserVM.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/vm/package-info.java": {
@@ -3384,25 +3342,7 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/infrastructure/InjectKeycloakServer.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/infrastructure/KeycloakServerResource.java": {
-    "stateCleared": "modified",
-  },
   "src/test/java/com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/utility/IntegrationTestBase.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/web/rest/AccountResourceIT.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/web/rest/AccountResourceTest.java": {
-    "stateCleared": "modified",
-  },
-  "src/test/java/com/mycompany/myapp/web/rest/LogoutResourceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/resources/jhipster-realm.json": {
