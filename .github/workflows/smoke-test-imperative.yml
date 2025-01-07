@@ -144,7 +144,7 @@ jobs:
               run: npm run ci:backend:test
             - name: 'Run JHipster Application client tests'
               if: steps.compare.outputs.equals != 'true'
-              run: npm run ci:frontend:test
+              run: npm run ci:frontend:test --if-present
             - name: 'Packaging'
               if: steps.compare.outputs.equals != 'true'
               run: npm run ci:e2e:package
