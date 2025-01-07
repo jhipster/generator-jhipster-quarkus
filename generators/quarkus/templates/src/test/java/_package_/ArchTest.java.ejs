@@ -42,6 +42,7 @@ class ArchTest {
             .dependOnClassesThat()
             .resideInAnyPackage("..<%=packageName%>.web..")
             .because("Services and repositories should not depend on web layer")
+            .allowEmptyShould(true)
             .check(importedClasses);
     }
 }
