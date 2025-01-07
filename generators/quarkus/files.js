@@ -29,11 +29,11 @@ export const serverFiles = {
             templates: ['README.md.jhi.quarkus', 'checkstyle.xml'],
         },
         {
-            condition: generator => generator.buildTool === 'maven',
+            condition: generator => generator.buildToolMaven,
             templates: ['pom.xml'],
         },
         {
-            condition: generator => generator.buildTool === 'gradle',
+            condition: generator => generator.buildToolGradle,
             templates: [
                 'build.gradle',
                 'settings.gradle',
@@ -55,39 +55,17 @@ export const serverFiles = {
             templates: ['application.properties'],
         }),
         javaMainResourceTemplatesBlock({
-            condition: generator => generator.authenticationType === 'jwt',
+            condition: generator => generator.authenticationTypeJwt,
             templates: [
                 { file: 'jwt/privateKey.pem', method: 'copy', noEjs: true },
                 { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
                 'resources-config.json',
             ],
         }),
-        javaMainResourceTemplatesBlock({
-            condition: generator => generator.databaseType === 'mongodb',
-            templates: ['reflect-config-mongo.json'],
-        }),
-        javaMainResourceTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
-            templates: [
-                'templates/mail/activationEmail.html',
-                'templates/mail/creationEmail.html',
-                'templates/mail/passwordResetEmail.html',
-            ],
-        }),
     ],
     serverTestSupport: [
         javaTestPackageTemplatesBlock({
             templates: ['ArchTest.java', 'TestUtil.java'],
-        }),
-        javaTestPackageTemplatesBlock({
-            condition: generator => generator.authenticationType === 'oauth2',
-            templates: [
-                'infrastructure/MockOidcServerTestResource.java',
-                'infrastructure/KeycloakServerResource.java',
-                'infrastructure/InjectKeycloakServer.java',
-                'utility/IntegrationTestBase_oauth2.java',
-                'web/rest/AccountResourceIT_oauth2.java',
-            ],
         }),
     ],
     serverJavaCache: [
@@ -100,7 +78,7 @@ export const serverFiles = {
             templates: ['cache/redis/RedisCache.java'],
         }),
         javaMainPackageTemplatesBlock({
-            condition: generator => generator.cacheProvider === 'redis' && generator.authenticationType === 'jwt',
+            condition: generator => generator.cacheProvider === 'redis' && generator.authenticationTypeJwt,
             templates: ['cache/redis/UserRedisCache.java'],
         }),
         javaTestPackageTemplatesBlock({
@@ -117,70 +95,71 @@ export const serverFiles = {
                 'config/LocalDateProvider.java',
             ],
         }),
+        javaTestPackageTemplatesBlock({
+            templates: ['config/mock/JHipsterPropertiesMock.java', 'config/LocalDateProviderTest.java'],
+        }),
+    ],
+    databaseConfig: [
         javaMainPackageTemplatesBlock({
-            condition: generator => generator.databaseType === 'sql',
+            condition: generator => generator.databaseTypeSql,
             templates: [
                 'config/hibernate/JHipsterCompatibleImplicitNamingStrategy.java',
                 'config/hibernate/JHipsterCompatiblePhysicalNamingStrategy.java',
             ],
         }),
         javaMainPackageTemplatesBlock({
-            condition: generator =>
-                generator.databaseType === 'mongodb' &&
-                (!generator.skipUserManagement || (generator.skipUserManagement && generator.authenticationType === 'oauth2')),
+            condition: ctx => ctx.databaseTypeMongodb,
+            templates: ['service/IdGenerator.java', 'service/StringIdGenerator.java'],
+        }),
+        javaMainPackageTemplatesBlock({
+            condition: ctx => ctx.databaseTypeMongodb && (ctx.generateUserManagement || ctx.authenticationTypeOauth2),
             templates: [
                 'config/dbmigrations/InitialSetupMigration.java',
                 'config/dbmigrations/ChangeUnitsList.java',
                 'config/MongockConfiguration.java',
             ],
         }),
-        javaTestPackageTemplatesBlock({
-            templates: ['config/mock/JHipsterPropertiesMock.java', 'config/LocalDateProviderTest.java'],
+        javaMainResourceTemplatesBlock({
+            condition: ctx => ctx.databaseTypeMongodb,
+            templates: ['reflect-config-mongo.json'],
         }),
     ],
-    serverJavaDomain: [
+    userEntity: [
         javaMainPackageTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
-            templates: ['domain/Authority.java', 'domain/User.java'],
-        }),
-        javaTestPackageTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
-            templates: ['domain/AuthorityTest.java', 'domain/UserTest.java'],
-        }),
-    ],
-    serverJavaSecurity: [
-        javaMainPackageTemplatesBlock({
-            condition: generator => generator.authenticationType === 'jwt',
-            templates: ['security/jwt/TokenProvider.java'],
-        }),
-        javaMainPackageTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
+            condition: generator => generator.generateBuiltInUserEntity,
             templates: [
-                'security/BCryptPasswordHasher.java',
-                'security/UsernameNotFoundException.java',
-                'security/UserNotActivatedException.java',
-                'security/RandomUtil.java',
+                'domain/User.java',
+                'service/mapper/UserMapper.java',
+                'service/dto/UserDTO.java',
+                'service/UserService.java',
+                'web/rest/UserResource.java',
             ],
         }),
-        javaMainPackageTemplatesBlock({
-            templates: ['security/AuthoritiesConstants.java'],
+        javaTestPackageTemplatesBlock({
+            condition: generator => generator.generateBuiltInUserEntity,
+            templates: [
+                'domain/UserTest.java',
+                'web/rest/UserResourceTest.java',
+                'service/mapper/UserMapperTest.java',
+                'domain/UserTest.java',
+            ],
         }),
     ],
-    serverJavaService: [
+    authorityEntity: [
         javaMainPackageTemplatesBlock({
-            templates: ['service/dto/ManagementInfoDTO.java', 'service/ManagementInfoService.java'],
+            condition: generator => generator.generateBuiltInAuthorityEntity,
+            templates: ['domain/Authority.java', 'web/rest/AuthorityResource.java'],
         }),
-        javaMainPackageTemplatesBlock({
-            condition: generator => generator.databaseType === 'mongodb',
-            templates: ['service/IdGenerator.java', 'service/StringIdGenerator.java'],
+        javaTestPackageTemplatesBlock({
+            condition: generator => generator.generateBuiltInAuthorityEntity,
+            templates: ['domain/AuthorityTest.java', 'web/rest/AuthorityResourceTest.java'],
         }),
-
+    ],
+    userManagement: [
         javaMainPackageTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
+            condition: ctx => ctx.generateUserManagement,
             templates: [
-                'service/mapper/UserMapper.java',
                 'service/dto/PasswordChangeDTO.java',
-                'service/dto/UserDTO.java',
                 'service/dto/ManagementInfoDTO.java',
                 'service/AuthenticationService.java',
                 'service/EmailAlreadyUsedException.java',
@@ -188,13 +167,45 @@ export const serverFiles = {
                 'service/MailService.java',
                 'service/ManagementInfoService.java',
                 'service/UsernameAlreadyUsedException.java',
-                'service/UserService.java',
-                'service/MailService.java',
+                'security/BCryptPasswordHasher.java',
+                'security/UsernameNotFoundException.java',
+                'security/UserNotActivatedException.java',
+                'security/RandomUtil.java',
+                'web/rest/vm/KeyAndPasswordVM.java',
+                'web/rest/vm/LoginVM.java',
+                'web/rest/vm/ManagedUserVM.java',
+                'web/rest/errors/EmailAlreadyUsedException.java',
+                'web/rest/errors/EmailNotFoundException.java',
+                'web/rest/errors/LoginAlreadyUsedException.java',
+                'web/rest/errors/InvalidPasswordWebException.java',
             ],
         }),
+        javaMainPackageTemplatesBlock({
+            condition: ctx => ctx.authenticationTypeJwt && ctx.generateUserManagement,
+            templates: ['security/RandomUtil.java'],
+        }),
         javaTestPackageTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
-            templates: ['service/MailServiceTest.java', 'service/mapper/UserMapperTest.java', 'domain/UserTest.java'],
+            condition: ctx => ctx.generateUserManagement,
+            templates: ['service/MailServiceTest.java'],
+        }),
+        javaMainResourceTemplatesBlock({
+            condition: ctx => ctx.generateUserManagement,
+            templates: [
+                'templates/mail/activationEmail.html',
+                'templates/mail/creationEmail.html',
+                'templates/mail/passwordResetEmail.html',
+            ],
+        }),
+    ],
+    security: [
+        javaMainPackageTemplatesBlock({
+            templates: ['security/AuthoritiesConstants.java'],
+        }),
+    ],
+    serverJavaService: [
+        javaMainPackageTemplatesBlock({
+            condition: ctx => ctx.generateAuthenticationApi,
+            templates: ['service/dto/ManagementInfoDTO.java', 'service/ManagementInfoService.java'],
         }),
     ],
     serverJavaWebRestError: [
@@ -206,23 +217,32 @@ export const serverFiles = {
                 'web/rest/errors/FieldErrorVM.java',
             ],
         }),
-        javaMainPackageTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
-            templates: [
-                'web/rest/errors/EmailAlreadyUsedException.java',
-                'web/rest/errors/EmailNotFoundException.java',
-                'web/rest/errors/LoginAlreadyUsedException.java',
-                'web/rest/errors/InvalidPasswordWebException.java',
-            ],
-        }),
     ],
-    serverJavaWeb: [
+    authenticationApi: [
         javaMainPackageTemplatesBlock({
-            condition: generator => generator.databaseType !== 'no',
+            condition: ctx => ctx.generateAuthenticationApi,
             templates: ['web/rest/AccountResource.java'],
         }),
+        javaMainPackageTemplatesBlock({
+            condition: generator => generator.generateAuthenticationApi,
+            templates: ['web/rest/ManagementInfoResource.java'],
+        }),
         javaTestPackageTemplatesBlock({
-            condition: generator => generator.databaseType !== 'no' && generator.authenticationType === 'jwt',
+            condition: generator => generator.generateAuthenticationApi,
+            templates: ['web/rest/ManagementInfoResourceTest.java'],
+        }),
+    ],
+    jwt: [
+        javaMainPackageTemplatesBlock({
+            condition: ctx => ctx.authenticationTypeJwt,
+            templates: ['security/jwt/TokenProvider.java'],
+        }),
+        javaMainPackageTemplatesBlock({
+            condition: ctx => ctx.authenticationTypeJwt && ctx.generateUserManagement,
+            templates: ['web/rest/UserJWTController.java'],
+        }),
+        javaTestPackageTemplatesBlock({
+            condition: ctx => ctx.authenticationTypeJwt && ctx.generateUserManagement,
             templates: [
                 'web/rest/AccountResourceTest_jwt.java',
                 'builder/UserBuilder.java',
@@ -230,15 +250,36 @@ export const serverFiles = {
                 'infrastructure/InjectMailServer.java',
                 'utility/IntegrationTestBase.java',
                 'web/rest/AccountResourceIT.java',
+                'web/rest/UserJWTControllerTest.java',
+            ],
+        }),
+    ],
+    oauth2: [
+        javaMainPackageTemplatesBlock({
+            condition: generator => generator.authenticationTypeOauth2,
+            templates: [
+                'web/rest/vm/UserVM.java',
+                'web/rest/AuthInfoResource.java',
+                'web/rest/LogoutResource.java',
+                'web/rest/UserOauth2Controller.java',
             ],
         }),
         javaTestPackageTemplatesBlock({
-            condition: generator => generator.authenticationType === 'oauth2',
-            templates: ['web/rest/AccountResourceTest_oauth2.java', 'web/rest/LogoutResourceTest.java'],
+            condition: generator => generator.authenticationTypeOauth2,
+            templates: [
+                'web/rest/AccountResourceTest_oauth2.java',
+                'web/rest/LogoutResourceTest.java',
+                'infrastructure/MockOidcServerTestResource.java',
+                'infrastructure/KeycloakServerResource.java',
+                'infrastructure/InjectKeycloakServer.java',
+                'utility/IntegrationTestBase_oauth2.java',
+                'web/rest/AccountResourceIT_oauth2.java',
+            ],
         }),
+    ],
+    serverJavaWeb: [
         javaMainPackageTemplatesBlock({
             templates: [
-                'web/rest/ManagementInfoResource.java',
                 'web/rest/JHipsterMetricsEndpoint.java',
                 'web/rest/JHipsterConfigurationEndpoint.java',
                 'web/rest/vm/ConfigPropsVM.java',
@@ -249,44 +290,9 @@ export const serverFiles = {
                 'web/rest/vm/LoggerVM.java',
             ],
         }),
-        javaTestPackageTemplatesBlock({
-            templates: ['web/rest/ManagementInfoResourceTest.java'],
-        }),
-        javaMainPackageTemplatesBlock({
-            condition: generator => generator.authenticationType === 'jwt' && generator.databaseType !== 'no',
-            templates: ['web/rest/UserJWTController.java'],
-        }),
-        javaTestPackageTemplatesBlock({
-            condition: generator => generator.authenticationType === 'jwt' && generator.databaseType !== 'no',
-            templates: ['web/rest/UserJWTControllerTest.java'],
-        }),
-        javaMainPackageTemplatesBlock({
-            condition: generator => generator.authenticationType === 'oauth2',
-            templates: [
-                'web/rest/vm/UserVM.java',
-                'web/rest/AuthInfoResource.java',
-                'web/rest/LogoutResource.java',
-                'web/rest/UserOauth2Controller.java',
-            ],
-        }),
-        javaMainPackageTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
-            templates: [
-                'web/rest/vm/KeyAndPasswordVM.java',
-                'web/rest/vm/LoginVM.java',
-                'web/rest/vm/ManagedUserVM.java',
-                'web/rest/ManagementInfoResource.java',
-                'web/rest/UserResource.java',
-                'web/rest/AuthorityResource.java',
-            ],
-        }),
         javaMainPackageTemplatesBlock({
             condition: generator => !generator.skipClient,
             templates: ['web/rest/SpaFilter.java'],
-        }),
-        javaTestPackageTemplatesBlock({
-            condition: generator => !generator.skipUserManagement,
-            templates: ['web/rest/UserResourceTest.java', 'web/rest/AuthorityResourceTest.java'],
         }),
     ],
 };
