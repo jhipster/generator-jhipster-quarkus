@@ -38,6 +38,7 @@ jobs:
                     - imperative-ngx-jwt-maven-mysql-redis
                     - imperative-sql-jwt-maven-no-db
                     - imperative-ngx-oauth2-maven-mysql-caffeine
+                    - microservice-jwt
                 include:
                     - app: imperative-ngx-jwt-maven-mysql-caffeine
                     - app: imperative-ngx-jwt-maven-mongodb-caffeine
@@ -45,6 +46,7 @@ jobs:
                     - app: imperative-react-jwt-gradle-mysql-caffeine
                     - app: imperative-ngx-jwt-maven-mysql-redis
                     - app: imperative-ngx-oauth2-maven-mysql-caffeine
+                    - app: microservice-jwt
                 exclude:
                     - app: imperative-sql-jwt-maven-no-db
                     - app: imperative-ngx-jwt-gradle-mongodb-redis
