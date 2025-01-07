@@ -24,14 +24,14 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
         });
     });
 
-    Object.entries(fromMatrix({ buildTool: ['maven', 'gradle'] })).forEach(([name, config]) => {
-        describe(`run with ${name}, oauth2 and mongodb`, () => {
+    Object.entries(
+        fromMatrix({ applicationType: ['gateway', 'microservice'], authenticationType: ['jwt', 'oauth2'], buildTool: ['maven', 'gradle'] }),
+    ).forEach(([name, config]) => {
+        describe(`run with ${name} and mongodb`, () => {
             beforeAll(async function () {
                 await helpers
                     .run(SUB_GENERATOR_NAMESPACE)
                     .withJHipsterConfig({
-                        applicationType: 'gateway',
-                        authenticationType: 'oauth2',
                         databaseType: 'mongodb',
                         ...config,
                     })

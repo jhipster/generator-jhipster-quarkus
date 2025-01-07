@@ -18,6 +18,9 @@
 -%>
 package <%=packageName%>.web.rest;
 
+<%_ if (authenticationTypeJwt && !generateUserManagement) { _%>
+import <%=packageName%>.TestTokenProvider;
+<%_ } _%>
 <%- include('../../_partials/imports', this); -%>
 
 @QuarkusTest
@@ -38,11 +41,17 @@ public class <%= entityClass%>ResourceTest {
     String adminToken;
 
     <%= restClass %> <%= restInstance %>;
+<%_ if (authenticationTypeJwt && !generateUserManagement) { _%>
 
+    @Inject
+    TestTokenProvider tokenProvider;
+<%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
+
     @Inject
     LiquibaseFactory liquibaseFactory;
 <%_ } else if (databaseType === 'mongodb') { _%>
+
     @Inject
     MongoClient mongoClient;
 
@@ -58,7 +67,11 @@ public class <%= entityClass%>ResourceTest {
 
     @BeforeEach
     public void authenticateAdmin() {
+<%_ if (authenticationTypeJwt && !generateUserManagement) { _%>
+        this.adminToken = tokenProvider.getAdminToken();
+<%_ } else { _%>
         this.adminToken = TestUtil.getAdminToken();
+<%_ } _%>
     }
 
 <%_ if (databaseType === 'sql') { _%>

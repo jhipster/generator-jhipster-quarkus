@@ -19,7 +19,7 @@
 package <%=packageName%>;
 
 import static <%=packageName%>.config.Constants.DATE_TIME_FORMAT;
-<%_ if(!skipUserManagement) { _%>
+<%_ if(generateUserManagement) { _%>
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.Response.Status.OK;
 import static org.hamcrest.Matchers.*;
@@ -80,7 +80,7 @@ public final class TestUtil {
         // HashCodes are equals because the objects are not persisted yet
         assertThat(domainObject1.hashCode()).isEqualTo(domainObject2.hashCode());
     }
-<%_ if(!skipUserManagement) { _%>
+<%_ if (generateUserManagement) { _%>
 
     public static String getAdminToken() {
         return getToken("admin", "admin");

@@ -38,6 +38,8 @@ jobs:
                     - imperative-ngx-jwt-maven-mysql-redis
                     - imperative-sql-jwt-maven-no-db
                     - imperative-ngx-oauth2-maven-mysql-caffeine
+                    - microservice-jwt
+                    - microservice-oauth2
                 include:
                     - app: imperative-ngx-jwt-maven-mysql-caffeine
                     - app: imperative-ngx-jwt-maven-mongodb-caffeine
@@ -45,6 +47,8 @@ jobs:
                     - app: imperative-react-jwt-gradle-mysql-caffeine
                     - app: imperative-ngx-jwt-maven-mysql-redis
                     - app: imperative-ngx-oauth2-maven-mysql-caffeine
+                    - app: microservice-jwt
+                    - app: microservice-oauth2
                 exclude:
                     - app: imperative-sql-jwt-maven-no-db
                     - app: imperative-ngx-jwt-gradle-mongodb-redis
@@ -142,7 +146,7 @@ jobs:
               run: npm run ci:backend:test
             - name: 'Run JHipster Application client tests'
               if: steps.compare.outputs.equals != 'true'
-              run: npm run ci:frontend:test
+              run: npm run ci:frontend:test --if-present
             - name: 'Packaging'
               if: steps.compare.outputs.equals != 'true'
               run: npm run ci:e2e:package
