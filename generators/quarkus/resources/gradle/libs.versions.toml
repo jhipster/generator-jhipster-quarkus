@@ -1,7 +1,7 @@
 [libraries]
 assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.3" }
 archunit-junit5-api = { group = "com.tngtech.archunit", name = "archunit-junit5-api", version = "1.4.0" }
-camel-quarkus-jackson = { group = "org.apache.camel.quarkus", name = "camel-quarkus-jackson", version = "3.18.0" }
+camel-quarkus-jackson = { group = "org.apache.camel.quarkus", name = "camel-quarkus-jackson", version = "3.19.0" }
 commons-vfs2 = { group = "org.apache.commons", name = "commons-vfs2", version = "2.10.0" }
 graal = { group = "org.graalvm.nativeimage", name = "svm", version = "24.1.2" }
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version = "1.6.3" }
