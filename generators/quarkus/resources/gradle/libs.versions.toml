@@ -6,7 +6,7 @@ commons-vfs2 = { group = "org.apache.commons", name = "commons-vfs2", version = 
 graal = { group = "org.graalvm.nativeimage", name = "svm", version = "24.1.2" }
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version = "1.6.3" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version = "1.6.3" }
-mongock-bom = { group = "io.mongock", name = "mongock-bom", version = "5.5.0" }
+mongock-bom = { group = "io.mongock", name = "mongock-bom", version = "5.5.1" }
 jboss-vfs = { group = "org.jboss", name = "jboss-vfs", version = "3.3.2.Final" }
 quarkus-resteasy-problem = { group = "com.tietoevry.quarkus", name = "quarkus-resteasy-problem", version = "3.9.0" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
