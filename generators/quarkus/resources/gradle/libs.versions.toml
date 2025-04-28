@@ -11,7 +11,7 @@ jboss-vfs = { group = "org.jboss", name = "jboss-vfs", version = "3.3.2.Final" }
 quarkus-resteasy-problem = { group = "com.tietoevry.quarkus", name = "quarkus-resteasy-problem", version = "3.9.0" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
 testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "3.7.0" }
-checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "10.23.0" }
+checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "10.23.1" }
 
 [plugins]
 gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = "2.5.0" }
