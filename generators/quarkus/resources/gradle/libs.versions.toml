@@ -1,7 +1,7 @@
 [libraries]
 assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.4" }
 archunit-junit5-api = { group = "com.tngtech.archunit", name = "archunit-junit5-api", version = "1.4.1" }
-camel-quarkus-jackson = { group = "org.apache.camel.quarkus", name = "camel-quarkus-jackson", version = "3.24.0" }
+camel-quarkus-jackson = { group = "org.apache.camel.quarkus", name = "camel-quarkus-jackson", version = "3.25.0" }
 commons-vfs2 = { group = "org.apache.commons", name = "commons-vfs2", version = "2.10.0" }
 graal = { group = "org.graalvm.nativeimage", name = "svm", version = "24.2.2" }
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version = "1.6.3" }
@@ -11,7 +11,7 @@ jboss-vfs = { group = "org.jboss", name = "jboss-vfs", version = "3.3.2.Final" }
 quarkus-resteasy-problem = { group = "com.tietoevry.quarkus", name = "quarkus-resteasy-problem", version = "3.9.0" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
 testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "3.8.0" }
-checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "10.26.1" }
+checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "11.0.0" }
 
 [plugins]
 gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = "2.5.2" }
