@@ -23,6 +23,28 @@ services:
     image: <%= baseName.toLowerCase() %>
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
+<%_ if (databaseTypeSql) {
+const databaseName = prodDatabaseTypeMysql || prodDatabaseTypeMariadb ? baseName.toLowerCase() : baseName;
+_%>
+      - QUARKUS_DATASOURCE_JDBC_URL=<%- this.getJDBCUrl(prodDatabaseType, { hostname: prodDatabaseType, databaseName: databaseName }) %>
+<%_ } _%>
+<%_ if (databaseTypeMongodb) { _%>
+      - QUARKUS_MONGODB_CONNECTION_STRING=mongodb://mongodb:27017/<%= baseName %>
+<%_ } _%>
+<%_ if (authenticationTypeOauth2) { _%>
+      - QUARKUS_OIDC_AUTH_SERVER_URL=http://keycloak:9080/realms/jhipster
+  <%_ if (applicationTypeGateway || applicationTypeMonolith) { _%>
+      - QUARKUS_OIDC_CLIENT_ID=web_app
+      - QUARKUS_OIDC_CREDENTIALS_SECRET=web_app
+  <%_ } _%>
+  <%_ if (applicationTypeMicroservice) { _%>
+      - QUARKUS_OIDC_CLIENT_ID=internal
+      - QUARKUS_OIDC_CREDENTIALS_SECRET=internal
+  <%_ } _%>
+<%_ } _%>
+<%_ if (cacheProviderRedis) { _%>
+      - JHI_CACHE_REDIS_HOST=redis
+<%_ } _%>
 <%_ if (applicationTypeMonolith || applicationTypeGateway) { _%>
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
