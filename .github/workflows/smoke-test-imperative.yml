@@ -152,7 +152,10 @@ jobs:
               run: npm run ci:e2e:package
             - name: 'E2E: Start docker-compose containers for e2e tests'
               if: steps.compare.outputs.equals != 'true'
-              run: npm run ci:e2e:prepare
+              run: |
+                  # Required until https://github.com/jhipster/generator-jhipster/pull/30910 is released
+                  sed -i 's/docker.io\/bitnami\/consul/hashicorp\/consul/g' src/main/docker/consul.yml || true
+                  npm run ci:e2e:prepare
             - name: 'E2E: Run'
               if: steps.compare.outputs.equals != 'true'
               id: e2e
