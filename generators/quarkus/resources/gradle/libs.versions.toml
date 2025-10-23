@@ -3,7 +3,7 @@ assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.6
 archunit-junit5-api = { group = "com.tngtech.archunit", name = "archunit-junit5-api", version = "1.4.1" }
 camel-quarkus-jackson = { group = "org.apache.camel.quarkus", name = "camel-quarkus-jackson", version = "3.27.0" }
 commons-vfs2 = { group = "org.apache.commons", name = "commons-vfs2", version = "2.10.0" }
-graal = { group = "org.graalvm.nativeimage", name = "svm", version = "25.0.0" }
+graal = { group = "org.graalvm.nativeimage", name = "svm", version = "25.0.1" }
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version = "1.6.3" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version = "1.6.3" }
 mongock-bom = { group = "io.mongock", name = "mongock-bom", version = "5.5.1" }
