@@ -19,7 +19,7 @@ jobs:
               with:
                   node-version: ${{ env.node-version }}
             - name: Checkout jhipster-generator-quarkus
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
               with:
                   path: generator-jhipster-quarkus
             - name: Run generator-jhipster-quarkus git history
@@ -36,7 +36,7 @@ jobs:
                   git config --global user.name "JHipster Quarkus Bot"
                   git config --global user.email "git@github.com"
             - name: Checkout jhipster-sample-app-quarkus
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
               with:
                   token: ${{ secrets.AVDEV_GITHUB_TOKEN }}
                   repository: jhipster/jhipster-sample-app-quarkus
