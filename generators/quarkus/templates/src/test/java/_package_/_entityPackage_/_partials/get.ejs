@@ -83,9 +83,12 @@
                     }
                 } else if (fieldType === 'Boolean') {
                     expected = `${expected}.booleanValue()`;
-                } else if (fieldType === 'Instant' || fieldType === 'ZonedDateTime' || fieldType === 'LocalDate') {
+                } else if (fieldType === 'Instant' || fieldType === 'ZonedDateTime') {
                     expected = `TestUtil.formatDateTime(${expected})`;
-                } else if (fieldType !== 'String') {
+                } else if (fieldType === 'LocalDate') {
+                    expected = `TestUtil.formatLocalDate(${expected})`;
+                }
+                else if (fieldType !== 'String') {
                     expected = `${expected}.toString()`;
                 }
                 %>
