@@ -87,8 +87,7 @@
                     expected = `TestUtil.formatDateTime(${expected})`;
                 } else if (fieldType === 'LocalDate') {
                     expected = `TestUtil.formatLocalDate(${expected})`;
-                }
-                else if (fieldType !== 'String') {
+                } else if (fieldType !== 'String') {
                     expected = `${expected}.toString()`;
                 }
                 %>
