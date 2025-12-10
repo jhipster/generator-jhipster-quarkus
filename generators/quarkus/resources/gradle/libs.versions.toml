@@ -10,7 +10,7 @@ mongock-bom = { group = "io.mongock", name = "mongock-bom", version = "5.5.1" }
 jboss-vfs = { group = "org.jboss", name = "jboss-vfs", version = "3.3.2.Final" }
 quarkus-resteasy-problem = { group = "com.tietoevry.quarkus", name = "quarkus-resteasy-problem", version = "3.9.0" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
-testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "4.0.0" }
+testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "4.0.1" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "12.2.0" }
 
 [plugins]
