@@ -19,6 +19,9 @@
 package <%=packageName%>;
 
 import static <%=packageName%>.config.Constants.DATE_TIME_FORMAT;
+<%_ if (anyFieldIsLocalDate) { _%>
+import static <%=packageName%>.config.Constants.LOCAL_DATE_FORMAT;
+<%_ } _%>
 <%_ if(generateUserManagement) { _%>
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.Response.Status.OK;
@@ -57,10 +60,21 @@ public final class TestUtil {
     private static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
         .ofPattern(DATE_TIME_FORMAT)
         .withZone(ZoneId.of("UTC"));
+<%_ if (anyFieldIsLocalDate) { _%>
+    private static DateTimeFormatter LOCAL_DATE_FORMATTER = DateTimeFormatter
+        .ofPattern(LOCAL_DATE_FORMAT)
+        .withZone(ZoneId.of("UTC"));
+<%_ } _%>
 
     public static String formatDateTime(Temporal temporal) {
         return DATE_TIME_FORMATTER.format(temporal);
     }
+
+<%_ if (anyFieldIsLocalDate) { _%>
+    public static String formatLocalDate(Temporal temporal) {
+        return LOCAL_DATE_FORMATTER.format(temporal);
+    }
+<%_ } _%>
 
     /**
      * Verifies the equals/hashcode contract on the domain object.
