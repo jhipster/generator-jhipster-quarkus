@@ -14,7 +14,7 @@ testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "12.3.1" }
 
 [plugins]
-gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = "2.5.4" }
+gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = "2.5.5" }
 gradle-node = { id = "com.github.node-gradle.node", version = "7.1.0" }
 liquibase = { id = "org.liquibase.gradle", version = "3.1.0" }
 liquibase_core = { group = 'org.liquibase', id = "liquibase-core", version = "4.27.0" }
