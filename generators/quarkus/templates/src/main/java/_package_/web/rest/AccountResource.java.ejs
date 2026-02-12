@@ -20,6 +20,8 @@ package <%=packageName%>.web.rest;
 
 <%_ if (authenticationType === 'oauth2') { _%>
 import <%=packageName%>.config.Constants;
+import <%=packageName%>.service.UserService;
+import <%=packageName%>.service.dto.UserDTO;
 <%_ } _%>
 <%_ if (authenticationType === 'jwt') { _%>
 import <%=packageName%>.domain.User;
@@ -77,6 +79,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 <%_ if (authenticationType === 'oauth2') { _%>
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -130,6 +133,9 @@ public class AccountResource {
     // Since the resource can be accessed via an HTTP client (ie. service mode), use the Access Token as Bearer token
     @Inject
     JsonWebToken accessToken;
+
+    @Inject
+    UserService userService;
 
     /**
      * {@code GET /account} : get the current user.
@@ -192,7 +198,24 @@ public class AccountResource {
         }
         user.activated = true;
         user.authorities = getAuthoritiesFromAccessToken();
+
+        // Sync user with the local database
+        syncUserWithIdP(user);
+
         return user;
+    }
+
+    private void syncUserWithIdP(UserVM userVM) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.login = userVM.login;
+        userDTO.firstName = userVM.firstName;
+        userDTO.lastName = userVM.lastName;
+        userDTO.email = userVM.email;
+        userDTO.imageUrl = userVM.imageUrl;
+        userDTO.langKey = userVM.langKey;
+        userDTO.activated = userVM.activated;
+        userDTO.authorities = userVM.authorities;
+        userService.syncUserWithIdP(userDTO);
     }
 
     private Set<String> getAuthoritiesFromAccessToken() {

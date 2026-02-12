@@ -34,7 +34,9 @@ public class UserMapperTest {
         userMapper = new UserMapper();
         user = new User();
         user.login = DEFAULT_LOGIN;
+<%_ if (authenticationType !== 'oauth2') { _%>
         user.password = RandomStringUtils.random(60);
+<%_ } _%>
         user.activated = true;
         user.email = "johndoe@localhost";
         user.firstName = "john";
