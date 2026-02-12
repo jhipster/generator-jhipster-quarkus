@@ -165,6 +165,7 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
 <%_ } _%>
     public Instant resetDate = null;
 
+<%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
     @ManyToMany
     @JoinTable(
@@ -320,5 +321,4 @@ public class User <% if (databaseType === 'sql') { %>extends PanacheEntityBase <
     public static List<User> findAllByLoginNot(Page page, String login) {
         return find("login != ?1", login).page(page).list();
     }
-<%_ } _%>
 }

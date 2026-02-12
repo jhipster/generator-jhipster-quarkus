@@ -126,7 +126,7 @@ export const serverFiles = {
     ],
     userEntity: [
         javaMainPackageTemplatesBlock({
-            condition: generator => generator.generateBuiltInUserEntity,
+            condition: generator => generator.generateBuiltInUserEntity || generator.authenticationTypeOauth2,
             templates: [
                 'domain/User.java',
                 'service/mapper/UserMapper.java',
@@ -136,22 +136,26 @@ export const serverFiles = {
             ],
         }),
         javaTestPackageTemplatesBlock({
-            condition: generator => generator.generateBuiltInUserEntity,
+            condition: generator => generator.generateBuiltInUserEntity || generator.authenticationTypeOauth2,
             templates: [
                 'domain/UserTest.java',
-                'web/rest/UserResourceTest.java',
                 'service/mapper/UserMapperTest.java',
-                'domain/UserTest.java',
+            ],
+        }),
+        javaTestPackageTemplatesBlock({
+            condition: generator => generator.generateBuiltInUserEntity,
+            templates: [
+                'web/rest/UserResourceTest.java',
             ],
         }),
     ],
     authorityEntity: [
         javaMainPackageTemplatesBlock({
-            condition: generator => generator.generateBuiltInAuthorityEntity,
+            condition: generator => generator.generateBuiltInAuthorityEntity || generator.authenticationTypeOauth2,
             templates: ['domain/Authority.java', 'web/rest/AuthorityResource.java'],
         }),
         javaTestPackageTemplatesBlock({
-            condition: generator => generator.generateBuiltInAuthorityEntity,
+            condition: generator => generator.generateBuiltInAuthorityEntity || generator.authenticationTypeOauth2,
             templates: ['domain/AuthorityTest.java', 'web/rest/AuthorityResourceTest.java'],
         }),
     ],
