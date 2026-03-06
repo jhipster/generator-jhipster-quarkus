@@ -49,6 +49,28 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
         });
     });
 
+    describe('run with legacy ehcache config', () => {
+        beforeAll(async function () {
+            await helpers
+                .run(SUB_GENERATOR_NAMESPACE)
+                .withJHipsterConfig({
+                    cacheProvider: 'ehcache',
+                })
+                .withOptions({
+                    ignoreNeedlesError: true,
+                })
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig();
+        });
+
+        it('should migrate ehcache to caffeine', () => {
+            expect(result.getStateSnapshot()['.yo-rc.json']).toEqual({
+                stateCleared: 'modified',
+            });
+        });
+    });
+
     describe('with some entities', () => {
         beforeAll(async function () {
             await helpers
