@@ -11,6 +11,8 @@ export default class extends BaseApplicationGenerator {
             async configuringTemplateTask() {
                 if (!this.jhipsterConfig.cacheProvider) {
                     this.jhipsterConfig.cacheProvider = 'no';
+                } else if (this.jhipsterConfig.cacheProvider === 'ehcache') {
+                    this.jhipsterConfig.cacheProvider = 'caffeine';
                 }
                 if (!['caffeine', 'redis', 'no'].includes(this.jhipsterConfig.cacheProvider)) {
                     throw new Error(`Cache provider ${this.jhipsterConfig.cacheProvider} is not supported`);
