@@ -15,6 +15,10 @@ export default class extends BaseApplicationGenerator {
                 if (!['caffeine', 'redis', 'no'].includes(this.jhipsterConfig.cacheProvider)) {
                     throw new Error(`Cache provider ${this.jhipsterConfig.cacheProvider} is not supported`);
                 }
+                if (this.jhipsterConfig.searchEngine && this.jhipsterConfig.searchEngine !== 'no') {
+                    this.log.warn(`searchEngine '${this.jhipsterConfig.searchEngine}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.searchEngine = 'no';
+                }
             },
         });
     }
