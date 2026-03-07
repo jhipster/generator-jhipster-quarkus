@@ -15,6 +15,38 @@ export default class extends BaseApplicationGenerator {
                 if (!['caffeine', 'redis', 'no'].includes(this.jhipsterConfig.cacheProvider)) {
                     throw new Error(`Cache provider ${this.jhipsterConfig.cacheProvider} is not supported`);
                 }
+                if (this.jhipsterConfig.keycloak.admin-client-id && this.jhipsterConfig.keycloak.admin-client-id !== 'no') {
+                    this.log.warn(`keycloak.admin-client-id '${this.jhipsterConfig.keycloak.admin-client-id}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.keycloak.admin-client-id = 'no';
+                }
+                if (this.jhipsterConfig.keycloak.admin-client-secret && this.jhipsterConfig.keycloak.admin-client-secret !== 'no') {
+                    this.log.warn(`keycloak.admin-client-secret '${this.jhipsterConfig.keycloak.admin-client-secret}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.keycloak.admin-client-secret = 'no';
+                }
+                if (this.jhipsterConfig.keycloak.sync-users-on-login && this.jhipsterConfig.keycloak.sync-users-on-login !== 'no') {
+                    this.log.warn(`keycloak.sync-users-on-login '${this.jhipsterConfig.keycloak.sync-users-on-login}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.keycloak.sync-users-on-login = 'no';
+                }
+                if (this.jhipsterConfig.keycloak.realm && this.jhipsterConfig.keycloak.realm !== 'no') {
+                    this.log.warn(`keycloak.realm '${this.jhipsterConfig.keycloak.realm}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.keycloak.realm = 'no';
+                }
+                if (this.jhipsterConfig.keycloak.user-sync-enabled && this.jhipsterConfig.keycloak.user-sync-enabled !== 'no') {
+                    this.log.warn(`keycloak.user-sync-enabled '${this.jhipsterConfig.keycloak.user-sync-enabled}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.keycloak.user-sync-enabled = 'no';
+                }
+                if (this.jhipsterConfig.keycloak.sync-on-login && this.jhipsterConfig.keycloak.sync-on-login !== 'no') {
+                    this.log.warn(`keycloak.sync-on-login '${this.jhipsterConfig.keycloak.sync-on-login}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.keycloak.sync-on-login = 'no';
+                }
+                if (this.jhipsterConfig.keycloak.realm && this.jhipsterConfig.keycloak.realm !== 'no') {
+                    this.log.warn(`keycloak.realm '${this.jhipsterConfig.keycloak.realm}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.keycloak.realm = 'no';
+                }
+                if (this.jhipsterConfig.keycloak.resource && this.jhipsterConfig.keycloak.resource !== 'no') {
+                    this.log.warn(`keycloak.resource '${this.jhipsterConfig.keycloak.resource}' is not supported by this blueprint, falling back to 'no'`);
+                    this.jhipsterConfig.keycloak.resource = 'no';
+                }
             },
         });
     }
