@@ -13,10 +13,10 @@ describe('SubGenerator cypress of quarkus JHipster blueprint', () => {
                 .withJHipsterConfig()
                 .withOptions({
                     ignoreNeedlesError: true,
-                    blueprint: ['quarkus'],
                 })
-                .withJHipsterLookup()
-                .withParentBlueprintLookup();
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig();
         });
 
         it('should succeed', () => {
