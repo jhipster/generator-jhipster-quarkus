@@ -1,6 +1,5 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { fileURLToPath } from 'url';
 
 export const DEFAULT_DATA_ACCESS = 'activeRecord';
 export const QUARKUS_VERSION = '3.11.1';
@@ -8,4 +7,4 @@ export const QUARKUS_VERSION = '3.11.1';
 export const CACHE_MAXIMUM_SIZE = 100;
 export const CACHE_EXPIRE_AFTER_WRITE = '3600S';
 
-export const packageJson = JSON.parse(readFileSync(join(fileURLToPath(import.meta.url), '../../package.json')));
+export const packageJson = JSON.parse(readFileSync(join(import.meta.dirname, '../package.json')));
