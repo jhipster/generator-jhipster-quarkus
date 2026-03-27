@@ -4,12 +4,7 @@ import { entityServerFilesFromJHipster } from '../quarkus/entity-files.js';
 
 export default class extends ServerGenerator {
     constructor(args, opts, features) {
-        super(args, opts, {
-            ...features,
-            queueCommandTasks: true,
-            checkBlueprint: true,
-            sbsBlueprint: true,
-        });
+        super(args, opts, { ...features, checkBlueprint: true, sbsBlueprint: true });
     }
 
     async beforeQueue() {
