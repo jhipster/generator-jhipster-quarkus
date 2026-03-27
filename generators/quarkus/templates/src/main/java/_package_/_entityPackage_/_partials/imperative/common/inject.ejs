@@ -48,9 +48,6 @@
             beans.push({class: `${mapsIdEntity}Repository`, instance: mapsIdRepoInstance});
         }
     }
-    if (saveUserSnapshot && (viaService || constructorName.endsWith('Resource'))) {
-        beans.push({class: 'UserRepository', instance: 'userRepository'});
-    }
 _%>
 
     <%= beans.map(bean => `@Inject\n    ${bean.class} ${bean.instance};`).join('\n\n    ') %>

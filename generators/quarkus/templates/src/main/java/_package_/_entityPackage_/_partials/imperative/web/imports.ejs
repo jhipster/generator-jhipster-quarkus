@@ -36,9 +36,6 @@ import <%=packageName%>.repository.reactive.<%= entityClass %>ReactiveRepository
 import <%=packageName%>.repository.search.<%= entityClass %>SearchRepository;
     <%_ } _%>
 <%_ } _%>
-<%_ if (saveUserSnapshot) { _%>
-import <%=packageName%>.domain.User;
-<%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
 import <%=packageName%>.service.IdGenerator;
 <%_ } _%>
