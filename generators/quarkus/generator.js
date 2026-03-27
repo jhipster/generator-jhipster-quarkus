@@ -28,6 +28,19 @@ export default class extends BaseApplicationGenerator {
         await this.dependsOnJHipster('jhipster:java:server');
     }
 
+    get [BaseApplicationGenerator.CONFIGURING]() {
+        return this.asConfiguringTaskGroup({
+            async configuringTemplateTask() {
+                if (!this.jhipsterConfig.cacheProvider) {
+                    this.jhipsterConfig.cacheProvider = 'no';
+                }
+                if (!['caffeine', 'redis', 'no'].includes(this.jhipsterConfig.cacheProvider)) {
+                    throw new Error(`Cache provider ${this.jhipsterConfig.cacheProvider} is not supported`);
+                }
+            },
+        });
+    }
+
     get [BaseApplicationGenerator.COMPOSING]() {
         return this.asComposingTaskGroup({
             async composingTemplateTask() {

@@ -3,20 +3,7 @@ import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE } from '../constants.js';
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
-        super(args, opts, { ...features, queueCommandTasks: true, sbsBlueprint: true });
-    }
-
-    get [BaseApplicationGenerator.CONFIGURING]() {
-        return this.asConfiguringTaskGroup({
-            async configuringTemplateTask() {
-                if (!this.jhipsterConfig.cacheProvider) {
-                    this.jhipsterConfig.cacheProvider = 'no';
-                }
-                if (!['caffeine', 'redis', 'no'].includes(this.jhipsterConfig.cacheProvider)) {
-                    throw new Error(`Cache provider ${this.jhipsterConfig.cacheProvider} is not supported`);
-                }
-            },
-        });
+        super(args, opts, { ...features, sbsBlueprint: true });
     }
 
     get [BaseApplicationGenerator.LOADING]() {
