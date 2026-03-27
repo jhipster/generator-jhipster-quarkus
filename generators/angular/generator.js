@@ -14,6 +14,9 @@ export default class extends BaseApplicationGenerator {
                         '<h3 id="Quarkus-configuration">Quarkus configuration</h3>',
                     ),
                 );
+                this.editFile('.prettierrc', content =>
+                    content.replace('- files: "*.html"', `- files: "${application.clientSrcDir}**/*.html"`),
+                );
 
                 // Remove health modal
                 // TODO node 16 support is kept for workflow diff, drop after first merge
