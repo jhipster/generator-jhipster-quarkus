@@ -23,4 +23,30 @@ describe('SubGenerator bootstrap-application of quarkus JHipster blueprint', () 
             expect(result.getStateSnapshot()).toMatchSnapshot();
         });
     });
+
+    describe('run with legacy ehcache config', () => {
+        beforeAll(async function () {
+            await helpers
+                .run(BLUEPRINT_NAMESPACE)
+                .withJHipsterConfig({
+                    cacheProvider: 'ehcache',
+                })
+                .withOptions({
+                    ignoreNeedlesError: true,
+                    blueprint: ['quarkus'],
+                })
+                .withJHipsterLookup()
+                .withParentBlueprintLookup();
+        });
+
+        it('should succeed', () => {
+            expect(result.getStateSnapshot()).toMatchInlineSnapshot(`
+                {
+                  ".yo-rc.json": {
+                    "stateCleared": "modified",
+                  },
+                }
+            `);
+        });
+    });
 });
