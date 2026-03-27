@@ -4,9 +4,8 @@ import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE } from '../constants.js';
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
-        super(args, opts, { ...features, sbsBlueprint: true});
+        super(args, opts, { ...features, sbsBlueprint: true });
     }
-
 
     async beforeQueue() {
         await this.dependsOnBootstrap('server');
