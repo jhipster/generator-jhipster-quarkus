@@ -186,7 +186,7 @@ quarkus.oidc.client-id={clientId}
 quarkus.oidc.credentials.secret={clientSecret}
 ```
 
-  <%_ if (cypressTests) { _%>
+  <%_ if (locals.cypressTests) { _%>
 
 Before running Cypress tests, specify Auth0 user credentials by overriding the `CYPRESS_E2E_USERNAME` and `CYPRESS_E2E_PASSWORD` environment variables.
 
