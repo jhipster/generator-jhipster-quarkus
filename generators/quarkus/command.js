@@ -1,12 +1,10 @@
 import chalk from 'chalk';
-import { GENERATOR_JAVA, GENERATOR_LIQUIBASE, GENERATOR_SPRING_DATA_RELATIONAL } from 'generator-jhipster/generators';
-import { command as serverCommand } from 'generator-jhipster/generators/server';
+import { asCommand } from 'generator-jhipster';
+import { command as commonCommand } from 'generator-jhipster/generators/common';
 import { command as springBootCommand } from 'generator-jhipster/generators/spring-boot';
 
-const { applicationType } = serverCommand.configs;
+const { applicationType } = commonCommand.configs;
 const { defaultPackaging } = springBootCommand.configs;
-
-import { asCommand } from 'generator-jhipster';
 
 export default asCommand({
     options: {},
@@ -149,5 +147,5 @@ export default asCommand({
             scope: 'storage',
         },
     },
-    import: [GENERATOR_JAVA, GENERATOR_LIQUIBASE, GENERATOR_SPRING_DATA_RELATIONAL],
+    import: ['java', 'liquibase', 'jhipster:spring-boot:data-relational'],
 });

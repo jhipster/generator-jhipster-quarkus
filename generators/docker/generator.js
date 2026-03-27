@@ -1,5 +1,4 @@
 import { TEMPLATES_DOCKER_DIR } from 'generator-jhipster';
-import { GENERATOR_BOOTSTRAP_APPLICATION } from 'generator-jhipster/generators';
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 
 const renameTo = (ctx, filepath) => `${ctx.dockerServicesDir}${filepath}`.replace('/_eureka_', '').replace('/_consul_', '');
@@ -10,7 +9,7 @@ export default class extends BaseApplicationGenerator {
     }
 
     async beforeQueue() {
-        await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
+        await this.dependsOnBootstrap('docker');
     }
 
     get [BaseApplicationGenerator.PREPARING]() {
