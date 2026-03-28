@@ -12,7 +12,7 @@ quarkus-resteasy-problem = { group = "com.tietoevry.quarkus", name = "quarkus-re
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
 testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "4.1.1" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "13.2.0" }
-quarkus-bom = { group = "io.quarkus", name = "quarkus-bom", version = "3.11.1" }
+quarkus-bom = { group = "io.quarkus", name = "quarkus-bom", version = "3.34.1" }
 swagger-annotations = { group = "io.swagger", name = "swagger-annotations", version = "1.6.14" }
 
 [plugins]
