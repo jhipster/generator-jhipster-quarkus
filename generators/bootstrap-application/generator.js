@@ -1,5 +1,5 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
-import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, QUARKUS_VERSION } from '../constants.js';
+import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE } from '../constants.js';
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
@@ -23,7 +23,6 @@ export default class extends BaseApplicationGenerator {
         return this.asLoadingTaskGroup({
             async loadingTemplateTask({ application }) {
                 application.backendType = 'Quarkus';
-                application.quarkusVersion = QUARKUS_VERSION;
                 application.backendTypeJavaAny = true;
                 application.CACHE_MAXIMUM_SIZE = CACHE_MAXIMUM_SIZE;
                 application.CACHE_EXPIRE_AFTER_WRITE = CACHE_EXPIRE_AFTER_WRITE;

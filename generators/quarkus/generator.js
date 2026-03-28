@@ -59,9 +59,8 @@ export default class extends BaseApplicationGenerator {
     get [BaseApplicationGenerator.LOADING]() {
         return this.asLoadingTaskGroup({
             async loadDependencyVersions({ application }) {
-                if (application.buildTool === 'gradle') {
-                    this.loadJavaDependenciesFromGradleCatalog(application.javaDependencies);
-                }
+                this.loadJavaDependenciesFromGradleCatalog(application.javaDependencies);
+                application.quarkusVersion = application.javaDependencies['quarkus-bom'];
 
                 if (application.buildTool === 'maven') {
                     const pomFile = this.readTemplate('../../quarkus/resources/pom.xml')?.toString();
