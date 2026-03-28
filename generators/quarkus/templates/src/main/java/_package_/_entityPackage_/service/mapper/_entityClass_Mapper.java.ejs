@@ -69,8 +69,8 @@ for (idx in relationships) {
         renMapAnotEnt = true;
 _%>
     @Mapping(source = "<%= relationshipName %>.id", target = "<%= relationships[idx].relationshipFieldName %>Id")
-            <%_ if (relationships[idx].otherField.fieldNameCapitalized !='Id' && relationships[idx].otherField.fieldNameCapitalized !== '') { _%>
-    @Mapping(source = "<%= relationshipName %>.<%= relationships[idx].otherEntityField %>", target = "<%= relationships[idx].relationshipFieldName %><%= relationships[idx].otherField.fieldNameCapitalized %>")
+            <%_ if (relationships[idx].otherField?.fieldNameCapitalized !='Id' && relationships[idx].otherField?.fieldNameCapitalized !== '') { _%>
+    @Mapping(source = "<%= relationshipName %>.<%= relationships[idx].otherEntityField %>", target = "<%= relationships[idx].relationshipFieldName %><%= relationships[idx].otherField?.fieldNameCapitalized %>")
             <%_ } _%>
         <%_ } _%>
     <%_ } _%>
