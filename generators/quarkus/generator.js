@@ -11,10 +11,6 @@ import { entityQuarkusFiles } from './entity-files.js';
 import { serverFiles } from './files.js';
 
 export default class extends BaseApplicationGenerator {
-    constructor(args, opts, features) {
-        super(args, opts, { ...features, jhipster7Migration: true });
-    }
-
     async beforeQueue() {
         await this.dependsOnJHipster('jhipster-quarkus:quarkus:bootstrap');
         await this.dependsOnJHipster('java');
