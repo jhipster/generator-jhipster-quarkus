@@ -59,7 +59,7 @@ describe('Health', () => {
   describe('refresh', () => {
     it('should call refresh on init', () => {
       // GIVEN
-      const health: Health = { status: 'UP', checks: [{ name: 'database check', status: 'UP' }] };
+      const health: HealthModel = { status: 'UP', checks: [{ name: 'database check', status: 'UP' }] };
       vitest.spyOn(service, 'checkHealth').mockReturnValue(of(health));
 
       // WHEN
@@ -72,7 +72,7 @@ describe('Health', () => {
 
     it('should handle a 503 on refreshing health data', () => {
       // GIVEN
-      const health: Health = { status: 'DOWN', checks: [{ name: 'database check', status: 'DOWN' }] };
+      const health: HealthModel = { status: 'DOWN', checks: [{ name: 'database check', status: 'DOWN' }] };
       vitest.spyOn(service, 'checkHealth').mockReturnValue(throwError(() => new HttpErrorResponse({ status: 503, error: health })));
 
       // WHEN
