@@ -25,10 +25,13 @@ import io.quarkus.test.common.QuarkusTestResource;
 <%_ } _%>
 import io.quarkus.oidc.IdToken;
 import io.quarkus.oidc.OidcConfigurationMetadata;
+import io.quarkus.test.junit.QuarkusMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -43,12 +46,16 @@ import static org.mockito.Mockito.when;
 public class LogoutResourceTest {
 
     public static final String ORIGIN_HEADER = "http://localhost:9999";
-    @InjectMock
-    @IdToken
-    JsonWebToken idToken;
+
+    private final JsonWebToken idToken = Mockito.mock(JsonWebToken.class);
 
     @InjectMock
     OidcConfigurationMetadata configMetadata;
+
+    @BeforeEach
+    public void setup() {
+        QuarkusMock.installMockForType(idToken, JsonWebToken.class, IdToken.Literal.INSTANCE);
+    }
 
     @Test
     public void getLogoutInformation() {
