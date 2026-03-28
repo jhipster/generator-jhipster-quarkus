@@ -8,11 +8,11 @@ mapstruct = { group = "org.mapstruct", name = "mapstruct", version = "1.6.3" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version = "1.6.3" }
 mongock-bom = { group = "io.mongock", name = "mongock-bom", version = "5.5.1" }
 jboss-vfs = { group = "org.jboss", name = "jboss-vfs", version = "3.3.2.Final" }
-quarkus-resteasy-problem = { group = "com.tietoevry.quarkus", name = "quarkus-resteasy-problem", version = "3.9.0" }
+quarkus-resteasy-problem = { group = "io.quarkiverse.resteasy-problem", name = "quarkus-resteasy-problem", version = "3.20.1" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
 testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "4.1.1" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "13.2.0" }
-quarkus-bom = { group = "io.quarkus.platform", name = "quarkus-bom", version = "3.17.8" }
+quarkus-bom = { group = "io.quarkus.platform", name = "quarkus-bom", version = "3.23.0" }
 swagger-annotations = { group = "io.swagger", name = "swagger-annotations", version = "1.6.14" }
 
 [plugins]

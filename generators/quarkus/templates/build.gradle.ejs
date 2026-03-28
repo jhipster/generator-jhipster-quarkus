@@ -140,18 +140,18 @@ check.dependsOn cucumberTest
 check.dependsOn integrationTest
 task testReport(type: TestReport) {
     destinationDirectory.set(layout.buildDirectory.dir("reports/tests"))
-    testResultFiles(test.outputs.files)
+    testResults.from(test)
 }
 
 task integrationTestReport(type: TestReport) {
     destinationDirectory.set(layout.buildDirectory.dir("reports/tests"))
-    testResultFiles(integrationTest.outputs.files)
+    testResults.from(integrationTest)
 }
 
 <%_ if (cucumberTests) { _%>
 task cucumberTestReport(type: TestReport) {
     destinationDirectory.set(layout.buildDirectory.dir("reports/tests"))
-    testResultFiles(cucumberTest.outputs.files)
+    testResults.from(cucumberTest)
 }
 
 <%_ } _%>
@@ -284,7 +284,7 @@ dependencies {
     implementation "io.quarkus:quarkus-micrometer"
     implementation "io.quarkus:quarkus-micrometer-registry-prometheus"
     implementation "org.mapstruct:mapstruct:${mapstruct_version}"
-    implementation "com.tietoevry.quarkus:quarkus-resteasy-problem:${resteasy_problem_version}"
+    implementation "io.quarkiverse.resteasy-problem:quarkus-resteasy-problem:${resteasy_problem_version}"
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 <%_ if (databaseType === 'mongodb') { _%>
     implementation enforcedPlatform("io.mongock:mongock-bom:${mongockBom_version}")
