@@ -22,6 +22,16 @@ export default class extends BaseApplicationGenerator {
                     CACHE_EXPIRE_AFTER_WRITE,
                     jhipsterQuarkusVersion: undefined,
                     messageBrokerAny: undefined,
+                    temporaryDir: ({ buildTool }) => {
+                        switch (buildTool) {
+                            case 'maven':
+                                return 'target/';
+                            case 'gradle':
+                                return 'build/';
+                            default:
+                                return 'temp/';
+                        }
+                    },
                 });
             },
         });
