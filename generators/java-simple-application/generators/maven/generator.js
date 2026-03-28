@@ -1,5 +1,4 @@
 import MavenGenerator from 'generator-jhipster/generators/java-simple-application/generators/maven';
-import command from './command.js';
 
 export default class extends MavenGenerator {
     constructor(args, opts, features) {
