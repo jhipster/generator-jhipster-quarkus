@@ -30,6 +30,12 @@
                 "sbs": true,
                 "written": true
             },
+            "java-simple-application:gradle": {
+                "command": false,
+                "priorities": ["writing"],
+                "sbs": true,
+                "written": true
+            },
             "quarkus": {
                 "command": false,
                 "priorities": [

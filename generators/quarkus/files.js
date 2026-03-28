@@ -35,7 +35,6 @@ export const serverFiles = {
         {
             condition: generator => generator.buildToolGradle,
             templates: [
-                'build.gradle',
                 'settings.gradle',
                 'gradle.properties',
                 'gradle/sonar.gradle',
