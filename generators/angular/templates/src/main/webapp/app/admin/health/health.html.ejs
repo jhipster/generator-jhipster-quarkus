@@ -36,7 +36,7 @@
       </thead>
     @if (health(); as health) {
       <tbody>
-      @for (componentHealth of health.checks) {
+      @for (componentHealth of health.checks; track componentHealth.name) {
         <tr>
           <td>
             <span>{{ componentHealth.name }}</span>
