@@ -198,10 +198,9 @@ dependencies {
     implementation "io.quarkus:quarkus-resteasy"
     implementation "io.quarkus:quarkus-resteasy-jsonb"
     implementation "io.quarkus:quarkus-mailer"
+    implementation "io.quarkus:quarkus-hibernate-validator"
 <%_ if (databaseType === 'sql') { _%>
     implementation "io.quarkus:quarkus-hibernate-orm-panache"
-<%_ } _%>
-    implementation "io.quarkus:quarkus-hibernate-validator"
 <%_ if (devDatabaseType === 'mariadb' || prodDatabaseType === 'mariadb') { _%>
     implementation "io.quarkus:quarkus-jdbc-mariadb"
     liquibaseRuntime "io.quarkus:quarkus-jdbc-mariadb"
@@ -217,6 +216,7 @@ dependencies {
 <%_ if (devDatabaseType === 'postgresql' || prodDatabaseType === 'postgresql') { _%>
     implementation "io.quarkus:quarkus-jdbc-postgresql"
     liquibaseRuntime "io.quarkus:quarkus-jdbc-postgresql"
+<%_ } _%>
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
     implementation "io.quarkus:quarkus-mongodb-panache"

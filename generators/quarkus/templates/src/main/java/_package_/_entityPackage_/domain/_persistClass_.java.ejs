@@ -45,7 +45,7 @@ const uniqueEnums = {};
         }
     }
     for (const field of fields) {
-        if ((prodDatabaseType === 'postgresql' || devDatabaseType === 'postgresql') && field.fieldTypeBlobContent === 'text') {
+        if (databaseTypeSql && (prodDatabaseType === 'postgresql' || devDatabaseType === 'postgresql') && field.fieldTypeBlobContent === 'text') {
             hasTextBlob = true;
             break;
         }
@@ -176,7 +176,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
 
 <%_ if (databaseType === 'sql') { _%>
     @Id
-    <%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
+    <%_ if (databaseTypeSql && (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb')) { _%>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     <%_ }  else { _%>
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
