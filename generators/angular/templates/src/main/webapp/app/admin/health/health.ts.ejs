@@ -68,9 +68,4 @@ export default class Health implements OnInit {
       },
     });
   }
-
-  showHealth(health: { key: string; value: HealthDetails }): void {
-    const modalRef = this.modalService.open(HealthModal);
-    modalRef.componentInstance.health = health;
-  }
 }
