@@ -38,4 +38,14 @@ export default class extends BaseApplicationGenerator {
             },
         });
     }
+
+    get [BaseApplicationGenerator.DEFAULT]() {
+        return this.asDefaultTaskGroup({
+            async defaultTemplateTask({ application }) {
+                if (application.authority) {
+                    application.authority.skipClient = false;
+                }
+            },
+        });
+    }
 }
