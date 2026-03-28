@@ -23,7 +23,7 @@
             beans.push({class: `${entityClass}QueryService`, instance: `${entityInstance}QueryService`});
         }
         if (isUsingMapsId === true && viaRepository ==true && isController === false) {
-            const mapsIdEntity = mapsIdAssoc.otherEntityNameCapitalized;
+            const mapsIdEntity = mapsIdAssoc.otherEntity.entityNameCapitalized;
             const mapsIdEntityInstance = mapsIdEntity.charAt(0).toLowerCase() + mapsIdEntity.slice(1);
             const mapsIdRepoInstance = `${mapsIdEntityInstance}Repository`;
             beans.push({class: `${mapsIdEntity}Repository`, instance: mapsIdRepoInstance});
@@ -42,7 +42,7 @@
             beans.push({class: `${entityClass}ReactiveRepository`, instance: `${entityInstance}ReactiveRepository`});
         }
         if (isUsingMapsId === true && viaRepository ==true ) {
-            const mapsIdEntity = mapsIdAssoc.otherEntityNameCapitalized;
+            const mapsIdEntity = mapsIdAssoc.otherEntity.entityNameCapitalized;
             const mapsIdEntityInstance = mapsIdEntity.charAt(0).toLowerCase() + mapsIdEntity.slice(1);
             const mapsIdRepoInstance = `${mapsIdEntityInstance}Repository`;
             beans.push({class: `${mapsIdEntity}Repository`, instance: mapsIdRepoInstance});

@@ -27,7 +27,7 @@ import <%=packageName%>.service.<%= entityClass %>Service;
 <%_ if (viaRepository) { _%>
 import <%=packageName%>.repository.<%= entityClass %>Repository;
     <%_ if (isUsingMapsId === true) { _%>
-import <%=packageName%>.repository.<%= mapsIdAssoc.otherEntityNameCapitalized %>Repository;
+import <%=packageName%>.repository.<%= mapsIdAssoc.otherEntity.entityNameCapitalized %>Repository;
     <%_ } _%>
     <%_ if (reactive) { _%>
 import <%=packageName%>.repository.reactive.<%= entityClass %>ReactiveRepository;

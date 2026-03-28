@@ -26,7 +26,7 @@ let otherEntityName;
 let dataTypeName = (isUsingMapsId && mapsIdAssoc.otherEntityName === 'user' && authenticationType === 'oauth2') ? 'String' : 'long';
 
 if (isUsingMapsId) {
-    mapsIdEntityInstance = mapsIdAssoc.otherEntityNameCapitalized.charAt(0).toLowerCase() + mapsIdAssoc.otherEntityNameCapitalized.slice(1);
+    mapsIdEntityInstance = mapsIdAssoc.otherEntity.entityNameCapitalized.charAt(0).toLowerCase() + mapsIdAssoc.otherEntity.entityNameCapitalized.slice(1);
     mapsIdRepoInstance = `${mapsIdEntityInstance}Repository`;
     otherEntityName = mapsIdAssoc.otherEntityName;
     if (isController === true) { _%>

@@ -267,7 +267,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
     for (idx in relationships) {
         const relationship = relationships[idx];
         const otherEntity = relationship.otherEntity;
-        const otherEntityRelationshipName = relationships[idx].otherEntityRelationshipName;
+        const otherEntityRelationshipName = relationships[idx].otherEntity.relationshipName;
         const otherEntityRelationshipNamePlural = relationships[idx].otherEntity.relationshipNamePlural;
         const relationshipName = relationships[idx].relationshipName;
         const relationshipFieldName = relationships[idx].relationshipFieldName;
@@ -275,7 +275,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
         const relationshipType = relationships[idx].relationshipType;
         const relationshipValidate = relationships[idx].relationshipValidate;
         const relationshipRequired = relationships[idx].relationshipRequired;
-        const otherEntityNameCapitalized = relationships[idx].otherEntityNameCapitalized;
+        const otherEntityNameCapitalized = relationships[idx].otherEntity.entityNameCapitalized;
         const ownerSide = relationships[idx].ownerSide;
         const isUsingMapsId = relationships[idx].useJPADerivedIdentifier;
         if (otherEntityRelationshipName) {
