@@ -317,6 +317,12 @@ exports[`SubGenerator server of quarkus JHipster blueprint > run > should succee
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
+  "src/main/resources/i18n/messages_en.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/jwt/privateKey.pem": {
     "stateCleared": "modified",
   },
@@ -345,6 +351,9 @@ exports[`SubGenerator server of quarkus JHipster blueprint > run > should succee
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/config/mock/JHipsterPropertiesMock.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
@@ -384,6 +393,9 @@ exports[`SubGenerator server of quarkus JHipster blueprint > run > should succee
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/UserResourceTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
 }

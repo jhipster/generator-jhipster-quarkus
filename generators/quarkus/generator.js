@@ -17,7 +17,7 @@ export default class extends BaseApplicationGenerator {
 
     async beforeQueue() {
         await this.dependsOnJHipster('jhipster-quarkus:quarkus:bootstrap');
-        (await this.dependsOnJHipster('java')).generateEntities = false;
+        await this.dependsOnJHipster('java');
         await this.dependsOnJHipster('server');
 
         await this.dependsOnJHipster('jhipster:java-simple-application:build-tool');
@@ -41,6 +41,8 @@ export default class extends BaseApplicationGenerator {
         return this.asComposingTaskGroup({
             async composingTemplateTask() {
                 await this.composeWithJHipster('docker');
+                await this.composeWithJHipster('jhipster:java:i18n');
+                (await this.dependsOnJHipster('jhipster:java:domain')).generateEntities = false;
 
                 const languagesGenerator = await this.composeWithJHipster('languages');
                 languagesGenerator.writeJavaLanguageFiles = true;
