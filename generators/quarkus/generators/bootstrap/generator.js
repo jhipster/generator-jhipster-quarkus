@@ -61,6 +61,10 @@ export default class extends BaseApplicationGenerator {
                 if (application.authority) {
                     application.authority.skipClient = false;
                 }
+                if (application.user) {
+                    // Quarkus does not provides Public User API, so we need to set it to admin/users
+                    application.user.entityApiUrl = 'admin/users';
+                }
             },
         });
     }
