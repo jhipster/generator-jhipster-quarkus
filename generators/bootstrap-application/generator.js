@@ -9,6 +9,9 @@ export default class extends BaseApplicationGenerator {
     get [BaseApplicationGenerator.CONFIGURING]() {
         return this.asConfiguringTaskGroup({
             async configuringTemplateTask() {
+                if (this.jhipsterConfig.reactive === undefined) {
+                    this.jhipsterConfig.reactive = false;
+                }
                 if (!this.jhipsterConfig.cacheProvider) {
                     this.jhipsterConfig.cacheProvider = 'no';
                 }

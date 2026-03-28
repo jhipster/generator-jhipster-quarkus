@@ -18,7 +18,7 @@
 -%>
 package <%=packageName%>.web.rest;
 
-<%- include('../../_partials/imperative/web/imports', this); -%>
+<%- include(`../../_partials/${imperativeOrReactive}/web/imports`, this); -%>
 
 /**
  * REST controller for managing {@link <%= packageName %>.domain.<%= persistClass %>}.
@@ -43,23 +43,23 @@ public class <%= entityClass %>Resource {
 
 <%_ } _%>
 <%_ } _%>
-<%- include('../../_partials/imperative/common/inject', { ...this, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isController: true}); -%>
+<%- include('../../_partials/imperative/common/inject', { ...this, reactive: false, constructorName: entityClass + 'Resource', queryService: jpaMetamodelFiltering, isController: true}); -%>
 <%_ if (!readOnly) { _%>
-<%- include('../../_partials/imperative/web/create', this); -%>
+<%- include(`../../_partials/${imperativeOrReactive}/web/create`, this); -%>
 
-<%- include('../../_partials/imperative/web/update', this); -%>
+<%- include(`../../_partials/${imperativeOrReactive}/web/update`, this); -%>
 
-<%- include('../../_partials/imperative/web/delete', this); -%>
+<%- include(`../../_partials/${imperativeOrReactive}/web/delete`, this); -%>
 
 <%_ } _%>
 <%_ if (jpaMetamodelFiltering) {  %>
 <%- include('../../_partials/imperative/web/get_all_filtered', this); -%>
 <%_ } else { _%>
-<%- include('../../_partials/imperative/web/get_all', this); -%>
+<%- include(`../../_partials/${imperativeOrReactive}/web/get_all`, this); -%>
 <%_ } _%>
 
 
-<%- include('../../_partials/imperative/web/get', this); -%>
+<%- include(`../../_partials/${imperativeOrReactive}/web/get`, this); -%>
 <%_ if (searchEngine === 'elasticsearch') { _%>
 
 <%- include('../../_partials/imperative/web/search', this); -%>

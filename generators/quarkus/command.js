@@ -4,7 +4,7 @@ import { command as serverCommand } from 'generator-jhipster/generators/server';
 import { command as springBootCommand } from 'generator-jhipster/generators/spring-boot';
 
 const { applicationType } = serverCommand.configs;
-const { defaultPackaging } = springBootCommand.configs;
+const { defaultPackaging, reactive: reactiveConfig } = springBootCommand.configs;
 
 import { asCommand } from 'generator-jhipster';
 
@@ -69,6 +69,13 @@ export default asCommand({
                 { value: 'gradle', name: 'Gradle' },
             ],
             scope: 'storage',
+        },
+        reactive: {
+            ...reactiveConfig,
+            prompt: gen => ({
+                ...reactiveConfig.prompt(gen),
+                message: 'Do you want to use Quarkus reactive programming model?',
+            }),
         },
         databaseType: {
             prompt: {

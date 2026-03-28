@@ -100,6 +100,8 @@ export default class extends BaseApplicationGenerator {
         return this.asPreparingTaskGroup({
             async prepareQuarkusRendering({ entity }) {
                 entity.dataAccess = entity.dataAccess ?? DEFAULT_DATA_ACCESS;
+                entity.reactive = entity.reactive ?? this.jhipsterConfigWithDefaults.reactive;
+                entity.imperativeOrReactive = entity.reactive ? 'reactive' : 'imperative';
                 entity.viaService = entity.service !== 'no';
                 entity.hasServiceImpl = entity.service === 'serviceImpl';
                 entity.viaRepository = entity.dataAccess === 'repository';
