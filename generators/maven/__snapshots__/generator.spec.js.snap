@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SubGenerator maven of quarkus JHipster blueprint > run > should succeed 1`] = `
+{
+  ".mvn/jvm.config": {
+    "stateCleared": "modified",
+  },
+  ".mvn/wrapper/maven-wrapper.jar": {
+    "stateCleared": "modified",
+  },
+  ".mvn/wrapper/maven-wrapper.properties": {
+    "stateCleared": "modified",
+  },
+  ".yo-rc.json": {
+    "stateCleared": "modified",
+  },
+  "mvnw": {
+    "stateCleared": "modified",
+  },
+  "mvnw.cmd": {
+    "stateCleared": "modified",
+  },
+}
+`;
