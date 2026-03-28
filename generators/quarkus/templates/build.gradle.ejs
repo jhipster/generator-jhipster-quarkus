@@ -135,7 +135,7 @@ if (!project.hasProperty("runList")) {
     project.ext.runList = "main"
 }
 
-project.ext.diffChangelogFile = "<%= SERVER_MAIN_RES_DIR %>config/liquibase/changelog/" + new Date().format("yyyyMMddHHmmss") + "_changelog.xml"
+project.ext.diffChangelogFile = "<%= srcMainResources %>config/liquibase/changelog/" + new Date().format("yyyyMMddHHmmss") + "_changelog.xml"
 
 liquibase {
     activities {
