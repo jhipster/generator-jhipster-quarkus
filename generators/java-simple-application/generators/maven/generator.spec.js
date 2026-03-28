@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { defaultHelpers as helpers, result } from 'generator-jhipster/testing';
 
 const SUB_GENERATOR = 'maven';
-const BLUEPRINT_NAMESPACE = `jhipster:${SUB_GENERATOR}`;
+const BLUEPRINT_NAMESPACE = `jhipster:java-simple-application:${SUB_GENERATOR}`;
 
 describe('SubGenerator maven of quarkus JHipster blueprint', () => {
     describe('run', () => {
@@ -13,10 +13,10 @@ describe('SubGenerator maven of quarkus JHipster blueprint', () => {
                 .withJHipsterConfig()
                 .withOptions({
                     ignoreNeedlesError: true,
-                    blueprint: ['quarkus'],
                 })
-                .withJHipsterLookup()
-                .withParentBlueprintLookup();
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig();
         });
 
         it('should succeed', () => {

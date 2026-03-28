@@ -1,4 +1,4 @@
-import MavenGenerator from 'generator-jhipster/generators/maven';
+import MavenGenerator from 'generator-jhipster/generators/java-simple-application/generators/maven';
 import command from './command.js';
 
 export default class extends MavenGenerator {
@@ -16,10 +16,6 @@ export default class extends MavenGenerator {
     get [MavenGenerator.INITIALIZING]() {
         return this.asInitializingTaskGroup({
             ...super.initializing,
-            async initializingTemplateTask() {
-                this.parseJHipsterArguments(command.arguments);
-                this.parseJHipsterOptions(command.options);
-            },
         });
     }
 
