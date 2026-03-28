@@ -267,8 +267,8 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
     for (idx in relationships) {
         const relationship = relationships[idx];
         const otherEntity = relationship.otherEntity;
-        const otherEntityRelationshipName = relationships[idx].otherRelationship.relationshipName;
-        const otherEntityRelationshipNamePlural = relationships[idx].otherRelationship.relationshipNamePlural;
+        const otherEntityRelationshipName = relationships[idx].otherRelationship?.relationshipName;
+        const otherEntityRelationshipNamePlural = relationships[idx].otherRelationship?.relationshipNamePlural;
         const relationshipName = relationships[idx].relationshipName;
         const relationshipFieldName = relationships[idx].relationshipFieldName;
         const relationshipFieldNamePlural = relationships[idx].relationshipFieldNamePlural;
