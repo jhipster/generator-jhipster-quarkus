@@ -31,9 +31,9 @@ import <%= packageName %>.repository.<%= entityClass %>Repository;
 <%_ } _%>
 <%_ if (isUsingMapsId === true) { _%>
     <%_ if (viaRepository) { _%>
-import <%= packageName %>.repository.<%= mapsIdAssoc.otherEntityNameCapitalized %>Repository;
+import <%= packageName %>.repository.<%= mapsIdAssoc.otherEntity.entityNameCapitalized %>Repository;
     <%_ } else { _%>
-import <%= packageName %>.domain.<%= mapsIdAssoc.otherEntityNameCapitalized %>;
+import <%= packageName %>.domain.<%= mapsIdAssoc.otherEntity.entityNameCapitalized %>;
     <%_ } _%>
 <%_ } _%>
 <%_ if (searchEngine === 'elasticsearch') { _%>

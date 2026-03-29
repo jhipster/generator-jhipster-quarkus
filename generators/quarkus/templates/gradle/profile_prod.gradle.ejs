@@ -31,11 +31,11 @@ if (project.hasProperty("e2e")) {
 }
 
 <%_ if (!skipClient) { _%>
-task webapp_test(type: <%= this._.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
+task webapp_test(type: NpmTask, dependsOn: "npmInstall") {
     args = ["run", "webapp:test"]
 }
 
-task webapp(type: <%= this._.upperFirst(clientPackageManager) %>Task, dependsOn: "<%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>") {
+task webapp(type: NpmTask, dependsOn: "npmInstall") {
     args = ["run", "webapp:prod"]
     environment = [APP_VERSION: project.version]
 }

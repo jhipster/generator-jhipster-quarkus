@@ -66,6 +66,13 @@ jobs:
               with:
                   path: generator-jhipster-quarkus
                   fetch-depth: 5
+            - uses: jhipster/actions/setup-runner@v1
+              with:
+                  java-version: ${{ matrix.java-version }}
+                  node-version: ${{ matrix.node-version }}
+                  maven-cache: true
+                  gradle-cache: true
+                  binary-dir: ${{ github.workspace }}/generator-jhipster-quarkus/cli/
             - uses: actions/setup-node@v6
               with:
                   node-version: ${{matrix.node}}
@@ -92,52 +99,14 @@ jobs:
             #----------------------------------------------------------------------
             # Detect changes against base commit
             #----------------------------------------------------------------------
-            - name: 'MERGE: generate base'
-              continue-on-error: true
-              if: github.event.pull_request
-              id: base-app
-              run: |
-                  npm uninstall -g generator-jhipster-quarkus
-                  git checkout @~1
-                  npm install
-                  npm link
-                  cd ${{ github.workspace }}/base/app
-                  jhipster-quarkus generate-sample ${{ matrix.app }}.jdl --skip-install --skip-git
-                  cp -a "${{ github.workspace }}/app/.git" "${{ github.workspace }}/base/app/"
-              working-directory: ${{ github.workspace }}/generator-jhipster-quarkus/
-            - name: 'MERGE: compare changes'
-              continue-on-error: true
+            - uses: jhipster/actions/compare-sample@v1
               id: compare
-              if: steps.base-app.outcome == 'success'
-              working-directory: ${{ github.workspace }}/base/app
-              run: |
-                  git log
-                  # File keystore.p12 always changes
-                  # File package-lock.json is not generated
-                  # Verify if the generated source has changed
-                  git add .
-                  echo "Showing config diff changes (won't trigger builds)"
-                  echo "::group::ignored"
-                  git -c color.ui=always diff -R --cached -- \
-                    '.yo-rc.json' '**/.yo-rc.json' \
-                    '.gitignore' '**/.gitignore' \
-                    '.gitattributes' '**/.gitattributes' \
-                    'README.md' '**/README.md' \
-                    '.jhipster/**' '**/.jhipster/**'
-                  echo "::endgroup::"
-                  echo "Showing source diff changes (will trigger builds)"
-                  echo "::group::changes"
-                  git -c color.ui=always diff -R --cached --exit-code -- . \
-                    ':!.yo-rc.json' ':!**/.yo-rc.json' \
-                    ':!.gitignore' ':!**/.gitignore' \
-                    ':!.gitattributes' ':!**/.gitattributes' \
-                    ':!README.md' ':!**/README.md' \
-                    ':!.jhipster/**' ':!**/.jhipster/**' \
-                    ':!package-lock.json' ':!**/package-lock.json' \
-                    ':!**/keystore.p12' \
-                    && echo "equals=true" >> $GITHUB_OUTPUT \
-                    || echo "has-changes=true" >> $GITHUB_OUTPUT
-                  echo "::endgroup::"
+              if: >-
+                  github.event.pull_request &&
+                  !contains(github.event.pull_request.labels.*.name, 'pr: disable-compare')
+              with:
+                  generator-path: generator-jhipster-quarkus
+                  cmd: cli.cjs generate-sample ${{ matrix.app }}.jdl --skip-jhipster-dependencies --skip-install ${{ matrix.extra-args }}
             #----------------------------------------------------------------------
             # Run tests
             #----------------------------------------------------------------------

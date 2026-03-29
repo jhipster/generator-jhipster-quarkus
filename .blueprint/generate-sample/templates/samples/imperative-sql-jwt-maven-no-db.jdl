@@ -7,8 +7,6 @@ application {
       buildTool maven
       packageName io.github.jhipster.sample
       databaseType no
-      devDatabaseType no
-      prodDatabaseType no
       skipUserManagement true
       testFrameworks [cypress]
     }

@@ -16,34 +16,33 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+<%_ if (enableTranslation) { _%>
+import { TranslateModule } from '@ngx-translate/core';
+<%_ } _%>
 import { of, throwError } from 'rxjs';
 
-import HealthComponent from './health.component';
+import Health from './health';
 import { HealthService } from './health.service';
-import { Health } from './health.model';
+import { HealthModel } from './health.model';
 
-describe('HealthComponent', () => {
-  let comp: HealthComponent;
-  let fixture: ComponentFixture<HealthComponent>;
+describe('Health', () => {
+  let comp: Health;
+  let fixture: ComponentFixture<Health>;
   let service: HealthService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [HealthComponent],
-        providers: [provideHttpClientTesting(), provideHttpClient()],
-      })
-        .overrideTemplate(HealthComponent, '')
-        .compileComponents();
-    })
-  );
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+<%_ if (enableTranslation) { _%>
+      imports: [TranslateModule.forRoot()],
+<%_ } _%>
+    });
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HealthComponent);
+    fixture = TestBed.createComponent(Health);
     comp = fixture.componentInstance;
     service = TestBed.inject(HealthService);
   });
@@ -60,28 +59,28 @@ describe('HealthComponent', () => {
   describe('refresh', () => {
     it('should call refresh on init', () => {
       // GIVEN
-      const health: Health = { status: 'UP', checks: [{ name: 'database check', status: 'UP' }] };
-      jest.spyOn(service, 'checkHealth').mockReturnValue(of(health));
+      const health: HealthModel = { status: 'UP', checks: [{ name: 'database check', status: 'UP' }] };
+      vitest.spyOn(service, 'checkHealth').mockReturnValue(of(health));
 
       // WHEN
       comp.ngOnInit();
 
       // THEN
       expect(service.checkHealth).toHaveBeenCalled();
-      expect(comp.health).toEqual(health);
+      expect(comp.health()).toEqual(health);
     });
 
     it('should handle a 503 on refreshing health data', () => {
       // GIVEN
-      const health: Health = { status: 'DOWN', checks: [{ name: 'database check', status: 'DOWN' }] };
-      jest.spyOn(service, 'checkHealth').mockReturnValue(throwError(() => new HttpErrorResponse({ status: 503, error: health })));
+      const health: HealthModel = { status: 'DOWN', checks: [{ name: 'database check', status: 'DOWN' }] };
+      vitest.spyOn(service, 'checkHealth').mockReturnValue(throwError(() => new HttpErrorResponse({ status: 503, error: health })));
 
       // WHEN
       comp.refresh();
 
       // THEN
       expect(service.checkHealth).toHaveBeenCalled();
-      expect(comp.health).toEqual(health);
+      expect(comp.health()).toEqual(health);
     });
   });
 });

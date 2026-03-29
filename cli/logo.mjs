@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+
 import { packageJson } from '../generators/constants.js';
 
 export const getLogo = () => `

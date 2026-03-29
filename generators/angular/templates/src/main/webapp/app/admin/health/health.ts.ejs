@@ -16,24 +16,36 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { KeyValuePipe } from '@angular/common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 
-import SharedModule from 'app/shared/shared.module';
+<%_ if (enableTranslation) { _%>
+import { TranslateDirective } from 'app/shared/language';
+import { TranslateModule } from '@ngx-translate/core';
+<%_ } _%>
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HealthService } from './health.service';
-import { Health, HealthDetails, HealthStatus } from './health.model';
-import HealthModalComponent from './modal/health-modal.component';
+import { HealthModel, HealthDetails, HealthStatus } from './health.model';
 
 @Component({
-  standalone: true,
-  selector: '<%= jhiPrefixDashed %>-health',
-  templateUrl: './health.component.html',
-  imports: [SharedModule],
+  selector: '<%- jhiPrefixDashed %>-health',
+  templateUrl: './health.html',
+  imports: [
+<%_ if (enableTranslation) { _%>
+    TranslateDirective,
+    TranslateModule, 
+<%_ } _%>
+    FontAwesomeModule,
+    KeyValuePipe,
+  ],
 })
-export default class HealthComponent implements OnInit {
-  health?: Health;
+export default class Health implements OnInit {
+  readonly health = signal<HealthModel | null>(null);
 
-  constructor(private healthService: HealthService) {}
+  private readonly modalService = inject(NgbModal);
+  private readonly healthService = inject(HealthService);
 
   ngOnInit(): void {
     this.refresh();
@@ -48,12 +60,12 @@ export default class HealthComponent implements OnInit {
 
   refresh(): void {
     this.healthService.checkHealth().subscribe({
-      next: health => (this.health = health),
+      next: health => this.health.set(health),
       error: (error: HttpErrorResponse) => {
         if (error.status === 503) {
-          this.health = error.error;
+          this.health.set(error.error);
         }
-      }
+      },
     });
   }
 }

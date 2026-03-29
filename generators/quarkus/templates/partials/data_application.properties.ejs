@@ -17,6 +17,7 @@
  limitations under the License.
 -%>
 ## configure your datasource
+<%_ if (databaseType === 'sql') { _%>
 <%_ if (prodDatabaseType === 'mariadb') { _%>
 quarkus.datasource.db-kind=mariadb
 <%_ } else if (prodDatabaseType === 'mssql') { _%>
@@ -75,7 +76,6 @@ quarkus.datasource.db-kind=postgresql
 %prod.quarkus.datasource.username=<%= baseName %>
 %prod.quarkus.datasource.password=
 <%_ } _%>
-<%_ if (databaseType === 'sql') { _%>
 quarkus.datasource.jdbc.max-size=8
 quarkus.datasource.jdbc.min-size=2
 quarkus.hibernate-orm.database.generation=none
@@ -85,9 +85,9 @@ quarkus.hibernate-orm.implicit-naming-strategy=<%=packageName%>.config.hibernate
 quarkus.hibernate-orm.physical-naming-strategy=<%=packageName%>.config.hibernate.JHipsterCompatiblePhysicalNamingStrategy
 quarkus.hibernate-orm.second-level-caching-enabled=<%= enableHibernateCache %>
 %test.quarkus.hibernate-orm.second-level-caching-enabled=false
-<%_ } _%>
 <%_ if (enableHibernateCache) { _%>
 # jhipster-needle-quarkus-hibernate-cache-add-entry
+<%_ } _%>
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
 %prod.jhi.mongodb.port=27017
