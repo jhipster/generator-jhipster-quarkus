@@ -272,6 +272,7 @@ dependencies {
     testImplementation "io.rest-assured:rest-assured"
     testImplementation "org.assertj:assertj-core:${assertj_version}"
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
+    testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunit_junit5_version}"
 <%_ if (authenticationType === 'oauth2') { _%>
     testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremock_version}"
     testImplementation "com.github.dasniko:testcontainers-keycloak:${testcontainers_keycloak_version}"
