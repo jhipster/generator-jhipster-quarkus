@@ -27,8 +27,8 @@ jobs:
             fail-fast: false
             matrix:
                 os: [ubuntu-latest]
-                node: [22]
-                java: [17]
+                node: [24]
+                java: [21]
                 app:
                     - imperative-ngx-jwt-maven-mysql-caffeine
                     - imperative-ngx-jwt-maven-mongodb-caffeine
@@ -78,9 +78,9 @@ jobs:
               if: ${{ !contains(fromJson('["push", "pull_request"]'), github.event_name) || contains(matrix.app, 'mysql-caffeine') }}
               with:
                   java-version: ${{matrix.java}}
-                  distribution: 'graalvm'
-                  components: 'native-image'
+                  distribution: 'graalvm-community'
                   github-token: ${{ secrets.GITHUB_TOKEN }}
+                  native-image-job-reports: 'true'
             - name: 'install blueprint'
               run: npm install && npm link
               working-directory: ${{ github.workspace }}/generator-jhipster-quarkus/
