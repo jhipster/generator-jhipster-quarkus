@@ -24,3 +24,30 @@ describe('SubGenerator bootstrap-application of quarkus JHipster blueprint', () 
         });
     });
 });
+
+
+    describe('run with unsupported searchEngine elasticsearch', () => {
+        beforeAll(async function () {
+            await helpers
+                .run(BLUEPRINT_NAMESPACE)
+                .withJHipsterConfig({
+                    searchEngine: 'elasticsearch',
+                })
+                .withOptions({
+                    ignoreNeedlesError: true,
+                    blueprint: ['quarkus'],
+                })
+                .withJHipsterLookup()
+                .withParentBlueprintLookup();
+        });
+
+        it('should succeed by falling back searchEngine to no', () => {
+            expect(result.getStateSnapshot()).toMatchInlineSnapshot(`
+                {
+                  ".yo-rc.json": {
+                    "stateCleared": "modified",
+                  },
+                }
+            `);
+        });
+    });
