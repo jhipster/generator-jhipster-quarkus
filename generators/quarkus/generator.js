@@ -3,16 +3,6 @@ import chalk from 'chalk';
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import { getPomVersionProperties } from 'generator-jhipster/generators/maven/support';
 
-import {
-    GENERATOR_BOOTSTRAP_APPLICATION,
-    GENERATOR_DOCKER,
-    GENERATOR_GRADLE,
-    GENERATOR_JAVA,
-    GENERATOR_LANGUAGES,
-    GENERATOR_LIQUIBASE,
-    GENERATOR_MAVEN,
-    GENERATOR_SERVER,
-} from 'generator-jhipster/generators';
 import { createNeedleCallback } from 'generator-jhipster/generators/base/support';
 import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, DEFAULT_DATA_ACCESS } from '../constants.js';
 import { serverFiles } from './files.js';
@@ -24,9 +14,8 @@ export default class extends BaseApplicationGenerator {
     }
 
     async beforeQueue() {
-        await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
-        (await this.dependsOnJHipster(GENERATOR_JAVA)).generateEntities = false;
-        await this.dependsOnJHipster(GENERATOR_SERVER);
+        (await this.dependsOnJHipster('java')).generateEntities = false;
+        await this.dependsOnJHipster('server');
 
         await this.dependsOnJHipster('jhipster:java:build-tool');
         await this.dependsOnJHipster('jhipster:java:server');
@@ -35,20 +24,20 @@ export default class extends BaseApplicationGenerator {
     get [BaseApplicationGenerator.COMPOSING]() {
         return this.asComposingTaskGroup({
             async composingTemplateTask() {
-                await this.composeWithJHipster(GENERATOR_DOCKER);
+                await this.composeWithJHipster('docker');
 
                 if (this.jhipsterConfigWithDefaults.buildTool === 'maven') {
-                    await this.composeWithJHipster(GENERATOR_MAVEN);
+                    await this.composeWithJHipster('maven');
                 }
                 if (this.jhipsterConfigWithDefaults.buildTool === 'gradle') {
-                    await this.composeWithJHipster(GENERATOR_GRADLE);
+                    await this.composeWithJHipster('gradle');
                 }
 
-                const languagesGenerator = await this.composeWithJHipster(GENERATOR_LANGUAGES);
+                const languagesGenerator = await this.composeWithJHipster('languages');
                 languagesGenerator.writeJavaLanguageFiles = true;
 
                 if (this.jhipsterConfigWithDefaults.databaseType === 'sql') {
-                    const liquibaseGenerator = await this.composeWithJHipster(GENERATOR_LIQUIBASE);
+                    const liquibaseGenerator = await this.composeWithJHipster('liquibase');
                     liquibaseGenerator.injectLogs = false;
                     liquibaseGenerator.injectBuildTool = false;
                 }

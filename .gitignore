@@ -20,7 +20,6 @@ npm-debug.log.*
 .project
 .metadata
 tmp/
-tmp/**/*
 *.tmp
 *.bak
 *.swp
@@ -151,6 +150,8 @@ Desktop.ini
 ######################
 coverage/
 .nyc_output/
+
+/dist/
 
 # added by generate-blueprint:
 generators/**/package-lock.json

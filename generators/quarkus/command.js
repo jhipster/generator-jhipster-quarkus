@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import { GENERATOR_JAVA, GENERATOR_LIQUIBASE, GENERATOR_SPRING_DATA_RELATIONAL } from 'generator-jhipster/generators';
 import { command as serverCommand } from 'generator-jhipster/generators/server';
 import { command as springBootCommand } from 'generator-jhipster/generators/spring-boot';
 
@@ -9,7 +8,6 @@ const { defaultPackaging } = springBootCommand.configs;
 import { asCommand } from 'generator-jhipster';
 
 export default asCommand({
-    options: {},
     configs: {
         applicationType,
         defaultPackaging,
@@ -45,7 +43,7 @@ export default asCommand({
                 type: String,
             },
             prompt: {
-                type: 'list',
+                type: 'select',
                 message: `Which ${chalk.yellow('*type*')} of authentication would you like to use?`,
             },
             choices: [
@@ -61,7 +59,7 @@ export default asCommand({
                 type: String,
             },
             prompt: {
-                type: 'list',
+                type: 'select',
                 message: 'Would you like to use Maven or Gradle for building the backend?',
             },
             choices: [
@@ -72,7 +70,7 @@ export default asCommand({
         },
         databaseType: {
             prompt: {
-                type: 'list',
+                type: 'select',
                 message: `Which ${chalk.yellow('*type*')} of database would you like to use?`,
                 default: 'sql',
             },
@@ -85,7 +83,7 @@ export default asCommand({
         prodDatabaseType: {
             prompt: gen => ({
                 when: answers => (answers.databaseType ?? gen.jhipsterConfigWithDefaults.databaseType) === 'sql',
-                type: 'list',
+                type: 'select',
                 message: `Which ${chalk.yellow('*production*')} database would you like to use?`,
             }),
             choices: [
@@ -103,7 +101,7 @@ export default asCommand({
             },
             prompt: gen => ({
                 when: answers => (answers.databaseType ?? gen.jhipsterConfigWithDefaults.databaseType) === 'sql',
-                type: 'list',
+                type: 'select',
                 default: gen.jhipsterConfigWithDefaults.prodDatabaseType,
                 message: `Which ${chalk.yellow('*development*')} database would you like to use?`,
                 choices: answers => [
@@ -123,7 +121,7 @@ export default asCommand({
                 type: String,
             },
             prompt: {
-                type: 'list',
+                type: 'select',
                 message: 'Do you want to use the Quarkus cache abstraction?',
             },
             choices: [
@@ -149,5 +147,5 @@ export default asCommand({
             scope: 'storage',
         },
     },
-    import: [GENERATOR_JAVA, GENERATOR_LIQUIBASE, GENERATOR_SPRING_DATA_RELATIONAL],
+    import: ['java', 'liquibase', 'spring-data-relational'],
 });

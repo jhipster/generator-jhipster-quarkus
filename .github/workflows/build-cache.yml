@@ -15,7 +15,7 @@ jobs:
                   path: generator-jhipster-quarkus
             - uses: jhipster/actions/setup-runner@v1
               with:
-                  node-version: 20
+                  node-version: 24
                   binary-dir: ${{ github.workspace }}/generator-jhipster-quarkus/cli/
             - uses: jhipster/actions/cache-npm-dependencies@v1
               with:
