@@ -25,7 +25,6 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSystemHealth } from '../administration.reducer';
 
 export const HealthPage = () => {
-  const [healthObject, setHealthObject] = useState({});
   const dispatch = useAppDispatch();
 
   const health = useAppSelector(state => state.administration.health);
