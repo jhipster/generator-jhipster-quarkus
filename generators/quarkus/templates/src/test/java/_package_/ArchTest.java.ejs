@@ -28,7 +28,7 @@ import com.tngtech.archunit.lang.ArchRule;
 class ArchTest {
 
     @com.tngtech.archunit.junit.ArchTest
-    static final ArchRule servicesAndRepositoriesShouldNotDependOnWebLayer = noClasses()
+    public final ArchRule servicesAndRepositoriesShouldNotDependOnWebLayer = noClasses()
         .that()
         .resideInAnyPackage("..service..")
         .or()
