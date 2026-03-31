@@ -5,7 +5,7 @@ exports[`SubGenerator cypress of quarkus JHipster blueprint > run > should succe
   ".yo-rc.json": {
     "stateCleared": "modified",
   },
-  "cypress-audits.config.ts": {
+  "angular.json": {
     "stateCleared": "modified",
   },
   "cypress.config.ts": {
@@ -35,7 +35,10 @@ exports[`SubGenerator cypress of quarkus JHipster blueprint > run > should succe
   "src/test/javascript/cypress/e2e/administration/administration.cy.ts": {
     "stateCleared": "modified",
   },
-  "src/test/javascript/cypress/e2e/lighthouse.audits.ts": {
+  "src/test/javascript/cypress/e2e/entity/authority.cy.ts": {
+    "stateCleared": "modified",
+  },
+  "src/test/javascript/cypress/e2e/entity/user-management.cy.ts": {
     "stateCleared": "modified",
   },
   "src/test/javascript/cypress/fixtures/integration-test.png": {

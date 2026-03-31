@@ -29,7 +29,7 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   "README.md": {
     "stateCleared": "modified",
   },
-  "eslint.config.mjs": {
+  "eslint.config.ts": {
     "stateCleared": "modified",
   },
   "jest.conf.js": {
@@ -38,7 +38,7 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   "package.json": {
     "stateCleared": "modified",
   },
-  "postcss.config.js": {
+  "postcss.config.ts": {
     "stateCleared": "modified",
   },
   "sonar-project.properties": {
@@ -248,7 +248,19 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   "src/main/webapp/app/shared/error/page-not-found.tsx": {
     "stateCleared": "modified",
   },
+  "src/main/webapp/app/shared/jhipster/constants.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/shared/jhipster/data-utils.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/shared/jhipster/error.constants.ts": {
+    "stateCleared": "modified",
+  },
   "src/main/webapp/app/shared/jhipster/headers.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/shared/jhipster/link-header.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/shared/jhipster/problem-details.ts": {
@@ -480,6 +492,9 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
     "stateCleared": "modified",
   },
   "webpack/logo-jhipster.png": {
+    "stateCleared": "modified",
+  },
+  "webpack/package.json": {
     "stateCleared": "modified",
   },
   "webpack/utils.js": {

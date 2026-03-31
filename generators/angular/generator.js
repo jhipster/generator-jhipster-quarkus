@@ -2,17 +2,23 @@ import BaseApplicationGenerator from 'generator-jhipster/generators/base-applica
 
 export default class extends BaseApplicationGenerator {
     constructor(args, opts, features) {
-        super(args, opts, { ...features, queueCommandTasks: true, sbsBlueprint: true });
+        super(args, opts, { ...features, sbsBlueprint: true });
     }
 
     get [BaseApplicationGenerator.POST_WRITING]() {
         return this.asPostWritingTaskGroup({
             async customize({ application }) {
-                this.editFile(`${application.clientSrcDir}app/admin/configuration/configuration.component.html`, content =>
+                this.editFile(`${application.clientSrcDir}app/admin/configuration/configuration.html`, content =>
                     content.replace(
                         '<h3 id="spring-configuration">Spring configuration</h3>',
                         '<h3 id="Quarkus-configuration">Quarkus configuration</h3>',
                     ),
+                );
+                this.editFile('.prettierrc', content =>
+                    content.replace('- files: "*.html"', `- files: "${application.clientSrcDir}**/*.html"`),
+                );
+                this.editFile('eslint.config.ts', content =>
+                    content.replace("files: ['**/*.html'],", `files: ['${application.clientSrcDir}**/*.html'],`),
                 );
 
                 // Remove health modal

@@ -1,6 +1,6 @@
 [libraries]
 assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.7" }
-archunit-junit5-api = { group = "com.tngtech.archunit", name = "archunit-junit5-api", version = "1.4.1" }
+archunit = { group = "com.tngtech.archunit", name = "archunit", version = "1.4.1" }
 camel-quarkus-jackson = { group = "org.apache.camel.quarkus", name = "camel-quarkus-jackson", version = "3.26.0" }
 commons-vfs2 = { group = "org.apache.commons", name = "commons-vfs2", version = "2.10.0" }
 graal = { group = "org.graalvm.nativeimage", name = "svm", version = "25.0.2" }
@@ -8,11 +8,11 @@ mapstruct = { group = "org.mapstruct", name = "mapstruct", version = "1.6.3" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version = "1.6.3" }
 mongock-bom = { group = "io.mongock", name = "mongock-bom", version = "5.5.1" }
 jboss-vfs = { group = "org.jboss", name = "jboss-vfs", version = "3.3.2.Final" }
-quarkus-resteasy-problem = { group = "io.quarkiverse.resteasy-problem", name = "quarkus-resteasy-problem", version = "3.20.1" }
+quarkus-resteasy-problem = { group = "io.quarkiverse.resteasy-problem", name = "quarkus-resteasy-problem", version = "3.32.1" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock-jre8", version = "3.0.1" }
 testcontainers-keycloak = { group = "com.github.dasniko", name = "testcontainers-keycloak", version = "4.1.1" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version = "13.4.0" }
-quarkus-bom = { group = "io.quarkus.platform", name = "quarkus-bom", version = "3.21.3" }
+quarkus-bom = { group = "io.quarkus.platform", name = "quarkus-bom", version = "3.34.1" }
 swagger-annotations = { group = "io.swagger", name = "swagger-annotations", version = "1.6.16" }
 
 [plugins]
@@ -23,4 +23,4 @@ liquibase_core = { group = 'org.liquibase', id = "liquibase-core", version = "4.
 sonarqube = { id = "org.sonarqube", version = "7.2.3.7755" }
 openapi-generator = { id = "org.openapi.generator", version = "7.21.0" }
 no-http-checkstyle = { id = "io.github.checkstyle.checkstyle", version = "0.0.11" }
-modernizer = { id = "org.gaul.modernizer", version = "1.8.0" }
+gradle-modernizer-plugin = { id = 'com.github.andygoossens.gradle-modernizer-plugin', version = '1.13.0' }

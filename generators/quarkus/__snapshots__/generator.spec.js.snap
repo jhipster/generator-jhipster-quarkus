@@ -317,6 +317,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
@@ -333,51 +336,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
     "stateCleared": "modified",
   },
   "src/main/resources/templates/mail/passwordResetEmail.html": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/configuration.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/health.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/logs.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/metrics.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/user-management.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -802,6 +760,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-j
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
@@ -821,54 +782,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-j
     "stateCleared": "modified",
   },
   "src/main/resources/templates/mail/passwordResetEmail.html": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/configuration.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/gateway.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/health.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/logs.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/metrics.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/user-management.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -1269,6 +1182,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-j
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
@@ -1288,54 +1204,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-j
     "stateCleared": "modified",
   },
   "src/main/resources/templates/mail/passwordResetEmail.html": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/configuration.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/gateway.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/health.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/logs.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/metrics.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/user-management.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -1691,55 +1559,13 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
   "src/main/resources/reflect-config-mongo.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/configuration.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/gateway.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/health.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/logs.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/metrics.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -1779,6 +1605,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/ManagementInfoResourceTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
   "src/test/resources/jhipster-realm.json": {
@@ -2053,55 +1882,13 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
   "src/main/resources/reflect-config-mongo.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/configuration.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/gateway.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/health.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/logs.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/metrics.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -2141,6 +1928,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/ManagementInfoResourceTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
   "src/test/resources/jhipster-realm.json": {
@@ -2394,6 +2184,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
@@ -2404,36 +2197,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/main/resources/resources-config.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -2452,6 +2215,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
 }
@@ -2678,6 +2444,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
@@ -2688,36 +2457,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/main/resources/resources-config.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -2736,6 +2475,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
 }
@@ -2998,40 +2740,13 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
   "src/main/resources/reflect-config-mongo.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -3050,6 +2765,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
   "src/test/resources/jhipster-realm.json": {
@@ -3291,40 +3009,13 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
   "src/main/resources/reflect-config-mongo.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {
@@ -3343,6 +3034,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
   "src/test/resources/jhipster-realm.json": {
@@ -3689,6 +3383,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities
   "src/main/resources/default_banner.txt": {
     "stateCleared": "modified",
   },
+  "src/main/resources/i18n/messages.properties": {
+    "stateCleared": "modified",
+  },
   "src/main/resources/i18n/messages_en.properties": {
     "stateCleared": "modified",
   },
@@ -3705,54 +3402,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities
     "stateCleared": "modified",
   },
   "src/main/resources/templates/mail/passwordResetEmail.html": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/activate.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/configuration.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/entity.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/error.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/global.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/health.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/home.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/login.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/logs.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/metrics.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/password.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/register.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/reset.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/sessions.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/settings.json": {
-    "stateCleared": "modified",
-  },
-  "src/main/webapp/i18n/en/user-management.json": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/ArchTest.java": {

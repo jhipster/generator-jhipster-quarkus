@@ -3,17 +3,12 @@
         "additionalSubGenerators": "quarkus",
         "baseName": "quarkus",
         "cli": true,
+        "defaultCommand": "generate-blueprint",
         "entities": [],
         "generators": {
             "angular": {
                 "command": false,
                 "priorities": ["postWriting"],
-                "sbs": true,
-                "written": true
-            },
-            "bootstrap-application": {
-                "command": false,
-                "priorities": ["loading"],
                 "sbs": true,
                 "written": true
             },
@@ -35,32 +30,10 @@
                 "sbs": true,
                 "written": true
             },
-            "maven": {
+            "java-simple-application:gradle": {
                 "command": false,
-                "priorities": [
-                    "initializing",
-                    "prompting",
-                    "configuring",
-                    "composing",
-                    "loading",
-                    "preparing",
-                    "configuringEachEntity",
-                    "loadingEntities",
-                    "preparingEachEntity",
-                    "preparingEachEntityField",
-                    "preparingEachEntityRelationship",
-                    "postPreparingEachEntity",
-                    "default",
-                    "writing",
-                    "writingEntities",
-                    "postWriting",
-                    "postWritingEntities",
-                    "loadingTranslations",
-                    "install",
-                    "postInstall",
-                    "end"
-                ],
-                "sbs": false,
+                "priorities": ["writing"],
+                "sbs": true,
                 "written": true
             },
             "quarkus": {
@@ -77,6 +50,12 @@
                     "end"
                 ],
                 "sbs": null,
+                "written": true
+            },
+            "quarkus:bootstrap": {
+                "command": false,
+                "priorities": ["loading"],
+                "sbs": true,
                 "written": true
             },
             "react": {
@@ -115,14 +94,14 @@
             }
         },
         "githubWorkflows": true,
-        "jhipsterVersion": "8.11.0",
+        "jhipsterVersion": "9.0.0",
         "js": true,
         "localBlueprint": false,
         "packageJsonType": "module",
         "prettierTabWidth": 4,
         "sampleWritten": true,
         "skipCommitHook": true,
-        "subGenerators": ["angular", "bootstrap-application", "cypress", "docker", "maven", "react", "server"]
+        "subGenerators": ["angular", "quarkus:bootstrap", "cypress", "docker", "react", "server"]
     },
     "generator-jhipster-blueprint": {
         "promptValues": {

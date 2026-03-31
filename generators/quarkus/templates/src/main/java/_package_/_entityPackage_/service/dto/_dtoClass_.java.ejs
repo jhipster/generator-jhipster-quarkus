@@ -140,7 +140,7 @@ public class <%= dtoClass %> implements Serializable {
         const relationshipType = relationships[idx].relationshipType;
         const otherEntityPrimaryKeyType = relationships[idx].otherEntity.primaryKey.type;
         const otherEntityNameCapitalized = relationships[idx].otherEntity.entityNameCapitalized;
-        const otherEntityFieldCapitalized = relationships[idx].otherEntityFieldCapitalized;
+        const otherEntityFieldCapitalized = relationships[idx].otherField?.fieldNameCapitalized;
         const otherEntityIsEmbedded = relationships[idx].otherEntity.embedded;
         const ownerSide = relationships[idx].ownerSide;
     _%>
@@ -196,9 +196,9 @@ public class <%= dtoClass %> implements Serializable {
                 const relationshipNameCapitalized = relationships[idx].relationshipNameCapitalized;
                 const relationshipFieldNamePlural = relationships[idx].relationshipFieldNamePlural;
                 const relationshipNameCapitalizedPlural = relationships[idx].relationshipNameCapitalizedPlural;
-                const otherEntityFieldCapitalized = relationships[idx].otherEntityFieldCapitalized;
-                const otherEntityIsEmbedded = relationships[idx].otherEntityIsEmbedded;
-                const otherEntityPrimaryKeyType = relationships[idx].otherEntityPrimaryKeyType;
+                const otherEntityFieldCapitalized = relationships[idx].otherField?.fieldNameCapitalized;
+                const otherEntityIsEmbedded = relationships[idx].otherEntity.embedded;
+                const otherEntityPrimaryKeyType = relationships[idx].otherEntity.primaryKey.type;
                 const ownerSide = relationships[idx].ownerSide; _%>
                 <%_ if ((relationshipType === 'many-to-many' && ownerSide === true)
                         || (relationshipType === 'one-to-many' && otherEntityIsEmbedded)) { _%>

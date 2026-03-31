@@ -16,13 +16,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-}
-
 dependencies {
     <%# This dependency is in the dev profile (and not in regular dependencies) because native builds fail if H2 is a dependency. %>
     <%_ if (devDatabaseType === 'h2Disk' || devDatabaseType === 'h2Memory') { _%>
@@ -43,13 +36,11 @@ task webapp_test(type: NpmTask, dependsOn: "npmInstall") {
     args = ["run", "webapp:test"]
 }
 
-task webapp(type: <%= this._.upperFirst(clientPackageManager) %>Task) {
+task webapp(type: NpmTask) {
     inputs.property('appVersion', project.version)
-    <%_ if (clientPackageManager==='npm') { _%>
     inputs.files("package-lock.json")
         .withPropertyName('package-lock')
         .withPathSensitivity(PathSensitivity.RELATIVE)
-    <%_ } _%>
     inputs.files("build.gradle")
         .withPropertyName('build.gradle')
         .withPathSensitivity(PathSensitivity.RELATIVE)
@@ -68,7 +59,7 @@ task webapp(type: <%= this._.upperFirst(clientPackageManager) %>Task) {
     outputs.dir("build/resources/main/META-INF/resources/")
         .withPropertyName("webapp-build-dir")
 
-    dependsOn <%= clientPackageManager %><%_ if (clientPackageManager === 'npm') { _%>Install<%_ } _%>
+    dependsOn npmInstall
 
     args = ["run", "webapp:build"]
     environment = [APP_VERSION: project.version]

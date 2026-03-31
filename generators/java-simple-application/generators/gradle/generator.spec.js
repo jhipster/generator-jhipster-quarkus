@@ -2,10 +2,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { defaultHelpers as helpers, result } from 'generator-jhipster/testing';
 
-const SUB_GENERATOR = 'maven';
+const SUB_GENERATOR = 'java-simple-application:gradle';
 const BLUEPRINT_NAMESPACE = `jhipster:${SUB_GENERATOR}`;
 
-describe('SubGenerator maven of quarkus JHipster blueprint', () => {
+describe('SubGenerator java-simple-application:gradle of quarkus JHipster blueprint', () => {
     describe('run', () => {
         beforeAll(async function () {
             await helpers
@@ -13,10 +13,10 @@ describe('SubGenerator maven of quarkus JHipster blueprint', () => {
                 .withJHipsterConfig()
                 .withOptions({
                     ignoreNeedlesError: true,
-                    blueprint: ['quarkus'],
                 })
-                .withJHipsterLookup()
-                .withParentBlueprintLookup();
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig();
         });
 
         it('should succeed', () => {

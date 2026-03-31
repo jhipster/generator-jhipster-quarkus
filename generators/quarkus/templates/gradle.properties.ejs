@@ -28,7 +28,7 @@ npm_version=<%= nodeDependencies.npm %>
 
 # Dependency versions
 mapstruct_version=<%= javaDependencies['mapstruct'] %>
-archunit_junit5_version=<%= javaDependencies['archunit-junit5-api'] %>
+archunit_version=<%= javaDependencies.archunit %>
 resteasy_problem_version=<%= javaDependencies['quarkus-resteasy-problem'] %>
 assertj_version=<%= javaDependencies['assertj-core'] %>
 <%_ if (enableSwaggerCodegen) { _%>
@@ -66,7 +66,7 @@ openapi_plugin_version=<%= javaDependencies['openapi-generator'] %>
 <%_ } _%>
 checkstyle_version=<%= javaDependencies['checkstyle'] %>
 no_http_checkstyle_version=<%= javaDependencies['no-http-checkstyle'] %>
-modernizer_plugin_version=<%= javaDependencies['modernizer'] %>
+modernizer_plugin_version=<%= javaDependencies['gradle-modernizer-plugin'] %>
 
 # jhipster-needle-gradle-property - JHipster will add additional properties here
 
