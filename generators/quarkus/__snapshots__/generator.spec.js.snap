@@ -1589,6 +1589,15 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/main/java/com/mycompany/myapp/config/package-info.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/domain/Authority.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/domain/User.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/domain/package-info.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/package-info.java": {
     "stateCleared": "modified",
   },
@@ -1607,10 +1616,22 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/main/java/com/mycompany/myapp/service/StringIdGenerator.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/service/UserService.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/service/dto/ManagementInfoDTO.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/service/dto/UserDTO.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/service/dto/package-info.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/mapper/UserMapper.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/mapper/package-info.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/service/package-info.java": {
@@ -1620,6 +1641,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/AuthInfoResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/AuthorityResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterConfigurationEndpoint.java": {
@@ -1641,6 +1665,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/UserOauth2Controller.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/UserResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java": {
@@ -1757,6 +1784,12 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/domain/UserTest.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/infrastructure/InjectKeycloakServer.java": {
     "stateCleared": "modified",
   },
@@ -1766,6 +1799,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/test/java/com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/service/mapper/UserMapperTest.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/utility/IntegrationTestBase.java": {
     "stateCleared": "modified",
   },
@@ -1773,6 +1809,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/AccountResourceTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/web/rest/AuthorityResourceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/LogoutResourceTest.java": {
@@ -1951,6 +1990,15 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/main/java/com/mycompany/myapp/config/package-info.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/domain/Authority.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/domain/User.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/domain/package-info.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/package-info.java": {
     "stateCleared": "modified",
   },
@@ -1969,10 +2017,22 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/main/java/com/mycompany/myapp/service/StringIdGenerator.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/service/UserService.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/service/dto/ManagementInfoDTO.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/service/dto/UserDTO.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/service/dto/package-info.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/mapper/UserMapper.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/mapper/package-info.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/service/package-info.java": {
@@ -1982,6 +2042,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/AuthInfoResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/AuthorityResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterConfigurationEndpoint.java": {
@@ -2003,6 +2066,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/UserOauth2Controller.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/UserResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java": {
@@ -2119,6 +2185,12 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/domain/UserTest.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/infrastructure/InjectKeycloakServer.java": {
     "stateCleared": "modified",
   },
@@ -2128,6 +2200,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "src/test/java/com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/service/mapper/UserMapperTest.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/utility/IntegrationTestBase.java": {
     "stateCleared": "modified",
   },
@@ -2135,6 +2210,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/AccountResourceTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/web/rest/AuthorityResourceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/java/com/mycompany/myapp/web/rest/LogoutResourceTest.java": {
@@ -2923,6 +3001,15 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/java/com/mycompany/myapp/config/package-info.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/domain/Authority.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/domain/User.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/domain/package-info.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/package-info.java": {
     "stateCleared": "modified",
   },
@@ -2938,7 +3025,25 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/java/com/mycompany/myapp/service/StringIdGenerator.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/service/UserService.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/dto/UserDTO.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/dto/package-info.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/mapper/UserMapper.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/mapper/package-info.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/service/package-info.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/AuthorityResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterConfigurationEndpoint.java": {
@@ -2951,6 +3056,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/SpaFilter.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/UserResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java": {
@@ -3049,7 +3157,19 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/domain/UserTest.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/service/mapper/UserMapperTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/web/rest/AuthorityResourceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/resources/jhipster-realm.json": {
@@ -3216,6 +3336,15 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/java/com/mycompany/myapp/config/package-info.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/domain/Authority.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/domain/User.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/domain/package-info.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/package-info.java": {
     "stateCleared": "modified",
   },
@@ -3231,7 +3360,25 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/main/java/com/mycompany/myapp/service/StringIdGenerator.java": {
     "stateCleared": "modified",
   },
+  "src/main/java/com/mycompany/myapp/service/UserService.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/dto/UserDTO.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/dto/package-info.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/mapper/UserMapper.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/service/mapper/package-info.java": {
+    "stateCleared": "modified",
+  },
   "src/main/java/com/mycompany/myapp/service/package-info.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/AuthorityResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/JHipsterConfigurationEndpoint.java": {
@@ -3244,6 +3391,9 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/SpaFilter.java": {
+    "stateCleared": "modified",
+  },
+  "src/main/java/com/mycompany/myapp/web/rest/UserResource.java": {
     "stateCleared": "modified",
   },
   "src/main/java/com/mycompany/myapp/web/rest/errors/BadRequestAlertException.java": {
@@ -3342,7 +3492,19 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with microserv
   "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
     "stateCleared": "modified",
   },
+  "src/test/java/com/mycompany/myapp/domain/AuthorityTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/domain/UserTest.java": {
+    "stateCleared": "modified",
+  },
   "src/test/java/com/mycompany/myapp/infrastructure/MockOidcServerTestResource.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/service/mapper/UserMapperTest.java": {
+    "stateCleared": "modified",
+  },
+  "src/test/java/com/mycompany/myapp/web/rest/AuthorityResourceTest.java": {
     "stateCleared": "modified",
   },
   "src/test/resources/jhipster-realm.json": {

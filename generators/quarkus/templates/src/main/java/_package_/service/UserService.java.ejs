@@ -37,19 +37,13 @@ import java.time.Instant;
 <%_ if (cacheProvider === 'redis') { _%>
 import java.util.ArrayList;
 <%_ } _%>
-<%_ if (authenticationType === 'jwt') { _%>
 import java.util.HashSet;
-<%_ } _%>
 import java.util.List;
 import java.util.Optional;
-<%_ if (authenticationType === 'jwt') { _%>
 import java.util.Set;
-<%_ } _%>
 import java.util.stream.Collectors;
 import jakarta.enterprise.context.ApplicationScoped;
-<%_ if (authenticationType === 'jwt') { _%>
 import jakarta.inject.Inject;
-<%_ } _%>
 <%_ if (databaseType === 'sql') { _%>
 import jakarta.transaction.Transactional;
 <%_ } _%>
@@ -324,6 +318,99 @@ public class UserService {
                 }
             )
             .map(UserDTO::new);
+    }
+
+<%_ } _%>
+<%_ if (authenticationType === 'oauth2') { _%>
+<%_ if (databaseType === 'mongodb') { _%>
+
+    @Inject
+    IdGenerator<String> idGenerator;
+
+<%_ } _%>
+
+    <%_ if (cacheProvider === 'redis') { _%>
+    @Inject
+    UserRedisCache userRedisCache;
+    <%_ } _%>
+
+    /**
+     * Sync user with IdP (e.g. Keycloak, Okta). When a user authenticates via OAuth2/OIDC,
+     * this method ensures their information is persisted in the local database (jhi_user table).
+     * If the user already exists, their information is updated. If the user is new, they are created.
+     *
+     * @param userDTO the user information from the IdP.
+     * @return the synced user DTO.
+     */
+    public UserDTO syncUserWithIdP(UserDTO userDTO) {
+        log.debug("Syncing user '{}' with IdP", userDTO.login);
+        Optional<User> existingUser = User.findOneByLogin(userDTO.login);
+        if (existingUser.isPresent()) {
+            // Update existing user with latest IdP data
+            User user = existingUser.get();
+            user.firstName = userDTO.firstName;
+            user.lastName = userDTO.lastName;
+            if (userDTO.email != null) {
+                user.email = userDTO.email.toLowerCase();
+            }
+            user.imageUrl = userDTO.imageUrl;
+            user.activated = true;
+            user.langKey = userDTO.langKey;
+            Set<Authority> managedAuthorities = user.authorities;
+            managedAuthorities.clear();
+            if (userDTO.authorities != null) {
+                userDTO.authorities.stream()
+                    .map(authority -> {
+                        Authority auth = new Authority();
+                        auth.name = authority;
+                        return auth;
+                    })
+                    .forEach(managedAuthorities::add);
+            }
+            <%_ if (databaseType === 'mongodb') { _%>
+            user.update();
+            <%_ } _%>
+            <%_ if (cacheProviderAny) { _%>
+            this.clearUserCaches(user);
+            <%_ } _%>
+            log.debug("Updated User from IdP: {}", user);
+            return new UserDTO(user);
+        } else {
+            // Create new user from IdP data
+            User newUser = new User();
+            newUser.login = userDTO.login.toLowerCase();
+            newUser.firstName = userDTO.firstName;
+            newUser.lastName = userDTO.lastName;
+            if (userDTO.email != null) {
+                newUser.email = userDTO.email.toLowerCase();
+            }
+            newUser.imageUrl = userDTO.imageUrl;
+            newUser.activated = true;
+            if (userDTO.langKey == null) {
+                newUser.langKey = Constants.DEFAULT_LANGUAGE;
+            } else {
+                newUser.langKey = userDTO.langKey;
+            }
+            if (userDTO.authorities != null) {
+                newUser.authorities = userDTO.authorities.stream()
+                    .map(authority -> {
+                        Authority auth = new Authority();
+                        auth.name = authority;
+                        return auth;
+                    })
+                    .collect(Collectors.toSet());
+            }
+            newUser.createdBy = "system";
+            <%_ if (databaseType === 'mongodb') { _%>
+            newUser.id = idGenerator.generate();
+            <%_ } _%>
+            User.persist(newUser);
+            <%_ if (cacheProviderAny) { _%>
+            this.clearUserCaches(newUser);
+            <%_ } _%>
+            log.debug("Created User from IdP: {}", newUser);
+            return new UserDTO(newUser);
+        }
     }
 
 <%_ } _%>
