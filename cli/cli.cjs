@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { basename, dirname, join } = require('path');
+const { basename, dirname, join } = require('node:path');
 
 const { bin, version } = require('../package.json');
 

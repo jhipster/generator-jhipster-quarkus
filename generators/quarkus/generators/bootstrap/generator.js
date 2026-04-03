@@ -55,6 +55,37 @@ export default class extends BaseApplicationGenerator {
         });
     }
 
+    get [BaseApplicationGenerator.PREPARING_EACH_ENTITY_FIELD]() {
+        return this.asPreparingEachEntityFieldTaskGroup({
+            prepareField({ entity, field }) {
+                if (!entity.skipServer) {
+                    field.propertyGet = field.propertyName;
+                    field.propertySet = value => `${field.propertyName} = ${value}`;
+                }
+            },
+        });
+    }
+
+    get [BaseApplicationGenerator.PREPARING_EACH_ENTITY_RELATIONSHIP]() {
+        return this.asPreparingEachEntityRelationshipTaskGroup({
+            prepareField({ entity, relationship }) {
+                if (!entity.skipServer) {
+                    relationship.propertyGet = relationship.propertyName;
+                    relationship.propertySet = value => `${relationship.propertyName} = ${value}`;
+                }
+            },
+        });
+    }
+
+    get [BaseApplicationGenerator.POST_PREPARING_EACH_ENTITY]() {
+        return this.asPreparingTaskGroup({
+            async prepareQuarkusRendering({ entity }) {
+                entity.primaryKey.propertyGet = entity.primaryKey.name;
+                entity.primaryKey.propertySet = value => `${entity.primaryKey.name} = ${value}`;
+            },
+        });
+    }
+
     get [BaseApplicationGenerator.DEFAULT]() {
         return this.asDefaultTaskGroup({
             async defaultTemplateTask({ application }) {

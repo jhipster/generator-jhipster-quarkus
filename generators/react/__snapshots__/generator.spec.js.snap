@@ -92,6 +92,27 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   "src/main/webapp/app/config/translation.ts": {
     "stateCleared": "modified",
   },
+  "src/main/webapp/app/entities/admin/authority/authority-delete-dialog.tsx": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/entities/admin/authority/authority-detail.tsx": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/entities/admin/authority/authority-reducer.spec.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/entities/admin/authority/authority-update.tsx": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/entities/admin/authority/authority.reducer.ts": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/entities/admin/authority/authority.tsx": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/app/entities/admin/authority/index.tsx": {
+    "stateCleared": "modified",
+  },
   "src/main/webapp/app/entities/menu.tsx": {
     "stateCleared": "modified",
   },
@@ -314,6 +335,9 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
   "src/main/webapp/app/shared/layout/password/password-strength-bar.tsx": {
     "stateCleared": "modified",
   },
+  "src/main/webapp/app/shared/model/admin/authority.model.ts": {
+    "stateCleared": "modified",
+  },
   "src/main/webapp/app/shared/model/user.model.ts": {
     "stateCleared": "modified",
   },
@@ -426,6 +450,9 @@ exports[`SubGenerator react of quarkus JHipster blueprint > run > should succeed
     "stateCleared": "modified",
   },
   "src/main/webapp/i18n/en/activate.json": {
+    "stateCleared": "modified",
+  },
+  "src/main/webapp/i18n/en/adminAuthority.json": {
     "stateCleared": "modified",
   },
   "src/main/webapp/i18n/en/configuration.json": {
