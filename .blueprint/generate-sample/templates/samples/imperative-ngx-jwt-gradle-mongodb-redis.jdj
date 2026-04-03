@@ -7,8 +7,6 @@ application {
     buildTool gradle
     databaseType mongodb
     packageName io.github.jhipster.sample
-    devDatabaseType mongodb
-    prodDatabaseType mongodb
     enableHibernateCache false
     cacheProvider redis
   }

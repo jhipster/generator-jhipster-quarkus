@@ -11,8 +11,5 @@ exports[`SubGenerator java of quarkus JHipster blueprint > run > should succeed 
   "src/main/java/com/mycompany/myapp/package-info.java": {
     "stateCleared": "modified",
   },
-  "src/test/java/com/mycompany/myapp/domain/AssertUtils.java": {
-    "stateCleared": "modified",
-  },
 }
 `;

@@ -7,8 +7,6 @@ application {
     creationTimestamp 1617901618891
     databaseType mongodb
     packageName io.github.jhipster.sample
-    devDatabaseType mongodb
-    prodDatabaseType mongodb
     enableHibernateCache false
     cacheProvider caffeine
     testFrameworks [cypress]

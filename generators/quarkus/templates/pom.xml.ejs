@@ -48,11 +48,11 @@
 
         <!-- Dependency properties -->
         <quarkus.platform.version><%= quarkusVersion %></quarkus.platform.version>
-        <swagger.version>1.6.14</swagger.version>
+        <swagger.version><%= javaDependencies['swagger-annotations'] %></swagger.version>
         <mapstruct.version><%= javaDependencies['mapstruct'] %></mapstruct.version>
-        <resteasy-problem.version><%= javaDependencies['resteasy-problem'] %></resteasy-problem.version>
-        <archunit-junit5.version><%= javaDependencies['archunit-junit5'] %></archunit-junit5.version>
-        <assertj.version><%= javaDependencies['assertj'] %></assertj.version>
+        <resteasy-problem.version><%= javaDependencies['quarkus-resteasy-problem'] %></resteasy-problem.version>
+        <archunit.version><%= javaDependencies.archunit %></archunit.version>
+        <assertj.version><%= javaDependencies['assertj-core'] %></assertj.version>
         <%_ if(authenticationType === 'oauth2') {_%>
         <wiremock.version><%= javaDependencies['wiremock'] %></wiremock.version>
         <testcontainers-keycloak.version><%= javaDependencies['testcontainers-keycloak'] %></testcontainers-keycloak.version>
@@ -211,7 +211,7 @@ _%>
         </dependency>
         <%_ } _%>
         <dependency>
-            <groupId>com.tietoevry.quarkus</groupId>
+            <groupId>io.quarkiverse.resteasy-problem</groupId>
             <artifactId>quarkus-resteasy-problem</artifactId>
             <version>${resteasy-problem.version}</version>
         </dependency>
@@ -244,7 +244,13 @@ _%>
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit5</artifactId>
-            <version>${archunit-junit5.version}</version>
+            <version>${archunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5-engine</artifactId>
+            <version>${archunit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

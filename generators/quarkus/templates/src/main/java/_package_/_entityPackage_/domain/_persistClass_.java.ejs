@@ -45,7 +45,7 @@ const uniqueEnums = {};
         }
     }
     for (const field of fields) {
-        if ((prodDatabaseType === 'postgresql' || devDatabaseType === 'postgresql') && field.fieldTypeBlobContent === 'text') {
+        if (databaseTypeSql && (prodDatabaseType === 'postgresql' || devDatabaseType === 'postgresql') && field.fieldTypeBlobContent === 'text') {
             hasTextBlob = true;
             break;
         }
@@ -176,7 +176,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
 
 <%_ if (databaseType === 'sql') { _%>
     @Id
-    <%_ if (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb') { _%>
+    <%_ if (databaseTypeSql && (prodDatabaseType === 'mysql' || prodDatabaseType === 'mariadb')) { _%>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     <%_ }  else { _%>
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -267,15 +267,15 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
     for (idx in relationships) {
         const relationship = relationships[idx];
         const otherEntity = relationship.otherEntity;
-        const otherEntityRelationshipName = relationships[idx].otherEntityRelationshipName;
-        const otherEntityRelationshipNamePlural = relationships[idx].otherEntityRelationshipNamePlural;
+        const otherEntityRelationshipName = relationships[idx].otherRelationship?.relationshipName;
+        const otherEntityRelationshipNamePlural = relationships[idx].otherRelationship?.relationshipNamePlural;
         const relationshipName = relationships[idx].relationshipName;
         const relationshipFieldName = relationships[idx].relationshipFieldName;
         const relationshipFieldNamePlural = relationships[idx].relationshipFieldNamePlural;
         const relationshipType = relationships[idx].relationshipType;
         const relationshipValidate = relationships[idx].relationshipValidate;
         const relationshipRequired = relationships[idx].relationshipRequired;
-        const otherEntityNameCapitalized = relationships[idx].otherEntityNameCapitalized;
+        const otherEntityNameCapitalized = relationships[idx].otherEntity.entityNameCapitalized;
         const ownerSide = relationships[idx].ownerSide;
         const isUsingMapsId = relationships[idx].useJPADerivedIdentifier;
         if (otherEntityRelationshipName) {

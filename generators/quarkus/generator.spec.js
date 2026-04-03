@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { fromMatrix, defaultHelpers as helpers, result } from 'generator-jhipster/testing';
+import { defaultHelpers as helpers, fromMatrix, result } from 'generator-jhipster/testing';
 
 const SUB_GENERATOR = 'quarkus';
 const SUB_GENERATOR_NAMESPACE = `jhipster-quarkus:${SUB_GENERATOR}`;
@@ -13,10 +13,10 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
                 .withJHipsterConfig()
                 .withOptions({
                     ignoreNeedlesError: true,
-                    blueprints: 'quarkus',
                 })
-                .withJHipsterLookup()
-                .withParentBlueprintLookup();
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig();
         });
 
         it('should succeed', () => {
@@ -37,10 +37,10 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
                     })
                     .withOptions({
                         ignoreNeedlesError: true,
-                        blueprints: 'quarkus',
                     })
-                    .withJHipsterLookup()
-                    .withParentBlueprintLookup();
+                    .withJHipsterGenerators()
+                    .withConfiguredBlueprint()
+                    .withBlueprintConfig();
             });
 
             it('should succeed', () => {
@@ -73,10 +73,10 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
                 .withOptions({
                     reproducible: true,
                     ignoreNeedlesError: true,
-                    blueprints: 'quarkus',
                 })
-                .withJHipsterLookup()
-                .withParentBlueprintLookup();
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig();
         });
 
         it('should succeed', () => {

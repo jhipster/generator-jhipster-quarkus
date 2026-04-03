@@ -1,15 +1,10 @@
-import { GENERATOR_BOOTSTRAP_APPLICATION } from 'generator-jhipster/generators';
 import ServerGenerator from 'generator-jhipster/generators/server';
+
 import { entityServerFilesFromJHipster } from '../quarkus/entity-files.js';
 
 export default class extends ServerGenerator {
     constructor(args, opts, features) {
-        super(args, opts, {
-            ...features,
-            queueCommandTasks: true,
-            checkBlueprint: true,
-            sbsBlueprint: true,
-        });
+        super(args, opts, { ...features, checkBlueprint: true, sbsBlueprint: true });
     }
 
     async beforeQueue() {
@@ -17,7 +12,7 @@ export default class extends ServerGenerator {
             this.fetchFromInstalledJHipster('java/generators/node/templates'),
             this.fetchFromInstalledJHipster('spring-boot/templates'),
         );
-        await this.dependsOnJHipster(GENERATOR_BOOTSTRAP_APPLICATION);
+        await this.dependsOnBootstrap('server');
     }
 
     get [ServerGenerator.CONFIGURING]() {

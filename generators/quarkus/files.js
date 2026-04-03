@@ -35,7 +35,6 @@ export const serverFiles = {
         {
             condition: generator => generator.buildToolGradle,
             templates: [
-                'build.gradle',
                 'settings.gradle',
                 'gradle.properties',
                 'gradle/sonar.gradle',
@@ -57,8 +56,8 @@ export const serverFiles = {
         javaMainResourceTemplatesBlock({
             condition: generator => generator.authenticationTypeJwt,
             templates: [
-                { file: 'jwt/privateKey.pem', method: 'copy', noEjs: true },
-                { file: 'META-INF/resources/publicKey.pem', method: 'copy', noEjs: true },
+                { file: 'jwt/privateKey.pem', transform: false },
+                { file: 'META-INF/resources/publicKey.pem', transform: false },
                 'resources-config.json',
             ],
         }),

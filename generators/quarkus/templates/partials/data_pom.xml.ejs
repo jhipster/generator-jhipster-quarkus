@@ -16,15 +16,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -%>
-    <%_ if (databaseType === 'sql') { _%>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm-panache</artifactId>
-        </dependency>
-    <%_ } _%>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
+        </dependency>
+<%_ if (databaseType === 'sql') { _%>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
     <%_ if (prodDatabaseType === 'mariadb') { _%>
         <dependency>
@@ -50,7 +49,6 @@
             <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
     <%_ } _%>
-    <%_ if (databaseType === 'sql') { _%>
     <%_ if (prodDatabaseType !== devDatabaseType) { _%>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -62,7 +60,7 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-liquibase</artifactId>
         </dependency>
-    <%_ } _%>
+<%_ } _%>
     <%_ if (databaseType === 'mongodb') { _%>
         <dependency>
             <groupId>io.quarkus</groupId>

@@ -18,14 +18,13 @@
 -%>
 import React, { useState, useEffect } from 'react';
 import { Translate } from 'react-jhipster';
-import { Table, Badge, Col, Row, Button } from 'reactstrap';
+import { Table, Badge, Col, Row, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSystemHealth } from '../administration.reducer';
 
 export const HealthPage = () => {
-  const [healthObject, setHealthObject] = useState({});
   const dispatch = useAppDispatch();
 
   const health = useAppSelector(state => state.administration.health);
@@ -49,7 +48,7 @@ export const HealthPage = () => {
         Health Checks
       </h2>
       <p>
-        <Button onClick={fetchSystemHealth} color={isFetching ? 'btn btn-danger' : 'btn btn-primary'} disabled={isFetching}>
+        <Button onClick={fetchSystemHealth} variant={isFetching ? 'danger' : 'primary'} disabled={isFetching}>
           <FontAwesomeIcon icon="sync" />
           &nbsp;
           <Translate component="span" contentKey="health.refresh.button">
@@ -58,7 +57,7 @@ export const HealthPage = () => {
         </Button>
       </p>
       <Row>
-        <Col md="12">
+        <Col md={12}>
           <Table bordered aria-describedby="health-page-heading">
             <thead>
               <tr>
@@ -71,7 +70,7 @@ export const HealthPage = () => {
                   <tr key={index}>
                     <td>{name}</td>
                     <td>
-                      <Badge color={status !== 'UP' ? 'danger' : 'success'}>{status}</Badge>
+                          <Badge bg={status !== 'UP' ? 'danger' : 'success'}>{status}</Badge>
                     </td>
                   </tr>
               )}

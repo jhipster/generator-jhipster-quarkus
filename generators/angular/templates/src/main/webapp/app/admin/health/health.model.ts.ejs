@@ -18,7 +18,7 @@
 -%>
 export type HealthStatus = 'UP' | 'DOWN' | 'UNKNOWN' | 'OUT_OF_SERVICE';
 
-export interface Health {
+export interface HealthModel {
   status: HealthStatus;
   checks: HealthDetails[];
 }

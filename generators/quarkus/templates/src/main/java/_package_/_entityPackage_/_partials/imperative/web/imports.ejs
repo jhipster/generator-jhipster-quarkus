@@ -27,7 +27,7 @@ import <%=packageName%>.service.<%= entityClass %>Service;
 <%_ if (viaRepository) { _%>
 import <%=packageName%>.repository.<%= entityClass %>Repository;
     <%_ if (isUsingMapsId === true) { _%>
-import <%=packageName%>.repository.<%= mapsIdAssoc.otherEntityNameCapitalized %>Repository;
+import <%=packageName%>.repository.<%= mapsIdAssoc.otherEntity.entityNameCapitalized %>Repository;
     <%_ } _%>
     <%_ if (reactive) { _%>
 import <%=packageName%>.repository.reactive.<%= entityClass %>ReactiveRepository;
@@ -35,9 +35,6 @@ import <%=packageName%>.repository.reactive.<%= entityClass %>ReactiveRepository
     <%_ if (searchEngine === 'elasticsearch') { _%>
 import <%=packageName%>.repository.search.<%= entityClass %>SearchRepository;
     <%_ } _%>
-<%_ } _%>
-<%_ if (saveUserSnapshot) { _%>
-import <%=packageName%>.domain.User;
 <%_ } _%>
 <%_ if (databaseType === 'mongodb') { _%>
 import <%=packageName%>.service.IdGenerator;
