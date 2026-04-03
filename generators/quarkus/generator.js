@@ -3,6 +3,7 @@ import os from 'os';
 import chalk from 'chalk';
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import { createNeedleCallback } from 'generator-jhipster/generators/base-core/support';
+import { javaTestPackageTemplatesBlock } from 'generator-jhipster/generators/java/support';
 import { getPomVersionProperties } from 'generator-jhipster/generators/java-simple-application/generators/maven/support';
 
 import { CACHE_EXPIRE_AFTER_WRITE, CACHE_MAXIMUM_SIZE, DEFAULT_DATA_ACCESS } from '../constants.js';
@@ -151,6 +152,23 @@ export default class extends BaseApplicationGenerator {
                 for (const entity of entities.filter(entity => !entity.skipServer && !entity.builtIn)) {
                     this.writeFiles({
                         sections: entityQuarkusFiles,
+                        context: { ...application, ...entity },
+                    });
+                }
+            },
+
+            async writingDomainFiles({ application, entities }) {
+                for (const entity of entities.filter(entity => !entity.skipServer && !entity.builtIn)) {
+                    await this.writeFiles({
+                        blocks: [
+                            javaTestPackageTemplatesBlock({
+                                templates: [
+                                    '_entityPackage_/domain/_persistClass_Asserts.java',
+                                    '_entityPackage_/domain/_persistClass_Test.java',
+                                    '_entityPackage_/domain/_persistClass_TestSamples.java',
+                                ],
+                            }),
+                        ],
                         context: { ...application, ...entity },
                     });
                 }

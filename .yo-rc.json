@@ -24,12 +24,6 @@
                 "sbs": true,
                 "written": true
             },
-            "java": {
-                "command": false,
-                "priorities": ["end"],
-                "sbs": true,
-                "written": true
-            },
             "java-simple-application:gradle": {
                 "command": false,
                 "priorities": ["writing"],
@@ -90,6 +84,12 @@
                     "end"
                 ],
                 "sbs": false,
+                "written": true
+            },
+            "server:bootstrap": {
+                "command": false,
+                "priorities": ["configuring"],
+                "sbs": true,
                 "written": true
             }
         },
