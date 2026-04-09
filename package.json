@@ -1,6 +1,6 @@
 {
     "name": "generator-jhipster-quarkus",
-    "version": "3.6.0",
+    "version": "4.0.0",
     "description": "JHipster Quarkus blueprint",
     "keywords": [
         "yeoman-generator",
