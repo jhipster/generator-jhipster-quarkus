@@ -30,6 +30,31 @@ export default class extends BaseApplicationGenerator {
                 if (!['caffeine', 'redis', 'no'].includes(this.jhipsterConfig.cacheProvider)) {
                     throw new Error(`Cache provider ${this.jhipsterConfig.cacheProvider} is not supported`);
                 }
+                const unsupportedKeycloakOptions = [
+                    'keycloak.admin-client-id',
+                    'keycloak.admin-client-secret',
+                    'keycloak.sync-users-on-login',
+                    'keycloak.user-sync-enabled',
+                    'keycloak.sync-on-login',
+                    'keycloak.realm',
+                    'keycloak.resource',
+                ];
+                const keycloakConfig = this.jhipsterConfig.keycloak;
+                for (const option of unsupportedKeycloakOptions) {
+                    const nestedKey = option.replace('keycloak.', '');
+                    const nestedValue =
+                        keycloakConfig && Object.prototype.hasOwnProperty.call(keycloakConfig, nestedKey)
+                            ? keycloakConfig[nestedKey]
+                            : undefined;
+                    const value = this.jhipsterConfig[option] ?? nestedValue;
+                    if (value && value !== 'no') {
+                        this.log.warn(`${option} '${value}' is not supported by this blueprint, falling back to 'no'`);
+                        this.jhipsterConfig[option] = 'no';
+                        if (keycloakConfig) {
+                            keycloakConfig[nestedKey] = 'no';
+                        }
+                    }
+                }
             },
         });
     }
