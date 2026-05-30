@@ -49,6 +49,28 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
         });
     });
 
+    describe('run with unsupported searchEngine elasticsearch', () => {
+        beforeAll(async function () {
+            await helpers
+                .run(SUB_GENERATOR_NAMESPACE)
+                .withJHipsterConfig({
+                    searchEngine: 'elasticsearch',
+                })
+                .withOptions({
+                    ignoreNeedlesError: true,
+                })
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig();
+        });
+
+        it('should fall back searchEngine to no', () => {
+            expect(result.getStateSnapshot()['.yo-rc.json']).toEqual({
+                stateCleared: 'modified',
+            });
+        });
+    });
+
     describe('with some entities', () => {
         beforeAll(async function () {
             await helpers
