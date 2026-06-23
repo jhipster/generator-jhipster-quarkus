@@ -12,7 +12,8 @@ application {
 
 entity BankAccount {
   name String required,
-  balance BigDecimal required
+  balance BigDecimal required,
+  createdAt LocalDate
 }
 entity Label {
   label String required minlength(3)
