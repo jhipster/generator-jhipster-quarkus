@@ -16,7 +16,7 @@ describe('SubGenerator angular of quarkus JHipster blueprint', () => {
                 })
                 .withJHipsterGenerators()
                 .withConfiguredBlueprint()
-                .withBlueprintConfig();
+                .withBlueprintConfig({});
         });
 
         it('should succeed', () => {
