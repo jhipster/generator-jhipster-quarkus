@@ -5,9 +5,6 @@ exports[`SubGenerator cypress of quarkus JHipster blueprint > run > should succe
   ".yo-rc.json": {
     "stateCleared": "modified",
   },
-  "angular.json": {
-    "stateCleared": "modified",
-  },
   "cypress.config.ts": {
     "stateCleared": "modified",
   },
