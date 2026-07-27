@@ -66,7 +66,7 @@ jobs:
               with:
                   path: generator-jhipster-quarkus
                   fetch-depth: 5
-            - uses: jhipster/actions/setup-runner@v1
+            - uses: jhipster/actions/setup-runner@v2
               with:
                   java-version: ${{ matrix.java-version }}
                   node-version: ${{ matrix.node-version }}
@@ -99,7 +99,7 @@ jobs:
             #----------------------------------------------------------------------
             # Detect changes against base commit
             #----------------------------------------------------------------------
-            - uses: jhipster/actions/compare-sample@v1
+            - uses: jhipster/actions/compare-sample@v2
               id: compare
               if: >-
                   github.event.pull_request &&
