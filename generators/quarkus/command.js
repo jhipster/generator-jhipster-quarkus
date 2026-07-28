@@ -7,7 +7,6 @@ const { applicationType } = commonCommand.configs;
 const { defaultPackaging } = springBootCommand.configs;
 
 export default asCommand({
-    options: {},
     configs: {
         applicationType,
         defaultPackaging,

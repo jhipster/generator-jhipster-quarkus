@@ -58,8 +58,14 @@ export default class extends BaseApplicationGenerator {
             async loadDependencyVersions({ application }) {
                 this.loadJavaDependenciesFromGradleCatalog(application.javaDependencies);
                 application.quarkusVersion = application.javaDependencies['quarkus-bom'];
+            },
+        });
+    }
 
-                if (application.buildTool === 'maven') {
+    get [BaseApplicationGenerator.PREPARING]() {
+        return this.asPreparingTaskGroup({
+            async loadMavenDependencyVersions({ application }) {
+                if (application.buildToolMaven) {
                     const pomFile = this.readTemplate('../../quarkus/resources/pom.xml')?.toString();
                     const applicationJavaDependencies = this.prepareDependencies(
                         {
@@ -71,11 +77,6 @@ export default class extends BaseApplicationGenerator {
                     Object.assign(application.javaDependencies, applicationJavaDependencies);
                 }
             },
-        });
-    }
-
-    get [BaseApplicationGenerator.PREPARING]() {
-        return this.asPreparingTaskGroup({
             async preparingTemplateTask({ source, application }) {
                 source.addEntryToCache = ({ entry }) => {
                     this.editFile(

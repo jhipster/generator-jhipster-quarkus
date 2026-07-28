@@ -1,2 +1,15 @@
 README.md skip
 .github/workflows/samples.yml skip
+generators/react/generator.spec.js skip
+generators/quarkus/generator.spec.js skip
+generators/server/command.js skip
+generators/angular/generator.js skip
+generators/docker/generator.js skip
+generators/react/generator.js skip
+generators/cypress/generator.js skip
+generators/quarkus/generator.js skip
+generators/java-simple-application/generators/gradle/generator.js skip
+generators/quarkus/command.js skip
+generators/quarkus/generators/bootstrap/generator.js skip
+generators/server/generators/bootstrap/generator.js skip
+generators/server/generator.js skip
