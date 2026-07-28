@@ -47,12 +47,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run > should succe
   "mvnw.cmd": {
     "stateCleared": "modified",
   },
-  "npmw": {
-    "stateCleared": "modified",
-  },
-  "npmw.cmd": {
-    "stateCleared": "modified",
-  },
   "package.json": {
     "stateCleared": "modified",
   },
@@ -472,12 +466,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-j
   "gradlew.bat": {
     "stateCleared": "modified",
   },
-  "npmw": {
-    "stateCleared": "modified",
-  },
-  "npmw.cmd": {
-    "stateCleared": "modified",
-  },
   "package.json": {
     "stateCleared": "modified",
   },
@@ -892,12 +880,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-j
     "stateCleared": "modified",
   },
   "mvnw.cmd": {
-    "stateCleared": "modified",
-  },
-  "npmw": {
-    "stateCleared": "modified",
-  },
-  "npmw.cmd": {
     "stateCleared": "modified",
   },
   "package.json": {
@@ -1340,12 +1322,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
   "gradlew.bat": {
     "stateCleared": "modified",
   },
-  "npmw": {
-    "stateCleared": "modified",
-  },
-  "npmw.cmd": {
-    "stateCleared": "modified",
-  },
   "package.json": {
     "stateCleared": "modified",
   },
@@ -1661,12 +1637,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > run with gateway-o
     "stateCleared": "modified",
   },
   "mvnw.cmd": {
-    "stateCleared": "modified",
-  },
-  "npmw": {
-    "stateCleared": "modified",
-  },
-  "npmw.cmd": {
     "stateCleared": "modified",
   },
   "package.json": {
@@ -3093,12 +3063,6 @@ exports[`SubGenerator quarkus of quarkus JHipster blueprint > with some entities
     "stateCleared": "modified",
   },
   "mvnw.cmd": {
-    "stateCleared": "modified",
-  },
-  "npmw": {
-    "stateCleared": "modified",
-  },
-  "npmw.cmd": {
     "stateCleared": "modified",
   },
   "package.json": {
