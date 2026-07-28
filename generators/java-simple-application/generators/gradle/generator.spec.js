@@ -16,7 +16,7 @@ describe('SubGenerator java-simple-application:gradle of quarkus JHipster bluepr
                 })
                 .withJHipsterGenerators()
                 .withConfiguredBlueprint()
-                .withBlueprintConfig();
+                .withBlueprintConfig({});
         });
 
         it('should succeed', () => {

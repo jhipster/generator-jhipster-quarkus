@@ -749,7 +749,7 @@ exports[`SubGenerator angular of quarkus JHipster blueprint > run > should succe
   "src/main/webapp/app/shared/language/translate.directive.ts": {
     "stateCleared": "modified",
   },
-  "src/main/webapp/app/shared/language/translation.module.ts": {
+  "src/main/webapp/app/shared/language/translation.provider.ts": {
     "stateCleared": "modified",
   },
   "src/main/webapp/app/shared/pagination/index.ts": {

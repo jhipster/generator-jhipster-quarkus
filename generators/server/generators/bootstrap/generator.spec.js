@@ -16,7 +16,7 @@ describe('SubGenerator server:bootstrap of quarkus JHipster blueprint', () => {
                 })
                 .withJHipsterGenerators()
                 .withConfiguredBlueprint()
-                .withBlueprintConfig();
+                .withBlueprintConfig({});
         });
 
         it('should succeed', () => {
