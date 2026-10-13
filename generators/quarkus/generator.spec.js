@@ -49,6 +49,31 @@ describe('SubGenerator quarkus of quarkus JHipster blueprint', () => {
         });
     });
 
+    describe('run with unsupported keycloak user sync options', () => {
+        beforeAll(async function () {
+            await helpers
+                .run(SUB_GENERATOR_NAMESPACE)
+                .withJHipsterConfig({
+                    'keycloak.user-sync-enabled': 'true',
+                    'keycloak.sync-on-login': 'true',
+                    'keycloak.realm': 'custom',
+                    'keycloak.resource': 'custom-client',
+                })
+                .withOptions({
+                    ignoreNeedlesError: true,
+                })
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig();
+        });
+
+        it('should fall back unsupported keycloak options to no', () => {
+            expect(result.getStateSnapshot()['.yo-rc.json']).toEqual({
+                stateCleared: 'modified',
+            });
+        });
+    });
+
     describe('with some entities', () => {
         beforeAll(async function () {
             await helpers
