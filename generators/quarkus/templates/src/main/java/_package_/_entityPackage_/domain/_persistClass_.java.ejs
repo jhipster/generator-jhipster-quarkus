@@ -77,7 +77,8 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 <%_ } if (hasTextBlob === true || (anyFieldIsUUID === true && ['mysql', 'mariadb'].includes(prodDatabaseType))) { _%>
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 <%_ } if (databaseType === 'mongodb') { _%>
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
@@ -223,10 +224,11 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
         if (field.fieldIsEnum) { _%>
     @Enumerated(EnumType.STRING)
         <%_ }
-        if (fieldType === 'byte[]') { _%>
+        if (fieldType === 'byte[]') {
+            if ((prodDatabaseType === 'postgresql' || devDatabaseType === 'postgresql') && fieldTypeBlobContent === 'text') { _%>
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
+        <%_ } else { _%>
     @Lob
-        <%_ if ((prodDatabaseType === 'postgresql' || devDatabaseType === 'postgresql') && fieldTypeBlobContent === 'text' ) { _%>
-    @Type(type = "org.hibernate.type.TextType")
         <%_ }
         }
         if (['Instant', 'ZonedDateTime', 'LocalDate', 'Duration'].includes(fieldType)) { _%>
@@ -234,7 +236,7 @@ public class <%= persistClass %> extends <% if (databaseType === 'sql') { %>Pana
         <%_ } else if (fieldType === 'BigDecimal') { _%>
     @Column(name = "<%-fieldNameAsDatabaseColumn %>", precision = 21, scale = 2<% if (required) { %>, nullable = false<% } %><% if (unique) { %>, unique = true<% } %>)
         <%_ } else if (fieldType === 'UUID' && ['mysql', 'mariadb'].includes(prodDatabaseType)) { _%>
-    @Type(type = "uuid-char")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "<%-fieldNameAsDatabaseColumn %>", length = 36<% if (required) { %>, nullable = false<% } %><% if (unique) { %>, unique = true<% } %>)
         <%_ } else { _%>
     @Column(name = "<%-fieldNameAsDatabaseColumn %>"<% if (fieldValidate === true) { %><% if (fieldValidateRules.includes('maxlength')) { %>, length = <%= fieldValidateRulesMaxlength %><% } %><% if (required) { %>, nullable = false<% } %><% if (unique) { %>, unique = true<% } %><% } %>)
