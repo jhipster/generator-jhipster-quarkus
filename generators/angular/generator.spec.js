@@ -23,4 +23,21 @@ describe('SubGenerator angular of quarkus JHipster blueprint', () => {
             expect(result.getStateSnapshot()).toMatchSnapshot();
         });
     });
+
+    describe('with withAdminUi disabled', () => {
+        beforeAll(async function () {
+            await helpers
+                .run(BLUEPRINT_NAMESPACE)
+                .withJHipsterConfig({
+                    withAdminUi: false,
+                })
+                .withJHipsterGenerators()
+                .withConfiguredBlueprint()
+                .withBlueprintConfig({});
+        });
+
+        it('should succeed without configuration.html error', () => {
+            result.assertNoFile('src/main/webapp/app/admin/configuration/configuration.html');
+        });
+    });
 });
