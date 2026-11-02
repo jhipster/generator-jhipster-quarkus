@@ -18,7 +18,7 @@ swagger-annotations = { group = "io.swagger", name = "swagger-annotations", vers
 [plugins]
 gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version = "4.0.1" }
 gradle-node = { id = "com.github.node-gradle.node", version = "7.1.0" }
-liquibase = { id = "org.liquibase.gradle", version = "3.1.0" }
+liquibase = { id = "org.liquibase.gradle", version = "3.1.1" }
 liquibase_core = { group = 'org.liquibase', id = "liquibase-core", version = "4.27.0" }
 sonarqube = { id = "org.sonarqube", version = "7.5.0.8588" }
 openapi-generator = { id = "org.openapi.generator", version = "7.26.0" }
